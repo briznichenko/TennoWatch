@@ -54,10 +54,6 @@ struct Reward: Decodable {
         countedItems = try container.decode([CountedItem].self, forKey: .countedItems)
         credits = try container.decode(Int.self, forKey: .credits)
         color = try container.decode(Int.self, forKey: .color)
-        // Some rewards (e.g. certain alerts) have an empty thumbnail string, which
-        // URL's Decodable conformance treats as invalid rather than nil — decode it
-        // as a plain string first so an empty thumbnail becomes nil instead of a
-        // decode failure for the whole object.
         let thumbnailString = try container.decodeIfPresent(String.self, forKey: .thumbnail)
         thumbnail = thumbnailString.flatMap { $0.isEmpty ? nil : URL(string: $0) }
     }

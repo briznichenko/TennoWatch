@@ -7,10 +7,6 @@
 
 import Foundation
 
-// `faceoffBonus` and `questToConquerCancer` are undocumented free-form objects in the
-// upstream OpenAPI spec (no schema at all), so WorldState doesn't declare them — Decodable
-// ignores unlisted keys, so the rest of the payload still decodes fine.
-
 struct ArchimedeaMissionDifficultyRisk: Decodable {
     let description: String
     let isHard: Bool
@@ -205,9 +201,6 @@ struct CurrentZarimanCycle: Decodable {
     let start: Double
 }
 
-// The spec documents ClanRewardDto/ClanInitiativeRewardsDto with entirely different
-// (camelCase) field names and a single reward object, but the real API returns
-// PascalCase fields and an array — modeled to match the actual response instead.
 struct ClanReward: Decodable {
     let rewardClaimed: Bool
     let pointThreshold: Double
@@ -228,7 +221,7 @@ struct ClanInitiativeRewards: Decodable {
     let id: String?
     let bonusRegion: String
     let regionUniqueName: String
-    let rewwards: [ClanReward] // sic — typo in the upstream API response, not ours
+    let rewwards: [ClanReward]
     let week: Double
 }
 
@@ -337,9 +330,6 @@ struct Fissure: Decodable {
     let tier: String
 }
 
-// Only item/id/activation/expiry are consistently present — the rest vary a lot
-// by sale type in practice (e.g. only one of premiumOverride/regularOverride
-// shows up at a time), so they're all optional here.
 struct FlashSale: Decodable {
     let activation: Date?
     let expiry: Date?
@@ -368,11 +358,6 @@ struct Kinepage: Decodable {
     let timestamp: Date
 }
 
-// The spec marks several of these required, but a real archonHunt mission omits
-// description/enemySpec/exclusiveWeapon/faction/factionKey/levelOverride/
-// maxEnemyLevel/minEnemyLevel — Mission is reused across alerts, sorties, and
-// archon hunts with different subsets of fields actually populated, so those are
-// modeled as optional rather than trusting the spec's required list.
 struct Mission: Decodable {
     let advancedSpawners: [String]
     let archwingRequired: Bool
