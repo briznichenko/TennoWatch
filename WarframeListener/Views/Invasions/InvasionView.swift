@@ -10,6 +10,10 @@ import SwiftUI
 struct InvasionView: View {
     @State private var isExpanded = false
     let reward: Reward
+    private var rewardText: String {
+        reward.items.joined(separator: ", ") + 
+        reward.countedItems.map { "\($0.type), \($0.key), \($0.count)"}.joined(separator: ", ")
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -18,7 +22,7 @@ struct InvasionView: View {
                     .font(.headline)
                 Spacer()
                 Image(systemName: "chevron.right")
-                    .rotationEffect(.degrees(isExpanded ? 90 : 0)) // Rotates arrow
+                    .rotationEffect(.degrees(isExpanded ? 90 : 0))
             }
             .padding()
             .background(Color(.systemBackground))
@@ -29,11 +33,13 @@ struct InvasionView: View {
             }
             
             if isExpanded {
-                Text(reward.items.joined(separator: ","))
-                    .font(.body)
-                    .foregroundColor(.secondary)
-                    .padding([.horizontal, .bottom])
-                    .transition(.move(edge: .top).combined(with: .opacity))
+                HStack {
+                    Text(rewardText)
+                        .font(.body)
+                        .foregroundColor(.secondary)
+                        .padding([.horizontal, .bottom])
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                }
             }
         }
         .background(Color(.secondarySystemBackground))

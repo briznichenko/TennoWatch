@@ -25,10 +25,10 @@ struct InvasionsView: View {
                         Text(invasion.desc)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
-                        if let reward = invasion.attacker.reward {
+                        if let reward = invasion.attacker.reward, reward.countedItems.isEmpty == false {
                             InvasionView(reward: reward)
                         }
-                        if let reward = invasion.defender.reward { InvasionView(reward: reward)
+                        if let reward = invasion.defender.reward, reward.countedItems.isEmpty == false { InvasionView(reward: reward)
                         }
                     }
                 }
@@ -41,6 +41,8 @@ struct InvasionsView: View {
             }
         }
         .task {
+            viewModel.fetchInvasions()
+        }.refreshable {
             viewModel.fetchInvasions()
         }
     }

@@ -52,6 +52,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7DAA00CC303C70C60040DF25 /* Build configuration list for PBXNativeTarget "WarframeListener" */;
 			buildPhases = (
+				7D4C2305303C97AB00F20105 /* SwiftLint */,
 				7DAA00BD303C70C50040DF25 /* Sources */,
 				7DAA00BE303C70C50040DF25 /* Frameworks */,
 				7DAA00BF303C70C50040DF25 /* Resources */,
@@ -64,8 +65,6 @@
 				7DAA00C3303C70C50040DF25 /* WarframeListener */,
 			);
 			name = WarframeListener;
-			packageProductDependencies = (
-			);
 			productName = WarframeListener;
 			productReference = 7DAA00C1303C70C50040DF25 /* WarframeListener.app */;
 			productType = "com.apple.product-type.application";
@@ -113,6 +112,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7D4C2305303C97AB00F20105 /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint > /dev/null; then\n  swiftlint\nelif [ -f /opt/homebrew/bin/swiftlint ]; then\n  /opt/homebrew/bin/swiftlint\nelif [ -f /usr/local/bin/swiftlint ]; then\n  /usr/local/bin/swiftlint\nelse\n  echo \"warning: SwiftLint not installed. Install via 'brew install swiftlint'.\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7DAA00BD303C70C50040DF25 /* Sources */ = {
@@ -162,7 +183,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -225,7 +246,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
