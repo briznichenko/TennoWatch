@@ -1,0 +1,592 @@
+//
+//  WorldState.swift
+//  WarframeListener
+//
+//  Created by Andrii Bryzhnychenko on 8/24/26.
+//
+
+import Foundation
+
+// `faceoffBonus` and `questToConquerCancer` are undocumented free-form objects in the
+// upstream OpenAPI spec (no schema at all), so WorldState doesn't declare them — Decodable
+// ignores unlisted keys, so the rest of the payload still decodes fine.
+
+struct ArchimedeaMissionDifficultyRisk: Decodable {
+    let description: String
+    let isHard: Bool
+    let key: String
+    let name: String
+}
+
+struct ArchimedeaMissionDifficulty: Decodable {
+    let description: String
+    let key: String
+    let name: String
+}
+
+struct ExternalMission: Decodable {
+    let activation: Date
+    let archwing: Bool
+    let enemy: String?
+    let expired: Bool
+    let expiry: Date
+    let id: String
+    let node: String
+    let nodeKey: String
+    let sharkwing: Bool
+    let `type`: String
+    let typeKey: String
+}
+
+struct ArchimedeaMission: Decodable {
+    let deviation: ArchimedeaMissionDifficulty
+    let faction: String
+    let factionKey: String
+    let missionType: String
+    let missionTypeKey: String
+    let risks: [ArchimedeaMissionDifficultyRisk]
+}
+
+struct PersonalModifier: Decodable {
+    let description: String
+    let key: String
+    let name: String
+}
+
+struct Archimedea: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let missions: [ArchimedeaMission]
+    let personalModifiers: [PersonalModifier]
+    let `type`: String
+    let typeKey: String
+}
+
+struct Alert: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let mission: Mission
+    let rewardTypes: [String]
+    let tag: String?
+}
+
+struct InterimStep: Decodable {
+    let goal: Double
+    let reward: Reward?
+    let winnerCount: Double?
+}
+
+struct RewardDrop: Decodable {
+    let count: Double
+}
+
+struct SyndicateJob: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let enemyLevels: [Double]
+    let isVault: Bool?
+    let locationTag: String?
+    let minMR: Double
+    let rewardPool: [String]
+    let rewardPoolDrops: [RewardDrop]
+    let standingStages: [Double]
+    let timeBound: String?
+    let `type`: String?
+    let uniqueName: String
+}
+
+struct ProgressStep: Decodable {
+    let `type`: String
+    let progressAmt: Double
+}
+
+struct WorldEvent: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let affiliatedWith: String?
+    let altActivation: Date
+    let altExpiry: Date
+    let archwingDrops: [String]
+    let completionBonuses: [Double]
+    let concurrentNodes: [String]
+    let currentScore: Double
+    let description: String
+    let faction: String?
+    let health: Double?
+    let interimSteps: [InterimStep]
+    let isCommunity: Bool
+    let isPersonal: Bool
+    let jobs: [SyndicateJob]
+    let largeInterval: Double?
+    let maximumScore: Double
+    let node: String?
+    let previousId: String?
+    let previousJobs: [SyndicateJob]
+    let progressSteps: [ProgressStep]
+    let progressTotal: Double?
+    let regionDrops: [String]
+    let rewards: [Reward]
+    let scoreLocTag: String?
+    let scoreVar: String
+    let showTotalAtEndOfMission: Bool
+    let smallInterval: Double?
+    let tag: String
+    let tooltip: String?
+    let victim: String?
+    let victimNode: String?
+}
+
+struct GameCalendar: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let requirements: [String]
+    let season: String
+    let version: Double
+    let yearIteration: Double
+}
+
+struct CambionCycle: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let state: String
+    let timeLeft: String
+}
+
+struct CetusCycle: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let isCetus: Bool
+    let isDay: Bool
+    let state: String
+    let timeLeft: String
+}
+
+struct VallisCycle: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let isWarm: Bool
+    let state: String
+}
+
+struct EarthCycle: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let isDay: Bool
+    let state: String
+    let timeLeft: String
+}
+
+struct ZarimanCycle: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let bountiesEndDate: Date?
+    let ec: CurrentZarimanCycle?
+    let isCorpus: Bool
+    let state: String
+    let timeLeft: String
+}
+
+struct CurrentZarimanCycle: Decodable {
+    let isCorpus: Bool
+    let timeLeft: String
+    let expiry: Date
+    let expiresIn: Double
+    let state: String
+    let start: Double
+}
+
+// The spec documents ClanRewardDto/ClanInitiativeRewardsDto with entirely different
+// (camelCase) field names and a single reward object, but the real API returns
+// PascalCase fields and an array — modeled to match the actual response instead.
+struct ClanReward: Decodable {
+    let rewardClaimed: Bool
+    let pointThreshold: Double
+    let itemCount: Double
+    let reward: String
+
+    private enum CodingKeys: String, CodingKey {
+        case rewardClaimed = "RewardClaimed"
+        case pointThreshold = "PointThreshold"
+        case itemCount = "ItemCount"
+        case reward = "Reward"
+    }
+}
+
+struct ClanInitiativeRewards: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let bonusRegion: String
+    let regionUniqueName: String
+    let rewwards: [ClanReward] // sic — typo in the upstream API response, not ours
+    let week: Double
+}
+
+struct ConclaveChallenge: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let amount: Double
+    let category: String
+    let categoryKey: String
+    let daily: Bool
+    let description: String?
+    let mode: String
+    let rootChallenge: Bool
+    let standing: Double?
+    let title: String?
+}
+
+struct ConstructionProgress: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let fomorianProgress: String
+    let razorbackProgress: String
+    let unknownProgress: String
+}
+
+struct DailyDeal: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let discount: Double
+    let item: String
+    let originalPrice: Double
+    let salePrice: Double
+    let sold: Double
+    let total: Double
+    let uniqueName: String
+}
+
+struct DarkSectorBattle: Decodable {
+    let attacker: String
+    let attackerIsAlliance: Bool
+    let defender: String
+    let defenderIsAlliance: Bool
+    let end: Date
+    let start: Date
+    let winner: String
+}
+
+struct DarkSector: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let battlePayReserve: Double
+    let battlePaySetBy: String
+    let battlePaySetByClan: String
+    let creditTaxRate: Double
+    let damagePerMission: Double
+    let defenderMOTD: String
+    let defenderMaxPool: Double
+    let defenderName: String
+    let defenderPoolRemaining: Double
+    let defenderRailHealReserve: Double
+    let deployerClan: String
+    let deployerName: String
+    let healRate: Double
+    let history: [DarkSectorBattle]
+    let isAlliance: Bool
+    let itemsTaxRate: Double
+    let memberCreditsTaxRate: Double
+    let memberItemsTaxRate: Double
+    let mission: Mission?
+    let perMissionBattlePay: Double
+    let railType: String
+    let taxChangedBy: String
+    let taxChangedByClan: String
+}
+
+struct DuviriChoice: Decodable {
+    let category: String
+    let categoryKey: String
+    let choices: [String]
+}
+
+struct DuviriCycle: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let choices: [DuviriChoice]
+    let state: String
+}
+
+struct Fissure: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let enemy: String
+    let enemyKey: String
+    let isHard: Bool
+    let isStorm: Bool
+    let missionType: String
+    let missionTypeKey: String
+    let node: String
+    let nodeKey: String
+    let tier: String
+}
+
+// Only item/id/activation/expiry are consistently present — the rest vary a lot
+// by sale type in practice (e.g. only one of premiumOverride/regularOverride
+// shows up at a time), so they're all optional here.
+struct FlashSale: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let discount: Double?
+    let isFeatured: Bool?
+    let isPopular: Bool?
+    let isShownInMarket: Bool?
+    let item: String
+    let premiumOverride: Double?
+    let regularOverride: Double?
+}
+
+struct GlobalUpgrade: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let operation: String
+    let operationSymbol: String
+    let upgrade: String
+    let upgradeOperationValue: Double
+}
+
+struct Kinepage: Decodable {
+    let message: String
+    let timestamp: Date
+}
+
+// The spec marks several of these required, but a real archonHunt mission omits
+// description/enemySpec/exclusiveWeapon/faction/factionKey/levelOverride/
+// maxEnemyLevel/minEnemyLevel — Mission is reused across alerts, sorties, and
+// archon hunts with different subsets of fields actually populated, so those are
+// modeled as optional rather than trusting the spec's required list.
+struct Mission: Decodable {
+    let advancedSpawners: [String]
+    let archwingRequired: Bool
+    let consumeRequiredItems: Bool?
+    let description: String?
+    let enemySpec: String?
+    let exclusiveWeapon: String?
+    let faction: String?
+    let factionKey: String?
+    let goalTag: String?
+    let isSharkwing: Bool
+    let leadersAlwaysAllowed: Bool?
+    let levelAuras: [String]
+    let levelOverride: String?
+    let maxEnemyLevel: Double?
+    let maxWaveNum: Double?
+    let minEnemyLevel: Double?
+    let nightmare: Bool
+    let node: String
+    let nodeKey: String
+    let requiredItems: [String]
+    let reward: Reward?
+    let target: String?
+    let `type`: String
+    let typeKey: String
+}
+
+struct SortieVariant: Decodable {
+    let missionType: String
+    let missionTypeKey: String
+    let modifier: String
+    let modifierDescription: String
+    let node: String
+    let nodeKey: String
+}
+
+struct Sortie: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let boss: String
+    let faction: String
+    let factionKey: String
+    let missions: [Mission]
+    let rewardPool: String
+    let variants: [SortieVariant]
+}
+
+struct News: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let date: Date
+    let imageLink: String
+    let link: String
+    let message: String
+    let mobileOnly: Bool?
+    let primeAccess: Bool
+    let priority: Bool?
+    let stream: Bool
+    let update: Bool
+}
+
+struct NightwaveChallenge: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let desc: String
+    let isDaily: Bool
+    let isElite: Bool
+    let isPermanent: Bool
+    let reputation: Double
+    let title: String
+}
+
+struct Nightwave: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let activeChallenges: [NightwaveChallenge]
+    let phase: Double
+    let possibleChallenges: [NightwaveChallenge]
+    let season: Double
+    let tag: String
+}
+
+struct OutpostMission: Decodable {
+    let node: String
+    let faction: String
+    let `type`: String
+}
+
+struct SentientOutpost: Decodable {
+    let activation: Date
+    let active: Bool
+    let expiry: Date
+    let id: String
+    let mission: OutpostMission?
+}
+
+struct PersistentEnemy: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let agentType: String
+    let fleeDamage: Double
+    let healthPercent: Double
+    let isDiscovered: Bool
+    let isUsingTicketing: Bool
+    let lastDiscoveredAt: String
+    let lastDiscoveredTime: Date
+    let locationTag: String
+    let pid: String
+    let rank: Double
+}
+
+struct Simaris: Decodable {
+    let isTargetActive: Bool
+    let target: String
+}
+
+struct SteelPathOfferings: Decodable {
+    let activation: Date
+    let expiry: Date
+    let remaining: String
+}
+
+struct SyndicateMission: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let jobs: [SyndicateJob]
+    let nodes: [String]
+    let syndicate: String
+    let syndicateKey: String
+}
+
+struct ChallengeInstance: Decodable {
+    let damageType: String?
+    let minEnemyLevel: Double
+    let progressAmount: Double
+    let requiredAmount: Double
+    let target: String?
+    let `type`: String
+}
+
+struct WeeklyChallenge: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let challenges: [ChallengeInstance]
+}
+
+struct VoidTraderItem: Decodable {
+    let credits: Double?
+    let ducats: Double?
+    let item: String
+    let uniqueName: String
+}
+
+struct VoidTraderSchedule: Decodable {
+    let expiry: Date
+    let item: String
+}
+
+struct VoidTrader: Decodable {
+    let activation: Date?
+    let expiry: Date?
+    let id: String?
+    let character: String
+    let completed: Bool?
+    let initialStart: Date
+    let inventory: [VoidTraderItem]
+    let location: String
+    let psId: String
+    let schedule: [VoidTraderSchedule]
+}
+
+struct WorldState: Decodable {
+    let alerts: [Alert]
+    let arbitration: ExternalMission?
+    let archimedeas: [Archimedea]
+    let archonHunt: Sortie
+    let buildLabel: String
+    let calendar: GameCalendar
+    let cambionCycle: CambionCycle
+    let cetusCycle: CetusCycle
+    let clanWeeklyInitiative: ClanInitiativeRewards?
+    let conclaveChallenges: [ConclaveChallenge]
+    let constructionProgress: ConstructionProgress
+    let dailyDeals: [DailyDeal]
+    let darkSectors: [DarkSector]
+    let duviriCycle: DuviriCycle
+    let earthCycle: EarthCycle
+    let events: [WorldEvent]
+    let fissures: [Fissure]
+    let flashSales: [FlashSale]
+    let globalUpgrades: [GlobalUpgrade]
+    let invasions: [Invasion]
+    let kinepage: Kinepage
+    let kuva: [ExternalMission]?
+    let news: [News]
+    let nightwave: Nightwave?
+    let persistentEnemies: [PersistentEnemy]
+    let sentientOutposts: SentientOutpost
+    let simaris: Simaris
+    let sortie: Sortie
+    let steelPath: SteelPathOfferings
+    let syndicateMissions: [SyndicateMission]
+    let timestamp: Date
+    let vallisCycle: VallisCycle
+    let vaultTrader: VoidTrader
+    let voidTrader: VoidTrader
+    let voidTraders: [VoidTrader]
+    let weeklyChallenges: WeeklyChallenge?
+    let zarimanCycle: ZarimanCycle
+}
