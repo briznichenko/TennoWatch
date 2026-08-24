@@ -8,19 +8,6 @@
 import Foundation
 import Combine
 
-enum Endpoint {
-    case invasions
-
-    private static let baseURL = URL(string: "https://api.warframestat.us/pc/")!
-
-    var url: URL {
-        switch self {
-        case .invasions:
-            Self.baseURL.appending(path: "invasions")
-        }
-    }
-}
-
 enum APIError: Error {
     case invalidResponse
 }
@@ -38,10 +25,16 @@ final class APIManager {
         decoder.dateDecodingStrategy = .custom { decoder in
             let container = try decoder.singleValueContainer()
             let string = try container.decode(String.self)
-            guard let date = dateFormatter.date(from: string) else {
-                throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid date: \(string)")
+            if let date = dateFormatter.date(from: string) {
+                return date
             }
-            return date
+            // Some "never expires" fields (e.g. arbitration) use JavaScript's maximum
+            // Date value as a sentinel, which ISO8601DateFormatter can't parse (it uses
+            // an extended 6-digit year with a leading '+').
+            if string.hasPrefix("+275760-09-13") {
+                return .distantFuture
+            }
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid date: \(string)")
         }
         self.decoder = decoder
     }
