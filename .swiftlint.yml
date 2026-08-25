@@ -1,16 +1,10 @@
 # SwiftLint config for WarframeListener.
 # Keep this focused on catching real mistakes (unsafe unwraps, force casts),
-# not style nitpicks — this is a learning project, not a style exercise.
 
 opt_in_rules:
   - force_unwrapping
   - implicitly_unwrapped_optional
   - fatal_error_message
-  - first_where
-  - redundant_nil_coalescing
-  - sorted_imports
-  - closure_spacing
-  - empty_count
 
 disabled_rules:
   - todo
