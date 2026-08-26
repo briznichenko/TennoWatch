@@ -9,7 +9,14 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        InvasionsView()
+        TabView {
+            Tab("World state", systemImage: "globe.europe.africa") {
+                InvasionsView()
+            }
+            Tab("Profile", systemImage: "person") {
+                ProfileView()
+            }
+        }
     }
 }
 
