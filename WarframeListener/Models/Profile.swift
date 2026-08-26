@@ -20,9 +20,21 @@ struct ProfileModel: Codable {
 struct ProfileInfoModel: Codable {
     let accountID: ID
     let displayName: String
+    
+    enum CodingKeys: String, CodingKey {
+        case accountID = "AccountId"
+        case displayName = "DisplayName"
+    }
+}
+
+// TODO: - Data unneeded for now
+
+struct ProfileInfoModelComplex: Codable {
+    let accountID: ID
+    let displayName: String
     let platformNames: [String]
     let playerLevel: Int
-    let loadOutPreset: LoadOutPreset
+    let loadOutPreset: LoadOutPreset?
     let loadOutInventory: LoadOutInventory
     let guildID: ID
     let guildName: String
@@ -272,6 +284,12 @@ struct LoadOutPreset: Codable {
     let focusSchool: String
     let presetIcon: String
     let favorite: Bool
+    
+    enum CodingKeys: String, CodingKey {
+        case focusSchool = "FocusSchool"
+        case presetIcon = "PresetIcon"
+        case favorite = "Favorite"
+    }
 }
 
 // MARK: - ResultMission
@@ -282,7 +300,16 @@ struct ResultMission: Codable {
 }
 
 // MARK: - Stats
+
 struct Stats: Codable {
+    let weapons: [Weapon]
+    
+    enum CodingKeys: String, CodingKey {
+        case weapons = "Weapons"
+    }
+}
+
+struct StatsComplex: Codable {
     let ciphersFailed: Int
     let ciphersSolved: Int
     let cipherTime: Double

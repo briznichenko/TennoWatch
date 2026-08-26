@@ -1,3 +1,4 @@
+// swiftlint:disable type_body_length file_length line_length
 struct ExternalData {
     static let persistentItemNames: [String: String] = [
         "/Lotus/Weapons/Lasria/AK47/TC2024AK47Weapon": "AX-52",
@@ -870,3 +871,4 @@ struct ExternalData {
         "/Lotus/Weapons/Infested/Pistols/InfUzi/InfUziWeapon": "Zymos"
     ]
 }
+// swiftlint:enable type_body_length file_length line_length

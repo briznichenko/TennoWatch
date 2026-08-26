@@ -13,37 +13,22 @@ struct InvasionsView: View {
     var body: some View {
         NavigationStack {
             List {
-                if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
-                        .foregroundStyle(.red)
-                }
-
                 ForEach(viewModel.invasions) { invasion in
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(invasion.node)
-                            .font(.headline)
-                        Text(invasion.desc)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                        if let reward = invasion.attacker.reward, reward.countedItems.isEmpty == false {
-                            InvasionView(reward: reward)
-                        }
-                        if let reward = invasion.defender.reward, reward.countedItems.isEmpty == false { InvasionView(reward: reward)
-                        }
-                    }
+                    InvasionView(invasion: invasion)
                 }
             }
             .navigationTitle("Invasions")
             .overlay {
                 if viewModel.isLoading && viewModel.invasions.isEmpty {
+                    Text(viewModel.networkMessage)
                     ProgressView()
                 }
             }
         }
         .task {
-            viewModel.fetchInvasions()
+            await viewModel.fetchInvasions()
         }.refreshable {
-            viewModel.fetchInvasions()
+            await viewModel.fetchInvasions()
         }
     }
 }

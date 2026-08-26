@@ -15,25 +15,35 @@ struct ProfileView: View {
     }
 
     var body: some View {
-        VStack {
-            if let profile = viewModel.profile?.results.first {
-                Text(profile.displayName)
-                Text("\(profile.playerLevel)")
-                ScrollView {
-                    ForEach(viewModel.items) { item in
+        NavigationStack {
+            VStack {
+                if let profile = viewModel.profile?.results.first {
+                    Text(profile.displayName)
+                    ForEach(MasteryItemType.allCases, id: \.self) { type in
                         HStack {
-                            Text(item.itemName).foregroundStyle(item.textColor)
-                            Spacer()
-                            Text("\(item.itemXP)").foregroundStyle(item.textColor)
+                            Text(type.rawValue)
+                            let items = viewModel.items[type] ?? []
+                            Text("\(viewModel.items[type]?.count ?? 0)")
+                                    NavigationLink("Expand") {
+                                        ScrollView {
+                                            ForEach(items) { ProfileItemCard(item: $0) }
+                                        }
+                            }
                         }
                     }
+                    Spacer()
+                } else {
+                    Text(viewModel.networkText)
+                    ProgressView()
                 }
-            } else {
-                ProgressView()
             }
-        }
-        .task {
-            viewModel.fetchProfile()
+            .padding()
+            .navigationTitle("Profile")
+            .task {
+                await viewModel.fetchProfileMock()
+            }.refreshable {
+                await viewModel.fetchProfile()
+            }
         }
     }
 }

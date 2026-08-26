@@ -12,7 +12,11 @@ enum APIError: Error {
     case invalidResponse
 }
 
-final class APIManager {
+protocol ServiceProtocol {
+    func fetch<T: Decodable>(_ endpoint: Endpoint) async throws -> T
+}
+
+final class APIManager: ServiceProtocol {
     private let session: URLSession
     private let decoder: JSONDecoder
 
@@ -38,16 +42,14 @@ final class APIManager {
         }
         self.decoder = decoder
     }
-
-    func fetch<T: Decodable>(_ endpoint: Endpoint) -> AnyPublisher<T, Error> {
-        session.dataTaskPublisher(for: endpoint.url)
-            .tryMap { data, response in
-                guard let httpResponse = response as? HTTPURLResponse, (200..<300).contains(httpResponse.statusCode) else {
-                    throw APIError.invalidResponse
-                }
-                return data
-            }
-            .decode(type: T.self, decoder: decoder)
-            .eraseToAnyPublisher()
+    
+    func fetch<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
+        let (data, response) = try await session.data(from: endpoint.url)
+        
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw APIError.invalidResponse
+        }
+        
+        return try decoder.decode(T.self, from: data)
     }
 }

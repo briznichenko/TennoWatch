@@ -9,19 +9,17 @@ def escape_swift_string(s: str) -> str:
 
 
 def build_swift_dict(data: dict, key_field: str = "InternalName") -> dict:
-    # Swapped: the value pulled from the JSON (InternalName) becomes the Swift
-    # dictionary KEY, and the outer JSON key becomes the Swift dictionary VALUE.
     result = {}
     for outer_key, obj in data.items():
         if not isinstance(obj, dict):
-            print(f"warning: skipping '{outer_key}' — value is not an object", file=sys.stderr)
+            print(f"skipping '{outer_key}' — value is not an object", file=sys.stderr)
             continue
         if key_field not in obj:
-            print(f"warning: skipping '{outer_key}' — missing '{key_field}'", file=sys.stderr)
+            print(f"skipping '{outer_key}' — missing '{key_field}'", file=sys.stderr)
             continue
         internal_name = obj[key_field]
         if internal_name in result:
-            print(f"warning: duplicate key '{internal_name}' (from '{outer_key}') overwrites previous value '{result[internal_name]}'", file=sys.stderr)
+            print(f"duplicate key '{internal_name}' (from '{outer_key}') overwrites previous value '{result[internal_name]}'", file=sys.stderr)
         result[internal_name] = outer_key
     return result
 
