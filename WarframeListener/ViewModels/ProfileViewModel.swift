@@ -13,7 +13,7 @@ struct MasteryItem: Identifiable {
     private(set) var item: Weapon
     let id = UUID()
     
-    var itemName: String { item.type.components(separatedBy: "/").last ?? "" }
+    var itemName: String { ExternalData.persistentItemNames[item.type.components(separatedBy: "/").last ?? ""] ?? ""}
     var itemXP: Int { item.xp ?? 0 }
     var textColor: Color { itemXP > 0 ? .green : .red }
 }
