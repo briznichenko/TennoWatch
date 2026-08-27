@@ -31,6 +31,7 @@ final class ProfileViewModel {
     private(set) var networkText: String = ""
     private(set) var isLoading = false
     private(set) var items: [MasteryItemType: [MasteryItem]] = [:]
+    private(set) var catalogs: [Catalog] = []
 
     private let playerId: String
     private let apiManager: APIManager
@@ -54,6 +55,28 @@ final class ProfileViewModel {
         }
     }
     
+    func fetchCatalog(filename: String = "masterycatalog") async {
+        guard let url = Bundle.main.url(forResource: filename, withExtension: "json") else {
+            networkText = "wrong \(filename)"
+                return
+            }
+            do {
+                let data = try Data(contentsOf: url)
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .iso8601
+                let catalogContainer = try decoder.decode(CatalogContainer.self, from: data)
+                filterCatalogItems(catalogContainer.items)
+            } catch let DecodingError.keyNotFound(key, context) {
+                networkText = "Missing Key: \(key.stringValue), Path: \(context.codingPath)"
+            } catch let DecodingError.typeMismatch(type, context) {
+                networkText = "Type Mismatch: \(type), Path: \(context.codingPath)"
+            } catch let DecodingError.valueNotFound(value, context) {
+                networkText = "Value Null: \(value), Path: \(context.codingPath)"
+            } catch {
+                networkText = "Error: \(error)"
+            }
+    }
+    
     func fetchProfileMock(filename: String = "ProfileData") async {
         guard let url = Bundle.main.url(forResource: filename, withExtension: "json") else {
                 return
@@ -68,11 +91,17 @@ final class ProfileViewModel {
             }
     }
     
+    private func filterCatalogItems(_ catalogItems: [CatalogItem]) {
+        CatalogItem.Category.allCases.forEach { category in
+            let catalog = Catalog(category: category, items: catalogItems.filter { $0.category == category })
+            catalogs.append(catalog)
+        }
+    }
+    
     private func filterItems() {
         let xpItems = profile?.stats.weapons
             .sorted { ($0.xp ?? 0) < ($1.xp ?? 0) }
             .map { MasteryItem(item: $0) } ?? []
-        print(xpItems.map { $0.itemType })
         var weapons: [MasteryItem] = []
         var warframes: [MasteryItem] = []
         var other: [MasteryItem] = []

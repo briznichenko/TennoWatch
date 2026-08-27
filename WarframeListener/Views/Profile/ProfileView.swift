@@ -16,35 +16,51 @@ struct ProfileView: View {
 
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(alignment: .leading) {
+                Text(viewModel.networkText)
                 if let profile = viewModel.profile?.results.first {
-                    Text(profile.displayName)
-                    ForEach(MasteryItemType.allCases, id: \.self) { type in
-                        HStack {
-                            Text(type.rawValue)
-                            let items = viewModel.items[type] ?? []
-                            Text("\(viewModel.items[type]?.count ?? 0)")
-                                    NavigationLink("Expand") {
-                                        ScrollView {
-                                            ForEach(items) { ProfileItemCard(item: $0) }
-                                        }
-                            }
-                        }
-                    }
-                    Spacer()
+                    makeProfileView(profile)
                 } else {
-                    Text(viewModel.networkText)
                     ProgressView()
                 }
+                Text("Catalog").font(.title)
+                makeCatalogView()
+                Spacer()
             }
             .padding()
             .navigationTitle("Profile")
             .task {
                 await viewModel.fetchProfileMock()
+                await viewModel.fetchCatalog()
             }.refreshable {
                 await viewModel.fetchProfile()
             }
         }
+    }
+    
+    @ViewBuilder
+    private func makeCatalogView() -> some View {
+        ForEach(viewModel.catalogs) { catalog in
+            HStack {
+                Text(catalog.category.rawValue)
+                Text("\(catalog.items.count)")
+                    .font(.subheadline)
+                    .foregroundStyle(.cyan)
+                Spacer()
+                NavigationLink("Expand") {
+                    ScrollView {
+                        ForEach(catalog.items) {
+                            CatalogItemCard(item: $0) }
+                    }
+                }
+            }
+        }
+    }
+        
+    @ViewBuilder
+    private func makeProfileView(_ profile: ProfileInfoModel) -> some View {
+        Text(profile.displayName)
+        Spacer()
     }
 }
 
