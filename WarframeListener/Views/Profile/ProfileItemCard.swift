@@ -11,18 +11,20 @@ struct ProfileItemCard: View {
     
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerSize: .init(width: 10, height: 10)).stroke(style: .init())
+            RoundedRectangle(cornerSize: .init(width: 10, height: 10))
+                .foregroundStyle(item.isMastered ? .green : .red)
             HStack {
                 Text(item.itemName)
-                    .foregroundStyle(item.textColor)
                 Spacer()
                 Text("\(item.itemXP)")
-                    .foregroundStyle(item.textColor)
-            }
+                    .foregroundStyle(item.isMastered ? .green : .red)
+            }.background(
+                in: Rectangle()
+            )
         }
     }
 }
 
 #Preview {
-    ProfileItemCard(item: .init(item: .init(equipTime: .none, headshots: .none, hits: .none, assists: .none, kills: .none, xp: 0, type: "Type", fired: 0)))
+    ProfileItemCard(item: .stub)
 }

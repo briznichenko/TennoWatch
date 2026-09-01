@@ -7,7 +7,6 @@
 
 import Combine
 import Foundation
-import SwiftUI
 
 enum MasteryItemType: String, CaseIterable {
     case weapon = "Weapons"
@@ -22,7 +21,9 @@ struct MasteryItem: Identifiable {
     var itemName: String { ExternalData.persistentItemNames[item.type] ?? item.type}
     var itemType: String { item.type }
     var itemXP: Int { item.xp ?? 0 }
-    var textColor: Color { itemXP > 0 ? .green : .red }
+    var isMastered: Bool { itemXP > 0 }
+    
+    static let stub = MasteryItem(item: .init(equipTime: 1, headshots: 20, hits: 10, assists: 5, kills: 20, xp: 3000, type: "Type", fired: 100))
 }
 
 @Observable
@@ -32,6 +33,10 @@ final class ProfileViewModel {
     private(set) var isLoading = false
     private(set) var items: [MasteryItemType: [MasteryItem]] = [:]
     private(set) var catalogs: [Catalog] = []
+    
+    var displayName: String {
+        profile?.results.first?.displayName ?? "Unknown"
+    }
 
     private let playerId: String
     private let apiManager: APIManager

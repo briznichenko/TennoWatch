@@ -17,12 +17,9 @@ struct ProfileView: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading) {
+                Text(viewModel.displayName)
+                    .font(.title)
                 Text(viewModel.networkText)
-                if let profile = viewModel.profile?.results.first {
-                    makeProfileView(profile)
-                } else {
-                    ProgressView()
-                }
                 Text("Catalog").font(.title)
                 makeCatalogView()
                 Spacer()
@@ -40,27 +37,9 @@ struct ProfileView: View {
     
     @ViewBuilder
     private func makeCatalogView() -> some View {
-        ForEach(viewModel.catalogs) { catalog in
-            HStack {
-                Text(catalog.category.rawValue)
-                Text("\(catalog.items.count)")
-                    .font(.subheadline)
-                    .foregroundStyle(.cyan)
-                Spacer()
-                NavigationLink("Expand") {
-                    ScrollView {
-                        ForEach(catalog.items) {
-                            CatalogItemCard(item: $0) }
-                    }
-                }
-            }
+        List(viewModel.catalogs) { catalog in
+            CategoryView(catalog: catalog)
         }
-    }
-        
-    @ViewBuilder
-    private func makeProfileView(_ profile: ProfileInfoModel) -> some View {
-        Text(profile.displayName)
-        Spacer()
     }
 }
 
