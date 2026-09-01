@@ -20,25 +20,15 @@ struct ProfileView: View {
                 Text(viewModel.displayName)
                     .font(.title)
                 Text(viewModel.networkText)
-                Text("Catalog").font(.title)
-                makeCatalogView()
                 Spacer()
             }
             .padding()
             .navigationTitle("Profile")
             .task {
-                await viewModel.fetchProfileMock()
-                await viewModel.fetchCatalog()
+                await viewModel.fetchProfile(isMock: true)
             }.refreshable {
                 await viewModel.fetchProfile()
             }
-        }
-    }
-    
-    @ViewBuilder
-    private func makeCatalogView() -> some View {
-        List(viewModel.catalogs) { catalog in
-            CategoryView(catalog: catalog)
         }
     }
 }

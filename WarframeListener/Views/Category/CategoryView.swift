@@ -12,11 +12,12 @@ struct CategoryView: View {
     
     var body: some View {
         HStack {
-            Text(catalog.category.rawValue)
+            Text(catalog.category.displayName.uppercased())
             Text("\(catalog.items.count)")
                 .font(.subheadline)
                 .foregroundStyle(.cyan)
             Spacer()
+            Image(systemName: "chevron.forward")
         }
     }
 }

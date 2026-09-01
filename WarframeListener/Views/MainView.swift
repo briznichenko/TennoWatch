@@ -13,6 +13,9 @@ struct MainView: View {
             Tab("World state", systemImage: "globe.europe.africa") {
                 InvasionsView()
             }
+            Tab("Mastery", systemImage: "trophy") {
+                MasteryView()
+            }
             Tab("Profile", systemImage: "person") {
                 ProfileView()
             }

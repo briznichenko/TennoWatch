@@ -10,9 +10,9 @@ import SwiftData
 
 @Model
 final class InventoryItem {
-    private(set) var item: Weapon
+    private(set) var item: ProfileItem
     
-    init(item: Weapon) {
+    init(item: ProfileItem) {
         self.item = item
     }
 }

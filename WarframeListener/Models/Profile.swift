@@ -302,7 +302,7 @@ struct ResultMission: Codable {
 // MARK: - Stats
 
 struct Stats: Codable {
-    let weapons: [Weapon]
+    let weapons: [ProfileItem]
     
     enum CodingKeys: String, CodingKey {
         case weapons = "Weapons"
@@ -317,7 +317,7 @@ struct StatsComplex: Codable {
     let fishCount: Int
     let deaths: Int
     let rating: Int
-    let weapons: [Weapon]
+    let weapons: [ProfileItem]
     let healCount: Int
     let income: Int
     let meleeKills: Int
@@ -334,14 +334,4 @@ struct StatsComplex: Codable {
     let guildName: String
 }
 
-// MARK: - Weapon
-struct Weapon: Codable {
-    let equipTime: Double?
-    let headshots: Int?
-    let hits: Int?
-    let assists: Int?
-    let kills: Int?
-    let xp: Int?
-    let type: String
-    let fired: Int?
-}
+

@@ -1,22 +1,23 @@
 //
-//  ProfileItemCard.swift
+//  MasteryItemView.swift
 //  WarframeListener
 //
-//  Created by Andrii Bryzhnychenko on 8/26/26.
+//  Created by Andrii Bryzhnychenko on 9/1/26.
 //
+
 import SwiftUI
 
-struct ProfileItemCard: View {
-    let item: MasteryItem
+struct MasteryItemView: View {
+    let item: MasteryItemViewModel
     
     var body: some View {
         ZStack {
             RoundedRectangle(cornerSize: .init(width: 10, height: 10))
                 .foregroundStyle(item.isMastered ? .green : .red)
             HStack {
-                Text(item.itemName)
+                Text(item.name)
                 Spacer()
-                Text("\(item.itemXP)")
+                Text("\(item.xp)")
                     .foregroundStyle(item.isMastered ? .green : .red)
             }.background(
                 in: Rectangle()
@@ -26,5 +27,5 @@ struct ProfileItemCard: View {
 }
 
 #Preview {
-    ProfileItemCard(item: .stub)
+    MasteryItemView(item: .stub)
 }
