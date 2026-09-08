@@ -22,15 +22,9 @@ final class MasteryViewModel {
         self.catalogRepository = catalogRepository
     }
     
-    func fetchAll() async {
-        await fetchCatalog()
-        await fetchProfile()
-    }
-    
     func fetchCatalog() async {
         do {
-            let items = try await catalogRepository.getCatalog().items
-            catalogs = filterCatalogItemModels(items)
+            catalogs = try await catalogRepository.getCatalogs()
         } catch {
             statusText = error.localizedDescription
         }
@@ -46,40 +40,9 @@ final class MasteryViewModel {
 
         do {
             let profile = try await profileRepository.getProfile(withPlayerId: .none)
-            setProfileItemModels(profile.items)
+            catalogs = try await catalogRepository.syncCatalogs(with: profile)
         } catch {
             statusText = error.localizedDescription
-        }
-    }
-    
-    private func setProfileItemModels(_ items: [ProfileItemModel]) {
-        let itemsDictionary: [String: ProfileItemModel] = items.map { [$0.type: $0] }.reduce(into: [:]) { result, dict in
-            for (key, value) in dict {
-                result[key] = value
-            }
-        }
-        catalogs.indices.forEach { index in
-            let unsyncedItems = catalogs[index].masteryItems
-            var syncedItems: [MasteryItemContainer] = []
-            
-            unsyncedItems.forEach {
-                let profileItem = itemsDictionary[$0.catalogItem.uniqueName]
-                syncedItems.append(.init(catalogItem: $0.catalogItem, profileItem: profileItem))
-            }
-            catalogs[index].set(masteryItems: syncedItems.sorted {
-                $0.catalogItem.name < $1.catalogItem.name
-            })
-        }
-    }
-    
-    private func filterCatalogItemModels(_ catalogItems: [CatalogItemModel]) -> [CatalogContainer] {
-        var catalogs: [CatalogContainer] = []
-        CatalogItemModel.Category.allCases.forEach { category in
-            let category = Category(category: category, items: catalogItems.filter { $0.category == category })
-            catalogs.append(.init(category: category))
-        }
-        return catalogs.sorted {
-            $0.category.category.displayName < $1.category.category.displayName
         }
     }
 }

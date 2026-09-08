@@ -14,18 +14,18 @@ final class MasteryItemViewModel: Identifiable {
         case mastered, unmastered, partiallyMastered, unobtainable
     }
     
-    private let item: MasteryItemContainer
+    private let item: MasteryItem
     let id = UUID()
     
-    var name: String { item.catalogItem.name }
-    var type: String { item.catalogItem.category.displayName }
-    var uniqueName: String { item.catalogItem.uniqueName }
-    var xp: Int { item.profileItem?.xp ?? 0 }
+    var name: String { item.catalogItemModel.name }
+    var type: String { item.catalogItemModel.category.displayName }
+    var uniqueName: String { item.catalogItemModel.uniqueName }
+    var xp: Int { item.profileItemModel?.xp ?? 0 }
     var rank: Int {
-        let calculatedRank = Int(Double(xp / item.catalogItem.xpPerRankSq).squareRoot())
-        return min(calculatedRank, item.catalogItem.maxRank)
+        let calculatedRank = Int(Double(xp / item.catalogItemModel.xpPerRankSq).squareRoot())
+        return min(calculatedRank, item.catalogItemModel.maxRank)
     }
-    var maxRank: Int { item.catalogItem.maxRank }
+    var maxRank: Int { item.catalogItemModel.maxRank }
     var rankText: String { "Rank: \(rank)/\(maxRank)" }
     
     var iconName: String {
@@ -38,15 +38,15 @@ final class MasteryItemViewModel: Identifiable {
     }
     
     var state: State {
-        guard item.catalogItem.obtainable else { return .unobtainable }
+        guard item.catalogItemModel.obtainable else { return .unobtainable }
         return switch rank {
         case 0: .unmastered
-        case item.catalogItem.maxRank: .mastered
+        case item.catalogItemModel.maxRank: .mastered
         default: .partiallyMastered
         }
     }
     
-    init(item: MasteryItemContainer) {
+    init(item: MasteryItem) {
         self.item = item
     }
 }

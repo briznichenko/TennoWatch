@@ -12,11 +12,11 @@ struct MasteryItemListView: View {
     
     var body: some View {
         NavigationStack {
-            List(catalogContainer.masteryItems) { item in
+            List(catalogContainer.masteryItems, id: \.self) { item in
                 MasteryItemView(viewModel: .init(item: item))
                     .listRowSeparatorTint(.accent)
             }.listStyle(.inset)
-                .navigationTitle(catalogContainer.category.category.displayName.uppercased())
+                .navigationTitle(catalogContainer.category.displayName.uppercased())
         }
     }
 }

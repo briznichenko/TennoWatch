@@ -12,7 +12,7 @@ struct MasteryCategoryView: View {
     
     var body: some View {
         HStack {
-            Text(catalogContainer.category.category.displayName.uppercased())
+            Text(catalogContainer.category.displayName.uppercased())
             Text(catalogContainer.countText)
                 .font(.subheadline)
                 .foregroundStyle(.accent)

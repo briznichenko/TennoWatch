@@ -18,7 +18,7 @@ struct MasteryCatalogContainer: NetworkModel {
     let items: [CatalogItemModel]
 }
 
-struct CatalogItemModel: Codable, Hashable, Identifiable {
+struct CatalogItemModel: Codable, Hashable, Identifiable, Equatable {
     enum Category: String, CaseIterable, Codable {
         case suits = "Suits"
         case spaceSuits = "SpaceSuits"

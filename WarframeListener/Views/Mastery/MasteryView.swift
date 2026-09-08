@@ -27,12 +27,10 @@ struct MasteryView: View {
             }
             .navigationTitle("Mastery")
             .task {
-                await viewModel.fetchAll()
+                await viewModel.fetchCatalog()
             }.refreshable {
-                await viewModel.fetchAll()
+                await viewModel.fetchProfile()
             }
         }
     }
 }
-
-

@@ -45,7 +45,7 @@ struct Profile: PersistentModelConvertible {
     let lastUpdated: Date
 }
 
-struct ProfileItemModel: Codable, Hashable {
+struct ProfileItemModel: Codable, Hashable, Equatable {
     let equipTime: Double?
     let headshots: Int?
     let hits: Int?
