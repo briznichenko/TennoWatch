@@ -7,20 +7,20 @@
 
 import Foundation
 
-struct ArchimedeaMissionDifficultyRisk: Decodable {
+struct ArchimedeaMissionDifficultyRisk: NetworkModel {
     let description: String
     let isHard: Bool
     let key: String
     let name: String
 }
 
-struct ArchimedeaMissionDifficulty: Decodable {
+struct ArchimedeaMissionDifficulty: NetworkModel {
     let description: String
     let key: String
     let name: String
 }
 
-struct ExternalMission: Decodable {
+struct ExternalMission: NetworkModel {
     let activation: Date
     let archwing: Bool
     let enemy: String?
@@ -34,7 +34,7 @@ struct ExternalMission: Decodable {
     let typeKey: String
 }
 
-struct ArchimedeaMission: Decodable {
+struct ArchimedeaMission: NetworkModel {
     let deviation: ArchimedeaMissionDifficulty
     let faction: String
     let factionKey: String
@@ -43,13 +43,13 @@ struct ArchimedeaMission: Decodable {
     let risks: [ArchimedeaMissionDifficultyRisk]
 }
 
-struct PersonalModifier: Decodable {
+struct PersonalModifier: NetworkModel {
     let description: String
     let key: String
     let name: String
 }
 
-struct Archimedea: Decodable {
+struct Archimedea: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -59,7 +59,7 @@ struct Archimedea: Decodable {
     let typeKey: String
 }
 
-struct Alert: Decodable {
+struct Alert: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -68,17 +68,17 @@ struct Alert: Decodable {
     let tag: String?
 }
 
-struct InterimStep: Decodable {
+struct InterimStep: NetworkModel {
     let goal: Double
     let reward: Reward?
     let winnerCount: Double?
 }
 
-struct RewardDrop: Decodable {
+struct RewardDrop: NetworkModel {
     let count: Double
 }
 
-struct SyndicateJob: Decodable {
+struct SyndicateJob: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -94,12 +94,12 @@ struct SyndicateJob: Decodable {
     let uniqueName: String
 }
 
-struct ProgressStep: Decodable {
+struct ProgressStep: NetworkModel {
     let `type`: String
     let progressAmt: Double
 }
 
-struct WorldEvent: Decodable {
+struct WorldEvent: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -136,7 +136,7 @@ struct WorldEvent: Decodable {
     let victimNode: String?
 }
 
-struct GameCalendar: Decodable {
+struct GameCalendar: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -146,7 +146,7 @@ struct GameCalendar: Decodable {
     let yearIteration: Double
 }
 
-struct CambionCycle: Decodable {
+struct CambionCycle: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -154,7 +154,7 @@ struct CambionCycle: Decodable {
     let timeLeft: String
 }
 
-struct CetusCycle: Decodable {
+struct CetusCycle: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -164,7 +164,7 @@ struct CetusCycle: Decodable {
     let timeLeft: String
 }
 
-struct VallisCycle: Decodable {
+struct VallisCycle: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -172,7 +172,7 @@ struct VallisCycle: Decodable {
     let state: String
 }
 
-struct EarthCycle: Decodable {
+struct EarthCycle: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -181,7 +181,7 @@ struct EarthCycle: Decodable {
     let timeLeft: String
 }
 
-struct ZarimanCycle: Decodable {
+struct ZarimanCycle: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -192,7 +192,7 @@ struct ZarimanCycle: Decodable {
     let timeLeft: String
 }
 
-struct CurrentZarimanCycle: Decodable {
+struct CurrentZarimanCycle: NetworkModel {
     let isCorpus: Bool
     let timeLeft: String
     let expiry: Date
@@ -201,7 +201,7 @@ struct CurrentZarimanCycle: Decodable {
     let start: Double
 }
 
-struct ClanReward: Decodable {
+struct ClanReward: NetworkModel {
     let rewardClaimed: Bool
     let pointThreshold: Double
     let itemCount: Double
@@ -215,7 +215,7 @@ struct ClanReward: Decodable {
     }
 }
 
-struct ClanInitiativeRewards: Decodable {
+struct ClanInitiativeRewards: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -225,7 +225,7 @@ struct ClanInitiativeRewards: Decodable {
     let week: Double
 }
 
-struct ConclaveChallenge: Decodable {
+struct ConclaveChallenge: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -240,7 +240,7 @@ struct ConclaveChallenge: Decodable {
     let title: String?
 }
 
-struct ConstructionProgress: Decodable {
+struct ConstructionProgress: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -249,7 +249,7 @@ struct ConstructionProgress: Decodable {
     let unknownProgress: String
 }
 
-struct DailyDeal: Decodable {
+struct DailyDeal: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -262,7 +262,7 @@ struct DailyDeal: Decodable {
     let uniqueName: String
 }
 
-struct DarkSectorBattle: Decodable {
+struct DarkSectorBattle: NetworkModel {
     let attacker: String
     let attackerIsAlliance: Bool
     let defender: String
@@ -272,7 +272,7 @@ struct DarkSectorBattle: Decodable {
     let winner: String
 }
 
-struct DarkSector: Decodable {
+struct DarkSector: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -301,13 +301,13 @@ struct DarkSector: Decodable {
     let taxChangedByClan: String
 }
 
-struct DuviriChoice: Decodable {
+struct DuviriChoice: NetworkModel {
     let category: String
     let categoryKey: String
     let choices: [String]
 }
 
-struct DuviriCycle: Decodable {
+struct DuviriCycle: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -315,7 +315,7 @@ struct DuviriCycle: Decodable {
     let state: String
 }
 
-struct Fissure: Decodable {
+struct Fissure: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -330,7 +330,7 @@ struct Fissure: Decodable {
     let tier: String
 }
 
-struct FlashSale: Decodable {
+struct FlashSale: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -343,7 +343,7 @@ struct FlashSale: Decodable {
     let regularOverride: Double?
 }
 
-struct GlobalUpgrade: Decodable {
+struct GlobalUpgrade: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -353,12 +353,12 @@ struct GlobalUpgrade: Decodable {
     let upgradeOperationValue: Double
 }
 
-struct Kinepage: Decodable {
+struct Kinepage: NetworkModel {
     let message: String
     let timestamp: Date
 }
 
-struct Mission: Decodable {
+struct Mission: NetworkModel {
     let advancedSpawners: [String]
     let archwingRequired: Bool
     let consumeRequiredItems: Bool?
@@ -385,7 +385,7 @@ struct Mission: Decodable {
     let typeKey: String
 }
 
-struct SortieVariant: Decodable {
+struct SortieVariant: NetworkModel {
     let missionType: String
     let missionTypeKey: String
     let modifier: String
@@ -394,7 +394,7 @@ struct SortieVariant: Decodable {
     let nodeKey: String
 }
 
-struct Sortie: Decodable {
+struct Sortie: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -406,7 +406,7 @@ struct Sortie: Decodable {
     let variants: [SortieVariant]
 }
 
-struct News: Decodable {
+struct News: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -421,7 +421,7 @@ struct News: Decodable {
     let update: Bool
 }
 
-struct NightwaveChallenge: Decodable {
+struct NightwaveChallenge: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -433,7 +433,7 @@ struct NightwaveChallenge: Decodable {
     let title: String
 }
 
-struct Nightwave: Decodable {
+struct Nightwave: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -444,13 +444,13 @@ struct Nightwave: Decodable {
     let tag: String
 }
 
-struct OutpostMission: Decodable {
+struct OutpostMission: NetworkModel {
     let node: String
     let faction: String
     let `type`: String
 }
 
-struct SentientOutpost: Decodable {
+struct SentientOutpost: NetworkModel {
     let activation: Date
     let active: Bool
     let expiry: Date
@@ -458,7 +458,7 @@ struct SentientOutpost: Decodable {
     let mission: OutpostMission?
 }
 
-struct PersistentEnemy: Decodable {
+struct PersistentEnemy: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -474,18 +474,18 @@ struct PersistentEnemy: Decodable {
     let rank: Double
 }
 
-struct Simaris: Decodable {
+struct Simaris: NetworkModel {
     let isTargetActive: Bool
     let target: String
 }
 
-struct SteelPathOfferings: Decodable {
+struct SteelPathOfferings: NetworkModel {
     let activation: Date
     let expiry: Date
     let remaining: String
 }
 
-struct SyndicateMission: Decodable {
+struct SyndicateMission: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -495,7 +495,7 @@ struct SyndicateMission: Decodable {
     let syndicateKey: String
 }
 
-struct ChallengeInstance: Decodable {
+struct ChallengeInstance: NetworkModel {
     let damageType: String?
     let minEnemyLevel: Double
     let progressAmount: Double
@@ -504,26 +504,26 @@ struct ChallengeInstance: Decodable {
     let `type`: String
 }
 
-struct WeeklyChallenge: Decodable {
+struct WeeklyChallenge: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
     let challenges: [ChallengeInstance]
 }
 
-struct VoidTraderItem: Decodable {
+struct VoidTraderItem: NetworkModel {
     let credits: Double?
     let ducats: Double?
     let item: String
     let uniqueName: String
 }
 
-struct VoidTraderSchedule: Decodable {
+struct VoidTraderSchedule: NetworkModel {
     let expiry: Date
     let item: String
 }
 
-struct VoidTrader: Decodable {
+struct VoidTrader: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
@@ -536,7 +536,7 @@ struct VoidTrader: Decodable {
     let schedule: [VoidTraderSchedule]
 }
 
-struct WorldState: Decodable {
+struct WorldState: NetworkModel {
     let alerts: [Alert]
     let arbitration: ExternalMission?
     let archimedeas: [Archimedea]

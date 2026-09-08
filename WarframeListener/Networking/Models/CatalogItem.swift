@@ -1,5 +1,5 @@
 //
-//  CatalogItem.swift
+//  CatalogItemModel.swift
 //  WarframeListener
 //
 //  Created by Andrii Bryzhnychenko on 8/24/26.
@@ -7,23 +7,19 @@
 
 import Foundation
 
-struct CatalogContainer: Decodable {
-    let schemaVersion: Int
+typealias NetworkModel = Decodable
+
+struct MasteryCatalogContainer: NetworkModel {
+    let schemaVersion: Double
     let gameVersion: String
     let generatedAt: Date
     let totalMasteryMax: Int
     let obtainableMasteryMax: Int
-    let items: [CatalogItem]
+    let items: [CatalogItemModel]
 }
 
-struct Catalog: Identifiable {
-    let id = UUID()
-    let category: CatalogItem.Category
-    let items: [CatalogItem]
-}
-
-struct CatalogItem: Decodable, Hashable, Identifiable {
-    enum Category: String, CaseIterable, Decodable {
+struct CatalogItemModel: Codable, Hashable, Identifiable {
+    enum Category: String, CaseIterable, Codable {
         case suits = "Suits"
         case spaceSuits = "SpaceSuits"
         case mechSuits = "MechSuits"
@@ -104,6 +100,4 @@ struct CatalogItem: Decodable, Hashable, Identifiable {
     let icon: String?
     let obtainable: Bool
     let requiresGilding: Bool
-    
-    static let stub: Self = .init(uniqueName: "Name", name: "Name", category: .amp, maxRank: 100, pointsPerRank: 100, xpPerRankSq: 100, icon: .none, obtainable: true, requiresGilding: false)
 }

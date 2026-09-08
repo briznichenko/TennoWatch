@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Invasion: Decodable, Identifiable {
+struct Invasion: NetworkModel, Identifiable {
     let id: String
     let activation: Date
     let node: String
@@ -23,13 +23,13 @@ struct Invasion: Decodable, Identifiable {
     let rewardTypes: [String]
 }
 
-struct Faction: Decodable {
+struct Faction: NetworkModel {
     let reward: Reward?
     let faction: String
     let factionKey: String
 }
 
-struct Reward: Decodable {
+struct Reward: NetworkModel {
     let items: [String]
     let countedItems: [CountedItem]
     let credits: Int
@@ -59,7 +59,7 @@ struct Reward: Decodable {
     }
 }
 
-struct CountedItem: Decodable {
+struct CountedItem: NetworkModel {
     let count: Int
     let type: String
     let key: String

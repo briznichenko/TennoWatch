@@ -11,7 +11,7 @@ protocol EndpointProtocol {
     var baseURL: URL { get }
     var path: String { get }
     var queryItems: [URLQueryItem] { get }
-    var url: URL { get }
+    var url: URL { get throws }
 }
 
 enum Platform: String {
@@ -27,39 +27,53 @@ enum Endpoint: EndpointProtocol {
     case worldState(platform: Platform)
     case catalog(ItemCategory)
     case profile(playerId: String)
-    
+
     var baseURL: URL {
         switch self {
-        case .invasions, .catalog(_:), .worldState(platform:):
+        case .invasions, .catalog, .worldState:
             URL("https://api.warframestat.us")
-        case .profile(playerId:):
-            URL("https://api.warframe.com/cdn/getProfileViewingData.php")
+
+        case .profile:
+            URL("https://api.warframe.com")
         }
     }
-    
+
     var path: String {
         switch self {
         case .invasions:
             "pc/invasions"
+
         case .worldState(let platform):
             platform.rawValue
+
         case .catalog(let category):
             category.rawValue
-        case .profile(let playerId):
-            ""
+
+        case .profile:
+            "cdn/getProfileViewingData.php"
         }
     }
-    
+
     var queryItems: [URLQueryItem] {
         switch self {
-        case .profile(let playerId):
-            [URLQueryItem(name: "playerId", value: playerId)]
-        default:
-            []
+        case .profile(let playerId): [URLQueryItem(name: "playerId", value: playerId)]
+        default: []
         }
     }
 
     var url: URL {
-        baseURL.appending(path: path).appending(queryItems: queryItems)
+        get throws {
+            var components = URLComponents(
+                url: baseURL.appending(path: path),
+                resolvingAgainstBaseURL: false
+            )
+            
+            components?.queryItems = queryItems
+            
+            guard let url = components?.url else {
+                throw URLError(.badURL)
+            }
+            return url
+        }
     }
 }

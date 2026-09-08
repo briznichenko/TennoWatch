@@ -8,24 +8,29 @@
 import SwiftUI
 
 struct MasteryItemView: View {
-    let item: MasteryItemViewModel
+    private struct Constants {
+        static let imageHeight = 35.0
+        static let padding = 5.0
+    }
+    
+    let viewModel: MasteryItemViewModel
     
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerSize: .init(width: 10, height: 10))
-                .foregroundStyle(item.isMastered ? .green : .red)
-            HStack {
-                Text(item.name)
-                Spacer()
-                Text("\(item.xp)")
-                    .foregroundStyle(item.isMastered ? .green : .red)
-            }.background(
-                in: Rectangle()
-            )
+        HStack {
+            Image(systemName: viewModel.iconName)
+                .resizable().aspectRatio(1, contentMode: .fit)
+                .foregroundStyle(.accent)
+                .frame(height: Constants.imageHeight)
+                .padding(.vertical, Constants.padding)
+            VStack(alignment: .leading) {
+                Text(viewModel.name)
+                HStack {
+                    Text(viewModel.rankText)
+                    Divider()
+                    Text("\(viewModel.xp) xp")
+                }
+            }
+            Spacer()
         }
     }
-}
-
-#Preview {
-    MasteryItemView(item: .stub)
 }

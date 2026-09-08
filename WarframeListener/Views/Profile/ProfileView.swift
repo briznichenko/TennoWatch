@@ -9,14 +9,19 @@ import SwiftUI
 
 struct ProfileView: View {
     @State private var viewModel: ProfileViewModel
-
-    init(playerId: String = "523b73b91a4d806878000000") {
-        _viewModel = State(initialValue: ProfileViewModel(playerId: playerId))
+    
+    init(viewModel: ProfileViewModel) {
+        self.viewModel = viewModel
     }
 
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading) {
+                TextField("Player Id", text: $viewModel.playerId).onSubmit {
+                    Task {
+                        await viewModel.fetchProfile()
+                    }
+                }
                 Text(viewModel.displayName)
                     .font(.title)
                 Text(viewModel.networkText)
@@ -25,7 +30,7 @@ struct ProfileView: View {
             .padding()
             .navigationTitle("Profile")
             .task {
-                await viewModel.fetchProfile(isMock: true)
+                await viewModel.fetchProfile()
             }.refreshable {
                 await viewModel.fetchProfile()
             }
@@ -34,5 +39,5 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView(playerId: "")
+//    ProfileView()
 }

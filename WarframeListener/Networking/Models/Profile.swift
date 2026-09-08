@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ProfileModel: Codable {
+struct ProfileModel: NetworkModel {
     let results: [ProfileInfoModel]
     let stats: Stats
 
@@ -17,7 +17,7 @@ struct ProfileModel: Codable {
     }
 }
 
-struct ProfileInfoModel: Codable {
+struct ProfileInfoModel: NetworkModel {
     let accountID: ID
     let displayName: String
     
@@ -27,9 +27,7 @@ struct ProfileInfoModel: Codable {
     }
 }
 
-// TODO: - Data unneeded for now
-
-struct ProfileInfoModelComplex: Codable {
+struct ProfileInfoModelComplex: Decodable {
     let accountID: ID
     let displayName: String
     let platformNames: [String]
@@ -125,7 +123,7 @@ struct ID: Codable {
 }
 
 // MARK: - Affiliation
-struct Affiliation: Codable {
+struct Affiliation: Decodable {
     let tag: String
     let standing: Int
     let title: Int
@@ -138,7 +136,7 @@ struct Affiliation: Codable {
 }
 
 // MARK: - Alignment
-struct Alignment: Codable {
+struct Alignment: Decodable {
     let alignment: Double
     let wisdom: Int
 
@@ -149,7 +147,7 @@ struct Alignment: Codable {
 }
 
 // MARK: - ChallengeProgress
-struct ChallengeProgress: Codable {
+struct ChallengeProgress: Decodable {
     let name: String
     let progress: Int
 
@@ -160,7 +158,7 @@ struct ChallengeProgress: Codable {
 }
 
 // MARK: - LoadOutInventory
-struct LoadOutInventory: Codable {
+struct LoadOutInventory: Decodable {
     let weaponSkins: [WeaponSkin]
     let suits: [Suit]
     let pistols: [LongGun]
@@ -177,7 +175,7 @@ struct LoadOutInventory: Codable {
 }
 
 // MARK: - LongGun
-struct LongGun: Codable {
+struct LongGun: Decodable {
     let itemType: String
     let configs: [LongGunConfig]
     let upgradeVer: Int
@@ -204,7 +202,7 @@ struct LongGun: Codable {
 }
 
 // MARK: - LongGunConfig
-struct LongGunConfig: Codable {
+struct LongGunConfig: Decodable {
     let skins: [String]
     let name: String
 
@@ -215,7 +213,7 @@ struct LongGunConfig: Codable {
 }
 
 // MARK: - Polarity
-struct Polarity: Codable {
+struct Polarity: Decodable {
     let slot: Int
     let value: String
 
@@ -226,7 +224,7 @@ struct Polarity: Codable {
 }
 
 // MARK: - Suit
-struct Suit: Codable {
+struct Suit: Decodable {
     let itemType: String
     let features: Int
     let xp: Int
@@ -247,7 +245,7 @@ struct Suit: Codable {
 }
 
 // MARK: - ArchonCrystalUpgrade
-struct ArchonCrystalUpgrade: Codable {
+struct ArchonCrystalUpgrade: Decodable {
     let color: String
     let upgradeType: String
 
@@ -258,7 +256,7 @@ struct ArchonCrystalUpgrade: Codable {
 }
 
 // MARK: - WeaponSkin
-struct WeaponSkin: Codable {
+struct WeaponSkin: Decodable {
     let itemType: String
     let favorite: Bool?
 
@@ -269,7 +267,7 @@ struct WeaponSkin: Codable {
 }
 
 // MARK: - XPInfo
-struct XPInfo: Codable {
+struct XPInfo: Decodable {
     let itemType: String
     let xp: Int
 
@@ -280,7 +278,7 @@ struct XPInfo: Codable {
 }
 
 // MARK: - LoadOutPreset
-struct LoadOutPreset: Codable {
+struct LoadOutPreset: Decodable {
     let focusSchool: String
     let presetIcon: String
     let favorite: Bool
@@ -293,7 +291,7 @@ struct LoadOutPreset: Codable {
 }
 
 // MARK: - ResultMission
-struct ResultMission: Codable {
+struct ResultMission: Decodable {
     let completes: Int
     let tier: Int?
     let tag: String
@@ -301,15 +299,15 @@ struct ResultMission: Codable {
 
 // MARK: - Stats
 
-struct Stats: Codable {
-    let weapons: [ProfileItem]
+struct Stats: NetworkModel {
+    let weapons: [ProfileItemModel]
     
     enum CodingKeys: String, CodingKey {
         case weapons = "Weapons"
     }
 }
 
-struct StatsComplex: Codable {
+struct StatsComplex: Decodable {
     let ciphersFailed: Int
     let ciphersSolved: Int
     let cipherTime: Double
@@ -317,7 +315,7 @@ struct StatsComplex: Codable {
     let fishCount: Int
     let deaths: Int
     let rating: Int
-    let weapons: [ProfileItem]
+    let weapons: [ProfileItemModel]
     let healCount: Int
     let income: Int
     let meleeKills: Int
@@ -333,5 +331,3 @@ struct StatsComplex: Codable {
     let reviveCount: Int
     let guildName: String
 }
-
-

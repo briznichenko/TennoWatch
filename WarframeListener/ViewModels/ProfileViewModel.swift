@@ -10,75 +10,36 @@ import Observation
 
 @Observable
 final class ProfileViewModel {
-    private(set) var profile: ProfileModel?
+    private(set) var profile: Profile?
     private(set) var networkText: String = ""
     private(set) var isLoading = false
-    private(set) var items: [MasteryItemType: [ProfileItem]] = [:]
-    
+    var playerId: String = "523b73b91a4d806878000000"
     var displayName: String {
-        profile?.results.first?.displayName ?? "Unknown"
+        profile?.displayName ?? "Unknown"
     }
 
-    private let playerId: String
-    private let apiManager: APIManager
+    private let profileService: ProfileRepository
 
-    init(playerId: String, apiManager: APIManager = APIManager()) {
-        self.playerId = playerId
-        self.apiManager = apiManager
+    init(profileService: ProfileRepository) {
+        self.profileService = profileService
     }
 
-    func fetchProfile(isMock: Bool = false) async {
-        guard isMock == false else {
-            return await fetchProfileMock()
+    func fetchProfile() async {
+        guard playerId.isEmpty == false else {
+            networkText = "No player ID"
+            return
+        }
+        defer {
+            isLoading = false
         }
         isLoading = true
         networkText = "Loading..."
 
         do {
-            profile = try await apiManager.fetch(.profile(playerId: playerId))
-            filterItems()
+            profile = try await profileService.getProfile(withPlayerId: playerId)
             isLoading = false
         } catch {
             networkText = error.localizedDescription
         }
-    }
-    
-    private func fetchProfileMock(filename: String = "ProfileData") async {
-        guard let url = Bundle.main.url(forResource: filename, withExtension: "json") else {
-                return
-            }
-            do {
-                let data = try Data(contentsOf: url)
-                let decoder = JSONDecoder()
-                profile = try decoder.decode(ProfileModel.self, from: data)
-                filterItems()
-            } catch {
-                networkText = error.localizedDescription
-            }
-    }
-    
-    private func filterItems() {
-//        let xpItems = profile?.stats.weapons
-//            .sorted { ($0.xp ?? 0) < ($1.xp ?? 0) }
-//            .map { MasteryItem(item: $0) } ?? []
-//        var weapons: [Weapon] = []
-//        var warframes: [Weapon] = []
-//        var other: [Weapon] = []
-//        
-//        xpItems.forEach { item in
-//            let comps = item.itemType.components(separatedBy: "/")
-//            if comps.indices.contains(2) {
-//                switch MasteryItemType(rawValue: comps[2]) {
-//                case .weapon: weapons.append(item)
-//                case .warframe: warframes.append(item)
-//                case .other, .none: other.append(item)
-//                }
-//            }
-//        }
-//        items = [
-//            .other: other,
-//            .warframe: warframes,
-//            .weapon: weapons
-//        ]
     }
 }
