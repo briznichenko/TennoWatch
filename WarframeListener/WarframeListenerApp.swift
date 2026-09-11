@@ -10,19 +10,23 @@ import SwiftData
 
 @main
 struct WarframeListenerApp: App {
+    @AppStorage("themePreference") private var themePreference: ThemePreference = .system
+
     private let modelContainer: ModelContainer
     private let dependencies: AppDependencies
 
     init() {
         modelContainer = Self.makeModelContainer()
         dependencies = AppDependencies(modelContainer: modelContainer)
+        AppearanceProxies.configure()
     }
 
     var body: some Scene {
         WindowGroup {
             MainView(dependencies: dependencies)
                 .tint(.accent)
-                .foregroundStyle(.label)
+                .foregroundStyle(Color.label)
+                .preferredColorScheme(themePreference.colorScheme)
         }
         .modelContainer(modelContainer)
     }

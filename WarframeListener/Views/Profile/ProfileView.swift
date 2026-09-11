@@ -9,35 +9,61 @@ import SwiftUI
 
 struct ProfileView: View {
     @State private var viewModel: ProfileViewModel
-    
-    init(viewModel: ProfileViewModel) {
+    @State private var isShowingSettings = false
+
+    private let dependencies: AppDependencies
+
+    init(viewModel: ProfileViewModel, dependencies: AppDependencies) {
         self.viewModel = viewModel
+        self.dependencies = dependencies
     }
 
+    //TODO: - Deconstruct;
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading) {
-                TextField("Player Id", text: $viewModel.playerId).onSubmit {
-                    Task {
-                        await viewModel.fetchProfile()
+                TextField("Player ID", text: $viewModel.playerId)
+                    .foregroundStyle(Color.label)
+                    .onSubmit {
+                        Task {
+                            await viewModel.fetchProfile()
+                        }
                     }
-                }
                 Text(viewModel.displayName)
                     .font(.title)
+                    .foregroundStyle(Color.label)
                 Text(viewModel.networkText)
+                    .foregroundStyle(Color.labelSecondary)
                 Spacer()
             }
             .padding()
+            .screenBackground()
             .navigationTitle("Profile")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        isShowingSettings = true
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
+                }
+            }
+            .sheet(isPresented: $isShowingSettings) {
+                SettingsView(
+                    viewModel: .init(
+                        persistencyService: dependencies.persistencyService,
+                        catalogRepository: dependencies.catalogRepository,
+                        profileRepository: dependencies.profileRepository
+                    ),
+                    displayName: viewModel.displayName
+                )
+            }
             .task {
                 await viewModel.fetchProfile()
-            }.refreshable {
+            }
+            .refreshable {
                 await viewModel.fetchProfile()
             }
         }
     }
-}
-
-#Preview {
-//    ProfileView()
 }

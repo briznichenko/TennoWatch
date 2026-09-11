@@ -8,29 +8,35 @@
 import SwiftUI
 
 struct MasteryItemView: View {
-    private struct Constants {
-        static let imageHeight = 35.0
-        static let padding = 5.0
-    }
-    
     let viewModel: MasteryItemViewModel
-    
+
+    private var textColor: Color {
+        viewModel.isDimmed ? .labelSecondary : .label
+    }
+
+    private var iconStyle: Color {
+        switch viewModel.state {
+        case .mastered: .masteredIcon
+        case .unmastered, .partiallyMastered: .unmasteredIcon
+        case .unobtainable: .lockedIcon
+        }
+    }
+
     var body: some View {
-        HStack {
+        HStack(spacing: 10) {
             Image(systemName: viewModel.iconName)
-                .resizable().aspectRatio(1, contentMode: .fit)
-                .foregroundStyle(.accent)
-                .frame(height: Constants.imageHeight)
-                .padding(.vertical, Constants.padding)
-            VStack(alignment: .leading) {
+                .symbolRenderingMode(.hierarchical)
+                .foregroundStyle(iconStyle)
+                .imageScale(.large)
+            VStack(alignment: .leading, spacing: 2) {
                 Text(viewModel.name)
-                HStack {
-                    Text(viewModel.rankText)
-                    Divider()
-                    Text("\(viewModel.xp) xp")
-                }
+                    .foregroundStyle(textColor)
+                Text(viewModel.detailText)
+                    .font(.caption)
+                    .foregroundStyle(Color.labelSecondary)
             }
             Spacer()
         }
+        .frame(minHeight: 44)
     }
 }

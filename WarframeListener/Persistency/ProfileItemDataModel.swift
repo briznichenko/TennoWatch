@@ -118,6 +118,28 @@ extension MasteryItemDataModel: ValueTypeConvertible {
 struct MasteryItem: Equatable, Hashable {
     let profileItemModel: ProfileItemModel?
     let catalogItemModel: CatalogItemModel
+
+    var xp: Int { profileItemModel?.xp ?? 0 }
+
+    var rank: Int {
+        let calculatedRank = Int(Double(xp) / Double(catalogItemModel.xpPerRankSq).squareRoot())
+        return min(calculatedRank, catalogItemModel.maxRank)
+    }
+
+    var isMastered: Bool { rank >= catalogItemModel.maxRank }
+
+    var earnedMasteryPoints: Int { rank * catalogItemModel.pointsPerRank }
+
+    var remainingMasteryPoints: Int { (catalogItemModel.maxRank - rank) * catalogItemModel.pointsPerRank }
+
+    enum MasteryState: Equatable {
+        case mastered, unmastered, partiallyMastered, unobtainable
+    }
+
+    var masteryState: MasteryState {
+        guard catalogItemModel.obtainable else { return .unobtainable }
+        return isMastered ? .mastered : (rank == 0 ? .unmastered : .partiallyMastered)
+    }
 }
 
 extension MasteryItem: PersistentModelConvertible {
