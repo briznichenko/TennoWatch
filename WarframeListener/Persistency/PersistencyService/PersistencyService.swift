@@ -10,7 +10,8 @@ import SwiftData
 
 protocol PersistencyService {
     func fetchModel<T: ValueTypeConvertible>(by type: T.Type, with descriptor: FetchDescriptor<T>) async throws -> [T.Value]
-    func saveValue<T: PersistentModelConvertible>(value: T) async throws
+    func saveValues<T: PersistentModelConvertible>(_ values: [T]) async throws
+    func saveValue<T: PersistentModelConvertible>(_ value: T) async throws
 }
 
 extension PersistencyService {
@@ -31,9 +32,16 @@ actor DefaultPersistencyService: PersistencyService {
         return values
     }
     
-    func saveValue<T: PersistentModelConvertible>(value: T) async throws {
-        let model = await value.model
-        modelContext.insert(model)
+    func saveValues<T: PersistentModelConvertible>(_ values: [T]) async throws {
+        for item in values {
+            let model = await item.model
+            modelContext.insert(model)
+        }
+        try modelContext.save()
+    }
+    
+    func saveValue<T>(_ value: T) async throws where T : PersistentModelConvertible {
+        await modelContext.insert(value.model)
         try modelContext.save()
     }
 }

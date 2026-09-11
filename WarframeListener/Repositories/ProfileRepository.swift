@@ -43,7 +43,7 @@ final class PersistentProfileRepository: ProfileRepository {
                 displayName: result.displayName,
                 items: fetchedProfile.stats.weapons,
                 lastUpdated: Date())
-            try await persistencyService.saveValue(value: profile)
+            try await persistencyService.saveValue(profile)
             return profile
         } else {
             throw ProfileError.noData
