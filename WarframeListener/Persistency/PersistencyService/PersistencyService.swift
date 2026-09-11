@@ -40,7 +40,7 @@ actor DefaultPersistencyService: PersistencyService {
         try modelContext.save()
     }
     
-    func saveValue<T>(_ value: T) async throws where T : PersistentModelConvertible {
+    func saveValue<T>(_ value: T) async throws where T: PersistentModelConvertible {
         await modelContext.insert(value.model)
         try modelContext.save()
     }

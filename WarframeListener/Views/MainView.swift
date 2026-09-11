@@ -9,8 +9,8 @@ import SwiftUI
 import SwiftData
 
 struct MainView: View {
-    @Environment(\.modelContext) private var modelContext
-    
+    let dependencies: AppDependencies
+
     var body: some View {
         TabView {
             Tab("World state", systemImage: "globe.europe.africa") {
@@ -19,15 +19,8 @@ struct MainView: View {
             Tab("Mastery", systemImage: "trophy") {
                 MasteryView(
                     viewModel: .init(
-                        profileRepository: PersistentProfileRepository(
-                            persistencyService: DefaultPersistencyService(
-                                modelContainer: modelContext.container
-                            )
-                        ), catalogRepository: PersistentCatalogRepository(
-                            persistencyService: DefaultPersistencyService(
-                                modelContainer: modelContext.container
-                            )
-                        )
+                        profileRepository: dependencies.profileRepository,
+                        catalogRepository: dependencies.catalogRepository
                     )
                 )
             }
@@ -36,13 +29,7 @@ struct MainView: View {
             }
             Tab("Profile", systemImage: "person") {
                 ProfileView(
-                    viewModel: .init(
-                        profileService: PersistentProfileRepository(
-                            persistencyService: DefaultPersistencyService(
-                                modelContainer: modelContext.container
-                            )
-                        )
-                    )
+                    viewModel: .init(profileService: dependencies.profileRepository)
                 )
             }
         }
@@ -50,5 +37,6 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView()
+    let container = try! ModelContainer(for: ProfileDataModel.self, MasteryCatalogDataModel.self, configurations: .init(isStoredInMemoryOnly: true))
+    MainView(dependencies: AppDependencies(modelContainer: container))
 }

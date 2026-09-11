@@ -17,7 +17,9 @@ final class ProfileItemDataModel {
     var xp: Int?
     var type: String
     var fired: Int?
-    
+    var profile: ProfileDataModel?
+    var masteryItem: MasteryItemDataModel?
+
     init(profileItem: ProfileItemModel) {
         self.equipTime = profileItem.equipTime
         self.headshots = profileItem.headshots
@@ -89,6 +91,7 @@ extension CatalogItemDataModel: ValueTypeConvertible {
 @Model
 final class MasteryItemDataModel {
     var catalogItem: CatalogItemDataModel
+    @Relationship(deleteRule: .cascade, inverse: \ProfileItemDataModel.masteryItem)
     var profileItem: ProfileItemDataModel?
     
     init(profileItemModel: ProfileItemModel?, catalogItemModel: CatalogItemModel) {

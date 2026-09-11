@@ -114,7 +114,7 @@ struct ProfileInfoModelComplex: Decodable {
 }
 
 // MARK: - ID
-struct ID: Codable {
+struct ID: Codable, Hashable {
     let oid: String
 
     enum CodingKeys: String, CodingKey {

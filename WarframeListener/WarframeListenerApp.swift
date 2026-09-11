@@ -9,12 +9,32 @@ import SwiftUI
 import SwiftData
 
 @main
-struct WarframeListenerApp: App {    
+struct WarframeListenerApp: App {
+    private let modelContainer: ModelContainer
+    private let dependencies: AppDependencies
+
+    init() {
+        modelContainer = Self.makeModelContainer()
+        dependencies = AppDependencies(modelContainer: modelContainer)
+    }
+
     var body: some Scene {
         WindowGroup {
-            MainView()
+            MainView(dependencies: dependencies)
                 .tint(.accent)
                 .foregroundStyle(.label)
-        }.modelContainer(for: [ProfileDataModel.self, MasteryCatalogDataModel.self])
+        }
+        .modelContainer(modelContainer)
+    }
+
+    private static func makeModelContainer() -> ModelContainer {
+        do {
+            return try ModelContainer(
+                for: ProfileDataModel.self,
+                MasteryCatalogDataModel.self
+            )
+        } catch {
+            fatalError("Failed to create ModelContainer: \(error)")
+        }
     }
 }

@@ -17,6 +17,7 @@ final class ProfileDataModel: ValueTypeConvertible {
     
     @Attribute(.unique) var accountID: String
     @Attribute(.unique) var displayName: String
+    @Relationship(deleteRule: .cascade, inverse: \ProfileItemDataModel.profile)
     var items: [ProfileItemDataModel]
     var lastUpdated: Date
     
