@@ -13,30 +13,24 @@ typealias Invasions = [Invasion]
 @Observable
 final class InvasionsViewModel {
     private(set) var invasions: Invasions = []
-    private(set) var errorMessage: String?
+    private(set) var networkMessage: String = ""
     private(set) var isLoading = false
 
     private let apiManager: APIManager
-    private var cancellables = Set<AnyCancellable>()
 
     init(apiManager: APIManager = APIManager()) {
         self.apiManager = apiManager
     }
 
-    func fetchInvasions() {
+    func fetchInvasions() async {
         isLoading = true
-        errorMessage = nil
+        networkMessage = "Loading..."
 
-        apiManager.fetch(.invasions)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                self?.isLoading = false
-                if case .failure(let error) = completion {
-                    self?.errorMessage = error.localizedDescription
-                }
-            } receiveValue: { [weak self] (invasions: Invasions) in
-                self?.invasions = invasions
-            }
-            .store(in: &cancellables)
+        do {
+            let result: Invasions  = try await apiManager.fetch(.invasions)
+            invasions = result.sorted(by: { $0.node < $1.node })
+        } catch {
+            networkMessage = error.localizedDescription
+        }
     }
 }

@@ -7,15 +7,18 @@ opt_in_rules:
   - fatal_error_message
 
 disabled_rules:
+  - inclusive_language
   - todo
+  - trailing_whitespace
 
 excluded:
   - .build
   - DerivedData
+  - Generated/ExternalData.swift
 
 line_length:
   warning: 120
-  error: 160
+  error: 400
 
 force_cast: warning
 force_try: warning

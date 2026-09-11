@@ -53,6 +53,7 @@
 			buildConfigurationList = 7DAA00CC303C70C60040DF25 /* Build configuration list for PBXNativeTarget "WarframeListener" */;
 			buildPhases = (
 				7D4C2305303C97AB00F20105 /* SwiftLint */,
+				7D5FB1E6303F4396009E0596 /* ShellScript */,
 				7DAA00BD303C70C50040DF25 /* Sources */,
 				7DAA00BE303C70C50040DF25 /* Frameworks */,
 				7DAA00BF303C70C50040DF25 /* Resources */,
@@ -132,6 +133,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint > /dev/null; then\n  swiftlint\nelif [ -f /opt/homebrew/bin/swiftlint ]; then\n  /opt/homebrew/bin/swiftlint\nelif [ -f /usr/local/bin/swiftlint ]; then\n  /usr/local/bin/swiftlint\nelse\n  echo \"warning: SwiftLint not installed. Install via 'brew install swiftlint'.\"\nfi\n";
+		};
+		7D5FB1E6303F4396009E0596 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"$HOME/.pyenv/shims:$PATH\"\npython3 \"$SRCROOT/Scripts/itemMapper.py\" \"$SRCROOT/Scripts/input.json\" > \"$SRCROOT/Generated/ExternalData.swift\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

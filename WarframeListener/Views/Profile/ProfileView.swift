@@ -9,35 +9,35 @@ import SwiftUI
 
 struct ProfileView: View {
     @State private var viewModel: ProfileViewModel
-
-    init(playerId: String = "523b73b91a4d806878000000") {
-        _viewModel = State(initialValue: ProfileViewModel(playerId: playerId))
+    
+    init(viewModel: ProfileViewModel) {
+        self.viewModel = viewModel
     }
 
     var body: some View {
-        VStack {
-            if let profile = viewModel.profile?.results.first {
-                Text(profile.displayName)
-                Text("\(profile.playerLevel)")
-                ScrollView {
-                    ForEach(viewModel.items) { item in
-                        HStack {
-                            Text(item.itemName).foregroundStyle(item.textColor)
-                            Spacer()
-                            Text("\(item.itemXP)").foregroundStyle(item.textColor)
-                        }
+        NavigationStack {
+            VStack(alignment: .leading) {
+                TextField("Player Id", text: $viewModel.playerId).onSubmit {
+                    Task {
+                        await viewModel.fetchProfile()
                     }
                 }
-            } else {
-                ProgressView()
+                Text(viewModel.displayName)
+                    .font(.title)
+                Text(viewModel.networkText)
+                Spacer()
             }
-        }
-        .task {
-            viewModel.fetchProfile()
+            .padding()
+            .navigationTitle("Profile")
+            .task {
+                await viewModel.fetchProfile()
+            }.refreshable {
+                await viewModel.fetchProfile()
+            }
         }
     }
 }
 
 #Preview {
-    ProfileView(playerId: "")
+//    ProfileView()
 }
