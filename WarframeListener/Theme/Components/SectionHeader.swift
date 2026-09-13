@@ -21,12 +21,3 @@ struct SectionHeaderLabel: View {
             .foregroundStyle(Color.labelSecondary)
     }
 }
-
-extension View {
-    func sectionHeader(_ title: String) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            SectionHeaderLabel(title)
-            self
-        }
-    }
-}

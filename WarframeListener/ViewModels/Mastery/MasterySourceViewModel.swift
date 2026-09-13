@@ -42,27 +42,7 @@ final class MasterySourceViewModel: Identifiable {
 }
 
 extension MasterySourceModel {
-    typealias State = MasteryItem.MasteryState
-
-    var iconName: String {
-        switch state {
-        case .mastered: "checkmark.circle.fill"
-        case .partiallyMastered: "circle.lefthalf.filled"
-        case .unmastered: "circle.dashed"
-        case .unobtainable: "lock.fill"
-        }
-    }
-
-    var isDimmed: Bool {
-        switch state {
-        case .mastered, .unobtainable: true
-        case .unmastered, .partiallyMastered: false
-        }
-    }
-
-    var state: State { isMastered == true ? .mastered : .unmastered }
-    
     var masteryState: MasteryItem.MasteryState {
-        return isMastered == true ? .mastered : .unmastered
+        isMastered == true ? .mastered : .unmastered
     }
 }

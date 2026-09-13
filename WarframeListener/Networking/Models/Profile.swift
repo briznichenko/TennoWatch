@@ -307,27 +307,4 @@ struct Stats: NetworkModel {
     }
 }
 
-struct StatsComplex: Decodable {
-    let ciphersFailed: Int
-    let ciphersSolved: Int
-    let cipherTime: Double
-    let destroyCount: Int
     let fishCount: Int
-    let deaths: Int
-    let rating: Int
-    let weapons: [ProfileItemModel]
-    let healCount: Int
-    let income: Int
-    let meleeKills: Int
-    let missionsDumped: Int
-    let missionsFailed: Int
-    let missionsInterrupted: Int
-    let missionsQuit: Int
-    let missionsCompleted: Int
-    let timePlayedSEC: Double
-    let pickupCount: Int
-    let playerLevel: Int
-    let rank: Int
-    let reviveCount: Int
-    let guildName: String
-}

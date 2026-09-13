@@ -1,5 +1,5 @@
 //
-//  MasteryCatalog.swift
+//  MasteryCatalogDataModel.swift
 //  WarframeListener
 //
 //  Created by Andrii Bryzhnychenko on 9/3/26.
@@ -171,16 +171,5 @@ extension MasteryCatalog: PersistentModelConvertible {
             items: items.map(\.model),
             nonItemSources: nonItemSources.map(\.model)
         )
-    }
-}
-
-struct MasteryCategory {
-    let name: String
-    let sources: [MasterySourceModel]
-}
-
-extension MasteryCategory: PersistentModelConvertible {
-    var model: MasteryCategoryDataModel {
-        .init(name: name, sources: sources.map(\.model))
     }
 }

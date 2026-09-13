@@ -33,7 +33,7 @@ final class PersistentCatalogRepository: CatalogRepository {
     func getMasteryCatalog() async throws -> MasteryCatalog {
         var catalogs = try await persistencyService.fetchModel(by: MasteryCatalogDataModel.self)
         if catalogs.isEmpty {
-            var container = try await fetchCatalog()
+            let container = try await fetchCatalog()
             catalogs.append(container)
             try await persistencyService.saveValues(catalogs)
         }

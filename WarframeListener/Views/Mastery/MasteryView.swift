@@ -80,7 +80,7 @@ struct MasteryView: View {
     private var otherSourcesList: some View {
         ForEach(viewModel.nonItemSources) { source in
             Section {
-                NavigationLink(destination: MasterySourceCategoryDetailView(catalogContainer: source)) {
+                NavigationLink(destination: MasterySourceCategoryDetailView(masteryCategory: source)) {
                     MasterySourceCategoryView(masteryCategory: source)
                 }
             } header: {

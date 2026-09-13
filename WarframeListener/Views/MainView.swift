@@ -29,7 +29,7 @@ struct MainView: View {
             }
             Tab("Profile", systemImage: "person") {
                 ProfileView(
-                    viewModel: .init(profileService: dependencies.profileRepository),
+                    viewModel: .init(profileRepository: dependencies.profileRepository),
                     dependencies: dependencies
                 )
             }

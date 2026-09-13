@@ -1,5 +1,5 @@
 //
-//  ProfileItem.swift
+//  ProfileItemDataModel.swift
 //  WarframeListener
 //
 //  Created by Andrii Bryzhnychenko on 9/3/26.

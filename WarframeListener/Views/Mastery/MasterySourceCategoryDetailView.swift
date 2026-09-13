@@ -13,14 +13,14 @@ struct MasterySourceCategoryDetailView: View {
 
     typealias SortOption = MasteryCategoryDetailView.SortOption
 
-    let catalogContainer: MasteryCategoryModel
+    let masteryCategory: MasteryCategoryModel
 
     @State private var filter: Filter = .missing
     @State private var sortOption: SortOption = .name
 
     //TODO: - Move to view model;
     private var sortedItems: [MasterySourceModel] {
-        let filtered = catalogContainer.sources.filter { filter.matches($0.masteryState) }
+        let filtered = masteryCategory.sources.filter { filter.matches($0.masteryState) }
         switch sortOption {
         case .name: return filtered.sorted { $0.name < $1.name }
         case .pointsRemaining: return filtered.sorted { $0.mastery < $1.mastery }
@@ -41,7 +41,7 @@ struct MasterySourceCategoryDetailView: View {
                 .padding(.vertical, 8)
                 .background(Color.bg)
         }
-        .navigationTitle(catalogContainer.name.sentenceCased)
+        .navigationTitle(masteryCategory.name.sentenceCased)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

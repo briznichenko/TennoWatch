@@ -1,5 +1,5 @@
 //
-//  CatalogItemModel.swift
+//  CatalogItem.swift
 //  WarframeListener
 //
 //  Created by Andrii Bryzhnychenko on 8/24/26.

@@ -18,10 +18,10 @@ final class ProfileViewModel {
         profile?.displayName ?? "Unknown"
     }
 
-    private let profileService: ProfileRepository
+    private let profileRepository: ProfileRepository
 
-    init(profileService: ProfileRepository) {
-        self.profileService = profileService
+    init(profileRepository: ProfileRepository) {
+        self.profileRepository = profileRepository
     }
 
     func fetchProfile() async {
@@ -36,7 +36,7 @@ final class ProfileViewModel {
         networkText = "Loading..."
 
         do {
-            profile = try await profileService.getProfile(withPlayerId: playerId)
+            profile = try await profileRepository.getProfile(withPlayerId: playerId)
             isLoading = false
         } catch {
             networkText = error.localizedDescription

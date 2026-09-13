@@ -16,9 +16,9 @@ final class InvasionsViewModel {
     private(set) var networkMessage: String = ""
     private(set) var isLoading = false
 
-    private let apiManager: APIManager
+    private let apiManager: ServiceProtocol
 
-    init(apiManager: APIManager = APIManager()) {
+    init(apiManager: ServiceProtocol = APIManager()) {
         self.apiManager = apiManager
     }
 
