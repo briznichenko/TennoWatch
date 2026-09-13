@@ -10,15 +10,17 @@ import SwiftData
 
 @Model
 final class MasteryCatalogDataModel {
-    var schemaVersion: Double
+    @Attribute(.unique) var schemaVersion: Double
     var gameVersion: String
     var generatedAt: Date
     var totalMasteryMax: Int
     var obtainableMasteryMax: Int
-    var items: [MasteryItemDataModel]
+    @Relationship(inverse: \CatalogContainerModel.catalog)
+    var items: [CatalogContainerModel]
+    @Relationship(inverse: \MasteryCategoryDataModel.catalog)
     var nonItemSources: [MasteryCategoryDataModel]
     
-    init(schemaVersion: Double, gameVersion: String, generatedAt: Date, totalMasteryMax: Int, obtainableMasteryMax: Int, items: [MasteryItemDataModel], nonItemSources: [MasteryCategoryDataModel]) {
+    init(schemaVersion: Double, gameVersion: String, generatedAt: Date, totalMasteryMax: Int, obtainableMasteryMax: Int, items: [CatalogContainerModel], nonItemSources: [MasteryCategoryDataModel]) {
         self.schemaVersion = schemaVersion
         self.gameVersion = gameVersion
         self.generatedAt = generatedAt
@@ -34,10 +36,12 @@ final class MasteryCatalogDataModel {
         generatedAt = model.generatedAt
         totalMasteryMax = model.totalMasteryMax
         obtainableMasteryMax = model.obtainableMasteryMax
-        items = model.items.map {
+        let masteryItems: [MasteryItem] = model.items.map {
             .init(profileItemModel: .none,
                   catalogItemModel: $0)
         }
+
+        items = PersistentCatalogRepository.makeCatalogs(from: masteryItems).map(\.model)
         nonItemSources = model.nonItemSources.map {
             .init(name: $0, sources: $1.map(\.model))
         }
@@ -59,9 +63,28 @@ extension MasteryCatalogDataModel: ValueTypeConvertible {
 }
 
 @Model
+final class CatalogContainerModel {
+    var category: CatalogItemModel.Category
+    var masteryItems: [MasteryItemDataModel]
+    var catalog: MasteryCatalogDataModel?
+    
+    init(category: CatalogItemModel.Category, masteryItems: [MasteryItemDataModel]) {
+        self.category = category
+        self.masteryItems = masteryItems
+    }
+}
+
+extension CatalogContainerModel: ValueTypeConvertible {
+    var value: CatalogContainer {
+        .init(category: category, masteryItems: masteryItems.map(\.value))
+    }
+}
+
+@Model
 final class MasteryCategoryDataModel {
     var name: String
     var sources: [MasterySourceDataModel]
+    var catalog: MasteryCatalogDataModel?
     
     init(name: String, sources: [MasterySourceDataModel]) {
         self.name = name
@@ -114,11 +137,8 @@ struct MasteryCatalog {
     let generatedAt: Date
     let totalMasteryMax: Int
     let obtainableMasteryMax: Int
-    let items: [MasteryItem]
-    let nonItemSources: [MasteryCategoryModel]
-    
-    // TODO: - get rid of 
-    var catalogs: [CatalogContainer] = []
+    var items: [CatalogContainer]
+    var nonItemSources: [MasteryCategoryModel]
 }
 
 extension MasteryCatalog {
@@ -128,10 +148,12 @@ extension MasteryCatalog {
         self.generatedAt = container.generatedAt
         self.totalMasteryMax = container.totalMasteryMax
         self.obtainableMasteryMax = container.obtainableMasteryMax
-        items = container.items.map {
+        let masteryItems: [MasteryItem] = container.items.map {
             .init(profileItemModel: .none,
                   catalogItemModel: $0)
         }
+
+        items = PersistentCatalogRepository.makeCatalogs(from: masteryItems)
         nonItemSources = container.nonItemSources.map {
             .init(name: $0, sources: $1)
         }

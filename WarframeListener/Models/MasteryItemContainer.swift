@@ -24,3 +24,9 @@ struct CatalogContainer: Identifiable, Hashable {
         self.masteryItems = masteryItems
     }
 }
+
+extension CatalogContainer: PersistentModelConvertible {
+    var model: CatalogContainerModel {
+        .init(category: category, masteryItems: masteryItems.map(\.model))
+    }
+}

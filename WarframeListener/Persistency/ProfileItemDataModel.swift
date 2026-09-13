@@ -49,7 +49,7 @@ extension ProfileItemDataModel: ValueTypeConvertible {
 
 @Model
 final class CatalogItemDataModel {
-    @Attribute(.unique) var uniqueName: String
+    var uniqueName: String
     var name: String
     var category: CatalogItemModel.Category
     var maxRank: Int

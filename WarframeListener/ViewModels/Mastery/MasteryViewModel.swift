@@ -28,7 +28,7 @@ final class MasteryViewModel {
     private(set) var statusText: String = ""
     private(set) var catalog: MasteryCatalog?
     var catalogs: [CatalogContainer] {
-        catalog?.catalogs ?? []
+        catalog?.items ?? []
     }
     var nonItemSources: [MasteryCategoryModel] {
         catalog?.nonItemSources ?? []
@@ -75,6 +75,7 @@ final class MasteryViewModel {
         do {
             catalog = try await catalogRepository.getMasteryCatalog()
         } catch {
+            print(error)
             statusText = error.localizedDescription
         }
     }
@@ -91,6 +92,7 @@ final class MasteryViewModel {
             let profile = try await profileRepository.getProfile(withPlayerId: .none)
             catalog = try await catalogRepository.syncMasteryCatalog(with: profile)
         } catch {
+            print(error)
             statusText = error.localizedDescription
         }
     }

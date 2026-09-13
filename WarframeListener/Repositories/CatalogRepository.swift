@@ -34,7 +34,6 @@ final class PersistentCatalogRepository: CatalogRepository {
         var catalogs = try await persistencyService.fetchModel(by: MasteryCatalogDataModel.self)
         if catalogs.isEmpty {
             var container = try await fetchCatalog()
-            container.catalogs = makeCatalogs(from: container.items)
             catalogs.append(container)
             try await persistencyService.saveValues(catalogs)
         }
@@ -46,16 +45,16 @@ final class PersistentCatalogRepository: CatalogRepository {
     
     func syncMasteryCatalog(with profileModel: Profile) async throws -> MasteryCatalog {
         var catalog = try await getMasteryCatalog()
-        catalog.catalogs = try await syncCatalogs(with: profileModel, against: catalog)
+        catalog.items = try await PersistentCatalogRepository.syncCatalogs(with: profileModel, against: catalog)
         try await persistencyService.saveValue(catalog)
         return catalog
     }
     
-    func syncCatalogs(with profileModel: Profile, against catalog: MasteryCatalog) async throws -> [CatalogContainer] {
+    static func syncCatalogs(with profileModel: Profile, against catalog: MasteryCatalog) async throws -> [CatalogContainer] {
         let items = profileModel.items
         let itemsDictionary = Dictionary(items.map { ($0.type, $0) }, uniquingKeysWith: { first, _ in first })
         
-        var catalogs = catalog.catalogs
+        var catalogs = catalog.items
         
         catalogs.indices.forEach { index in
             let unsyncedItems = catalogs[index].masteryItems
@@ -74,7 +73,7 @@ final class PersistentCatalogRepository: CatalogRepository {
         return catalogs
     }
     
-    private func makeCatalogs(from catalogItems: [MasteryItem]) -> [CatalogContainer] {
+    static func makeCatalogs(from catalogItems: [MasteryItem]) -> [CatalogContainer] {
         var catalogs: [CatalogContainer] = []
         CatalogItemModel.Category.allCases.forEach { category in
             catalogs.append(.init(category: category,
