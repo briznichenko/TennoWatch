@@ -26,19 +26,22 @@ struct MasteryRankProgress {
 @Observable
 final class MasteryViewModel {
     private(set) var statusText: String = ""
-    private(set) var catalogs: [CatalogContainer] = []
+    private(set) var catalog: MasteryCatalog?
+    var catalogs: [CatalogContainer] {
+        catalog?.catalogs ?? []
+    }
+    var nonItemSources: [MasteryCategoryModel] {
+        catalog?.nonItemSources ?? []
+    }
     private(set) var isLoading: Bool = false
 
     let profileRepository: ProfileRepository
     let catalogRepository: CatalogRepository
 
-    init(profileRepository: ProfileRepository, catalogRepository: CatalogRepository) {
-        self.profileRepository = profileRepository
-        self.catalogRepository = catalogRepository
-    }
-
     var earnedMasteryXP: Int {
-        catalogs.flatMap(\.masteryItems).reduce(0) { $0 + $1.earnedMasteryPoints }
+        let itemsMastery = catalogs.flatMap(\.masteryItems).reduce(0) { $0 + $1.earnedMasteryPoints }
+        let nonItemsMastery = nonItemSources.map(\.sources).joined().reduce(0) { $0 + $1.mastery }
+        return itemsMastery + nonItemsMastery
     }
 
     var rankProgress: MasteryRankProgress {
@@ -47,6 +50,11 @@ final class MasteryViewModel {
 
     var obtainableItemsRemaining: Int {
         catalogs.reduce(0) { $0 + $1.obtainableRemainingCount }
+    }
+    
+    init(profileRepository: ProfileRepository, catalogRepository: CatalogRepository) {
+        self.profileRepository = profileRepository
+        self.catalogRepository = catalogRepository
     }
 
     private static func rankProgress(forXP xp: Int) -> MasteryRankProgress {
@@ -65,7 +73,7 @@ final class MasteryViewModel {
 
     func fetchCatalog() async {
         do {
-            catalogs = try await catalogRepository.getCatalogs()
+            catalog = try await catalogRepository.getMasteryCatalog()
         } catch {
             statusText = error.localizedDescription
         }
@@ -81,7 +89,7 @@ final class MasteryViewModel {
 
         do {
             let profile = try await profileRepository.getProfile(withPlayerId: .none)
-            catalogs = try await catalogRepository.syncCatalogs(with: profile)
+            catalog = try await catalogRepository.syncMasteryCatalog(with: profile)
         } catch {
             statusText = error.localizedDescription
         }

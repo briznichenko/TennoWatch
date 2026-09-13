@@ -122,7 +122,7 @@ struct MasteryItem: Equatable, Hashable {
     var xp: Int { profileItemModel?.xp ?? 0 }
 
     var rank: Int {
-        let calculatedRank = Int(Double(xp) / Double(catalogItemModel.xpPerRankSq).squareRoot())
+        let calculatedRank = Int(Double(xp / catalogItemModel.xpPerRankSq).squareRoot())
         return min(calculatedRank, catalogItemModel.maxRank)
     }
 
@@ -131,6 +131,8 @@ struct MasteryItem: Equatable, Hashable {
     var earnedMasteryPoints: Int { rank * catalogItemModel.pointsPerRank }
 
     var remainingMasteryPoints: Int { (catalogItemModel.maxRank - rank) * catalogItemModel.pointsPerRank }
+    
+    var obtainable: Bool { catalogItemModel.obtainable }
 
     enum MasteryState: Equatable {
         case mastered, unmastered, partiallyMastered, unobtainable

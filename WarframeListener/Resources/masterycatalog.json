@@ -11393,38 +11393,47 @@
     ],
     "intrinsics": [
       {
+        "uniqueName": "LPS_TACTICAL",
         "name": "Tactical (Railjack)",
         "mastery": 15000
       },
       {
+        "uniqueName": "LPS_PILOTING",
         "name": "Piloting (Railjack)",
         "mastery": 15000
       },
       {
+        "uniqueName": "LPS_GUNNERY",
         "name": "Gunnery (Railjack)",
         "mastery": 15000
       },
       {
+        "uniqueName": "LPS_ENGINEERING",
         "name": "Engineering (Railjack)",
         "mastery": 15000
       },
       {
+        "uniqueName": "LPS_COMMAND",
         "name": "Command (Railjack)",
         "mastery": 15000
       },
       {
+        "uniqueName": "LPS_DRIFT_COMBAT",
         "name": "Combat (Drifter)",
         "mastery": 15000
       },
       {
+        "uniqueName": "LPS_DRIFT_ENDURANCE",
         "name": "Endurance (Drifter)",
         "mastery": 15000
       },
       {
+        "uniqueName": "LPS_DRIFT_OPPORTUNITY",
         "name": "Opportunity (Drifter)",
         "mastery": 15000
       },
       {
+        "uniqueName": "LPS_DRIFT_RIDING",
         "name": "Riding (Drifter)",
         "mastery": 15000
       }

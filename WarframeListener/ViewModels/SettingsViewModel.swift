@@ -46,7 +46,7 @@ final class SettingsViewModel {
 
         do {
             let profile = try await profileRepository.getProfile(withPlayerId: .none)
-            _ = try await catalogRepository.syncCatalogs(with: profile)
+            _ = try await catalogRepository.syncMasteryCatalog(with: profile)
             await loadCatalogInfo()
             statusText = ""
         } catch {

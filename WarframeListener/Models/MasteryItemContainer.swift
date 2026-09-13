@@ -12,9 +12,9 @@ struct CatalogContainer: Identifiable, Hashable {
     var itemsCount: Int { masteryItems.count }
     var masteredItemsCount: Int { masteryItems.filter(\.isMastered).count }
 
-    var obtainableItemsCount: Int { masteryItems.filter(\.catalogItemModel.obtainable).count }
+    var obtainableItemsCount: Int { masteryItems.filter(\.obtainable).count }
     var obtainableRemainingCount: Int {
-        masteryItems.filter { $0.catalogItemModel.obtainable && !$0.isMastered }.count
+        masteryItems.filter { $0.obtainable && !$0.isMastered }.count
     }
 
     var countText: String { "\(masteredItemsCount) / \(itemsCount)" }

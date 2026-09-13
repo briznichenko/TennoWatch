@@ -20,12 +20,17 @@ struct MasteryView: View {
                 summaryCard
                     .listRowInsets(EdgeInsets())
                     .listRowSeparator(.hidden)
-
                 categoryList
+                otherSourcesList
             }
             .listStyle(.plain)
             .themedList()
             .navigationTitle("Mastery")
+            .overlay {
+                if viewModel.statusText.isEmpty == false {
+                    Text(viewModel.statusText)
+                }
+            }
             .task {
                 await viewModel.fetchCatalog()
             }
@@ -69,6 +74,18 @@ struct MasteryView: View {
             }
         } header: {
             SectionHeaderLabel("Categories")
+        }
+    }
+    @ViewBuilder
+    private var otherSourcesList: some View {
+        ForEach(viewModel.nonItemSources) { source in
+            Section {
+                NavigationLink(destination: MasterySourceCategoryDetailView(catalogContainer: source)) {
+                    MasterySourceCategoryView(masteryCategory: source)
+                }
+            } header: {
+                SectionHeaderLabel(source.name)
+            }
         }
     }
 }
