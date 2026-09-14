@@ -8,12 +8,15 @@
 import SwiftUI
 
 private struct PaletteSwatch: Identifiable {
+    // MARK: - Object Properties
     let name: String
     let color: Color
     let background: Color
 
+    // MARK: - Computed Properties
     var id: String { name }
 
+    // MARK: - Helper Functions
     private static func relativeLuminance(_ color: Color) -> Double {
         let resolved = color.resolve(in: .init())
         func channel(_ value: Float) -> Double {
@@ -23,6 +26,7 @@ private struct PaletteSwatch: Identifiable {
         return 0.2126 * channel(resolved.red) + 0.7152 * channel(resolved.green) + 0.0722 * channel(resolved.blue)
     }
 
+    // MARK: - Computed Properties
     var contrastRatio: Double {
         let l1 = Self.relativeLuminance(color)
         let l2 = Self.relativeLuminance(background)
@@ -43,6 +47,7 @@ private struct PaletteSwatch: Identifiable {
 }
 
 struct PaletteView: View {
+    // MARK: - Computed Properties
     private var swatches: [PaletteSwatch] {
         [
             .init(name: "label", color: .label, background: .bg),
@@ -53,6 +58,7 @@ struct PaletteView: View {
         ]
     }
 
+    // MARK: - Body
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) {

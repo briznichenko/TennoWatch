@@ -8,9 +8,12 @@
 import Foundation
 
 struct MasteryCategoryModel: Hashable, Identifiable {
+    // MARK: - Object Properties
     let name: String
     var sources: [MasterySourceModel]
-    
+    let id = UUID()
+
+    // MARK: - Computed Properties
     var itemsCount: Int { sources.count }
     var masteredItemsCount: Int {
         sources.filter {
@@ -19,8 +22,8 @@ struct MasteryCategoryModel: Hashable, Identifiable {
     }
 
     var countText: String { "\(masteredItemsCount) / \(itemsCount)" }
-    let id = UUID()
-    
+
+    // MARK: - Functions
     mutating func set(sources: [MasterySourceModel]) {
         self.sources = sources
     }

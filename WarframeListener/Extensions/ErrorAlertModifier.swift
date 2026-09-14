@@ -9,8 +9,10 @@ import Foundation
 import SwiftUI
 
 struct ErrorAlertModifier: ViewModifier {
+    // MARK: - Object Properties
     var errorManager: ErrorManager
-    
+
+    // MARK: - Body
     func body(content: Content) -> some View {
         content
             .alert(

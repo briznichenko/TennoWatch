@@ -10,6 +10,7 @@ import Observation
 
 @Observable
 final class SettingsViewModel {
+    // MARK: - Object Properties
     private(set) var gameVersion: String?
     private(set) var catalogGeneratedAt: Date?
     private(set) var isRefreshing = false
@@ -20,6 +21,7 @@ final class SettingsViewModel {
     private let profileRepository: ProfileRepository
     let errorManager: ErrorManager
 
+    // MARK: - Init
     init(
         persistencyService: PersistencyService,
         catalogRepository: CatalogRepository,
@@ -32,6 +34,7 @@ final class SettingsViewModel {
         self.errorManager = errorManager
     }
 
+    // MARK: - Functions
     func loadCatalogInfo() async {
         do {
             let catalogs = try await persistencyService.fetchModel(by: MasteryCatalogDataModel.self)

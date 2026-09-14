@@ -10,18 +10,21 @@ import SwiftData
 
 @main
 struct WarframeListenerApp: App {
+    // MARK: - Object Properties
     @AppStorage("themePreference") private var themePreference: ThemePreference = .system
     @AppStorage(AppLanguage.storageKey) private var languagePreference: AppLanguage = .system
 
     private let modelContainer: ModelContainer
     private let dependencies: AppDependencies
 
+    // MARK: - Init
     init() {
         modelContainer = Self.makeModelContainer()
         dependencies = AppDependencies(modelContainer: modelContainer)
         AppearanceProxies.configure()
     }
 
+    // MARK: - Body
     var body: some Scene {
         WindowGroup {
             MainView(dependencies: dependencies)
@@ -34,6 +37,7 @@ struct WarframeListenerApp: App {
         .modelContainer(modelContainer)
     }
 
+    // MARK: - Helper Functions
     private static func makeModelContainer() -> ModelContainer {
         do {
             return try ModelContainer(

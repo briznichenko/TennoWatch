@@ -29,6 +29,7 @@ enum Endpoint {
 }
 
 extension Endpoint: EndpointProtocol {
+    // MARK: - Computed Properties
     var baseURL: URL {
         switch self {
         case .catalog, .worldState:

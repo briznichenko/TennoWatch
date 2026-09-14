@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct Surface<Content: View>: View {
+    // MARK: - Object Properties
     @ViewBuilder var content: Content
 
+    // MARK: - Body
     var body: some View {
         content
             .padding(12)

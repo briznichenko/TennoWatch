@@ -8,24 +8,26 @@
 import SwiftUI
 
 struct WorldStateView: View {
+    // MARK: - Object Properties
     @State private var viewModel: WorldStateViewModel
 
+    // MARK: - Init
     init(viewModel: WorldStateViewModel) {
         self.viewModel = viewModel
     }
 
+    // MARK: - Body
     var body: some View {
         NavigationStack {
             List {
-                cyclesSection
+                voidTraderSection
+                nightwaveSection
                 invasionsSection
+                cyclesSection
                 fissuresSection
                 sortieSection
                 archonHuntSection
-                nightwaveSection
-                voidTraderSection
             }
-            .themedList()
             .navigationTitle(Strings.WorldState.title)
             .overlay {
                 if viewModel.isLoading && viewModel.worldState == nil {
@@ -42,6 +44,7 @@ struct WorldStateView: View {
         }
     }
 
+    // MARK: - Subviews
     @ViewBuilder
     private var cyclesSection: some View {
         if !viewModel.cycles.isEmpty {

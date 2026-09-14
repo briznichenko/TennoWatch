@@ -9,6 +9,7 @@ import SwiftData
 
 @Model
 final class ProfileItemDataModel {
+    // MARK: - Object Properties
     var equipTime: Double?
     var headshots: Int?
     var hits: Int?
@@ -20,6 +21,7 @@ final class ProfileItemDataModel {
     var profile: ProfileDataModel?
     var masteryItem: MasteryItemDataModel?
 
+    // MARK: - Init
     init(profileItem: ProfileItemModel) {
         self.equipTime = profileItem.equipTime
         self.headshots = profileItem.headshots
@@ -49,6 +51,7 @@ extension ProfileItemDataModel: ValueTypeConvertible {
 
 @Model
 final class CatalogItemDataModel {
+    // MARK: - Object Properties
     @Attribute(.unique) var uniqueName: String
     var name: String
     var category: CatalogItemModel.Category
@@ -58,7 +61,8 @@ final class CatalogItemDataModel {
     var icon: String?
     var obtainable: Bool
     var requiresGilding: Bool
-    
+
+    // MARK: - Init
     init(catalogItem: CatalogItemModel) {
         self.uniqueName = catalogItem.uniqueName
         self.name = catalogItem.name
@@ -90,17 +94,20 @@ extension CatalogItemDataModel: ValueTypeConvertible {
 
 @Model
 final class MasteryItemDataModel {
+    // MARK: - Object Properties
     var catalogItem: CatalogItemDataModel
     @Relationship(deleteRule: .cascade, inverse: \ProfileItemDataModel.masteryItem)
     var profileItem: ProfileItemDataModel?
-    
+
+    // MARK: - Init
     init(profileItemModel: ProfileItemModel?, catalogItemModel: CatalogItemModel) {
         if let profileItemModel {
             profileItem = .init(profileItem: profileItemModel)
         }
         catalogItem = .init(catalogItem: catalogItemModel)
     }
-    
+
+    // MARK: - Functions
     func set(profileItemModel: ProfileItemModel) {
         profileItem = .init(profileItem: profileItemModel)
     }
@@ -116,9 +123,11 @@ extension MasteryItemDataModel: ValueTypeConvertible {
 }
 
 struct MasteryItem: Equatable, Hashable {
+    // MARK: - Object Properties
     let profileItemModel: ProfileItemModel?
     let catalogItemModel: CatalogItemModel
 
+    // MARK: - Computed Properties
     var xp: Int { profileItemModel?.xp ?? 0 }
 
     var rank: Int {

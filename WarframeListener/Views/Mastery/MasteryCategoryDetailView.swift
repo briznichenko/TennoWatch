@@ -41,11 +41,13 @@ struct MasteryCategoryDetailView: View {
         }
     }
 
+    // MARK: - Object Properties
     let catalogContainer: CatalogContainer
 
     @State private var filter: Filter = .missing
     @State private var sortOption: SortOption = .name
 
+    // MARK: - Computed Properties
     //TODO: - Move to view model;
     private var sortedItems: [MasteryItem] {
         let filtered = catalogContainer.masteryItems.filter { filter.matches($0.masteryState) }
@@ -55,6 +57,7 @@ struct MasteryCategoryDetailView: View {
         }
     }
 
+    // MARK: - Body
     var body: some View {
         List {
             ForEach(sortedItems, id: \.self) { item in

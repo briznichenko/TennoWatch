@@ -12,9 +12,11 @@ import Foundation
 final class MasterySourceViewModel: Identifiable {
     typealias State = MasteryItem.MasteryState
 
+    // MARK: - Object Properties
     private let source: MasterySourceModel
     let id = UUID()
-    
+
+    // MARK: - Computed Properties
     var name: String { source.name }
     var uniqueName: String { source.uniqueName }
 
@@ -36,6 +38,7 @@ final class MasterySourceViewModel: Identifiable {
 
     var state: State { source.isMastered == true ? .mastered : .unmastered }
 
+    // MARK: - Init
     init(source: MasterySourceModel) {
         self.source = source
     }

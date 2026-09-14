@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct ProgressBar: View {
+    // MARK: - Object Properties
     let value: Double
 
+    // MARK: - Body
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {

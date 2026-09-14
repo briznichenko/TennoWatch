@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct InvasionView: View {
+    // MARK: - Object Properties
     let invasion: Invasion
-    
+
+    // MARK: - Body
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(invasion.node)
@@ -28,6 +30,7 @@ struct InvasionView: View {
         }
     }
     
+    // MARK: - Helper Functions
     private func factionView(_ faction: Faction, isAttacker: Bool) -> some View {
         VStack(alignment: isAttacker ? .leading : .trailing) {
             Text(faction.faction).foregroundStyle(isAttacker ? .red : .green)

@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct MasteryView: View {
+    // MARK: - Object Properties
     @State private var viewModel: MasteryViewModel
 
+    // MARK: - Init
     init(viewModel: MasteryViewModel) {
         self.viewModel = viewModel
     }
 
+    // MARK: - Body
     var body: some View {
         NavigationStack {
             List {
@@ -39,6 +42,7 @@ struct MasteryView: View {
         }
     }
 
+    // MARK: - Subviews
     private var summaryCard: some View {
         let progress = viewModel.rankProgress
         return Surface {

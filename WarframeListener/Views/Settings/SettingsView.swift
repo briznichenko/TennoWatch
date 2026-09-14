@@ -8,17 +8,20 @@
 import SwiftUI
 
 struct SettingsView: View {
+    // MARK: - Object Properties
     @AppStorage("themePreference") private var themePreference: ThemePreference = .system
     @AppStorage(AppLanguage.storageKey) private var languagePreference: AppLanguage = .system
     @State private var viewModel: SettingsViewModel
 
     let displayName: String
 
+    // MARK: - Init
     init(viewModel: SettingsViewModel, displayName: String) {
         self.viewModel = viewModel
         self.displayName = displayName
     }
 
+    // MARK: - Body
     var body: some View {
         NavigationStack {
             List {

@@ -106,10 +106,12 @@ struct CatalogItemModel: Codable, Hashable, Identifiable, Equatable {
         }
     }
     
+    // MARK: - Computed Properties
     var id: String {
         uniqueName
     }
-    
+
+    // MARK: - Object Properties
     let uniqueName: String
     let name: String
     let category: Category

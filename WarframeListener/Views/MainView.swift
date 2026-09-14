@@ -9,8 +9,10 @@ import SwiftUI
 import SwiftData
 
 struct MainView: View {
+    // MARK: - Object Properties
     let dependencies: AppDependencies
 
+    // MARK: - Body
     var body: some View {
         TabView {
             Tab(Strings.Main.tabWorldState, systemImage: "globe.europe.africa") {

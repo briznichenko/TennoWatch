@@ -12,6 +12,7 @@ enum AppLanguage: String, CaseIterable, Identifiable, Hashable {
 
     static let storageKey = "languagePreference"
 
+    // MARK: - Computed Properties
     var id: String { rawValue }
 
     var label: String {

@@ -18,12 +18,15 @@ extension WorldStateRepository {
 }
 
 final class DefaultWorldStateRepository: WorldStateRepository {
+    // MARK: - Object Properties
     private let worldStateService: ServiceProtocol
 
+    // MARK: - Init
     init(worldStateService: ServiceProtocol = APIManager()) {
         self.worldStateService = worldStateService
     }
 
+    // MARK: - Functions
     func getWorldState(platform: Platform) async throws -> WorldState {
         try await worldStateService.fetch(.worldState(platform: platform))
     }

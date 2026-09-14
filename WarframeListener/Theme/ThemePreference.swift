@@ -10,6 +10,7 @@ import SwiftUI
 enum ThemePreference: String, CaseIterable, Identifiable, Hashable {
     case system, light, dark
 
+    // MARK: - Computed Properties
     var id: String { rawValue }
 
     var label: String {

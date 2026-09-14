@@ -30,16 +30,19 @@ struct Faction: NetworkModel {
 }
 
 struct Reward: NetworkModel {
+    // MARK: - Object Properties
     let items: [String]
     let countedItems: [CountedItem]
     let credits: Int
     let thumbnail: URL?
     let color: Int
 
+    // MARK: - Coding Keys
     private enum CodingKeys: String, CodingKey {
         case items, countedItems, credits, thumbnail, color
     }
 
+    // MARK: - Init
     init(items: [String], countedItems: [CountedItem], credits: Int, thumbnail: URL?, color: Int) {
         self.items = items
         self.countedItems = countedItems

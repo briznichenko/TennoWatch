@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct MasteryItemView: View {
+    // MARK: - Object Properties
     let viewModel: MasteryItemViewModel
 
+    // MARK: - Computed Properties
     private var textColor: Color {
         viewModel.isDimmed ? .labelSecondary : .label
     }
@@ -22,6 +24,7 @@ struct MasteryItemView: View {
         }
     }
 
+    // MARK: - Body
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: viewModel.iconName)

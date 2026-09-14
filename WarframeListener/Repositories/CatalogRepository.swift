@@ -23,16 +23,19 @@ final class PersistentCatalogRepository: CatalogRepository {
         case noCatalogAvailable
     }
     
+    // MARK: - Object Properties
     let syncPolicy: SyncPolicy
     private let persistencyService: PersistencyService
     private let catalogSyncService: CatalogSyncService
 
+    // MARK: - Init
     init(syncPolicy: SyncPolicy = .daily, persistencyService: PersistencyService, catalogSyncService: CatalogSyncService = DefaultCatalogSyncService()) {
         self.syncPolicy = syncPolicy
         self.persistencyService = persistencyService
         self.catalogSyncService = catalogSyncService
     }
-    
+
+    // MARK: - Functions
     func getMasteryCatalog() async throws -> MasteryCatalog {
         var catalogs = try await persistencyService.fetchModel(by: MasteryCatalogDataModel.self)
         if catalogs.isEmpty {
@@ -55,6 +58,7 @@ final class PersistentCatalogRepository: CatalogRepository {
         }
     }
 
+    // MARK: - Helper Functions
     private func fetchCatalog(filename: String = "masterycatalog") async throws -> MasteryCatalog {
         guard let url = Bundle.main.url(forResource: filename, withExtension: "json") else {
             throw CatalogError.wrongFilename

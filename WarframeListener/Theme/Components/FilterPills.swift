@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct FilterPills<Option: Hashable>: View {
+    // MARK: - Object Properties
     let options: [Option]
     let title: (Option) -> String
     @Binding var selection: Option
 
+    // MARK: - Body
     var body: some View {
         HStack(spacing: 6) {
             ForEach(options, id: \.self) { option in
@@ -20,6 +22,7 @@ struct FilterPills<Option: Hashable>: View {
         }
     }
 
+    // MARK: - Helper Functions
     private func pill(for option: Option) -> some View {
         let isSelected = option == selection
         return Button {

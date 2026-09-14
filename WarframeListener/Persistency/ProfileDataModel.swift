@@ -11,6 +11,8 @@ import SwiftData
 @Model
 final class ProfileDataModel: ValueTypeConvertible {
     typealias Value = Profile
+
+    // MARK: - Computed Properties
     var value: Value {
         .init(
             accountID: .init(oid: accountID),
@@ -24,6 +26,7 @@ final class ProfileDataModel: ValueTypeConvertible {
         )
     }
 
+    // MARK: - Object Properties
     @Attribute(.unique) var accountID: String
     @Attribute(.unique) var displayName: String
     @Relationship(deleteRule: .cascade, inverse: \ProfileItemDataModel.profile)
@@ -32,6 +35,7 @@ final class ProfileDataModel: ValueTypeConvertible {
     var missions: [ResultMissionDataModel]
     var lastUpdated: Date
 
+    // MARK: - Init
     init(accountID: String, displayName: String, items: [ProfileItemDataModel], playerSkills: [IntrinsicsDataModel], missions: [ResultMissionDataModel], lastUpdated: Date) {
         self.accountID = accountID
         self.displayName = displayName
@@ -44,6 +48,8 @@ final class ProfileDataModel: ValueTypeConvertible {
 
 struct Profile: PersistentModelConvertible {
     typealias Model = ProfileDataModel
+
+    // MARK: - Computed Properties
     var model: Model {
         .init(
             accountID: accountID.oid,
@@ -55,6 +61,7 @@ struct Profile: PersistentModelConvertible {
         )
     }
 
+    // MARK: - Object Properties
     let accountID: ID
     let displayName: String
     let items: [ProfileItemModel]
@@ -65,16 +72,18 @@ struct Profile: PersistentModelConvertible {
 
 @Model
 final class ResultMissionDataModel {
+    // MARK: - Object Properties
     var completes: Int
     var tier: Int?
     @Attribute(.unique) var tag: String
-    
+
+    // MARK: - Init
     init(completes: Int, tier: Int?, tag: String) {
         self.completes = completes
         self.tier = tier
         self.tag = tag
     }
-    
+
     init(from mission: ResultMission) {
         self.completes = mission.completes
         self.tier = mission.tier
@@ -90,9 +99,11 @@ extension ResultMissionDataModel: ValueTypeConvertible {
 
 @Model
 final class IntrinsicsDataModel {
+    // MARK: - Object Properties
     @Attribute(.unique) var name: String
     var rank: Int
-    
+
+    // MARK: - Init
     init(name: String, rank: Int) {
         self.name = name
         self.rank = rank

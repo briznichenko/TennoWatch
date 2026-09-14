@@ -25,16 +25,19 @@ final class PersistentProfileRepository: ProfileRepository {
         case noData, noPlayerId
     }
     
+    // MARK: - Object Properties
     let syncPolicy: SyncPolicy = .daily
-    
+
     private let profileService: ServiceProtocol
     private let persistencyService: PersistencyService
-    
+
+    // MARK: - Init
     init(profileService: ServiceProtocol = APIManager(), persistencyService: PersistencyService) {
         self.profileService = profileService
         self.persistencyService = persistencyService
     }
-    
+
+    // MARK: - Functions
     func getProfile(withPlayerId playerId: String?) async throws -> Profile {
         let storedProfile = try await persistencyService.fetchModel(by: ProfileDataModel.self).first
         if let storedProfile, Calendar.current.isDateInToday(storedProfile.lastUpdated) && syncPolicy == .daily {

@@ -23,6 +23,7 @@ extension PersistencyService {
 
 @ModelActor
 actor DefaultPersistencyService: PersistencyService {
+    // MARK: - Functions
     func fetchModel<T: ValueTypeConvertible>(by type: T.Type, with descriptor: FetchDescriptor<T>) async throws -> [T.Value] {
         let models = try modelContext.fetch(descriptor)
         var values: [T.Value] = []

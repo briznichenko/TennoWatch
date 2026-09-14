@@ -7,8 +7,12 @@
 import Foundation
 
 struct CatalogContainer: Identifiable, Hashable {
+    // MARK: - Object Properties
     let category: CatalogItemModel.Category
     private(set) var masteryItems: [MasteryItem]
+    let id = UUID()
+
+    // MARK: - Computed Properties
     var itemsCount: Int { masteryItems.count }
     var masteredItemsCount: Int { masteryItems.filter(\.isMastered).count }
 
@@ -18,8 +22,8 @@ struct CatalogContainer: Identifiable, Hashable {
     }
 
     var countText: String { "\(masteredItemsCount) / \(itemsCount)" }
-    let id = UUID()
-    
+
+    // MARK: - Functions
     mutating func set(masteryItems: [MasteryItem]) {
         self.masteryItems = masteryItems
     }

@@ -12,9 +12,11 @@ import Foundation
 final class MasteryItemViewModel: Identifiable {
     typealias State = MasteryItem.MasteryState
 
+    // MARK: - Object Properties
     private let item: MasteryItem
     let id = UUID()
-    
+
+    // MARK: - Computed Properties
     var name: String { item.catalogItemModel.name }
     var type: String { item.catalogItemModel.category.displayName }
     var uniqueName: String { item.catalogItemModel.uniqueName }
@@ -49,6 +51,7 @@ final class MasteryItemViewModel: Identifiable {
 
     var state: State { item.masteryState }
 
+    // MARK: - Init
     init(item: MasteryItem) {
         self.item = item
     }

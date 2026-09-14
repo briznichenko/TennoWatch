@@ -8,12 +8,14 @@
 import SwiftData
 
 struct AppDependencies {
+    // MARK: - Object Properties
     let persistencyService: PersistencyService
     let profileRepository: ProfileRepository
     let catalogRepository: CatalogRepository
     let worldStateRepository: WorldStateRepository
     let errorManager: ErrorManager
 
+    // MARK: - Init
     init(modelContainer: ModelContainer) {
         let persistencyService = DefaultPersistencyService(modelContainer: modelContainer)
         self.persistencyService = persistencyService

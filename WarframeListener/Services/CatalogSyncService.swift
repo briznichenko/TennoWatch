@@ -13,9 +13,11 @@ protocol CatalogSyncService {
 }
 
 struct DefaultCatalogSyncService: CatalogSyncService {
+    // MARK: - Object Properties
     private let steelPathSuffix = "#steelPath"
     private let maxIntrinsicLevel = 10
 
+    // MARK: - Functions
     func syncCatalogs(with profile: Profile, against catalog: MasteryCatalog) -> [CatalogContainer] {
         let profileItems = Dictionary(
             profile.items.map { ($0.type, $0) },
@@ -71,6 +73,7 @@ struct DefaultCatalogSyncService: CatalogSyncService {
         }
     }
 
+    // MARK: - Helper Functions
     private func isMastered(
         uniqueName: String,
         missions: [String: ResultMission],

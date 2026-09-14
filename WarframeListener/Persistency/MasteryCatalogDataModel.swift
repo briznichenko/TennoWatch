@@ -10,6 +10,7 @@ import SwiftData
 
 @Model
 final class MasteryCatalogDataModel {
+    // MARK: - Object Properties
     @Attribute(.unique) var schemaVersion: Double
     var gameVersion: String
     var generatedAt: Date
@@ -19,7 +20,8 @@ final class MasteryCatalogDataModel {
     var items: [CatalogContainerModel]
     @Relationship(inverse: \MasteryCategoryDataModel.catalog)
     var nonItemSources: [MasteryCategoryDataModel]
-    
+
+    // MARK: - Init
     init(schemaVersion: Double, gameVersion: String, generatedAt: Date, totalMasteryMax: Int, obtainableMasteryMax: Int, items: [CatalogContainerModel], nonItemSources: [MasteryCategoryDataModel]) {
         self.schemaVersion = schemaVersion
         self.gameVersion = gameVersion
@@ -64,10 +66,12 @@ extension MasteryCatalogDataModel: ValueTypeConvertible {
 
 @Model
 final class CatalogContainerModel {
+    // MARK: - Object Properties
     var category: CatalogItemModel.Category
     var masteryItems: [MasteryItemDataModel]
     var catalog: MasteryCatalogDataModel?
-    
+
+    // MARK: - Init
     init(category: CatalogItemModel.Category, masteryItems: [MasteryItemDataModel]) {
         self.category = category
         self.masteryItems = masteryItems
@@ -82,10 +86,12 @@ extension CatalogContainerModel: ValueTypeConvertible {
 
 @Model
 final class MasteryCategoryDataModel {
+    // MARK: - Object Properties
     var name: String
     var sources: [MasterySourceDataModel]
     var catalog: MasteryCatalogDataModel?
-    
+
+    // MARK: - Init
     init(name: String, sources: [MasterySourceDataModel]) {
         self.name = name
         self.sources = sources
@@ -100,18 +106,20 @@ extension MasteryCategoryDataModel: ValueTypeConvertible {
 
 @Model
 final class MasterySourceDataModel {
+    // MARK: - Object Properties
     @Attribute(.unique) var uniqueName: String
     var name: String
     var mastery: Int
     var isMastered: Bool
-    
+
+    // MARK: - Init
     init(uniqueName: String, name: String, mastery: Int, isMastered: Bool) {
         self.uniqueName = uniqueName
         self.name = name
         self.mastery = mastery
         self.isMastered = isMastered
     }
-    
+
     init (from model: MasterySourceModel) {
         self.uniqueName = model.uniqueName
         self.name = model.name
@@ -132,6 +140,7 @@ extension MasterySourceDataModel: ValueTypeConvertible {
 }
 
 struct MasteryCatalog {
+    // MARK: - Object Properties
     let schemaVersion: Double
     let gameVersion: String
     let generatedAt: Date
@@ -142,6 +151,7 @@ struct MasteryCatalog {
 }
 
 extension MasteryCatalog {
+    // MARK: - Init
     init(container: MasteryCatalogContainer) {
         self.schemaVersion = container.schemaVersion
         self.gameVersion = container.gameVersion

@@ -8,16 +8,19 @@
 import SwiftUI
 
 struct ProfileView: View {
+    // MARK: - Object Properties
     @State private var viewModel: ProfileViewModel
     @State private var isShowingSettings = false
 
     private let dependencies: AppDependencies
 
+    // MARK: - Init
     init(viewModel: ProfileViewModel, dependencies: AppDependencies) {
         self.viewModel = viewModel
         self.dependencies = dependencies
     }
 
+    // MARK: - Body
     // TODO: - Deconstruct;
     var body: some View {
         NavigationStack {

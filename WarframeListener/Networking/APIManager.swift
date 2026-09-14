@@ -17,8 +17,9 @@ protocol ServiceProtocol {
 }
 
 final class APIManager: ServiceProtocol {
+    // MARK: - Object Properties
     private let session: URLSession
-    
+
     private lazy var decoder: JSONDecoder = {
         let decoder = JSONDecoder()
         let dateFormatter = ISO8601DateFormatter()
@@ -37,10 +38,12 @@ final class APIManager: ServiceProtocol {
         return decoder
     }()
 
+    // MARK: - Init
     init(session: URLSession = .shared) {
         self.session = session
     }
-    
+
+    // MARK: - Functions
     func fetch<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
         let (data, response) = try await session.data(from: endpoint.url)
         

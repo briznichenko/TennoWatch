@@ -19,13 +19,16 @@ protocol ErrorManager: Observable {
 @Observable
 @MainActor
 final class DefaultErrorManager: ErrorManager {
+    // MARK: - Object Properties
     private(set) var errorQueue: [Error] = []
     private(set) var isPresenting = false
 
+    // MARK: - Computed Properties
     var currentError: Error? {
         errorQueue.last
     }
 
+    // MARK: - Functions
     func append(_ error: Error) {
         errorQueue.append(error)
     }
@@ -39,6 +42,7 @@ final class DefaultErrorManager: ErrorManager {
         removeCurrent()
     }
 
+    // MARK: - Helper Functions
     private func removeCurrent() {
         _ = errorQueue.popLast()
     }
