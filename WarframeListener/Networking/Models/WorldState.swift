@@ -109,16 +109,16 @@ struct WorldEvent: NetworkModel {
     let archwingDrops: [String]
     let completionBonuses: [Double]
     let concurrentNodes: [String]
-    let currentScore: Double
+    let currentScore: Double?
     let description: String
     let faction: String?
     let health: Double?
     let interimSteps: [InterimStep]
     let isCommunity: Bool
-    let isPersonal: Bool
+    let isPersonal: Bool?
     let jobs: [SyndicateJob]
     let largeInterval: Double?
-    let maximumScore: Double
+    let maximumScore: Double?
     let node: String?
     let previousId: String?
     let previousJobs: [SyndicateJob]
@@ -127,7 +127,7 @@ struct WorldEvent: NetworkModel {
     let regionDrops: [String]
     let rewards: [Reward]
     let scoreLocTag: String?
-    let scoreVar: String
+    let scoreVar: String?
     let showTotalAtEndOfMission: Bool
     let smallInterval: Double?
     let tag: String
@@ -520,7 +520,7 @@ struct VoidTraderItem: NetworkModel {
 
 struct VoidTraderSchedule: NetworkModel {
     let expiry: Date
-    let item: String
+    let item: String?
 }
 
 struct VoidTrader: NetworkModel {

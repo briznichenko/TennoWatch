@@ -23,7 +23,6 @@ enum ItemCategory: String {
 }
 
 enum Endpoint {
-    case invasions
     case worldState(platform: Platform)
     case catalog(ItemCategory)
     case profile(playerId: String)
@@ -32,7 +31,7 @@ enum Endpoint {
 extension Endpoint: EndpointProtocol {
     var baseURL: URL {
         switch self {
-        case .invasions, .catalog, .worldState:
+        case .catalog, .worldState:
             URL("https://api.warframestat.us")
 
         case .profile:
@@ -42,9 +41,6 @@ extension Endpoint: EndpointProtocol {
 
     var path: String {
         switch self {
-        case .invasions:
-            "pc/invasions"
-
         case .worldState(let platform):
             platform.rawValue
 

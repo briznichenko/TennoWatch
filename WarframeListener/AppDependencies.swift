@@ -11,6 +11,7 @@ struct AppDependencies {
     let persistencyService: PersistencyService
     let profileRepository: ProfileRepository
     let catalogRepository: CatalogRepository
+    let worldStateRepository: WorldStateRepository
     let errorManager: ErrorManager
 
     init(modelContainer: ModelContainer) {
@@ -18,6 +19,7 @@ struct AppDependencies {
         self.persistencyService = persistencyService
         self.profileRepository = PersistentProfileRepository(persistencyService: persistencyService)
         self.catalogRepository = PersistentCatalogRepository(persistencyService: persistencyService)
+        self.worldStateRepository = DefaultWorldStateRepository()
         self.errorManager = DefaultErrorManager()
     }
 }

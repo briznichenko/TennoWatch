@@ -14,7 +14,12 @@ struct MainView: View {
     var body: some View {
         TabView {
             Tab(Strings.Main.tabWorldState, systemImage: "globe.europe.africa") {
-                InvasionsView()
+                WorldStateView(
+                    viewModel: .init(
+                        worldStateRepository: dependencies.worldStateRepository,
+                        errorManager: dependencies.errorManager
+                    )
+                )
             }
             Tab(Strings.Main.tabMastery, systemImage: "trophy") {
                 MasteryView(

@@ -89,42 +89,6 @@
         }
       }
     },
-    "invasions_loading_key" : {
-      "comment" : "Shown in place of the invasion list while the first fetch is in flight.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Loading..."
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Завантаження…"
-          }
-        }
-      }
-    },
-    "invasions_title_key" : {
-      "comment" : "Navigation title for the invasions list screen.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invasions"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Вторгнення"
-          }
-        }
-      }
-    },
     "language_system_key" : {
       "comment" : "Language option that follows the device's system language.",
       "extractionState" : "manual",
@@ -827,6 +791,348 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Системна"
+          }
+        }
+      }
+    },
+    "world_state_archon_hunt_header_key" : {
+      "comment" : "Section header for the archon hunt on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archon hunt"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Полювання на архонта"
+          }
+        }
+      }
+    },
+    "world_state_cambion_cycle_key" : {
+      "comment" : "Row title for the Cambion Drift day/night cycle.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambion Drift"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дрейф Камбіон"
+          }
+        }
+      }
+    },
+    "world_state_cetus_cycle_key" : {
+      "comment" : "Row title for the Cetus day/night cycle.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cetus"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Цетус"
+          }
+        }
+      }
+    },
+    "world_state_cycle_cold_key" : {
+      "comment" : "Orb Vallis cycle state meaning cold weather.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cold"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Холодно"
+          }
+        }
+      }
+    },
+    "world_state_cycle_corpus_key" : {
+      "comment" : "Zariman cycle state meaning the Corpus faction is active.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corpus"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Корпус"
+          }
+        }
+      }
+    },
+    "world_state_cycle_day_key" : {
+      "comment" : "Open world cycle state meaning daytime.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "День"
+          }
+        }
+      }
+    },
+    "world_state_cycle_grineer_key" : {
+      "comment" : "Zariman cycle state meaning the Grineer faction is active.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grineer"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Грінір"
+          }
+        }
+      }
+    },
+    "world_state_cycle_night_key" : {
+      "comment" : "Open world cycle state meaning nighttime.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Night"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ніч"
+          }
+        }
+      }
+    },
+    "world_state_cycle_warm_key" : {
+      "comment" : "Orb Vallis cycle state meaning warm weather.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warm"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тепло"
+          }
+        }
+      }
+    },
+    "world_state_cycles_header_key" : {
+      "comment" : "Section header for open world day/night cycles on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cycles"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Цикли"
+          }
+        }
+      }
+    },
+    "world_state_earth_cycle_key" : {
+      "comment" : "Row title for the Earth day/night cycle.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Earth"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Земля"
+          }
+        }
+      }
+    },
+    "world_state_fissures_header_key" : {
+      "comment" : "Section header for void fissures on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fissures"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Розломи"
+          }
+        }
+      }
+    },
+    "world_state_invasions_header_key" : {
+      "comment" : "Section header for invasions on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invasions"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вторгнення"
+          }
+        }
+      }
+    },
+    "world_state_nightwave_header_key" : {
+      "comment" : "Section header for the active Nightwave season on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nightwave"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нічна хвиля"
+          }
+        }
+      }
+    },
+    "world_state_sortie_header_key" : {
+      "comment" : "Section header for the daily sortie on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sortie"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вилазка"
+          }
+        }
+      }
+    },
+    "world_state_title_key" : {
+      "comment" : "Navigation title for the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "World state"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Стан світу"
+          }
+        }
+      }
+    },
+    "world_state_vallis_cycle_key" : {
+      "comment" : "Row title for the Orb Vallis warm/cold cycle.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orb Vallis"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Орб Валліс"
+          }
+        }
+      }
+    },
+    "world_state_void_trader_header_key" : {
+      "comment" : "Section header for the void trader on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Void trader"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Торговець Порожнечі"
+          }
+        }
+      }
+    },
+    "world_state_zariman_cycle_key" : {
+      "comment" : "Row title for the Zariman corpus/grineer cycle.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zariman"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Заріман"
           }
         }
       }

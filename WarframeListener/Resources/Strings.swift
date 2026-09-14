@@ -34,10 +34,27 @@ struct Strings {
         static var tabProfile: String { Strings.string("main_tab_profile_key", "Profile") }
     }
 
-    struct Invasions {
+    struct WorldState {
         private init() {}
-        static var title: String { Strings.string("invasions_title_key", "Invasions") }
-        static var loading: String { Strings.string("invasions_loading_key", "Loading...") }
+        static var title: String { Strings.string("world_state_title_key", "World state") }
+        static var cyclesHeader: String { Strings.string("world_state_cycles_header_key", "Cycles") }
+        static var invasionsHeader: String { Strings.string("world_state_invasions_header_key", "Invasions") }
+        static var fissuresHeader: String { Strings.string("world_state_fissures_header_key", "Fissures") }
+        static var sortieHeader: String { Strings.string("world_state_sortie_header_key", "Sortie") }
+        static var archonHuntHeader: String { Strings.string("world_state_archon_hunt_header_key", "Archon hunt") }
+        static var nightwaveHeader: String { Strings.string("world_state_nightwave_header_key", "Nightwave") }
+        static var voidTraderHeader: String { Strings.string("world_state_void_trader_header_key", "Void trader") }
+        static var cetusCycle: String { Strings.string("world_state_cetus_cycle_key", "Cetus") }
+        static var vallisCycle: String { Strings.string("world_state_vallis_cycle_key", "Orb Vallis") }
+        static var cambionCycle: String { Strings.string("world_state_cambion_cycle_key", "Cambion Drift") }
+        static var zarimanCycle: String { Strings.string("world_state_zariman_cycle_key", "Zariman") }
+        static var earthCycle: String { Strings.string("world_state_earth_cycle_key", "Earth") }
+        static var cycleDay: String { Strings.string("world_state_cycle_day_key", "Day") }
+        static var cycleNight: String { Strings.string("world_state_cycle_night_key", "Night") }
+        static var cycleWarm: String { Strings.string("world_state_cycle_warm_key", "Warm") }
+        static var cycleCold: String { Strings.string("world_state_cycle_cold_key", "Cold") }
+        static var cycleCorpus: String { Strings.string("world_state_cycle_corpus_key", "Corpus") }
+        static var cycleGrineer: String { Strings.string("world_state_cycle_grineer_key", "Grineer") }
     }
 
     struct Settings {
