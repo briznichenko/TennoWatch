@@ -40,5 +40,3 @@ struct MasteryItemView: View {
         .frame(minHeight: 44)
     }
 }
-
-

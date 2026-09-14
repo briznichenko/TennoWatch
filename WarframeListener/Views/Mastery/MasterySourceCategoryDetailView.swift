@@ -18,7 +18,7 @@ struct MasterySourceCategoryDetailView: View {
     @State private var filter: Filter = .missing
     @State private var sortOption: SortOption = .name
 
-    //TODO: - Move to view model;
+    // TODO: - Move to view model;
     private var sortedItems: [MasterySourceModel] {
         let filtered = masteryCategory.sources.filter { filter.matches($0.masteryState) }
         switch sortOption {
@@ -34,7 +34,6 @@ struct MasterySourceCategoryDetailView: View {
             }
         }
         .listStyle(.plain)
-        .themedList()
         .safeAreaInset(edge: .top) {
             FilterPills(options: Filter.allCases, title: \.title, selection: $filter)
                 .padding(.horizontal)

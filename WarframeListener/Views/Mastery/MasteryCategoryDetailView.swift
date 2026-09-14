@@ -56,7 +56,6 @@ struct MasteryCategoryDetailView: View {
             }
         }
         .listStyle(.plain)
-        .themedList()
         .safeAreaInset(edge: .top) {
             FilterPills(options: Filter.allCases, title: \.title, selection: $filter)
                 .padding(.horizontal)

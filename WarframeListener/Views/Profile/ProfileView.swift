@@ -22,13 +22,15 @@ struct ProfileView: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading) {
-                TextField("Player ID", text: $viewModel.playerId)
-                    .foregroundStyle(Color.label)
-                    .onSubmit {
-                        Task {
-                            await viewModel.fetchProfile()
-                        }
+                LabeledContent("Player ID") {
+                    TextField("Enter player ID", text: $viewModel.playerId)
+                }
+                .foregroundStyle(Color.label)
+                .onSubmit {
+                    Task {
+                        await viewModel.fetchProfile()
                     }
+                }
                 Text(viewModel.displayName)
                     .font(.title)
                     .foregroundStyle(Color.label)

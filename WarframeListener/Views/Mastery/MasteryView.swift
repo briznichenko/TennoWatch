@@ -23,8 +23,6 @@ struct MasteryView: View {
                 categoryList
                 otherSourcesList
             }
-            .listStyle(.plain)
-            .themedList()
             .navigationTitle("Mastery")
             .overlay {
                 if viewModel.isLoading {
@@ -86,7 +84,7 @@ struct MasteryView: View {
                     MasterySourceCategoryView(masteryCategory: source)
                 }
             } header: {
-                SectionHeaderLabel(source.name)
+                SectionHeaderLabel(source.name.sentenceCased)
             }
         }
     }
