@@ -22,12 +22,14 @@ enum ItemCategory: String {
     case weapons, warframes, items, mods
 }
 
-enum Endpoint: EndpointProtocol {
+enum Endpoint {
     case invasions
     case worldState(platform: Platform)
     case catalog(ItemCategory)
     case profile(playerId: String)
+}
 
+extension Endpoint: EndpointProtocol {
     var baseURL: URL {
         switch self {
         case .invasions, .catalog, .worldState:

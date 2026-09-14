@@ -10,24 +10,27 @@ import Foundation
 
 @Observable
 final class MasteryItemViewModel: Identifiable {
-    enum State {
-        case mastered, unmastered, partiallyMastered, unobtainable
-    }
-    
+    typealias State = MasteryItem.MasteryState
+
     private let item: MasteryItem
     let id = UUID()
     
     var name: String { item.catalogItemModel.name }
     var type: String { item.catalogItemModel.category.displayName }
     var uniqueName: String { item.catalogItemModel.uniqueName }
-    var xp: Int { item.profileItemModel?.xp ?? 0 }
-    var rank: Int {
-        let calculatedRank = Int(Double(xp / item.catalogItemModel.xpPerRankSq).squareRoot())
-        return min(calculatedRank, item.catalogItemModel.maxRank)
-    }
+    var rank: Int { item.rank }
     var maxRank: Int { item.catalogItemModel.maxRank }
-    var rankText: String { "Rank: \(rank)/\(maxRank)" }
-    
+    var pointsRemaining: Int { item.remainingMasteryPoints }
+    var isObtainable: Bool { item.catalogItemModel.obtainable }
+
+    var detailText: String {
+        switch state {
+        case .mastered: "Mastered"
+        case .unobtainable: "Unobtainable"
+        case .unmastered, .partiallyMastered: "Rank \(rank) / \(maxRank) · +\(pointsRemaining) left"
+        }
+    }
+
     var iconName: String {
         switch state {
         case .mastered: "checkmark.circle.fill"
@@ -36,16 +39,16 @@ final class MasteryItemViewModel: Identifiable {
         case .unobtainable: "lock.fill"
         }
     }
-    
-    var state: State {
-        guard item.catalogItemModel.obtainable else { return .unobtainable }
-        return switch rank {
-        case 0: .unmastered
-        case item.catalogItemModel.maxRank: .mastered
-        default: .partiallyMastered
+
+    var isDimmed: Bool {
+        switch state {
+        case .mastered, .unobtainable: true
+        case .unmastered, .partiallyMastered: false
         }
     }
-    
+
+    var state: State { item.masteryState }
+
     init(item: MasteryItem) {
         self.item = item
     }

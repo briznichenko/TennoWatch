@@ -9,27 +9,82 @@ import SwiftUI
 
 struct MasteryView: View {
     @State private var viewModel: MasteryViewModel
-    
+
     init(viewModel: MasteryViewModel) {
         self.viewModel = viewModel
     }
-    
+
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading) {
-                List(viewModel.catalogs) { catalog in
-                    NavigationLink(destination: MasteryItemListView(catalogContainer: catalog)) {
-                        MasteryCategoryView(catalogContainer: catalog)
-                    }.listRowSeparatorTint(.accent)
-                }.listStyle(.plain)
-                    .listRowSeparatorTint(.accent, edges: .all)
-                Spacer()
+            List {
+                summaryCard
+                    .listRowInsets(EdgeInsets())
+                    .listRowSeparator(.hidden)
+                categoryList
+                otherSourcesList
             }
             .navigationTitle("Mastery")
+            .overlay {
+                if viewModel.isLoading {
+                    ProgressView()
+                }
+            }
+            .handleErrorAlert(with: viewModel.errorManager)
             .task {
                 await viewModel.fetchCatalog()
-            }.refreshable {
-                await viewModel.fetchProfile()
+            }
+            .refreshable {
+                await viewModel.fetchCatalog()
+            }
+        }
+    }
+
+    private var summaryCard: some View {
+        let progress = viewModel.rankProgress
+        return Surface {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text("MR \(progress.rank)")
+                        .font(.system(size: 26, weight: .medium))
+                        .foregroundStyle(Color.label)
+                    Spacer()
+                    Text("\(progress.currentXP.formatted()) / \(progress.xpForNextRank.formatted())")
+                        .font(.caption)
+                        .foregroundStyle(Color.labelSecondary)
+                }
+                ProgressBar(value: progress.fraction)
+                    .padding(.vertical, 4)
+                let xpLine = "\(progress.xpToNextRank.formatted()) XP to MR \(progress.rank + 1)"
+                let itemsLine = "\(viewModel.obtainableItemsRemaining) items left"
+                Text("\(xpLine) · \(itemsLine)")
+                    .font(.caption)
+                    .foregroundStyle(Color.labelSecondary)
+            }
+        }
+        .padding(.bottom, 8)
+    }
+
+    private var categoryList: some View {
+        Section {
+            ForEach(viewModel.catalogs) { catalog in
+                NavigationLink(destination: MasteryCategoryDetailView(catalogContainer: catalog)) {
+                    MasteryCategoryView(catalogContainer: catalog)
+                }
+            }
+        } header: {
+            SectionHeaderLabel("Categories")
+        }
+    }
+    
+    @ViewBuilder
+    private var otherSourcesList: some View {
+        ForEach(viewModel.nonItemSources) { source in
+            Section {
+                NavigationLink(destination: MasterySourceCategoryDetailView(masteryCategory: source)) {
+                    MasterySourceCategoryView(masteryCategory: source)
+                }
+            } header: {
+                SectionHeaderLabel(source.name.sentenceCased)
             }
         }
     }

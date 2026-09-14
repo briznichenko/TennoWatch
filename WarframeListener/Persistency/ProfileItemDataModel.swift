@@ -1,5 +1,5 @@
 //
-//  ProfileItem.swift
+//  ProfileItemDataModel.swift
 //  WarframeListener
 //
 //  Created by Andrii Bryzhnychenko on 9/3/26.
@@ -15,7 +15,7 @@ final class ProfileItemDataModel {
     var assists: Int?
     var kills: Int?
     var xp: Int?
-    var type: String
+    @Attribute(.unique) var type: String
     var fired: Int?
     var profile: ProfileDataModel?
     var masteryItem: MasteryItemDataModel?
@@ -118,6 +118,30 @@ extension MasteryItemDataModel: ValueTypeConvertible {
 struct MasteryItem: Equatable, Hashable {
     let profileItemModel: ProfileItemModel?
     let catalogItemModel: CatalogItemModel
+
+    var xp: Int { profileItemModel?.xp ?? 0 }
+
+    var rank: Int {
+        let calculatedRank = Int(Double(xp / catalogItemModel.xpPerRankSq).squareRoot())
+        return min(calculatedRank, catalogItemModel.maxRank)
+    }
+
+    var isMastered: Bool { rank >= catalogItemModel.maxRank }
+
+    var earnedMasteryPoints: Int { rank * catalogItemModel.pointsPerRank }
+
+    var remainingMasteryPoints: Int { (catalogItemModel.maxRank - rank) * catalogItemModel.pointsPerRank }
+    
+    var obtainable: Bool { catalogItemModel.obtainable }
+
+    enum MasteryState: Equatable {
+        case mastered, unmastered, partiallyMastered, unobtainable
+    }
+
+    var masteryState: MasteryState {
+        guard catalogItemModel.obtainable else { return .unobtainable }
+        return isMastered ? .mastered : (rank == 0 ? .unmastered : .partiallyMastered)
+    }
 }
 
 extension MasteryItem: PersistentModelConvertible {

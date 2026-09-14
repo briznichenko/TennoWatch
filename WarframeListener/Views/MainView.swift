@@ -20,7 +20,8 @@ struct MainView: View {
                 MasteryView(
                     viewModel: .init(
                         profileRepository: dependencies.profileRepository,
-                        catalogRepository: dependencies.catalogRepository
+                        catalogRepository: dependencies.catalogRepository,
+                        errorManager: dependencies.errorManager
                     )
                 )
             }
@@ -29,14 +30,22 @@ struct MainView: View {
             }
             Tab("Profile", systemImage: "person") {
                 ProfileView(
-                    viewModel: .init(profileService: dependencies.profileRepository)
+                    viewModel: .init(
+                        profileRepository: dependencies.profileRepository,
+                        errorManager: dependencies.errorManager
+                    ),
+                    dependencies: dependencies
                 )
             }
         }
+        .toolbarBackground(Color.surface, for: .navigationBar, .tabBar)
+        .toolbarBackground(.visible, for: .navigationBar, .tabBar)
     }
 }
 
 #Preview {
-    let container = try! ModelContainer(for: ProfileDataModel.self, MasteryCatalogDataModel.self, configurations: .init(isStoredInMemoryOnly: true))
-    MainView(dependencies: AppDependencies(modelContainer: container))
+    let container = try? ModelContainer(for: ProfileDataModel.self, MasteryCatalogDataModel.self, configurations: .init(isStoredInMemoryOnly: true))
+    if let container {
+        MainView(dependencies: AppDependencies(modelContainer: container))
+    }
 }

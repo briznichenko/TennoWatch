@@ -1,21 +1,21 @@
 //
-//  MasteryCategoryView.swift
+//  MasterySourceCategoryView.swift
 //  WarframeListener
 //
-//  Created by Andrii Bryzhnychenko on 8/29/26.
+//  Created by Andrii Bryzhnychenko on 9/13/26.
 //
 
 import SwiftUI
 
-struct MasteryCategoryView: View {
-    let catalogContainer: CatalogContainer
+struct MasterySourceCategoryView: View {
+    let masteryCategory: MasteryCategoryModel
 
     var body: some View {
         HStack {
-            Text(catalogContainer.category.displayName.sentenceCased)
+            Text(masteryCategory.name.sentenceCased)
                 .foregroundStyle(Color.label)
             Spacer()
-            Text(catalogContainer.countText)
+            Text(masteryCategory.countText)
                 .font(.subheadline)
                 .foregroundStyle(Color.labelSecondary)
         }

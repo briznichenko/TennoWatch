@@ -1,5 +1,5 @@
 //
-//  CatalogItemModel.swift
+//  CatalogItem.swift
 //  WarframeListener
 //
 //  Created by Andrii Bryzhnychenko on 8/24/26.
@@ -16,6 +16,25 @@ struct MasteryCatalogContainer: NetworkModel {
     let totalMasteryMax: Int
     let obtainableMasteryMax: Int
     let items: [CatalogItemModel]
+    let nonItemSources: [String: [MasterySourceModel]]
+}
+
+struct MasterySourceModel: NetworkModel, Hashable {
+    let uniqueName: String
+    let name: String
+    let mastery: Int
+    @Omitted var isMastered: Bool?
+}
+
+extension MasterySourceModel: PersistentModelConvertible {
+    var model: MasterySourceDataModel {
+        .init(
+            uniqueName: uniqueName,
+            name: name,
+            mastery: mastery,
+            isMastered: isMastered ?? false
+        )
+    }
 }
 
 struct CatalogItemModel: Codable, Hashable, Identifiable, Equatable {
