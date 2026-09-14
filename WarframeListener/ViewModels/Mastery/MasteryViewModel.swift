@@ -25,19 +25,23 @@ struct MasteryRankProgress {
 
 @Observable
 final class MasteryViewModel {
-    private(set) var statusText: String = ""
+    // MARK: - Object Properties
+    private let profileRepository: ProfileRepository
+    private let catalogRepository: CatalogRepository
+    let errorManager: ErrorManager
+    
     private(set) var catalog: MasteryCatalog?
+    
+    private(set) var isLoading: Bool = false
+    
+    // MARK: - Computed Properties
     var catalogs: [CatalogContainer] {
         catalog?.items ?? []
     }
     var nonItemSources: [MasteryCategoryModel] {
         catalog?.nonItemSources ?? []
     }
-    private(set) var isLoading: Bool = false
-
-    let profileRepository: ProfileRepository
-    let catalogRepository: CatalogRepository
-
+    
     var earnedMasteryXP: Int {
         let itemsMastery = catalogs.flatMap(\.masteryItems).reduce(0) { $0 + $1.earnedMasteryPoints }
         let nonItemsMastery = nonItemSources.map(\.sources).joined().reduce(0) { $0 + $1.mastery }
@@ -52,11 +56,31 @@ final class MasteryViewModel {
         catalogs.reduce(0) { $0 + $1.obtainableRemainingCount }
     }
     
-    init(profileRepository: ProfileRepository, catalogRepository: CatalogRepository) {
+    // MARK: - Init
+    init(profileRepository: ProfileRepository, catalogRepository: CatalogRepository, errorManager: ErrorManager) {
         self.profileRepository = profileRepository
         self.catalogRepository = catalogRepository
+        self.errorManager = errorManager
     }
 
+    // MARK: - Functions
+    func fetchCatalog() async {
+        defer {
+            isLoading = false
+        }
+        
+        do {
+            if let profile = try? await profileRepository.getProfile() {
+                catalog = try await catalogRepository.syncMasteryCatalog(with: profile)
+            } else {
+                catalog = try await catalogRepository.getMasteryCatalog()
+            }
+        } catch {
+            errorManager.append(error)
+        }
+    }
+    
+    // MARK: - Helper Functions
     private static func rankProgress(forXP xp: Int) -> MasteryRankProgress {
         func cumulativeXP(for rank: Int) -> Int { 2500 * rank * (rank + 1) }
         var rank = 0
@@ -71,29 +95,4 @@ final class MasteryViewModel {
         )
     }
 
-    func fetchCatalog() async {
-        do {
-            catalog = try await catalogRepository.getMasteryCatalog()
-        } catch {
-            print(error)
-            statusText = error.localizedDescription
-        }
-    }
-    
-    func fetchProfile() async {
-        defer {
-            isLoading = false
-        }
-        
-        isLoading = true
-        statusText = "Loading..."
-
-        do {
-            let profile = try await profileRepository.getProfile(withPlayerId: .none)
-            catalog = try await catalogRepository.syncMasteryCatalog(with: profile)
-        } catch {
-            print(error)
-            statusText = error.localizedDescription
-        }
-    }
 }

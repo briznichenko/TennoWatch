@@ -81,6 +81,7 @@ struct SettingsView: View {
             }
             .themedList()
             .navigationTitle("Settings")
+            .handleErrorAlert(with: viewModel.errorManager)
             .task {
                 await viewModel.loadCatalogInfo()
             }

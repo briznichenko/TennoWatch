@@ -18,7 +18,7 @@ struct ProfileView: View {
         self.dependencies = dependencies
     }
 
-    //TODO: - Deconstruct;
+    // TODO: - Deconstruct;
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading) {
@@ -32,8 +32,6 @@ struct ProfileView: View {
                 Text(viewModel.displayName)
                     .font(.title)
                     .foregroundStyle(Color.label)
-                Text(viewModel.networkText)
-                    .foregroundStyle(Color.labelSecondary)
                 Spacer()
             }
             .padding()
@@ -48,12 +46,14 @@ struct ProfileView: View {
                     }
                 }
             }
+            .handleErrorAlert(with: viewModel.errorManager)
             .sheet(isPresented: $isShowingSettings) {
                 SettingsView(
                     viewModel: .init(
                         persistencyService: dependencies.persistencyService,
                         catalogRepository: dependencies.catalogRepository,
-                        profileRepository: dependencies.profileRepository
+                        profileRepository: dependencies.profileRepository,
+                        errorManager: dependencies.errorManager
                     ),
                     displayName: viewModel.displayName
                 )

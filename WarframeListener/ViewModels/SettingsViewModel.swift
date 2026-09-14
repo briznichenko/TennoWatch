@@ -18,15 +18,18 @@ final class SettingsViewModel {
     private let persistencyService: PersistencyService
     private let catalogRepository: CatalogRepository
     private let profileRepository: ProfileRepository
+    let errorManager: ErrorManager
 
     init(
         persistencyService: PersistencyService,
         catalogRepository: CatalogRepository,
-        profileRepository: ProfileRepository
+        profileRepository: ProfileRepository,
+        errorManager: ErrorManager
     ) {
         self.persistencyService = persistencyService
         self.catalogRepository = catalogRepository
         self.profileRepository = profileRepository
+        self.errorManager = errorManager
     }
 
     func loadCatalogInfo() async {
@@ -35,22 +38,20 @@ final class SettingsViewModel {
             gameVersion = catalogs.first?.gameVersion
             catalogGeneratedAt = catalogs.first?.generatedAt
         } catch {
-            statusText = error.localizedDescription
+            errorManager.append(error)
         }
     }
 
     func refreshCatalog() async {
         defer { isRefreshing = false }
         isRefreshing = true
-        statusText = "Refreshing…"
 
         do {
-            let profile = try await profileRepository.getProfile(withPlayerId: .none)
+            let profile = try await profileRepository.getProfile()
             _ = try await catalogRepository.syncMasteryCatalog(with: profile)
             await loadCatalogInfo()
-            statusText = ""
         } catch {
-            statusText = error.localizedDescription
+            errorManager.append(error)
         }
     }
 }

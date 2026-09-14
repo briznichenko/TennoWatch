@@ -27,15 +27,16 @@ struct MasteryView: View {
             .themedList()
             .navigationTitle("Mastery")
             .overlay {
-                if viewModel.statusText.isEmpty == false {
-                    Text(viewModel.statusText)
+                if viewModel.isLoading {
+                    ProgressView()
                 }
             }
+            .handleErrorAlert(with: viewModel.errorManager)
             .task {
                 await viewModel.fetchCatalog()
             }
             .refreshable {
-                await viewModel.fetchProfile()
+                await viewModel.fetchCatalog()
             }
         }
     }

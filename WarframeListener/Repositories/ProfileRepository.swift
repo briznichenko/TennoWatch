@@ -14,6 +14,12 @@ protocol ProfileRepository {
     func getProfile(withPlayerId playerId: String?) async throws -> Profile
 }
 
+extension ProfileRepository {
+    func getProfile(withPlayerId playerId: String? = .none) async throws -> Profile {
+        try await getProfile(withPlayerId: playerId)
+    }
+}
+
 final class PersistentProfileRepository: ProfileRepository {
     enum ProfileError: Error {
         case noData, noPlayerId
@@ -48,7 +54,7 @@ final class PersistentProfileRepository: ProfileRepository {
             try await persistencyService.saveValue(profile)
             return profile
         } else {
-            throw ProfileError.noData
+            throw ProfileError.noPlayerId
         }
     }
 }

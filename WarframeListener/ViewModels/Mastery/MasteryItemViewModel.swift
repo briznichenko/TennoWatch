@@ -53,5 +53,3 @@ final class MasteryItemViewModel: Identifiable {
         self.item = item
     }
 }
-
-

@@ -20,7 +20,8 @@ struct MainView: View {
                 MasteryView(
                     viewModel: .init(
                         profileRepository: dependencies.profileRepository,
-                        catalogRepository: dependencies.catalogRepository
+                        catalogRepository: dependencies.catalogRepository,
+                        errorManager: dependencies.errorManager
                     )
                 )
             }
@@ -29,7 +30,10 @@ struct MainView: View {
             }
             Tab("Profile", systemImage: "person") {
                 ProfileView(
-                    viewModel: .init(profileRepository: dependencies.profileRepository),
+                    viewModel: .init(
+                        profileRepository: dependencies.profileRepository,
+                        errorManager: dependencies.errorManager
+                    ),
                     dependencies: dependencies
                 )
             }

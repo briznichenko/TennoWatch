@@ -11,7 +11,6 @@ import Observation
 @Observable
 final class ProfileViewModel {
     private(set) var profile: Profile?
-    private(set) var networkText: String = ""
     private(set) var isLoading = false
     var playerId: String = "523b73b91a4d806878000000"
     var displayName: String {
@@ -19,27 +18,28 @@ final class ProfileViewModel {
     }
 
     private let profileRepository: ProfileRepository
+    let errorManager: ErrorManager
 
-    init(profileRepository: ProfileRepository) {
+    init(profileRepository: ProfileRepository, errorManager: ErrorManager) {
         self.profileRepository = profileRepository
+        self.errorManager = errorManager
     }
 
     func fetchProfile() async {
         guard playerId.isEmpty == false else {
-            networkText = "No player ID"
+            errorManager.append(PersistentProfileRepository.ProfileError.noPlayerId)
             return
         }
         defer {
             isLoading = false
         }
         isLoading = true
-        networkText = "Loading..."
 
         do {
             profile = try await profileRepository.getProfile(withPlayerId: playerId)
             isLoading = false
         } catch {
-            networkText = error.localizedDescription
+            errorManager.append(error)
         }
     }
 }
