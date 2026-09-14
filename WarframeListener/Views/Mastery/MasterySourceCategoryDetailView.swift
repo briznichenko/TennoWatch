@@ -45,7 +45,7 @@ struct MasterySourceCategoryDetailView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    Picker("Sort by", selection: $sortOption) {
+                    Picker(Strings.Mastery.sortBy, selection: $sortOption) {
                         ForEach(SortOption.allCases) { option in
                             Text(option.title).tag(option)
                         }

@@ -25,9 +25,9 @@ final class MasteryItemViewModel: Identifiable {
 
     var detailText: String {
         switch state {
-        case .mastered: "Mastered"
-        case .unobtainable: "Unobtainable"
-        case .unmastered, .partiallyMastered: "Rank \(rank) / \(maxRank) · +\(pointsRemaining) left"
+        case .mastered: Strings.Mastery.itemStateMastered
+        case .unobtainable: Strings.Mastery.itemStateUnobtainable
+        case .unmastered, .partiallyMastered: Strings.Mastery.itemRankProgress(rank: rank, maxRank: maxRank, pointsRemaining: pointsRemaining)
         }
     }
 

@@ -17,7 +17,7 @@ struct InvasionsView: View {
                     InvasionView(invasion: invasion)
                 }
             }
-            .navigationTitle("Invasions")
+            .navigationTitle(Strings.Invasions.title)
             .overlay {
                 if viewModel.isLoading && viewModel.invasions.isEmpty {
                     Text(viewModel.networkMessage)

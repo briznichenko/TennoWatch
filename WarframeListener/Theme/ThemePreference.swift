@@ -14,9 +14,9 @@ enum ThemePreference: String, CaseIterable, Identifiable, Hashable {
 
     var label: String {
         switch self {
-        case .system: "System"
-        case .light: "Light"
-        case .dark: "Dark"
+        case .system: Strings.Theme.system
+        case .light: Strings.Theme.light
+        case .dark: Strings.Theme.dark
         }
     }
 

@@ -12,7 +12,13 @@ struct MasteryCategoryDetailView: View {
         case missing, mastered, locked
 
         var id: String { rawValue }
-        var title: String { rawValue.sentenceCased }
+        var title: String {
+            switch self {
+            case .missing: Strings.Mastery.filterMissing
+            case .mastered: Strings.Mastery.filterMastered
+            case .locked: Strings.Mastery.filterLocked
+            }
+        }
 
         func matches(_ state: MasteryItem.MasteryState) -> Bool {
             switch self {
@@ -29,8 +35,8 @@ struct MasteryCategoryDetailView: View {
         var id: String { rawValue }
         var title: String {
             switch self {
-            case .name: "Name"
-            case .pointsRemaining: "Points remaining"
+            case .name: Strings.Mastery.sortOptionName
+            case .pointsRemaining: Strings.Mastery.sortOptionPointsRemaining
             }
         }
     }
@@ -67,7 +73,7 @@ struct MasteryCategoryDetailView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    Picker("Sort by", selection: $sortOption) {
+                    Picker(Strings.Mastery.sortBy, selection: $sortOption) {
                         ForEach(SortOption.allCases) { option in
                             Text(option.title).tag(option)
                         }

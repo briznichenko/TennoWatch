@@ -22,8 +22,8 @@ struct ProfileView: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading) {
-                LabeledContent("Player ID") {
-                    TextField("Enter player ID", text: $viewModel.playerId)
+                LabeledContent(Strings.Profile.id) {
+                    TextField(Strings.Profile.idPlaceholder, text: $viewModel.playerId)
                 }
                 .foregroundStyle(Color.label)
                 .onSubmit {
@@ -38,7 +38,7 @@ struct ProfileView: View {
             }
             .padding()
             .screenBackground()
-            .navigationTitle("Profile")
+            .navigationTitle(Strings.Profile.title)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {

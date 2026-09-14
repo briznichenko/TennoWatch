@@ -14,7 +14,7 @@ struct ErrorAlertModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .alert(
-                "An Error Occurred",
+                Strings.ErrorAlert.title,
                 isPresented: Binding(
                     get: { errorManager.currentError != nil },
                     set: { isPresented in
@@ -24,7 +24,7 @@ struct ErrorAlertModifier: ViewModifier {
                     }
                 )
             ) {
-                Button("OK") { }
+                Button(Strings.ErrorAlert.okButton) { }
             } message: {
                 if let error = errorManager.currentError {
                     Text(error.localizedDescription)

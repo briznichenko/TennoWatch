@@ -13,10 +13,10 @@ struct MainView: View {
 
     var body: some View {
         TabView {
-            Tab("World state", systemImage: "globe.europe.africa") {
+            Tab(Strings.Main.tabWorldState, systemImage: "globe.europe.africa") {
                 InvasionsView()
             }
-            Tab("Mastery", systemImage: "trophy") {
+            Tab(Strings.Main.tabMastery, systemImage: "trophy") {
                 MasteryView(
                     viewModel: .init(
                         profileRepository: dependencies.profileRepository,
@@ -25,10 +25,10 @@ struct MainView: View {
                     )
                 )
             }
-            Tab("Openings", systemImage: "target") {
-                Text("Openings will be here")
+            Tab(Strings.Main.tabOpenings, systemImage: "target") {
+                Text(Strings.Main.openingsPlaceholder)
             }
-            Tab("Profile", systemImage: "person") {
+            Tab(Strings.Main.tabProfile, systemImage: "person") {
                 ProfileView(
                     viewModel: .init(
                         profileRepository: dependencies.profileRepository,

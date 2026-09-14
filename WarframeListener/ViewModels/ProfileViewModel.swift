@@ -14,7 +14,7 @@ final class ProfileViewModel {
     private(set) var isLoading = false
     var playerId: String = "523b73b91a4d806878000000"
     var displayName: String {
-        profile?.displayName ?? "Unknown"
+        profile?.displayName ?? Strings.Profile.displayNameUnknown
     }
 
     private let profileRepository: ProfileRepository

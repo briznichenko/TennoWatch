@@ -23,7 +23,7 @@ struct MasteryView: View {
                 categoryList
                 otherSourcesList
             }
-            .navigationTitle("Mastery")
+            .navigationTitle(Strings.Mastery.title)
             .overlay {
                 if viewModel.isLoading {
                     ProgressView()
@@ -44,7 +44,7 @@ struct MasteryView: View {
         return Surface {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(alignment: .firstTextBaseline) {
-                    Text("MR \(progress.rank)")
+                    Text(Strings.Mastery.rankBadge(progress.rank))
                         .font(.system(size: 26, weight: .medium))
                         .foregroundStyle(Color.label)
                     Spacer()
@@ -54,8 +54,8 @@ struct MasteryView: View {
                 }
                 ProgressBar(value: progress.fraction)
                     .padding(.vertical, 4)
-                let xpLine = "\(progress.xpToNextRank.formatted()) XP to MR \(progress.rank + 1)"
-                let itemsLine = "\(viewModel.obtainableItemsRemaining) items left"
+                let xpLine = Strings.Mastery.xpToNextRank(progress.xpToNextRank.formatted(), nextRank: progress.rank + 1)
+                let itemsLine = Strings.Mastery.itemsLeft(viewModel.obtainableItemsRemaining)
                 Text("\(xpLine) · \(itemsLine)")
                     .font(.caption)
                     .foregroundStyle(Color.labelSecondary)
@@ -72,7 +72,7 @@ struct MasteryView: View {
                 }
             }
         } header: {
-            SectionHeaderLabel("Categories")
+            SectionHeaderLabel(Strings.Mastery.categoriesHeader)
         }
     }
     

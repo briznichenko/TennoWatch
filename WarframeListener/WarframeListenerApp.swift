@@ -11,6 +11,7 @@ import SwiftData
 @main
 struct WarframeListenerApp: App {
     @AppStorage("themePreference") private var themePreference: ThemePreference = .system
+    @AppStorage(AppLanguage.storageKey) private var languagePreference: AppLanguage = .system
 
     private let modelContainer: ModelContainer
     private let dependencies: AppDependencies
@@ -27,6 +28,7 @@ struct WarframeListenerApp: App {
                 .tint(.accent)
                 .foregroundStyle(Color.label)
                 .preferredColorScheme(themePreference.colorScheme)
+                .environment(\.locale, languagePreference.locale ?? .current)
         }
         .modelContainer(modelContainer)
     }

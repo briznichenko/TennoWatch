@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @AppStorage("themePreference") private var themePreference: ThemePreference = .system
+    @AppStorage(AppLanguage.storageKey) private var languagePreference: AppLanguage = .system
     @State private var viewModel: SettingsViewModel
 
     let displayName: String
@@ -22,36 +23,46 @@ struct SettingsView: View {
         NavigationStack {
             List {
                 Section {
-                    Picker("Theme", selection: $themePreference) {
+                    Picker(Strings.Settings.themeLabel, selection: $themePreference) {
                         ForEach(ThemePreference.allCases) { preference in
                             Text(preference.label).tag(preference)
                         }
                     }
                 } header: {
-                    SectionHeaderLabel("Appearance")
+                    SectionHeaderLabel(Strings.Settings.appearanceHeader)
+                }
+
+                Section {
+                    Picker(Strings.Settings.languageLabel, selection: $languagePreference) {
+                        ForEach(AppLanguage.allCases) { language in
+                            Text(language.label).tag(language)
+                        }
+                    }
+                } header: {
+                    SectionHeaderLabel(Strings.Settings.languageHeader)
                 }
 
                 Section {
                     HStack {
-                        Text("Account")
+                        Text(Strings.Settings.accountLabel)
                         Spacer()
                         Text(displayName)
                             .foregroundStyle(Color.labelSecondary)
                     }
                 } header: {
-                    SectionHeaderLabel("Account")
+                    SectionHeaderLabel(Strings.Settings.accountHeader)
                 }
 
                 Section {
                     HStack {
-                        Text("Catalog version")
+                        Text(Strings.Settings.catalogVersionLabel)
                         Spacer()
-                        Text(viewModel.gameVersion ?? "—")
+                        Text(viewModel.gameVersion ?? Strings.Settings.catalogVersionPlaceholder)
                             .foregroundStyle(Color.labelSecondary)
                     }
                     if let generatedAt = viewModel.catalogGeneratedAt {
                         HStack {
-                            Text("Generated")
+                            Text(Strings.Settings.generatedLabel)
                             Spacer()
                             Text(generatedAt.formatted(date: .abbreviated, time: .omitted))
                                 .foregroundStyle(Color.labelSecondary)
@@ -61,7 +72,7 @@ struct SettingsView: View {
                         Task { await viewModel.refreshCatalog() }
                     } label: {
                         HStack {
-                            Label("Refresh catalog", systemImage: "arrow.clockwise")
+                            Label(Strings.Settings.refreshCatalog, systemImage: "arrow.clockwise")
                             Spacer()
                             if viewModel.isRefreshing {
                                 ProgressView()
@@ -76,11 +87,11 @@ struct SettingsView: View {
                             .foregroundStyle(Color.labelSecondary)
                     }
                 } header: {
-                    SectionHeaderLabel("Catalog")
+                    SectionHeaderLabel(Strings.Settings.catalogHeader)
                 }
             }
             .themedList()
-            .navigationTitle("Settings")
+            .navigationTitle(Strings.Settings.title)
             .handleErrorAlert(with: viewModel.errorManager)
             .task {
                 await viewModel.loadCatalogInfo()

@@ -24,7 +24,7 @@ final class InvasionsViewModel {
 
     func fetchInvasions() async {
         isLoading = true
-        networkMessage = "Loading..."
+        networkMessage = Strings.Invasions.loading
 
         do {
             let result: Invasions  = try await apiManager.fetch(.invasions)
