@@ -41,7 +41,7 @@ final class MasteryCatalogDataModel {
                   catalogItemModel: $0)
         }
 
-        items = PersistentCatalogRepository.makeCatalogs(from: masteryItems).map(\.model)
+        items = DefaultCatalogSyncService.makeCatalogs(from: masteryItems).map(\.model)
         nonItemSources = model.nonItemSources.map {
             .init(name: $0, sources: $1.map(\.model))
         }
@@ -153,7 +153,7 @@ extension MasteryCatalog {
                   catalogItemModel: $0)
         }
 
-        items = PersistentCatalogRepository.makeCatalogs(from: masteryItems)
+        items = DefaultCatalogSyncService.makeCatalogs(from: masteryItems)
         nonItemSources = container.nonItemSources.map {
             .init(name: $0, sources: $1)
         }

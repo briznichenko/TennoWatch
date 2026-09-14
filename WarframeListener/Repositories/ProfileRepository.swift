@@ -42,6 +42,8 @@ final class PersistentProfileRepository: ProfileRepository {
                 accountID: result.accountID,
                 displayName: result.displayName,
                 items: fetchedProfile.stats.weapons,
+                playerSkills: result.playerSkills,
+                missions: result.missions,
                 lastUpdated: Date())
             try await persistencyService.saveValue(profile)
             return profile

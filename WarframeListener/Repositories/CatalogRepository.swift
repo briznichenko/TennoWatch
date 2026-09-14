@@ -24,10 +24,12 @@ final class PersistentCatalogRepository: CatalogRepository {
     
     let syncPolicy: SyncPolicy
     private let persistencyService: PersistencyService
-    
-    init(syncPolicy: SyncPolicy = .daily, persistencyService: PersistencyService) {
+    private let catalogSyncService: CatalogSyncService
+
+    init(syncPolicy: SyncPolicy = .daily, persistencyService: PersistencyService, catalogSyncService: CatalogSyncService = DefaultCatalogSyncService()) {
         self.syncPolicy = syncPolicy
         self.persistencyService = persistencyService
+        self.catalogSyncService = catalogSyncService
     }
     
     func getMasteryCatalog() async throws -> MasteryCatalog {
@@ -45,46 +47,10 @@ final class PersistentCatalogRepository: CatalogRepository {
     
     func syncMasteryCatalog(with profileModel: Profile) async throws -> MasteryCatalog {
         var catalog = try await getMasteryCatalog()
-        catalog.items = try await PersistentCatalogRepository.syncCatalogs(with: profileModel, against: catalog)
+        catalog.items = catalogSyncService.syncCatalogs(with: profileModel, against: catalog)
+        catalog.nonItemSources = catalogSyncService.syncNonItemSources(with: profileModel, against: catalog)
         try await persistencyService.saveValue(catalog)
         return catalog
-    }
-    
-    static func syncCatalogs(with profileModel: Profile, against catalog: MasteryCatalog) async throws -> [CatalogContainer] {
-        let items = profileModel.items
-        let itemsDictionary = Dictionary(items.map { ($0.type, $0) }, uniquingKeysWith: { first, _ in first })
-        
-        var catalogs = catalog.items
-        
-        catalogs.indices.forEach { index in
-            let unsyncedItems = catalogs[index].masteryItems
-            var syncedItems: [MasteryItem] = []
-            
-            unsyncedItems.forEach {
-                let profileItem = itemsDictionary[$0.catalogItemModel.uniqueName]
-                let masteryItem = MasteryItem(profileItemModel: profileItem, catalogItemModel: $0.catalogItemModel)
-                syncedItems.append(masteryItem)
-            }
-            catalogs[index].set(masteryItems: syncedItems.sorted {
-                $0.catalogItemModel.name < $1.catalogItemModel.name
-            })
-        }
-        
-        return catalogs
-    }
-    
-    static func makeCatalogs(from catalogItems: [MasteryItem]) -> [CatalogContainer] {
-        var catalogs: [CatalogContainer] = []
-        CatalogItemModel.Category.allCases.forEach { category in
-            catalogs.append(.init(category: category,
-                                  masteryItems:
-                                    catalogItems.filter {
-                $0.catalogItemModel.category == category
-            }))
-        }
-        return catalogs.sorted {
-            $0.category.displayName < $1.category.displayName
-        }
     }
 
     private func fetchCatalog(filename: String = "masterycatalog") async throws -> MasteryCatalog {

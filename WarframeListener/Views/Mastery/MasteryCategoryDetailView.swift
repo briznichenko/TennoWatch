@@ -81,5 +81,3 @@ struct MasteryCategoryDetailView: View {
         }
     }
 }
-
-

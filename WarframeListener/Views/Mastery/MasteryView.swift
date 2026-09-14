@@ -76,6 +76,7 @@ struct MasteryView: View {
             SectionHeaderLabel("Categories")
         }
     }
+    
     @ViewBuilder
     private var otherSourcesList: some View {
         ForEach(viewModel.nonItemSources) { source in

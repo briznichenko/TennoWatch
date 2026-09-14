@@ -20,10 +20,15 @@ struct ProfileModel: NetworkModel {
 struct ProfileInfoModel: NetworkModel {
     let accountID: ID
     let displayName: String
+    let playerSkills: [String: Int]
+    let missions: [ResultMission]
+    
     
     enum CodingKeys: String, CodingKey {
         case accountID = "AccountId"
         case displayName = "DisplayName"
+        case playerSkills = "PlayerSkills"
+        case missions = "Missions"
     }
 }
 
@@ -41,6 +46,7 @@ struct ProfileInfoModelComplex: Decodable {
     let guildClass: Int
     let guildEmblem: Bool
     let allianceID: ID
+    // MARK: - TODO sync
     let playerSkills: [String: Int]
     let challengeProgress: [ChallengeProgress]
     let deathMarks: [String]
@@ -48,6 +54,7 @@ struct ProfileInfoModelComplex: Decodable {
     let deathSquadable: Bool
     let titleType: String
     let migratedToConsole: Bool
+    // MARK: - TODO sync
     let missions: [ResultMission]
     let affiliations: [Affiliation]
     let dailyAffiliation: Int
@@ -291,10 +298,16 @@ struct LoadOutPreset: Decodable {
 }
 
 // MARK: - ResultMission
-struct ResultMission: Decodable {
+struct ResultMission: Codable, Hashable, Equatable {
     let completes: Int
     let tier: Int?
     let tag: String
+
+    enum CodingKeys: String, CodingKey {
+        case completes = "Completes"
+        case tier = "Tier"
+        case tag = "Tag"
+    }
 }
 
 // MARK: - Stats
@@ -307,4 +320,27 @@ struct Stats: NetworkModel {
     }
 }
 
+struct StatsComplex: Decodable {
+    let ciphersFailed: Int
+    let ciphersSolved: Int
+    let cipherTime: Double
+    let destroyCount: Int
     let fishCount: Int
+    let deaths: Int
+    let rating: Int
+    let weapons: [ProfileItemModel]
+    let healCount: Int
+    let income: Int
+    let meleeKills: Int
+    let missionsDumped: Int
+    let missionsFailed: Int
+    let missionsInterrupted: Int
+    let missionsQuit: Int
+    let missionsCompleted: Int
+    let timePlayedSEC: Double
+    let pickupCount: Int
+    let playerLevel: Int
+    let rank: Int
+    let reviveCount: Int
+    let guildName: String
+}
