@@ -7,9 +7,9 @@
 
 import Foundation
 
-protocol CatalogSyncService {
-    func syncCatalogs(with profileModel: Profile, against catalog: MasteryCatalog) -> [CatalogContainer]
-    func syncNonItemSources(with profileModel: Profile, against catalog: MasteryCatalog) -> [MasteryCategoryModel]
+protocol CatalogSyncService: Sendable {
+    func syncCatalogs(with profile: ProfileDataModel, against catalog: MasteryCatalogDataModel)
+    func syncNonItemSources(with profile: ProfileDataModel, against catalog: MasteryCatalogDataModel)
 }
 
 struct DefaultCatalogSyncService: CatalogSyncService {
@@ -18,65 +18,44 @@ struct DefaultCatalogSyncService: CatalogSyncService {
     private let maxIntrinsicLevel = 10
 
     // MARK: - Functions
-    func syncCatalogs(with profile: Profile, against catalog: MasteryCatalog) -> [CatalogContainer] {
+    func syncCatalogs(with profile: ProfileDataModel, against catalog: MasteryCatalogDataModel) {
         let profileItems = Dictionary(
             profile.items.map { ($0.type, $0) },
             uniquingKeysWith: { first, _ in first }
         )
 
-        return catalog.items.map { container in
-            var container = container
-            container.set(
-                masteryItems: container.masteryItems
-                    .map {
-                        MasteryItem(
-                            profileItemModel: profileItems[$0.catalogItemModel.uniqueName],
-                            catalogItemModel: $0.catalogItemModel
-                        )
-                    }
-                    .sorted {
-                        $0.catalogItemModel.name < $1.catalogItemModel.name
-                    }
-            )
-            return container
+        for container in catalog.items {
+            for masteryItem in container.masteryItems {
+                masteryItem.profileItem = profileItems[masteryItem.catalogItem.uniqueName]
+            }
         }
     }
 
-    func syncNonItemSources(with profile: Profile, against catalog: MasteryCatalog) -> [MasteryCategoryModel] {
+    func syncNonItemSources(with profile: ProfileDataModel, against catalog: MasteryCatalogDataModel) {
         let missions = Dictionary(
             profile.missions.map { ($0.tag, $0) },
             uniquingKeysWith: { first, _ in first }
         )
-        let playerSkills = profile.playerSkills
+        let playerSkills = Dictionary(
+            profile.playerSkills.map { ($0.name, $0.rank) },
+            uniquingKeysWith: { first, _ in first }
+        )
 
-        return catalog.nonItemSources.map { category in
-            var category = category
-
-            category.set(
-                sources: category.sources
-                    .map {
-                        MasterySourceModel(
-                            uniqueName: $0.uniqueName,
-                            name: $0.name,
-                            mastery: $0.mastery,
-                            isMastered: isMastered(
-                                uniqueName: $0.uniqueName,
-                                missions: missions,
-                                playerSkills: playerSkills
-                            )
-                        )
-                    }
-                    .sorted { $0.name < $1.name }
-            )
-
-            return category
+        for category in catalog.nonItemSources {
+            for source in category.sources {
+                source.isMastered = isMastered(
+                    uniqueName: source.uniqueName,
+                    missions: missions,
+                    playerSkills: playerSkills
+                )
+            }
         }
     }
 
     // MARK: - Helper Functions
     private func isMastered(
         uniqueName: String,
-        missions: [String: ResultMission],
+        missions: [String: ResultMissionDataModel],
         playerSkills: [String: Int]
     ) -> Bool {
         if uniqueName.hasSuffix(steelPathSuffix) {
@@ -91,18 +70,15 @@ struct DefaultCatalogSyncService: CatalogSyncService {
         }
         return false
     }
-    
-    static func makeCatalogs(from catalogItems: [MasteryItem]) -> [CatalogContainer] {
-        var catalogs: Set<CatalogContainer> = []
-        CatalogItemModel.Category.allCases.forEach { category in
-            catalogs.insert(.init(category: category,
-                                  masteryItems:
-                                    catalogItems.filter {
-                $0.catalogItemModel.category == category
-            }))
-        }
-        return catalogs.sorted {
-            $0.category.displayName < $1.category.displayName
-        }
+
+    static func makeCatalogs(from catalogItems: [MasteryItemDataModel]) -> [CatalogContainerModel] {
+        CatalogItemModel.Category.allCases
+            .map { category in
+                CatalogContainerModel(
+                    category: category,
+                    masteryItems: catalogItems.filter { $0.catalogItem.category == category }
+                )
+            }
+            .sorted { $0.category.displayName < $1.category.displayName }
     }
 }

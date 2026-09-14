@@ -11,17 +11,11 @@ import Observation
 @Observable
 final class ProfileViewModel {
     // MARK: - Object Properties
-    private(set) var profile: Profile?
     private(set) var isLoading = false
     var playerId: String = "523b73b91a4d806878000000"
 
     private let profileRepository: ProfileRepository
     let errorManager: ErrorManager
-
-    // MARK: - Computed Properties
-    var displayName: String {
-        profile?.displayName ?? Strings.Profile.displayNameUnknown
-    }
 
     // MARK: - Init
     init(profileRepository: ProfileRepository, errorManager: ErrorManager) {
@@ -41,8 +35,7 @@ final class ProfileViewModel {
         isLoading = true
 
         do {
-            profile = try await profileRepository.getProfile(withPlayerId: playerId)
-            isLoading = false
+            try await profileRepository.syncProfile(withPlayerId: playerId)
         } catch {
             errorManager.append(error)
         }

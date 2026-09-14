@@ -9,15 +9,15 @@ import SwiftUI
 
 struct MasteryItemView: View {
     // MARK: - Object Properties
-    let viewModel: MasteryItemViewModel
+    let item: MasteryItemDataModel
 
     // MARK: - Computed Properties
     private var textColor: Color {
-        viewModel.isDimmed ? .labelSecondary : .label
+        item.isDimmed ? .labelSecondary : .label
     }
 
     private var iconStyle: Color {
-        switch viewModel.state {
+        switch item.masteryState {
         case .mastered: .masteredIcon
         case .unmastered, .partiallyMastered: .unmasteredIcon
         case .unobtainable: .lockedIcon
@@ -27,14 +27,14 @@ struct MasteryItemView: View {
     // MARK: - Body
     var body: some View {
         HStack(spacing: 10) {
-            Image(systemName: viewModel.iconName)
+            Image(systemName: item.iconName)
                 .symbolRenderingMode(.hierarchical)
                 .foregroundStyle(iconStyle)
                 .imageScale(.large)
             VStack(alignment: .leading, spacing: 2) {
-                Text(viewModel.name)
+                Text(item.catalogItem.name)
                     .foregroundStyle(textColor)
-                Text(viewModel.detailText)
+                Text(item.detailText)
                     .font(.caption)
                     .foregroundStyle(Color.labelSecondary)
             }

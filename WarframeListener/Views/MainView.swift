@@ -54,5 +54,6 @@ struct MainView: View {
     let container = try? ModelContainer(for: ProfileDataModel.self, MasteryCatalogDataModel.self, configurations: .init(isStoredInMemoryOnly: true))
     if let container {
         MainView(dependencies: AppDependencies(modelContainer: container))
+            .modelContainer(container)
     }
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MasteryCategoryView: View {
-    let catalogContainer: CatalogContainer
+    let catalogContainer: CatalogContainerModel
 
     var body: some View {
         HStack {

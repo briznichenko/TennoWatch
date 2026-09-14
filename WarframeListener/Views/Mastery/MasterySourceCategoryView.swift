@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MasterySourceCategoryView: View {
-    let masteryCategory: MasteryCategoryModel
+    let masteryCategory: MasteryCategoryDataModel
 
     var body: some View {
         HStack {

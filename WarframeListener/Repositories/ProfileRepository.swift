@@ -10,13 +10,13 @@ import SwiftData
 
 protocol ProfileRepository {
     var syncPolicy: SyncPolicy { get }
-    
-    func getProfile(withPlayerId playerId: String?) async throws -> Profile
+
+    func syncProfile(withPlayerId playerId: String?) async throws
 }
 
 extension ProfileRepository {
-    func getProfile(withPlayerId playerId: String? = .none) async throws -> Profile {
-        try await getProfile(withPlayerId: playerId)
+    func syncProfile(withPlayerId playerId: String? = .none) async throws {
+        try await syncProfile(withPlayerId: playerId)
     }
 }
 
@@ -24,7 +24,7 @@ final class PersistentProfileRepository: ProfileRepository {
     enum ProfileError: Error {
         case noData, noPlayerId
     }
-    
+
     // MARK: - Object Properties
     let syncPolicy: SyncPolicy = .daily
 
@@ -38,26 +38,29 @@ final class PersistentProfileRepository: ProfileRepository {
     }
 
     // MARK: - Functions
-    func getProfile(withPlayerId playerId: String?) async throws -> Profile {
-        let storedProfile = try await persistencyService.fetchModel(by: ProfileDataModel.self).first
-        if let storedProfile, Calendar.current.isDateInToday(storedProfile.lastUpdated) && syncPolicy == .daily {
-            return storedProfile
+    func syncProfile(withPlayerId playerId: String?) async throws {
+        let syncPolicy = syncPolicy
+        let isFresh = try await persistencyService.perform { context in
+            guard let stored = try context.fetch(FetchDescriptor<ProfileDataModel>()).first else { return false }
+            return Calendar.current.isDateInToday(stored.lastUpdated) && syncPolicy == .daily
         }
-        
+        if isFresh { return }
+
         guard let playerId else { throw ProfileError.noPlayerId }
         let fetchedProfile: ProfileModel = try await profileService.fetch(.profile(playerId: playerId))
-        if let result = fetchedProfile.results.first {
-            let profile: Profile = .init(
+        guard let result = fetchedProfile.results.first else { throw ProfileError.noPlayerId }
+
+        try await persistencyService.perform { context in
+            let profile = ProfileDataModel(
                 accountID: result.accountID,
                 displayName: result.displayName,
                 items: fetchedProfile.stats.weapons,
                 playerSkills: result.playerSkills,
                 missions: result.missions,
-                lastUpdated: Date())
-            try await persistencyService.saveValue(profile)
-            return profile
-        } else {
-            throw ProfileError.noPlayerId
+                lastUpdated: Date()
+            )
+            context.insert(profile)
+            try context.save()
         }
     }
 }

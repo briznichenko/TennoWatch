@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SettingsView: View {
     // MARK: - Object Properties
     @AppStorage("themePreference") private var themePreference: ThemePreference = .system
     @AppStorage(AppLanguage.storageKey) private var languagePreference: AppLanguage = .system
     @State private var viewModel: SettingsViewModel
+    @Query(sort: \MasteryCatalogDataModel.generatedAt, order: .reverse) private var catalogs: [MasteryCatalogDataModel]
 
     let displayName: String
 
@@ -60,10 +62,10 @@ struct SettingsView: View {
                     HStack {
                         Text(Strings.Settings.catalogVersionLabel)
                         Spacer()
-                        Text(viewModel.gameVersion ?? Strings.Settings.catalogVersionPlaceholder)
+                        Text(catalogs.first?.gameVersion ?? Strings.Settings.catalogVersionPlaceholder)
                             .foregroundStyle(Color.labelSecondary)
                     }
-                    if let generatedAt = viewModel.catalogGeneratedAt {
+                    if let generatedAt = catalogs.first?.generatedAt {
                         HStack {
                             Text(Strings.Settings.generatedLabel)
                             Spacer()
@@ -96,9 +98,6 @@ struct SettingsView: View {
             .themedList()
             .navigationTitle(Strings.Settings.title)
             .handleErrorAlert(with: viewModel.errorManager)
-            .task {
-                await viewModel.loadCatalogInfo()
-            }
         }
     }
 }

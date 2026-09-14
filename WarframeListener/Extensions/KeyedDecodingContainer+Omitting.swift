@@ -8,7 +8,7 @@
 import Foundation
 
 @propertyWrapper
-struct Omitted<T: Hashable>: Codable, Hashable {
+struct Omitted<T: Hashable & Sendable>: Codable, Hashable, Sendable {
     var wrappedValue: T?
 
     init(from decoder: Decoder) throws {
@@ -23,7 +23,10 @@ struct Omitted<T: Hashable>: Codable, Hashable {
 }
 
 extension KeyedDecodingContainer {
-    func decode<T>(_ type: Omitted<T>.Type, forKey key: KeyedDecodingContainer<K>.Key) throws -> Omitted<T> {
+    func decode<T>(
+        _ type: Omitted<T>.Type,
+        forKey key: KeyedDecodingContainer<K>.Key
+    ) throws -> Omitted<T> {
         return Omitted(wrappedValue: nil)
     }
 }

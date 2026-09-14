@@ -9,23 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class ProfileDataModel: ValueTypeConvertible {
-    typealias Value = Profile
-
-    // MARK: - Computed Properties
-    var value: Value {
-        .init(
-            accountID: .init(oid: accountID),
-            displayName: displayName,
-            items: items.map(\.value),
-            playerSkills: playerSkills.reduce(into: [String: Int]()) { result, skill in
-                result[skill.name] = skill.rank
-            },
-            missions: missions.map(\.value),
-            lastUpdated: lastUpdated
-        )
-    }
-
+final class ProfileDataModel {
     // MARK: - Object Properties
     @Attribute(.unique) var accountID: String
     @Attribute(.unique) var displayName: String
@@ -36,38 +20,21 @@ final class ProfileDataModel: ValueTypeConvertible {
     var lastUpdated: Date
 
     // MARK: - Init
-    init(accountID: String, displayName: String, items: [ProfileItemDataModel], playerSkills: [IntrinsicsDataModel], missions: [ResultMissionDataModel], lastUpdated: Date) {
-        self.accountID = accountID
+    init(
+        accountID: ID,
+        displayName: String,
+        items: [ProfileItemModel],
+        playerSkills: [String: Int],
+        missions: [ResultMission],
+        lastUpdated: Date
+    ) {
+        self.accountID = accountID.oid
         self.displayName = displayName
-        self.items = items
-        self.playerSkills = playerSkills
-        self.missions = missions
+        self.items = items.map(\.model)
+        self.playerSkills = playerSkills.map { .init(name: $0.key, rank: $0.value) }
+        self.missions = missions.map { .init(from: $0) }
         self.lastUpdated = lastUpdated
     }
-}
-
-struct Profile: PersistentModelConvertible {
-    typealias Model = ProfileDataModel
-
-    // MARK: - Computed Properties
-    var model: Model {
-        .init(
-            accountID: accountID.oid,
-            displayName: displayName,
-            items: items.map(\.model),
-            playerSkills: playerSkills.map { .init(name: $0.key, rank: $0.value) },
-            missions: missions.map { .init(completes: $0.completes, tier: $0.tier, tag: $0.tag) },
-            lastUpdated: lastUpdated
-        )
-    }
-
-    // MARK: - Object Properties
-    let accountID: ID
-    let displayName: String
-    let items: [ProfileItemModel]
-    let playerSkills: [String: Int]
-    let missions: [ResultMission]
-    let lastUpdated: Date
 }
 
 @Model
@@ -91,12 +58,6 @@ final class ResultMissionDataModel {
     }
 }
 
-extension ResultMissionDataModel: ValueTypeConvertible {
-    var value: ResultMission {
-        .init(completes: completes, tier: tier, tag: tag)
-    }
-}
-
 @Model
 final class IntrinsicsDataModel {
     // MARK: - Object Properties
@@ -110,23 +71,6 @@ final class IntrinsicsDataModel {
     }
 }
 
-extension IntrinsicsDataModel: ValueTypeConvertible {
-    var value: Intrinsics {
-        .init(name: name, rank: rank)
-    }
-}
-
-struct Intrinsics: Codable, Hashable, Equatable {
-    let name: String
-    let rank: Int
-}
-
-extension Intrinsics: PersistentModelConvertible {
-    var model: IntrinsicsDataModel {
-        .init(name: name, rank: rank)
-    }
-}
-
 struct ProfileItemModel: Codable, Hashable, Equatable {
     let equipTime: Double?
     let headshots: Int?
@@ -136,7 +80,7 @@ struct ProfileItemModel: Codable, Hashable, Equatable {
     let xp: Int?
     let type: String
     let fired: Int?
-    
+
     static let stub = Self.init(equipTime: 10, headshots: 2, hits: 5, assists: 3, kills: 2, xp: 1000, type: "type", fired: 100)
 }
 

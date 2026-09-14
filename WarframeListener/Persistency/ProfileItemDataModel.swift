@@ -34,21 +34,6 @@ final class ProfileItemDataModel {
     }
 }
 
-extension ProfileItemDataModel: ValueTypeConvertible {
-    var value: ProfileItemModel {
-        .init(
-            equipTime: equipTime,
-            headshots: headshots,
-            hits: hits,
-            assists: assists,
-            kills: kills,
-            xp: xp,
-            type: type,
-            fired: fired
-        )
-    }
-}
-
 @Model
 final class CatalogItemDataModel {
     // MARK: - Object Properties
@@ -76,27 +61,13 @@ final class CatalogItemDataModel {
     }
 }
 
-extension CatalogItemDataModel: ValueTypeConvertible {
-    var value: CatalogItemModel {
-        .init(
-            uniqueName: uniqueName,
-            name: name,
-            category: category,
-            maxRank: maxRank,
-            pointsPerRank: pointsPerRank,
-            xpPerRankSq: xpPerRankSq,
-            icon: icon,
-            obtainable: obtainable,
-            requiresGilding: requiresGilding
-        )
-    }
-}
-
 @Model
 final class MasteryItemDataModel {
     // MARK: - Object Properties
     var catalogItem: CatalogItemDataModel
-    @Relationship(deleteRule: .cascade, inverse: \ProfileItemDataModel.masteryItem)
+    // .nullify, not .cascade: this points at the same row ProfileDataModel.items
+    // already owns (cascade); cascading here too would delete it out from under the profile.
+    @Relationship(deleteRule: .nullify, inverse: \ProfileItemDataModel.masteryItem)
     var profileItem: ProfileItemDataModel?
 
     // MARK: - Init
@@ -106,55 +77,59 @@ final class MasteryItemDataModel {
         }
         catalogItem = .init(catalogItem: catalogItemModel)
     }
-
-    // MARK: - Functions
-    func set(profileItemModel: ProfileItemModel) {
-        profileItem = .init(profileItem: profileItemModel)
-    }
 }
 
-extension MasteryItemDataModel: ValueTypeConvertible {
-    var value: MasteryItem {
-        return .init(
-            profileItemModel: profileItem?.value,
-            catalogItemModel: catalogItem.value
-        )
-    }
-}
-
-struct MasteryItem: Equatable, Hashable {
-    // MARK: - Object Properties
-    let profileItemModel: ProfileItemModel?
-    let catalogItemModel: CatalogItemModel
-
-    // MARK: - Computed Properties
-    var xp: Int { profileItemModel?.xp ?? 0 }
+extension MasteryItemDataModel {
+    var xp: Int { profileItem?.xp ?? 0 }
 
     var rank: Int {
-        let calculatedRank = Int(Double(xp / catalogItemModel.xpPerRankSq).squareRoot())
-        return min(calculatedRank, catalogItemModel.maxRank)
+        let calculatedRank = Int(Double(xp / catalogItem.xpPerRankSq).squareRoot())
+        return min(calculatedRank, catalogItem.maxRank)
     }
 
-    var isMastered: Bool { rank >= catalogItemModel.maxRank }
+    var isMastered: Bool { rank >= catalogItem.maxRank }
 
-    var earnedMasteryPoints: Int { rank * catalogItemModel.pointsPerRank }
+    var earnedMasteryPoints: Int { rank * catalogItem.pointsPerRank }
 
-    var remainingMasteryPoints: Int { (catalogItemModel.maxRank - rank) * catalogItemModel.pointsPerRank }
-    
-    var obtainable: Bool { catalogItemModel.obtainable }
+    var remainingMasteryPoints: Int { (catalogItem.maxRank - rank) * catalogItem.pointsPerRank }
 
-    enum MasteryState: Equatable {
-        case mastered, unmastered, partiallyMastered, unobtainable
-    }
+    var obtainable: Bool { catalogItem.obtainable }
 
     var masteryState: MasteryState {
-        guard catalogItemModel.obtainable else { return .unobtainable }
+        guard catalogItem.obtainable else { return .unobtainable }
         return isMastered ? .mastered : (rank == 0 ? .unmastered : .partiallyMastered)
+    }
+
+    var detailText: String {
+        switch masteryState {
+        case .mastered: Strings.Mastery.itemStateMastered
+        case .unobtainable: Strings.Mastery.itemStateUnobtainable
+        case .unmastered, .partiallyMastered:
+            Strings.Mastery.itemRankProgress(
+                rank: rank,
+                maxRank: catalogItem.maxRank,
+                pointsRemaining: remainingMasteryPoints
+            )
+        }
+    }
+
+    var iconName: String {
+        switch masteryState {
+        case .mastered: "checkmark.circle.fill"
+        case .partiallyMastered: "circle.lefthalf.filled"
+        case .unmastered: "circle.dashed"
+        case .unobtainable: "lock.fill"
+        }
+    }
+
+    var isDimmed: Bool {
+        switch masteryState {
+        case .mastered, .unobtainable: true
+        case .unmastered, .partiallyMastered: false
+        }
     }
 }
 
-extension MasteryItem: PersistentModelConvertible {
-    var model: MasteryItemDataModel {
-        .init(profileItemModel: profileItemModel, catalogItemModel: catalogItemModel)
-    }
+enum MasteryState: Equatable {
+    case mastered, unmastered, partiallyMastered, unobtainable
 }

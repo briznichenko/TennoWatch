@@ -6,10 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MasteryView: View {
     // MARK: - Object Properties
     @State private var viewModel: MasteryViewModel
+    @Query(sort: \MasteryCatalogDataModel.generatedAt, order: .reverse) private var catalogs: [MasteryCatalogDataModel]
+
+    private var catalog: MasteryCatalogDataModel? { catalogs.first }
 
     // MARK: - Init
     init(viewModel: MasteryViewModel) {
@@ -44,7 +48,7 @@ struct MasteryView: View {
 
     // MARK: - Subviews
     private var summaryCard: some View {
-        let progress = viewModel.rankProgress
+        let progress = catalog?.rankProgress ?? .rankProgress(forXP: 0)
         return Surface {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(alignment: .firstTextBaseline) {
@@ -59,7 +63,7 @@ struct MasteryView: View {
                 ProgressBar(value: progress.fraction)
                     .padding(.vertical, 4)
                 let xpLine = Strings.Mastery.xpToNextRank(progress.xpToNextRank.formatted(), nextRank: progress.rank + 1)
-                let itemsLine = Strings.Mastery.itemsLeft(viewModel.obtainableItemsRemaining)
+                let itemsLine = Strings.Mastery.itemsLeft(catalog?.obtainableItemsRemaining ?? 0)
                 Text("\(xpLine) · \(itemsLine)")
                     .font(.caption)
                     .foregroundStyle(Color.labelSecondary)
@@ -69,20 +73,21 @@ struct MasteryView: View {
     }
 
     private var categoryList: some View {
-        Section {
-            ForEach(viewModel.catalogs) { catalog in
-                NavigationLink(destination: MasteryCategoryDetailView(catalogContainer: catalog)) {
-                    MasteryCategoryView(catalogContainer: catalog)
+        let sortedContainers = (catalog?.items ?? []).sorted { $0.category.displayName < $1.category.displayName }
+        return Section {
+            ForEach(sortedContainers) { container in
+                NavigationLink(destination: MasteryCategoryDetailView(catalogContainer: container)) {
+                    MasteryCategoryView(catalogContainer: container)
                 }
             }
         } header: {
             SectionHeaderLabel(Strings.Mastery.categoriesHeader)
         }
     }
-    
+
     @ViewBuilder
     private var otherSourcesList: some View {
-        ForEach(viewModel.nonItemSources) { source in
+        ForEach(catalog?.nonItemSources ?? []) { source in
             Section {
                 NavigationLink(destination: MasterySourceCategoryDetailView(masteryCategory: source)) {
                     MasterySourceCategoryView(masteryCategory: source)

@@ -14,14 +14,14 @@ struct MasterySourceCategoryDetailView: View {
     typealias SortOption = MasteryCategoryDetailView.SortOption
 
     // MARK: - Object Properties
-    let masteryCategory: MasteryCategoryModel
+    let masteryCategory: MasteryCategoryDataModel
 
     @State private var filter: Filter = .missing
     @State private var sortOption: SortOption = .name
 
     // MARK: - Computed Properties
     // TODO: - Move to view model;
-    private var sortedItems: [MasterySourceModel] {
+    private var sortedItems: [MasterySourceDataModel] {
         let filtered = masteryCategory.sources.filter { filter.matches($0.masteryState) }
         switch sortOption {
         case .name: return filtered.sorted { $0.name < $1.name }
@@ -32,8 +32,8 @@ struct MasterySourceCategoryDetailView: View {
     // MARK: - Body
     var body: some View {
         List {
-            ForEach(sortedItems, id: \.self) { item in
-                MasterySourceView(viewModel: .init(source: item))
+            ForEach(sortedItems) { item in
+                MasterySourceView(source: item)
             }
         }
         .listStyle(.plain)

@@ -20,7 +20,7 @@ struct MasteryCategoryDetailView: View {
             }
         }
 
-        func matches(_ state: MasteryItem.MasteryState) -> Bool {
+        func matches(_ state: MasteryState) -> Bool {
             switch self {
             case .missing: state == .unmastered || state == .partiallyMastered
             case .mastered: state == .mastered
@@ -42,17 +42,17 @@ struct MasteryCategoryDetailView: View {
     }
 
     // MARK: - Object Properties
-    let catalogContainer: CatalogContainer
+    let catalogContainer: CatalogContainerModel
 
     @State private var filter: Filter = .missing
     @State private var sortOption: SortOption = .name
 
     // MARK: - Computed Properties
     //TODO: - Move to view model;
-    private var sortedItems: [MasteryItem] {
+    private var sortedItems: [MasteryItemDataModel] {
         let filtered = catalogContainer.masteryItems.filter { filter.matches($0.masteryState) }
         switch sortOption {
-        case .name: return filtered.sorted { $0.catalogItemModel.name < $1.catalogItemModel.name }
+        case .name: return filtered.sorted { $0.catalogItem.name < $1.catalogItem.name }
         case .pointsRemaining: return filtered.sorted { $0.remainingMasteryPoints > $1.remainingMasteryPoints }
         }
     }
@@ -60,8 +60,8 @@ struct MasteryCategoryDetailView: View {
     // MARK: - Body
     var body: some View {
         List {
-            ForEach(sortedItems, id: \.self) { item in
-                MasteryItemView(viewModel: .init(item: item))
+            ForEach(sortedItems) { item in
+                MasteryItemView(item: item)
             }
         }
         .listStyle(.plain)

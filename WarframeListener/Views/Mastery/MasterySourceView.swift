@@ -9,26 +9,26 @@ import SwiftUI
 
 struct MasterySourceView: View {
     // MARK: - Object Properties
-    let viewModel: MasterySourceViewModel
+    let source: MasterySourceDataModel
 
     // MARK: - Computed Properties
     private var textColor: Color {
-        viewModel.isDimmed ? .labelSecondary : .label
+        source.isDimmed ? .labelSecondary : .label
     }
 
     private var iconStyle: Color {
-        viewModel.state == .mastered ? .masteredIcon : .unmasteredIcon
+        source.masteryState == .mastered ? .masteredIcon : .unmasteredIcon
     }
 
     // MARK: - Body
     var body: some View {
         HStack(spacing: 10) {
-            Image(systemName: viewModel.iconName)
+            Image(systemName: source.iconName)
                 .symbolRenderingMode(.hierarchical)
                 .foregroundStyle(iconStyle)
                 .imageScale(.large)
             VStack(alignment: .leading, spacing: 2) {
-                Text(viewModel.name)
+                Text(source.name)
                     .foregroundStyle(textColor)
             }
             Spacer()

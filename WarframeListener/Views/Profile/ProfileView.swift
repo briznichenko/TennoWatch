@@ -6,13 +6,19 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ProfileView: View {
     // MARK: - Object Properties
     @State private var viewModel: ProfileViewModel
     @State private var isShowingSettings = false
+    @Query(sort: \ProfileDataModel.lastUpdated, order: .reverse) private var profiles: [ProfileDataModel]
 
     private let dependencies: AppDependencies
+
+    private var displayName: String {
+        profiles.first?.displayName ?? Strings.Profile.displayNameUnknown
+    }
 
     // MARK: - Init
     init(viewModel: ProfileViewModel, dependencies: AppDependencies) {
@@ -34,7 +40,7 @@ struct ProfileView: View {
                         await viewModel.fetchProfile()
                     }
                 }
-                Text(viewModel.displayName)
+                Text(displayName)
                     .font(.title)
                     .foregroundStyle(Color.label)
                 Spacer()
@@ -55,12 +61,11 @@ struct ProfileView: View {
             .sheet(isPresented: $isShowingSettings) {
                 SettingsView(
                     viewModel: .init(
-                        persistencyService: dependencies.persistencyService,
                         catalogRepository: dependencies.catalogRepository,
                         profileRepository: dependencies.profileRepository,
                         errorManager: dependencies.errorManager
                     ),
-                    displayName: viewModel.displayName
+                    displayName: displayName
                 )
             }
             .task {

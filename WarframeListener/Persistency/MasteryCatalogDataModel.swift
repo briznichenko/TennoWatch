@@ -31,37 +31,66 @@ final class MasteryCatalogDataModel {
         self.items = items
         self.nonItemSources = nonItemSources
     }
-    
-    init(from model: MasteryCatalogContainer) {
-        schemaVersion = model.schemaVersion
-        gameVersion = model.gameVersion
-        generatedAt = model.generatedAt
-        totalMasteryMax = model.totalMasteryMax
-        obtainableMasteryMax = model.obtainableMasteryMax
-        let masteryItems: [MasteryItem] = model.items.map {
-            .init(profileItemModel: .none,
-                  catalogItemModel: $0)
-        }
 
-        items = DefaultCatalogSyncService.makeCatalogs(from: masteryItems).map(\.model)
-        nonItemSources = model.nonItemSources.map {
-            .init(name: $0, sources: $1.map(\.model))
+    init(from container: MasteryCatalogContainer) {
+        schemaVersion = container.schemaVersion
+        gameVersion = container.gameVersion
+        generatedAt = container.generatedAt
+        totalMasteryMax = container.totalMasteryMax
+        obtainableMasteryMax = container.obtainableMasteryMax
+
+        let masteryItems: [MasteryItemDataModel] = container.items.map {
+            .init(profileItemModel: .none, catalogItemModel: $0)
+        }
+        items = DefaultCatalogSyncService.makeCatalogs(from: masteryItems)
+        nonItemSources = container.nonItemSources.map { name, sources in
+            .init(name: name, sources: sources.map(\.model))
         }
     }
 }
 
-extension MasteryCatalogDataModel: ValueTypeConvertible {
-    var value: MasteryCatalog {
-        .init(
-            schemaVersion: schemaVersion,
-            gameVersion: gameVersion,
-            generatedAt: generatedAt,
-            totalMasteryMax: totalMasteryMax,
-            obtainableMasteryMax: obtainableMasteryMax,
-            items: items.map(\.value),
-            nonItemSources: nonItemSources.map(\.value)
+extension MasteryCatalogDataModel {
+    var earnedMasteryXP: Int {
+        let itemsMastery = items.flatMap(\.masteryItems).reduce(0) { $0 + $1.earnedMasteryPoints }
+        let nonItemsMastery = nonItemSources.flatMap(\.sources).reduce(0) { $0 + $1.mastery }
+        return itemsMastery + nonItemsMastery
+    }
+
+    var obtainableItemsRemaining: Int {
+        items.reduce(0) { $0 + $1.obtainableRemainingCount }
+    }
+
+    var rankProgress: MasteryRankProgress { .rankProgress(forXP: earnedMasteryXP) }
+}
+
+struct MasteryRankProgress {
+    let rank: Int
+    let currentXP: Int
+    let xpForCurrentRank: Int
+    let xpForNextRank: Int
+
+    // MARK: - Init
+    static func rankProgress(forXP xp: Int) -> MasteryRankProgress {
+        func cumulativeXP(for rank: Int) -> Int { 2500 * rank * (rank + 1) }
+        var rank = 0
+        while cumulativeXP(for: rank + 1) <= xp {
+            rank += 1
+        }
+        return MasteryRankProgress(
+            rank: rank,
+            currentXP: xp,
+            xpForCurrentRank: cumulativeXP(for: rank),
+            xpForNextRank: cumulativeXP(for: rank + 1)
         )
     }
+
+    var fraction: Double {
+        let span = Double(xpForNextRank - xpForCurrentRank)
+        guard span > 0 else { return 1 }
+        return Double(currentXP - xpForCurrentRank) / span
+    }
+
+    var xpToNextRank: Int { xpForNextRank - currentXP }
 }
 
 @Model
@@ -78,10 +107,16 @@ final class CatalogContainerModel {
     }
 }
 
-extension CatalogContainerModel: ValueTypeConvertible {
-    var value: CatalogContainer {
-        .init(category: category, masteryItems: masteryItems.map(\.value))
+extension CatalogContainerModel {
+    var itemsCount: Int { masteryItems.count }
+    var masteredItemsCount: Int { masteryItems.filter(\.isMastered).count }
+
+    var obtainableItemsCount: Int { masteryItems.filter(\.obtainable).count }
+    var obtainableRemainingCount: Int {
+        masteryItems.filter { $0.obtainable && !$0.isMastered }.count
     }
+
+    var countText: String { "\(masteredItemsCount) / \(itemsCount)" }
 }
 
 @Model
@@ -98,10 +133,10 @@ final class MasteryCategoryDataModel {
     }
 }
 
-extension MasteryCategoryDataModel: ValueTypeConvertible {
-    var value: MasteryCategoryModel {
-        .init(name: name, sources: sources.map(\.value))
-    }
+extension MasteryCategoryDataModel {
+    var itemsCount: Int { sources.count }
+    var masteredItemsCount: Int { sources.filter(\.isMastered).count }
+    var countText: String { "\(masteredItemsCount) / \(itemsCount)" }
 }
 
 @Model
@@ -119,67 +154,24 @@ final class MasterySourceDataModel {
         self.mastery = mastery
         self.isMastered = isMastered
     }
-
-    init (from model: MasterySourceModel) {
-        self.uniqueName = model.uniqueName
-        self.name = model.name
-        self.mastery = model.mastery
-        self.isMastered = false
-    }
 }
 
-extension MasterySourceDataModel: ValueTypeConvertible {
-    var value: MasterySourceModel {
-        .init(
-            uniqueName: uniqueName,
-            name: name,
-            mastery: mastery,
-            isMastered: isMastered
-        )
-    }
-}
+extension MasterySourceDataModel {
+    var masteryState: MasteryState { isMastered ? .mastered : .unmastered }
 
-struct MasteryCatalog {
-    // MARK: - Object Properties
-    let schemaVersion: Double
-    let gameVersion: String
-    let generatedAt: Date
-    let totalMasteryMax: Int
-    let obtainableMasteryMax: Int
-    var items: [CatalogContainer]
-    var nonItemSources: [MasteryCategoryModel]
-}
-
-extension MasteryCatalog {
-    // MARK: - Init
-    init(container: MasteryCatalogContainer) {
-        self.schemaVersion = container.schemaVersion
-        self.gameVersion = container.gameVersion
-        self.generatedAt = container.generatedAt
-        self.totalMasteryMax = container.totalMasteryMax
-        self.obtainableMasteryMax = container.obtainableMasteryMax
-        let masteryItems: [MasteryItem] = container.items.map {
-            .init(profileItemModel: .none,
-                  catalogItemModel: $0)
-        }
-
-        items = DefaultCatalogSyncService.makeCatalogs(from: masteryItems)
-        nonItemSources = container.nonItemSources.map {
-            .init(name: $0, sources: $1)
+    var iconName: String {
+        switch masteryState {
+        case .mastered: "checkmark.circle.fill"
+        case .partiallyMastered: "circle.lefthalf.filled"
+        case .unmastered: "circle.dashed"
+        case .unobtainable: "lock.fill"
         }
     }
-}
 
-extension MasteryCatalog: PersistentModelConvertible {
-    var model: MasteryCatalogDataModel {
-        .init(
-            schemaVersion: schemaVersion,
-            gameVersion: gameVersion,
-            generatedAt: generatedAt,
-            totalMasteryMax: totalMasteryMax,
-            obtainableMasteryMax: obtainableMasteryMax,
-            items: items.map(\.model),
-            nonItemSources: nonItemSources.map(\.model)
-        )
+    var isDimmed: Bool {
+        switch masteryState {
+        case .mastered, .unobtainable: true
+        case .unmastered, .partiallyMastered: false
+        }
     }
 }
