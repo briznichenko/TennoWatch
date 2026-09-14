@@ -29,6 +29,7 @@ struct WarframeListenerApp: App {
                 .foregroundStyle(Color.label)
                 .preferredColorScheme(themePreference.colorScheme)
                 .environment(\.locale, languagePreference.locale ?? .current)
+                .id(languagePreference)
         }
         .modelContainer(modelContainer)
     }
