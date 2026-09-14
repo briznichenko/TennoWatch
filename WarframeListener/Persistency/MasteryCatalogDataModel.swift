@@ -20,6 +20,7 @@ final class MasteryCatalogDataModel {
     var items: [CatalogContainerModel]
     @Relationship(inverse: \MasteryCategoryDataModel.catalog)
     var nonItemSources: [MasteryCategoryDataModel]
+    var lastSyncedAt: Date?
 
     // MARK: - Init
     init(schemaVersion: Double, gameVersion: String, generatedAt: Date, totalMasteryMax: Int, obtainableMasteryMax: Int, items: [CatalogContainerModel], nonItemSources: [MasteryCategoryDataModel]) {
@@ -52,7 +53,7 @@ final class MasteryCatalogDataModel {
 extension MasteryCatalogDataModel {
     var earnedMasteryXP: Int {
         let itemsMastery = items.flatMap(\.masteryItems).reduce(0) { $0 + $1.earnedMasteryPoints }
-        let nonItemsMastery = nonItemSources.flatMap(\.sources).reduce(0) { $0 + $1.mastery }
+        let nonItemsMastery = nonItemSources.flatMap(\.sources).filter(\.isMastered).reduce(0) { $0 + $1.mastery }
         return itemsMastery + nonItemsMastery
     }
 

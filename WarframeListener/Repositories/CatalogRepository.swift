@@ -10,11 +10,36 @@ import SwiftData
 
 enum SyncPolicy: Equatable { case daily }
 
+struct MasterySummary: Sendable {
+    struct CategoryCount: Sendable {
+        let masteredCount: Int
+        let itemsCount: Int
+    }
+
+    struct ItemSnapshot: Sendable {
+        let rank: Int
+        let masteryState: MasteryState
+        let remainingMasteryPoints: Int
+    }
+
+    struct SourceSnapshot: Sendable {
+        let isMastered: Bool
+    }
+
+    let rankProgress: MasteryRankProgress
+    let obtainableItemsRemaining: Int
+    let itemCategoryCounts: [CatalogItemModel.Category: CategoryCount]
+    let sourceCategoryCounts: [String: CategoryCount]
+    let itemSnapshots: [String: ItemSnapshot]
+    let sourceSnapshots: [String: SourceSnapshot]
+}
+
 protocol CatalogRepository {
     var syncPolicy: SyncPolicy { get }
 
     func ensureCatalogAvailable() async throws
     func syncCatalog() async throws
+    func fetchSummary() async throws -> MasterySummary?
 }
 
 final class PersistentCatalogRepository: CatalogRepository {
@@ -55,7 +80,63 @@ final class PersistentCatalogRepository: CatalogRepository {
 
             catalogSyncService.syncCatalogs(with: profile, against: catalog)
             catalogSyncService.syncNonItemSources(with: profile, against: catalog)
+            catalog.lastSyncedAt = Date()
             try context.save()
+        }
+    }
+
+    func fetchSummary() async throws -> MasterySummary? {
+        try await persistencyService.perform { context in
+            guard let catalog = try context.fetch(FetchDescriptor<MasteryCatalogDataModel>()).first else { return nil }
+
+            let itemCounts = Dictionary(
+                uniqueKeysWithValues: catalog.items.map { container in
+                    (
+                        container.category,
+                        MasterySummary.CategoryCount(
+                            masteredCount: container.masteredItemsCount,
+                            itemsCount: container.itemsCount
+                        )
+                    )
+                }
+            )
+            let sourceCounts = Dictionary(
+                uniqueKeysWithValues: catalog.nonItemSources.map { category in
+                    (
+                        category.name,
+                        MasterySummary.CategoryCount(
+                            masteredCount: category.masteredItemsCount,
+                            itemsCount: category.itemsCount
+                        )
+                    )
+                }
+            )
+            let itemSnapshots = Dictionary(
+                uniqueKeysWithValues: catalog.items.flatMap(\.masteryItems).map { item in
+                    (
+                        item.catalogItem.uniqueName,
+                        MasterySummary.ItemSnapshot(
+                            rank: item.rank,
+                            masteryState: item.masteryState,
+                            remainingMasteryPoints: item.remainingMasteryPoints
+                        )
+                    )
+                }
+            )
+            let sourceSnapshots = Dictionary(
+                uniqueKeysWithValues: catalog.nonItemSources.flatMap(\.sources).map { source in
+                    (source.uniqueName, MasterySummary.SourceSnapshot(isMastered: source.isMastered))
+                }
+            )
+
+            return MasterySummary(
+                rankProgress: catalog.rankProgress,
+                obtainableItemsRemaining: catalog.obtainableItemsRemaining,
+                itemCategoryCounts: itemCounts,
+                sourceCategoryCounts: sourceCounts,
+                itemSnapshots: itemSnapshots,
+                sourceSnapshots: sourceSnapshots
+            )
         }
     }
 

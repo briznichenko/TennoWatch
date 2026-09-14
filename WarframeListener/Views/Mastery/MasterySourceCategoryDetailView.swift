@@ -15,6 +15,7 @@ struct MasterySourceCategoryDetailView: View {
 
     // MARK: - Object Properties
     let masteryCategory: MasteryCategoryDataModel
+    var sourceSnapshots: [String: MasterySummary.SourceSnapshot] = [:]
 
     @State private var filter: Filter = .missing
     @State private var sortOption: SortOption = .name
@@ -22,18 +23,23 @@ struct MasterySourceCategoryDetailView: View {
     // MARK: - Computed Properties
     // TODO: - Move to view model;
     private var sortedItems: [MasterySourceDataModel] {
-        let filtered = masteryCategory.sources.filter { filter.matches($0.masteryState) }
+        let filtered = masteryCategory.sources.filter { filter.matches(masteryState(for: $0)) }
         switch sortOption {
         case .name: return filtered.sorted { $0.name < $1.name }
         case .pointsRemaining: return filtered.sorted { $0.mastery < $1.mastery }
         }
     }
 
+    private func masteryState(for source: MasterySourceDataModel) -> MasteryState {
+        guard let isMastered = sourceSnapshots[source.uniqueName]?.isMastered else { return source.masteryState }
+        return isMastered ? .mastered : .unmastered
+    }
+
     // MARK: - Body
     var body: some View {
         List {
             ForEach(sortedItems) { item in
-                MasterySourceView(source: item)
+                MasterySourceView(source: item, snapshot: sourceSnapshots[item.uniqueName])
             }
         }
         .listStyle(.plain)

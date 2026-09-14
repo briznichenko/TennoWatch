@@ -16,6 +16,7 @@ final class MasteryViewModel {
     let errorManager: ErrorManager
 
     private(set) var isLoading: Bool = false
+    private(set) var summary: MasterySummary?
 
     // MARK: - Init
     init(profileRepository: ProfileRepository, catalogRepository: CatalogRepository, errorManager: ErrorManager) {
@@ -35,6 +36,7 @@ final class MasteryViewModel {
             try await catalogRepository.ensureCatalogAvailable()
             try? await profileRepository.syncProfile()
             try await catalogRepository.syncCatalog()
+            summary = try await catalogRepository.fetchSummary()
         } catch {
             errorManager.append(error)
         }

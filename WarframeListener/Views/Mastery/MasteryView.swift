@@ -48,7 +48,7 @@ struct MasteryView: View {
 
     // MARK: - Subviews
     private var summaryCard: some View {
-        let progress = catalog?.rankProgress ?? .rankProgress(forXP: 0)
+        let progress = viewModel.summary?.rankProgress ?? .rankProgress(forXP: 0)
         return Surface {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(alignment: .firstTextBaseline) {
@@ -63,7 +63,7 @@ struct MasteryView: View {
                 ProgressBar(value: progress.fraction)
                     .padding(.vertical, 4)
                 let xpLine = Strings.Mastery.xpToNextRank(progress.xpToNextRank.formatted(), nextRank: progress.rank + 1)
-                let itemsLine = Strings.Mastery.itemsLeft(catalog?.obtainableItemsRemaining ?? 0)
+                let itemsLine = Strings.Mastery.itemsLeft(viewModel.summary?.obtainableItemsRemaining ?? 0)
                 Text("\(xpLine) · \(itemsLine)")
                     .font(.caption)
                     .foregroundStyle(Color.labelSecondary)
@@ -76,8 +76,16 @@ struct MasteryView: View {
         let sortedContainers = (catalog?.items ?? []).sorted { $0.category.displayName < $1.category.displayName }
         return Section {
             ForEach(sortedContainers) { container in
-                NavigationLink(destination: MasteryCategoryDetailView(catalogContainer: container)) {
-                    MasteryCategoryView(catalogContainer: container)
+                NavigationLink(
+                    destination: MasteryCategoryDetailView(
+                        catalogContainer: container,
+                        itemSnapshots: viewModel.summary?.itemSnapshots ?? [:]
+                    )
+                ) {
+                    MasteryCategoryView(
+                        catalogContainer: container,
+                        countOverride: viewModel.summary?.itemCategoryCounts[container.category]
+                    )
                 }
             }
         } header: {
@@ -89,8 +97,16 @@ struct MasteryView: View {
     private var otherSourcesList: some View {
         ForEach(catalog?.nonItemSources ?? []) { source in
             Section {
-                NavigationLink(destination: MasterySourceCategoryDetailView(masteryCategory: source)) {
-                    MasterySourceCategoryView(masteryCategory: source)
+                NavigationLink(
+                    destination: MasterySourceCategoryDetailView(
+                        masteryCategory: source,
+                        sourceSnapshots: viewModel.summary?.sourceSnapshots ?? [:]
+                    )
+                ) {
+                    MasterySourceCategoryView(
+                        masteryCategory: source,
+                        countOverride: viewModel.summary?.sourceCategoryCounts[source.name]
+                    )
                 }
             } header: {
                 SectionHeaderLabel(source.name.sentenceCased)

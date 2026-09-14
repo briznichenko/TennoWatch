@@ -43,6 +43,7 @@ struct MasteryCategoryDetailView: View {
 
     // MARK: - Object Properties
     let catalogContainer: CatalogContainerModel
+    var itemSnapshots: [String: MasterySummary.ItemSnapshot] = [:]
 
     @State private var filter: Filter = .missing
     @State private var sortOption: SortOption = .name
@@ -50,18 +51,26 @@ struct MasteryCategoryDetailView: View {
     // MARK: - Computed Properties
     //TODO: - Move to view model;
     private var sortedItems: [MasteryItemDataModel] {
-        let filtered = catalogContainer.masteryItems.filter { filter.matches($0.masteryState) }
+        let filtered = catalogContainer.masteryItems.filter { filter.matches(masteryState(for: $0)) }
         switch sortOption {
         case .name: return filtered.sorted { $0.catalogItem.name < $1.catalogItem.name }
-        case .pointsRemaining: return filtered.sorted { $0.remainingMasteryPoints > $1.remainingMasteryPoints }
+        case .pointsRemaining: return filtered.sorted { remainingMasteryPoints(for: $0) > remainingMasteryPoints(for: $1) }
         }
+    }
+
+    private func masteryState(for item: MasteryItemDataModel) -> MasteryState {
+        itemSnapshots[item.catalogItem.uniqueName]?.masteryState ?? item.masteryState
+    }
+
+    private func remainingMasteryPoints(for item: MasteryItemDataModel) -> Int {
+        itemSnapshots[item.catalogItem.uniqueName]?.remainingMasteryPoints ?? item.remainingMasteryPoints
     }
 
     // MARK: - Body
     var body: some View {
         List {
             ForEach(sortedItems) { item in
-                MasteryItemView(item: item)
+                MasteryItemView(item: item, snapshot: itemSnapshots[item.catalogItem.uniqueName])
             }
         }
         .listStyle(.plain)
