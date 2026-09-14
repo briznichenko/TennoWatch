@@ -19,7 +19,7 @@ struct ErrorAlertModifier: ViewModifier {
                     get: { errorManager.currentError != nil },
                     set: { isPresented in
                         if !isPresented {
-                            errorManager.removeCurrent()
+                            errorManager.finishPresentation()
                         }
                     }
                 )

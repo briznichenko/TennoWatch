@@ -15,7 +15,7 @@ final class ProfileItemDataModel {
     var assists: Int?
     var kills: Int?
     var xp: Int?
-    var type: String
+    @Attribute(.unique) var type: String
     var fired: Int?
     var profile: ProfileDataModel?
     var masteryItem: MasteryItemDataModel?
@@ -49,7 +49,7 @@ extension ProfileItemDataModel: ValueTypeConvertible {
 
 @Model
 final class CatalogItemDataModel {
-    var uniqueName: String
+    @Attribute(.unique) var uniqueName: String
     var name: String
     var category: CatalogItemModel.Category
     var maxRank: Int

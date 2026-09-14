@@ -100,7 +100,7 @@ extension MasteryCategoryDataModel: ValueTypeConvertible {
 
 @Model
 final class MasterySourceDataModel {
-    var uniqueName: String
+    @Attribute(.unique) var uniqueName: String
     var name: String
     var mastery: Int
     var isMastered: Bool

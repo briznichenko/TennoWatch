@@ -67,7 +67,7 @@ struct Profile: PersistentModelConvertible {
 final class ResultMissionDataModel {
     var completes: Int
     var tier: Int?
-    var tag: String
+    @Attribute(.unique) var tag: String
     
     init(completes: Int, tier: Int?, tag: String) {
         self.completes = completes
@@ -90,7 +90,7 @@ extension ResultMissionDataModel: ValueTypeConvertible {
 
 @Model
 final class IntrinsicsDataModel {
-    var name: String
+    @Attribute(.unique) var name: String
     var rank: Int
     
     init(name: String, rank: Int) {
