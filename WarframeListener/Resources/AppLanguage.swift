@@ -14,8 +14,6 @@ enum AppLanguage: String, CaseIterable, Identifiable, Hashable {
 
     var id: String { rawValue }
 
-    // English/Ukrainian are shown as endonyms (their own name, in their own language),
-    // matching how iOS's own language picker displays them, regardless of the app's current language.
     var label: String {
         switch self {
         case .system: Strings.Language.system
