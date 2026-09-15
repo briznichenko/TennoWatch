@@ -50,7 +50,7 @@ final class SettingsViewModel {
         isRefreshing = true
 
         do {
-            let profile = try await profileRepository.getProfile()
+            let profile = try await profileRepository.getProfile(forceRefresh: true)
             _ = try await catalogRepository.syncMasteryCatalog(with: profile)
             await loadCatalogInfo()
         } catch {
