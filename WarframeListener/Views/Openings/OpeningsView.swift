@@ -19,59 +19,20 @@ struct OpeningsView: View {
     // MARK: - Body
     var body: some View {
         NavigationStack {
-            List {
-                timeSensitiveSection
-                permanentSection
-            }
-            .navigationTitle(Strings.Openings.title)
-            .overlay {
-                if viewModel.isLoading && viewModel.catalog == nil {
-                    ProgressView()
+            OpeningsListView(viewModel: viewModel)
+                .navigationTitle(Strings.Openings.title)
+                .overlay {
+                    if viewModel.isLoading && viewModel.catalog == nil {
+                        ProgressView()
+                    }
                 }
-            }
-            .handleErrorAlert(with: viewModel.errorManager)
-            .task {
-                await viewModel.fetchOpenings()
-            }
-            .refreshable {
-                await viewModel.fetchOpenings()
-            }
-        }
-    }
-
-    // MARK: - Subviews
-    @ViewBuilder
-    private var timeSensitiveSection: some View {
-        Section {
-            if viewModel.timeSensitiveOpenings.isEmpty {
-                Text(Strings.Openings.emptyTimeSensitive)
-                    .foregroundStyle(Color.labelSecondary)
-            } else {
-                ForEach(viewModel.timeSensitiveOpenings) { opening in
-                    TimeSensitiveOpeningRowView(viewModel: opening)
+                .handleErrorAlert(with: viewModel.errorManager)
+                .task {
+                    await viewModel.fetchOpenings()
                 }
-            }
-        } header: {
-            SectionHeaderLabel(Strings.Openings.timeSensitiveHeader)
-        }
-    }
-
-    @ViewBuilder
-    private var permanentSection: some View {
-        Section {
-            if viewModel.permanentItems.isEmpty && viewModel.permanentSources.isEmpty {
-                Text(Strings.Openings.emptyPermanent)
-                    .foregroundStyle(Color.labelSecondary)
-            } else {
-                ForEach(viewModel.permanentItems) { item in
-                    MasteryItemView(viewModel: item)
+                .refreshable {
+                    await viewModel.fetchOpenings()
                 }
-                ForEach(viewModel.permanentSources) { source in
-                    MasterySourceView(viewModel: source)
-                }
-            }
-        } header: {
-            SectionHeaderLabel(Strings.Openings.permanentHeader)
         }
     }
 }
