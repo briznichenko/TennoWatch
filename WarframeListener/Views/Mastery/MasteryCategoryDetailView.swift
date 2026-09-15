@@ -48,7 +48,7 @@ struct MasteryCategoryDetailView: View {
     @State private var sortOption: SortOption = .name
 
     // MARK: - Computed Properties
-    //TODO: - Move to view model;
+    // TODO: - Move to view model;
     private var sortedItems: [MasteryItem] {
         let filtered = catalogContainer.masteryItems.filter { filter.matches($0.masteryState) }
         switch sortOption {

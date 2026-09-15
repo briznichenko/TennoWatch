@@ -31,7 +31,9 @@ final class ProfileDataModel: ValueTypeConvertible {
     @Attribute(.unique) var displayName: String
     @Relationship(deleteRule: .cascade, inverse: \ProfileItemDataModel.profile)
     var items: [ProfileItemDataModel]
+    @Relationship(deleteRule: .cascade, inverse: \IntrinsicsDataModel.profile)
     var playerSkills: [IntrinsicsDataModel]
+    @Relationship(deleteRule: .cascade, inverse: \ResultMissionDataModel.profile)
     var missions: [ResultMissionDataModel]
     var lastUpdated: Date
 
@@ -76,6 +78,7 @@ final class ResultMissionDataModel {
     var completes: Int
     var tier: Int?
     @Attribute(.unique) var tag: String
+    var profile: ProfileDataModel?
 
     // MARK: - Init
     init(completes: Int, tier: Int?, tag: String) {
@@ -102,6 +105,7 @@ final class IntrinsicsDataModel {
     // MARK: - Object Properties
     @Attribute(.unique) var name: String
     var rank: Int
+    var profile: ProfileDataModel?
 
     // MARK: - Init
     init(name: String, rank: Int) {

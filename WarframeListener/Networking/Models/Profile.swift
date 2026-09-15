@@ -23,7 +23,6 @@ struct ProfileInfoModel: NetworkModel {
     let playerSkills: [String: Int]
     let missions: [ResultMission]
     
-    
     enum CodingKeys: String, CodingKey {
         case accountID = "AccountId"
         case displayName = "DisplayName"
