@@ -98,6 +98,7 @@ final class MasteryItemDataModel {
     var catalogItem: CatalogItemDataModel
     @Relationship(deleteRule: .cascade, inverse: \ProfileItemDataModel.masteryItem)
     var profileItem: ProfileItemDataModel?
+    var isMastered: Bool = false
 
     // MARK: - Init
     init(profileItemModel: ProfileItemModel?, catalogItemModel: CatalogItemModel) {
@@ -105,11 +106,13 @@ final class MasteryItemDataModel {
             profileItem = .init(profileItem: profileItemModel)
         }
         catalogItem = .init(catalogItem: catalogItemModel)
+        isMastered = MasteryItem(profileItemModel: profileItemModel, catalogItemModel: catalogItemModel).isMastered
     }
 
     // MARK: - Functions
     func set(profileItemModel: ProfileItemModel) {
         profileItem = .init(profileItem: profileItemModel)
+        isMastered = MasteryItem(profileItemModel: profileItemModel, catalogItemModel: catalogItem.value).isMastered
     }
 }
 

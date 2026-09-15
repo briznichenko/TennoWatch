@@ -30,7 +30,6 @@ struct Strings {
         static var tabWorldState: String { Strings.string("main_tab_world_state_key", "World state") }
         static var tabMastery: String { Strings.string("main_tab_mastery_key", "Mastery") }
         static var tabOpenings: String { Strings.string("main_tab_openings_key", "Openings") }
-        static var openingsPlaceholder: String { Strings.string("main_openings_placeholder_key", "Openings will be here") }
         static var tabProfile: String { Strings.string("main_tab_profile_key", "Profile") }
     }
 
@@ -103,6 +102,23 @@ struct Strings {
                 format: Strings.string("mastery_item_state_rank_progress_format_key", "Rank %lld / %lld · +%lld left"),
                 rank, maxRank, pointsRemaining
             )
+        }
+    }
+
+    struct Openings {
+        private init() {}
+        static var title: String { Strings.string("openings_title_key", "Openings") }
+        static var timeSensitiveHeader: String { Strings.string("openings_time_sensitive_header_key", "Time-sensitive") }
+        static var permanentHeader: String { Strings.string("openings_permanent_header_key", "Permanent") }
+        static var emptyTimeSensitive: String { Strings.string("openings_empty_time_sensitive_key", "No time-sensitive openings right now") }
+        static var emptyPermanent: String { Strings.string("openings_empty_permanent_key", "No permanent openings right now") }
+
+        static func invasionSource(node: String, faction: String, percent: Int) -> String {
+            String(format: Strings.string("openings_invasion_source_format_key", "Invasion · %@ · %@ · %lld%%"), node, faction, percent)
+        }
+
+        static func voidTraderSource(location: String, timeLeft: String) -> String {
+            String(format: Strings.string("openings_void_trader_source_format_key", "Baro Ki'Teer · %@ · %@"), location, timeLeft)
         }
     }
 

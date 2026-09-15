@@ -91,11 +91,6 @@ final class WorldStateViewModel {
 
     // MARK: - Helper Functions
     private static func timeLeft(until date: Date?) -> String {
-        guard let date else { return "" }
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .abbreviated
-        formatter.allowedUnits = [.day, .hour, .minute]
-        formatter.maximumUnitCount = 2
-        return formatter.string(from: Date.now, to: date) ?? ""
+        date?.timeLeftDescription ?? ""
     }
 }

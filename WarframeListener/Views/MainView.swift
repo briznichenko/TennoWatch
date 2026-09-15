@@ -33,7 +33,14 @@ struct MainView: View {
                 )
             }
             Tab(Strings.Main.tabOpenings, systemImage: "target") {
-                Text(Strings.Main.openingsPlaceholder)
+                OpeningsView(
+                    viewModel: .init(
+                        profileRepository: dependencies.profileRepository,
+                        catalogRepository: dependencies.catalogRepository,
+                        worldStateRepository: dependencies.worldStateRepository,
+                        errorManager: dependencies.errorManager
+                    )
+                )
             }
             Tab(Strings.Main.tabProfile, systemImage: "person") {
                 ProfileView(
