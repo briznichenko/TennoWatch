@@ -144,6 +144,23 @@ struct Strings {
         static var missionsRow: String { Strings.string("profile_missions_row_key", "Mission History") }
         static var missionsTitle: String { Strings.string("profile_missions_title_key", "Mission History") }
 
+        static var statsRow: String { Strings.string("profile_account_stats_row_key", "Career Stats") }
+        static var statsTitle: String { Strings.string("profile_account_stats_title_key", "Career Stats") }
+        static var masteryRankLabel: String { Strings.string("profile_mastery_rank_label_key", "Mastery Rank") }
+
+        static var statMeleeKills: String { Strings.string("profile_stat_melee_kills_key", "Melee Kills") }
+        static var statDeaths: String { Strings.string("profile_stat_deaths_key", "Deaths") }
+        static var statRevives: String { Strings.string("profile_stat_revives_key", "Revives") }
+        static var statMissionsCompleted: String { Strings.string("profile_stat_missions_completed_key", "Missions Completed") }
+        static var statTimePlayed: String { Strings.string("profile_stat_time_played_key", "Time Played") }
+        static var statIncome: String { Strings.string("profile_stat_income_key", "Credits Earned") }
+        static var statHealCount: String { Strings.string("profile_stat_heal_count_key", "Heals Given") }
+        static var statPickupCount: String { Strings.string("profile_stat_pickup_count_key", "Items Picked Up") }
+        static var statFishCaught: String { Strings.string("profile_stat_fish_caught_key", "Fish Caught") }
+        static var statDestroyed: String { Strings.string("profile_stat_destroyed_key", "Objects Destroyed") }
+        static var statCiphersSolved: String { Strings.string("profile_stat_ciphers_solved_key", "Hacks Solved") }
+        static var statCiphersFailed: String { Strings.string("profile_stat_ciphers_failed_key", "Hacks Failed") }
+
         static var sortBy: String { Strings.string("profile_sort_by_key", "Sort by") }
         static var sortOptionName: String { Strings.string("profile_sort_option_name_key", "Name") }
         static var sortOptionKills: String { Strings.string("profile_sort_option_kills_key", "Kills") }

@@ -25,6 +25,9 @@ final class ProfileViewModel {
     var accountId: String {
         profile?.accountID.oid ?? ""
     }
+    var playerLevel: Int {
+        profile?.playerLevel ?? 0
+    }
     var intrinsicGroups: [IntrinsicGroup] {
         profile?.intrinsicGroups ?? []
     }
@@ -33,6 +36,9 @@ final class ProfileViewModel {
     }
     var missionStats: [MissionStat] {
         profile?.missionStats ?? []
+    }
+    var accountStatRows: [AccountStatRow] {
+        profile?.accountStatRows ?? []
     }
     var totalMissionsCompleted: Int {
         missionStats.reduce(0) { $0 + $1.completes }
@@ -54,7 +60,7 @@ final class ProfileViewModel {
     }
 
     // MARK: - Functions
-    func fetchProfile() async {
+    func fetchProfile(forceRefresh: Bool = false) async {
         guard playerId.isEmpty == false else {
             errorManager.append(PersistentProfileRepository.ProfileError.noPlayerId)
             return
@@ -65,7 +71,7 @@ final class ProfileViewModel {
         isLoading = true
 
         do {
-            profile = try await profileRepository.getProfile(withPlayerId: playerId)
+            profile = try await profileRepository.getProfile(withPlayerId: playerId, forceRefresh: forceRefresh)
             isLoading = false
         } catch {
             errorManager.append(error)

@@ -60,7 +60,7 @@ struct ProfileView: View {
                 await viewModel.fetchProfile()
             }
             .refreshable {
-                await viewModel.fetchProfile()
+                await viewModel.fetchProfile(forceRefresh: true)
             }
         }
     }
@@ -92,6 +92,7 @@ struct ProfileView: View {
                 }
                 
                 HStack(spacing: 20) {
+                    statPair(value: viewModel.playerLevel, label: Strings.Profile.masteryRankLabel)
                     statPair(value: viewModel.totalMissionsCompleted, label: Strings.Profile.missionsCompletedLabel)
                     statPair(value: viewModel.totalKills, label: Strings.Profile.totalKillsLabel)
                 }
@@ -133,6 +134,13 @@ struct ProfileView: View {
                     ProfileMissionsListView(missions: viewModel.missionStats)
                 } label: {
                     LabeledContent(Strings.Profile.missionsRow, value: "\(viewModel.missionStats.count)")
+                }
+            }
+            if !viewModel.accountStatRows.isEmpty {
+                NavigationLink {
+                    ProfileAccountStatsView(rows: viewModel.accountStatRows)
+                } label: {
+                    Text(Strings.Profile.statsRow)
                 }
             }
         } header: {

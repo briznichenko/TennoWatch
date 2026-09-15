@@ -52,6 +52,15 @@ struct MissionStat: Identifiable, Hashable {
     var id: String { tag }
 }
 
+struct AccountStatRow: Identifiable, Hashable {
+    // MARK: - Object Properties
+    let label: String
+    let value: String
+
+    // MARK: - Computed Properties
+    var id: String { label }
+}
+
 extension Profile {
     // MARK: - Object Properties
     private static let intrinsicMaxRank = 10
@@ -101,4 +110,30 @@ extension Profile {
             .init(tag: $0.tag, name: $0.tag.spacedByCamelCase, tier: $0.tier, completes: $0.completes)
         }
     }
+
+    var accountStatRows: [AccountStatRow] {
+        [
+            .init(label: Strings.Profile.statMeleeKills, value: accountStats.meleeKills.formatted()),
+            .init(label: Strings.Profile.statDeaths, value: accountStats.deaths.formatted()),
+            .init(label: Strings.Profile.statRevives, value: accountStats.reviveCount.formatted()),
+            .init(label: Strings.Profile.statMissionsCompleted, value: accountStats.missionsCompleted.formatted()),
+            .init(label: Strings.Profile.statTimePlayed, value: Self.timePlayedFormatter.string(from: accountStats.timePlayedSec) ?? "—"),
+            .init(label: Strings.Profile.statIncome, value: accountStats.income.formatted()),
+            .init(label: Strings.Profile.statHealCount, value: accountStats.healCount.formatted()),
+            .init(label: Strings.Profile.statPickupCount, value: accountStats.pickupCount.formatted()),
+            .init(label: Strings.Profile.statFishCaught, value: accountStats.fishCount.formatted()),
+            .init(label: Strings.Profile.statDestroyed, value: accountStats.destroyCount.formatted()),
+            .init(label: Strings.Profile.statCiphersSolved, value: accountStats.ciphersSolved.formatted()),
+            .init(label: Strings.Profile.statCiphersFailed, value: accountStats.ciphersFailed.formatted())
+        ]
+    }
+
+    // MARK: - Helper Properties
+    private static let timePlayedFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.day, .hour, .minute]
+        formatter.unitsStyle = .abbreviated
+        formatter.maximumUnitCount = 2
+        return formatter
+    }()
 }

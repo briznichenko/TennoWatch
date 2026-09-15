@@ -44,7 +44,9 @@ final class MasteryViewModel {
     
     var earnedMasteryXP: Int {
         let itemsMastery = catalogs.flatMap(\.masteryItems).reduce(0) { $0 + $1.earnedMasteryPoints }
-        let nonItemsMastery = nonItemSources.map(\.sources).joined().reduce(0) { $0 + $1.mastery }
+        let nonItemsMastery = nonItemSources.map(\.sources).joined()
+            .filter { $0.isMastered == true }
+            .reduce(0) { $0 + $1.mastery }
         return itemsMastery + nonItemsMastery
     }
 
@@ -64,13 +66,13 @@ final class MasteryViewModel {
     }
 
     // MARK: - Functions
-    func fetchCatalog() async {
+    func fetchCatalog(forceRefresh: Bool = false) async {
         defer {
             isLoading = false
         }
-        
+
         do {
-            if let profile = try? await profileRepository.getProfile() {
+            if let profile = try? await profileRepository.getProfile(forceRefresh: forceRefresh) {
                 catalog = try await catalogRepository.syncMasteryCatalog(with: profile)
             } else {
                 catalog = try await catalogRepository.getMasteryCatalog()
@@ -83,15 +85,15 @@ final class MasteryViewModel {
     // MARK: - Helper Functions
     private static func rankProgress(forXP xp: Int) -> MasteryRankProgress {
         func cumulativeXP(for rank: Int) -> Int { 2500 * rank * (rank + 1) }
-        var rank = 0
-        while cumulativeXP(for: rank + 1) <= xp {
-            rank += 1
+        var completedRanks = 0
+        while cumulativeXP(for: completedRanks + 1) <= xp {
+            completedRanks += 1
         }
         return MasteryRankProgress(
-            rank: rank,
+            rank: completedRanks + 1,
             currentXP: xp,
-            xpForCurrentRank: cumulativeXP(for: rank),
-            xpForNextRank: cumulativeXP(for: rank + 1)
+            xpForCurrentRank: cumulativeXP(for: completedRanks),
+            xpForNextRank: cumulativeXP(for: completedRanks + 1)
         )
     }
 

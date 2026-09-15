@@ -17,27 +17,13 @@ struct ProfileModel: NetworkModel {
     }
 }
 
-struct ProfileInfoModel: NetworkModel {
-    let accountID: ID
-    let displayName: String
-    let playerSkills: [String: Int]
-    let missions: [ResultMission]
-    
-    enum CodingKeys: String, CodingKey {
-        case accountID = "AccountId"
-        case displayName = "DisplayName"
-        case playerSkills = "PlayerSkills"
-        case missions = "Missions"
-    }
-}
-
-struct ProfileInfoModelComplex: Decodable {
+struct ProfileInfoModel: Decodable {
     let accountID: ID
     let displayName: String
     let platformNames: [String]
     let playerLevel: Int
     let loadOutPreset: LoadOutPreset?
-    let loadOutInventory: LoadOutInventory
+//    let loadOutInventory: LoadOutInventory
     let guildID: ID
     let guildName: String
     let guildTier: Int
@@ -45,7 +31,6 @@ struct ProfileInfoModelComplex: Decodable {
     let guildClass: Int
     let guildEmblem: Bool
     let allianceID: ID
-    // MARK: - TODO sync
     let playerSkills: [String: Int]
     let challengeProgress: [ChallengeProgress]
     let deathMarks: [String]
@@ -53,7 +38,6 @@ struct ProfileInfoModelComplex: Decodable {
     let deathSquadable: Bool
     let titleType: String
     let migratedToConsole: Bool
-    // MARK: - TODO sync
     let missions: [ResultMission]
     let affiliations: [Affiliation]
     let dailyAffiliation: Int
@@ -81,7 +65,7 @@ struct ProfileInfoModelComplex: Decodable {
         case platformNames = "PlatformNames"
         case playerLevel = "PlayerLevel"
         case loadOutPreset = "LoadOutPreset"
-        case loadOutInventory = "LoadOutInventory"
+//        case loadOutInventory = "LoadOutInventory"
         case guildID = "GuildId"
         case guildName = "GuildName"
         case guildTier = "GuildTier"
@@ -310,12 +294,35 @@ struct ResultMission: Codable, Hashable, Equatable {
 }
 
 // MARK: - Stats
-
 struct Stats: NetworkModel {
     let weapons: [ProfileItemModel]
+    let deaths: Int
+    let reviveCount: Int
+    let meleeKills: Int
+    let missionsCompleted: Int
+    let timePlayedSec: Double
+    let healCount: Int
+    let income: Int
+    let pickupCount: Int
+    let fishCount: Int
+    let destroyCount: Int
+    let ciphersSolved: Int
+    let ciphersFailed: Int
     
     enum CodingKeys: String, CodingKey {
         case weapons = "Weapons"
+        case deaths = "Deaths"
+        case reviveCount = "ReviveCount"
+        case meleeKills = "MeleeKills"
+        case missionsCompleted = "MissionsCompleted"
+        case timePlayedSec = "TimePlayedSec"
+        case healCount = "HealCount"
+        case income = "Income"
+        case pickupCount = "PickupCount"
+        case fishCount = "FishCount"
+        case destroyCount = "DestroyCount"
+        case ciphersSolved = "CiphersSolved"
+        case ciphersFailed = "CiphersFailed"
     }
 }
 
@@ -336,10 +343,36 @@ struct StatsComplex: Decodable {
     let missionsInterrupted: Int
     let missionsQuit: Int
     let missionsCompleted: Int
-    let timePlayedSEC: Double
+    let timePlayedSec: Double
     let pickupCount: Int
     let playerLevel: Int
     let rank: Int
     let reviveCount: Int
     let guildName: String
+    
+    enum CodingKeys: String, CodingKey {
+        case weapons = "Weapons"
+        case deaths = "Deaths"
+        case reviveCount = "ReviveCount"
+        case meleeKills = "MeleeKills"
+        case missionsCompleted = "MissionsCompleted"
+        case timePlayedSec = "TimePlayedSec"
+        case healCount = "HealCount"
+        case income = "Income"
+        case pickupCount = "PickupCount"
+        case fishCount = "FishCount"
+        case destroyCount = "DestroyCount"
+        case ciphersSolved = "CiphersSolved"
+        case ciphersFailed = "CiphersFailed"
+        case cipherTime = "CipherTime"
+        case rating = "Rating"
+        case missionsDumped = "MissionsDumped"
+        case missionsFailed = "MissionsFailed"
+        case missionsInterrupted = "MissionsInterrupted"
+        case missionsQuit = "MissionsQuit"
+        case playerLevel = "PlayerLevel"
+        case rank = "Rank"
+        case guildName = "GuildName"
+    }
+
 }

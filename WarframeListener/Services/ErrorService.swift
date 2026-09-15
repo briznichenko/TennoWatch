@@ -30,6 +30,9 @@ final class DefaultErrorManager: ErrorManager {
 
     // MARK: - Functions
     func append(_ error: Error) {
+        #if DEBUG
+        print(error)
+        #endif
         errorQueue.append(error)
     }
 
