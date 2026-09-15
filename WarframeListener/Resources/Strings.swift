@@ -30,7 +30,6 @@ struct Strings {
         static var tabWorldState: String { Strings.string("main_tab_world_state_key", "World state") }
         static var tabMastery: String { Strings.string("main_tab_mastery_key", "Mastery") }
         static var tabOpenings: String { Strings.string("main_tab_openings_key", "Openings") }
-        static var openingsPlaceholder: String { Strings.string("main_openings_placeholder_key", "Openings will be here") }
         static var tabProfile: String { Strings.string("main_tab_profile_key", "Profile") }
     }
 
@@ -106,12 +105,67 @@ struct Strings {
         }
     }
 
+    struct Openings {
+        private init() {}
+        static var title: String { Strings.string("openings_title_key", "Openings") }
+        static var timeSensitiveHeader: String { Strings.string("openings_time_sensitive_header_key", "Time-sensitive") }
+        static var permanentHeader: String { Strings.string("openings_permanent_header_key", "Permanent") }
+        static var emptyTimeSensitive: String { Strings.string("openings_empty_time_sensitive_key", "No time-sensitive openings right now") }
+        static var emptyPermanent: String { Strings.string("openings_empty_permanent_key", "No permanent openings right now") }
+
+        static func invasionSource(node: String, faction: String, percent: Int) -> String {
+            String(format: Strings.string("openings_invasion_source_format_key", "Invasion · %@ · %@ · %lld%%"), node, faction, percent)
+        }
+
+        static func voidTraderSource(location: String, timeLeft: String) -> String {
+            String(format: Strings.string("openings_void_trader_source_format_key", "Baro Ki'Teer · %@ · %@"), location, timeLeft)
+        }
+    }
+
     struct Profile {
         private init() {}
         static var id: String { Strings.string("profile_id_key", "Player ID") }
         static var idPlaceholder: String { Strings.string("profile_id_placeholder_key", "Enter player ID") }
         static var title: String { Strings.string("profile_title_key", "Profile") }
         static var displayNameUnknown: String { Strings.string("profile_display_name_unknown_key", "Unknown") }
+        static var accountIdLabel: String { Strings.string("profile_account_id_label_key", "Account ID") }
+        static var missionsCompletedLabel: String { Strings.string("profile_missions_completed_label_key", "Missions completed") }
+        static var totalKillsLabel: String { Strings.string("profile_total_kills_label_key", "Total kills") }
+
+        static var statsHeader: String { Strings.string("profile_stats_header_key", "Stats") }
+        static var intrinsicsRow: String { Strings.string("profile_intrinsics_row_key", "Intrinsics") }
+        static var intrinsicsTitle: String { Strings.string("profile_intrinsics_title_key", "Intrinsics") }
+        static var railjackIntrinsics: String { Strings.string("profile_railjack_intrinsics_key", "Railjack Intrinsics") }
+        static var drifterIntrinsics: String { Strings.string("profile_drifter_intrinsics_key", "Drifter Intrinsics") }
+
+        static var itemsRow: String { Strings.string("profile_items_row_key", "Weapon & Warframe Stats") }
+        static var itemsTitle: String { Strings.string("profile_items_title_key", "Weapon & Warframe Stats") }
+
+        static var missionsRow: String { Strings.string("profile_missions_row_key", "Mission History") }
+        static var missionsTitle: String { Strings.string("profile_missions_title_key", "Mission History") }
+
+        static var sortBy: String { Strings.string("profile_sort_by_key", "Sort by") }
+        static var sortOptionName: String { Strings.string("profile_sort_option_name_key", "Name") }
+        static var sortOptionKills: String { Strings.string("profile_sort_option_kills_key", "Kills") }
+        static var sortOptionXP: String { Strings.string("profile_sort_option_xp_key", "XP") }
+        static var sortOptionCompletes: String { Strings.string("profile_sort_option_completes_key", "Completes") }
+        static var searchPlaceholder: String { Strings.string("profile_search_placeholder_key", "Search") }
+
+        static func itemDetailText(kills: Int, headshots: Int, assists: Int) -> String {
+            String(format: Strings.string("profile_item_detail_format_key", "%lld kills · %lld headshots · %lld assists"), kills, headshots, assists)
+        }
+
+        static func missionTierText(_ tier: Int) -> String {
+            String(format: Strings.string("profile_mission_tier_format_key", "Tier %lld"), tier)
+        }
+
+        static func completesCount(_ count: Int) -> String {
+            String(format: Strings.string("profile_completes_count_format_key", "%lld×"), count)
+        }
+
+        static func intrinsicRankText(rank: Int, maxRank: Int) -> String {
+            String(format: Strings.string("profile_intrinsic_rank_format_key", "%lld / %lld"), rank, maxRank)
+        }
     }
 
     struct Theme {

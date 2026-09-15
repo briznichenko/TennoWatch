@@ -37,6 +37,7 @@ fastlane/test_output
 DerivedData/
 build/
 *.xcarchive
+build_out/
 
 # macOS
 .DS_Store

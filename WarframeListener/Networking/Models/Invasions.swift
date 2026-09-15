@@ -63,7 +63,15 @@ struct Reward: NetworkModel {
 }
 
 struct CountedItem: NetworkModel {
+    let uniqueName: String?
     let count: Int
     let type: String
     let key: String
+
+    init(uniqueName: String? = nil, count: Int, type: String, key: String) {
+        self.uniqueName = uniqueName
+        self.count = count
+        self.type = type
+        self.key = key
+    }
 }

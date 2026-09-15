@@ -5,7 +5,6 @@
 //  Created by Andrii Bryzhnychenko on 9/13/26.
 //
 
-
 import SwiftUI
 
 struct MasterySourceCategoryDetailView: View {
