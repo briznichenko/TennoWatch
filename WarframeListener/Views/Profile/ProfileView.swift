@@ -11,6 +11,7 @@ struct ProfileView: View {
     // MARK: - Object Properties
     @State private var viewModel: ProfileViewModel
     @State private var isShowingSettings = false
+    @FocusState private var isIDInputFocused
 
     private let dependencies: AppDependencies
 
@@ -21,27 +22,19 @@ struct ProfileView: View {
     }
 
     // MARK: - Body
-    // TODO: - Deconstruct;
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading) {
-                LabeledContent(Strings.Profile.id) {
-                    TextField(Strings.Profile.idPlaceholder, text: $viewModel.playerId)
-                }
-                .foregroundStyle(Color.label)
-                .onSubmit {
-                    Task {
-                        await viewModel.fetchProfile()
-                    }
-                }
-                Text(viewModel.displayName)
-                    .font(.title)
-                    .foregroundStyle(Color.label)
-                Spacer()
+            List {
+                identityCard
+                    .listRowSeparator(.hidden)
+                statsSection
             }
-            .padding()
-            .screenBackground()
             .navigationTitle(Strings.Profile.title)
+            .overlay {
+                if viewModel.isLoading {
+                    ProgressView()
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -69,6 +62,81 @@ struct ProfileView: View {
             .refreshable {
                 await viewModel.fetchProfile()
             }
+        }
+    }
+
+    // MARK: - Subviews
+    private var identityCard: some View {
+        Surface {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(viewModel.displayName)
+                    .font(.system(size: 22, weight: .medium))
+                    .foregroundStyle(Color.label)
+                LabeledContent(Strings.Profile.id) {
+                    HStack {
+                        TextField(Strings.Profile.idPlaceholder, text: $viewModel.playerId)
+                            .focused($isIDInputFocused)
+                            .font(.caption)
+                            .foregroundStyle(Color.labelSecondary)
+                            .onSubmit {
+                                Task { await viewModel.fetchProfile() }
+                            }
+                        Image(systemName: "pencil")
+                            .foregroundStyle(isIDInputFocused ? Color.accentColor : .secondary)
+                    }
+                    .padding(10)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(isIDInputFocused ? Color.accentColor : Color.gray.opacity(0.4), lineWidth: 1)
+                    )
+                }
+                
+                HStack(spacing: 20) {
+                    statPair(value: viewModel.totalMissionsCompleted, label: Strings.Profile.missionsCompletedLabel)
+                    statPair(value: viewModel.totalKills, label: Strings.Profile.totalKillsLabel)
+                }
+                .padding(.top, 4)
+            }
+        }
+        .padding(.bottom, 8)
+    }
+
+    private func statPair(value: Int, label: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(value.formatted())
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(Color.label)
+            Text(label)
+                .font(.caption2)
+                .foregroundStyle(Color.labelSecondary)
+        }
+    }
+
+    private var statsSection: some View {
+        Section {
+            if !viewModel.intrinsicGroups.isEmpty {
+                NavigationLink {
+                    IntrinsicsView(groups: viewModel.intrinsicGroups)
+                } label: {
+                    LabeledContent(Strings.Profile.intrinsicsRow, value: viewModel.intrinsicsSummaryText)
+                }
+            }
+            if !viewModel.itemStats.isEmpty {
+                NavigationLink {
+                    ProfileItemsListView(items: viewModel.itemStats)
+                } label: {
+                    LabeledContent(Strings.Profile.itemsRow, value: "\(viewModel.itemStats.count)")
+                }
+            }
+            if !viewModel.missionStats.isEmpty {
+                NavigationLink {
+                    ProfileMissionsListView(missions: viewModel.missionStats)
+                } label: {
+                    LabeledContent(Strings.Profile.missionsRow, value: "\(viewModel.missionStats.count)")
+                }
+            }
+        } header: {
+            SectionHeaderLabel(Strings.Profile.statsHeader)
         }
     }
 }
