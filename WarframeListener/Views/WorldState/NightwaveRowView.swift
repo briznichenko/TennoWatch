@@ -10,20 +10,26 @@ import SwiftUI
 struct NightwaveRowView: View {
     let nightwave: Nightwave
 
+    // MARK: - Computed Properties
+    private var totalStanding: Int {
+        nightwave.activeChallenges.reduce(0) { $0 + Int($1.reputation) }
+    }
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(nightwave.tag)
-                .font(.headline)
-            ForEach(Array(nightwave.activeChallenges.enumerated()), id: \.offset) { _, challenge in
-                HStack {
-                    Text(challenge.title)
-                    Spacer()
-                    Text("+\(Int(challenge.reputation))")
-                        .font(.caption)
-                        .foregroundStyle(Color.labelSecondary)
-                }
+        HStack {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(nightwave.tag)
+                    .font(.headline)
+                Text(Strings.WorldState.nightwaveChallengesCount(nightwave.activeChallenges.count))
+                    .font(.caption)
+                    .foregroundStyle(Color.labelSecondary)
             }
+            Spacer()
+            Text(Strings.WorldState.nightwaveStandingAvailable(totalStanding))
+                .font(.caption)
+                .foregroundStyle(Color.labelSecondary)
         }
+        .frame(minHeight: 44)
     }
 }
 

@@ -13,8 +13,15 @@ extension String {
         return first.uppercased() + dropFirst()
     }
 
-    /// Turns a path-like or camelCase identifier (e.g. "/Lotus/Weapons/Kunai" or "ClanNode1")
-    /// into a spaced, sentence-cased display string (e.g. "Kunai", "Clan Node 1").
+    var nodeNameAndPlanet: (name: String, planet: String?) {
+        guard let openParen = lastIndex(of: "("), let closeParen = lastIndex(of: ")"), openParen < closeParen else {
+            return (self, nil)
+        }
+        let name = self[..<openParen].trimmingCharacters(in: .whitespaces)
+        let planet = String(self[index(after: openParen)..<closeParen])
+        return (name, planet)
+    }
+
     var spacedByCamelCase: String {
         let base = components(separatedBy: "/").last ?? self
         var result = ""

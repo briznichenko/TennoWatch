@@ -14,7 +14,7 @@ struct FissureRowView: View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
                 Text(fissure.node)
-                Text("\(fissure.tier) · \(fissure.missionType)")
+                Text("\(fissure.enemy) · \(fissure.missionType)")
                     .font(.caption)
                     .foregroundStyle(Color.labelSecondary)
             }

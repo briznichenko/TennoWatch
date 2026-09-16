@@ -39,15 +39,29 @@ struct OpeningsListView: View {
     @ViewBuilder
     private var permanentSection: some View {
         Section {
-            if viewModel.permanentItems.isEmpty && viewModel.permanentSources.isEmpty {
+            if viewModel.permanentItemCategories.isEmpty && viewModel.permanentSourceCategories.isEmpty {
                 Text(Strings.Openings.emptyPermanent)
                     .foregroundStyle(Color.labelSecondary)
             } else {
-                ForEach(viewModel.permanentItems) { item in
-                    MasteryItemView(viewModel: item)
+                ForEach(viewModel.permanentItemCategories) { summary in
+                    NavigationLink {
+                        OpeningsItemCategoryDetailView(
+                            categoryTitle: summary.category.displayName.sentenceCased,
+                            items: viewModel.permanentItems(in: summary.category)
+                        )
+                    } label: {
+                        OpeningsCategoryRowView(title: summary.category.displayName.sentenceCased, countText: summary.countText)
+                    }
                 }
-                ForEach(viewModel.permanentSources) { source in
-                    MasterySourceView(viewModel: source)
+                ForEach(viewModel.permanentSourceCategories) { summary in
+                    NavigationLink {
+                        OpeningsSourceCategoryDetailView(
+                            categoryTitle: summary.name.sentenceCased,
+                            sources: viewModel.permanentSources(in: summary.name)
+                        )
+                    } label: {
+                        OpeningsCategoryRowView(title: summary.name.sentenceCased, countText: summary.countText)
+                    }
                 }
             }
         } header: {

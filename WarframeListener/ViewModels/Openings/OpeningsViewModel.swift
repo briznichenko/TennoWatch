@@ -8,6 +8,20 @@
 import Foundation
 import Observation
 
+struct OpeningsItemCategorySummary: Identifiable, Hashable {
+    let category: CatalogItemModel.Category
+    let count: Int
+    var id: CatalogItemModel.Category { category }
+    var countText: String { "\(count)" }
+}
+
+struct OpeningsSourceCategorySummary: Identifiable, Hashable {
+    let name: String
+    let count: Int
+    var id: String { name }
+    var countText: String { "\(count)" }
+}
+
 @Observable
 final class OpeningsViewModel {
     // MARK: - Object Properties
@@ -26,13 +40,23 @@ final class OpeningsViewModel {
         (catalog?.items.flatMap(\.masteryItems) ?? []).filter { $0.obtainable && !$0.isMastered }
     }
 
-    private var unmasteredSources: [MasterySourceModel] {
-        (catalog?.nonItemSources.flatMap(\.sources) ?? []).filter { $0.isMastered != true }
-    }
-
     private var matchedOpenings: [TimeSensitiveOpening] {
         guard let worldState else { return [] }
         return matchingService.timeSensitiveOpenings(for: unmasteredItems, in: worldState)
+    }
+
+    private var permanentMasteryItems: [MasteryItem] {
+        let timeSensitiveIDs = Set(matchedOpenings.map(\.id))
+        return unmasteredItems.filter { !timeSensitiveIDs.contains($0.catalogItemModel.uniqueName) }
+    }
+
+    /// Non-item sources grouped by their source category name, keeping only
+    /// categories that still have an unmastered source left.
+    private var permanentSourceGroups: [(name: String, sources: [MasterySourceModel])] {
+        (catalog?.nonItemSources ?? []).compactMap { category in
+            let unmastered = category.sources.filter { $0.isMastered != true }
+            return unmastered.isEmpty ? nil : (category.name, unmastered)
+        }
     }
 
     var timeSensitiveOpenings: [TimeSensitiveOpeningViewModel] {
@@ -41,18 +65,16 @@ final class OpeningsViewModel {
             .map { TimeSensitiveOpeningViewModel(opening: $0) }
     }
 
-    var permanentItems: [MasteryItemViewModel] {
-        let timeSensitiveIDs = Set(matchedOpenings.map(\.id))
-        return unmasteredItems
-            .filter { !timeSensitiveIDs.contains($0.catalogItemModel.uniqueName) }
-            .sorted { $0.catalogItemModel.name < $1.catalogItemModel.name }
-            .map { MasteryItemViewModel(item: $0) }
+    var permanentItemCategories: [OpeningsItemCategorySummary] {
+        Dictionary(grouping: permanentMasteryItems, by: \.catalogItemModel.category)
+            .map { OpeningsItemCategorySummary(category: $0.key, count: $0.value.count) }
+            .sorted { $0.category.displayName < $1.category.displayName }
     }
 
-    var permanentSources: [MasterySourceViewModel] {
-        unmasteredSources
+    var permanentSourceCategories: [OpeningsSourceCategorySummary] {
+        permanentSourceGroups
+            .map { OpeningsSourceCategorySummary(name: $0.name, count: $0.sources.count) }
             .sorted { $0.name < $1.name }
-            .map { MasterySourceViewModel(source: $0) }
     }
 
     // MARK: - Init
@@ -79,6 +101,19 @@ final class OpeningsViewModel {
         async let fetchedWorldState = fetchWorldState()
         catalog = await fetchedCatalog
         worldState = await fetchedWorldState
+    }
+
+    func permanentItems(in category: CatalogItemModel.Category) -> [MasteryItemViewModel] {
+        permanentMasteryItems
+            .filter { $0.catalogItemModel.category == category }
+            .sorted { $0.catalogItemModel.name < $1.catalogItemModel.name }
+            .map { MasteryItemViewModel(item: $0) }
+    }
+
+    func permanentSources(in categoryName: String) -> [MasterySourceViewModel] {
+        (permanentSourceGroups.first { $0.name == categoryName }?.sources ?? [])
+            .sorted { $0.name < $1.name }
+            .map { MasterySourceViewModel(source: $0) }
     }
 
     // MARK: - Helper Functions

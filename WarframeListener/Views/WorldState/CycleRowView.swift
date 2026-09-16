@@ -16,7 +16,10 @@ struct CycleRowView: View {
             Spacer()
             Text(cycle.state)
                 .foregroundStyle(Color.labelSecondary)
-            if !cycle.timeLeft.isEmpty {
+            if cycle.expiry != nil {
+                LiveCountdownText(date: cycle.expiry)
+                    .frame(minWidth: 56, alignment: .trailing)
+            } else if !cycle.timeLeft.isEmpty {
                 Text(cycle.timeLeft)
                     .font(.caption)
                     .foregroundStyle(Color.labelSecondary)
@@ -28,6 +31,6 @@ struct CycleRowView: View {
 
 #Preview {
     List {
-        CycleRowView(cycle: .init(id: "cetus", title: "Cetus", state: "Day", timeLeft: "45m"))
+        CycleRowView(cycle: .init(id: "cetus", title: "Cetus", state: "Day", timeLeft: "45m", expiry: .now.addingTimeInterval(2700)))
     }
 }

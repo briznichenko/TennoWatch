@@ -42,8 +42,10 @@ struct WorldStateListView: View {
     private var invasionsSection: some View {
         if !viewModel.invasions.isEmpty {
             Section {
-                ForEach(viewModel.invasions) { invasion in
-                    InvasionView(invasion: invasion)
+                NavigationLink {
+                    InvasionListView(groups: viewModel.invasionsByPlanet)
+                } label: {
+                    InvasionsSummaryRowView(count: viewModel.invasions.count)
                 }
             } header: {
                 SectionHeaderLabel(Strings.WorldState.invasionsHeader)
@@ -55,8 +57,10 @@ struct WorldStateListView: View {
     private var fissuresSection: some View {
         if !viewModel.fissures.isEmpty {
             Section {
-                ForEach(viewModel.fissures, id: \.nodeKey) { fissure in
-                    FissureRowView(fissure: fissure)
+                NavigationLink {
+                    FissureListView(groups: viewModel.fissuresByTier)
+                } label: {
+                    FissuresSummaryRowView(count: viewModel.fissures.count)
                 }
             } header: {
                 SectionHeaderLabel(Strings.WorldState.fissuresHeader)
@@ -90,7 +94,11 @@ struct WorldStateListView: View {
     private var nightwaveSection: some View {
         if let nightwave = viewModel.worldState?.nightwave {
             Section {
-                NightwaveRowView(nightwave: nightwave)
+                NavigationLink {
+                    NightwaveListView(nightwave: nightwave)
+                } label: {
+                    NightwaveRowView(nightwave: nightwave)
+                }
             } header: {
                 SectionHeaderLabel(Strings.WorldState.nightwaveHeader)
             }

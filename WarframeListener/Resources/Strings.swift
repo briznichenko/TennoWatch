@@ -54,6 +54,16 @@ struct Strings {
         static var cycleCold: String { Strings.string("world_state_cycle_cold_key", "Cold") }
         static var cycleCorpus: String { Strings.string("world_state_cycle_corpus_key", "Corpus") }
         static var cycleGrineer: String { Strings.string("world_state_cycle_grineer_key", "Grineer") }
+        static var baroArrivesIn: String { Strings.string("world_state_baro_arrives_in_key", "Arrives in") }
+        static var baroDepartsIn: String { Strings.string("world_state_baro_departs_in_key", "Departs in") }
+
+        static func nightwaveChallengesCount(_ count: Int) -> String {
+            String(format: Strings.string("world_state_nightwave_challenges_count_format_key", "%lld challenges"), count)
+        }
+
+        static func nightwaveStandingAvailable(_ standing: Int) -> String {
+            String(format: Strings.string("world_state_nightwave_standing_available_format_key", "+%lld standing"), standing)
+        }
     }
 
     struct Settings {
