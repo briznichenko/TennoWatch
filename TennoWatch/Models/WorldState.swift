@@ -136,10 +136,34 @@ struct WorldEvent: NetworkModel {
     let victimNode: String?
 }
 
+struct CalendarChallenge: NetworkModel {
+    let title: String
+    let description: String
+}
+
+struct CalendarUpgrade: NetworkModel {
+    let title: String
+    let description: String
+}
+
+struct CalendarEvent: NetworkModel {
+    let `type`: String
+    let challenge: CalendarChallenge?
+    let reward: String?
+    let uniqueName: String?
+    let upgrade: CalendarUpgrade?
+}
+
+struct CalendarDay: NetworkModel {
+    let date: Date
+    let events: [CalendarEvent]
+}
+
 struct GameCalendar: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
+    let days: [CalendarDay]
     let requirements: [String]
     let season: String
     let version: Double
@@ -479,10 +503,25 @@ struct Simaris: NetworkModel {
     let target: String
 }
 
+struct SteelPathReward: NetworkModel {
+    let name: String
+    let cost: Double
+}
+
+struct SteelPathIncursion: NetworkModel {
+    let id: String?
+    let activation: Date?
+    let expiry: Date?
+}
+
 struct SteelPathOfferings: NetworkModel {
     let activation: Date
     let expiry: Date
     let remaining: String
+    let currentReward: SteelPathReward?
+    let rotation: [SteelPathReward]
+    let evergreens: [SteelPathReward]
+    let incursions: SteelPathIncursion?
 }
 
 struct SyndicateMission: NetworkModel {

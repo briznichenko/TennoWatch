@@ -67,7 +67,7 @@ extension Sortie {
 
 extension GameCalendar {
     static func stub() -> GameCalendar {
-        .init(activation: nil, expiry: nil, id: nil, requirements: [], season: "", version: 0, yearIteration: 0)
+        .init(activation: nil, expiry: nil, id: nil, days: [], requirements: [], season: "", version: 0, yearIteration: 0)
     }
 }
 
@@ -121,7 +121,7 @@ extension Simaris {
 
 extension SteelPathOfferings {
     static func stub() -> SteelPathOfferings {
-        .init(activation: .now, expiry: .now, remaining: "")
+        .init(activation: .now, expiry: .now, remaining: "", currentReward: nil, rotation: [], evergreens: [], incursions: nil)
     }
 }
 

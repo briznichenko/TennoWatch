@@ -16,6 +16,7 @@ struct DefaultOpeningsMatchingService: OpeningsMatchingService {
     func timeSensitiveOpenings(for items: [MasteryItem], in worldState: WorldState) -> [TimeSensitiveOpening] {
         invasionOpenings(for: items, invasions: worldState.invasions)
             + voidTraderOpenings(for: items, voidTrader: worldState.voidTrader)
+            + vaultTraderOpenings(for: items, vaultTrader: worldState.vaultTrader)
     }
 
     // MARK: - Helper Functions
@@ -40,6 +41,17 @@ struct DefaultOpeningsMatchingService: OpeningsMatchingService {
                 TimeSensitiveOpening(
                     item: $0,
                     source: .voidTrader(location: voidTrader.location, expiry: voidTrader.expiry)
+                )
+            }
+        }
+    }
+
+    private func vaultTraderOpenings(for items: [MasteryItem], vaultTrader: VoidTrader) -> [TimeSensitiveOpening] {
+        vaultTrader.inventory.flatMap { invItem in
+            matchingItems(uniqueName: invItem.uniqueName, displayName: invItem.item, in: items).map {
+                TimeSensitiveOpening(
+                    item: $0,
+                    source: .vaultTrader(location: vaultTrader.location, expiry: vaultTrader.expiry)
                 )
             }
         }

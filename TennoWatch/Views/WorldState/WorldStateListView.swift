@@ -11,107 +11,184 @@ struct WorldStateListView: View {
     // MARK: - Object Properties
     let viewModel: WorldStateViewModel
 
+    private static let columns = [GridItem(.flexible()), GridItem(.flexible())]
+
     // MARK: - Body
     var body: some View {
-        List {
-            voidTraderSection
-            nightwaveSection
-            invasionsSection
-            cyclesSection
-            fissuresSection
-            sortieSection
-            archonHuntSection
+        ScrollView {
+            LazyVGrid(columns: Self.columns, spacing: 12) {
+                cyclesCard
+                invasionsCard
+                fissuresCard
+                sortieCard
+                archonHuntCard
+                nightwaveCard
+                voidTraderCard
+                vaultTraderCard
+                steelPathCard
+                alertsCard
+                archimedeaCard
+                calendarCard
+            }
+            .padding(12)
         }
+        .buttonStyle(.plain)
+        .background(Color.bg)
     }
 
-    // MARK: - Subviews
+    // MARK: - Cards
     @ViewBuilder
-    private var cyclesSection: some View {
+    private var cyclesCard: some View {
         if !viewModel.cycles.isEmpty {
-            Section {
-                ForEach(viewModel.cycles) { cycle in
-                    CycleRowView(cycle: cycle)
+            NavigationLink {
+                CycleListView(cycles: viewModel.cycles)
+            } label: {
+                WorldStateCardView(icon: "clock.arrow.2.circlepath", title: Strings.WorldState.cyclesHeader) {
+                    Text("\(viewModel.cycles.count)")
                 }
-            } header: {
-                SectionHeaderLabel(Strings.WorldState.cyclesHeader)
             }
         }
     }
 
     @ViewBuilder
-    private var invasionsSection: some View {
+    private var invasionsCard: some View {
         if !viewModel.invasions.isEmpty {
-            Section {
-                NavigationLink {
-                    InvasionListView(groups: viewModel.invasionsByPlanet)
-                } label: {
-                    InvasionsSummaryRowView(count: viewModel.invasions.count)
+            NavigationLink {
+                InvasionListView(groups: viewModel.invasionsByPlanet)
+            } label: {
+                WorldStateCardView(icon: "person.3.fill", title: Strings.WorldState.invasionsHeader) {
+                    Text("\(viewModel.invasions.count)")
                 }
-            } header: {
-                SectionHeaderLabel(Strings.WorldState.invasionsHeader)
             }
         }
     }
 
     @ViewBuilder
-    private var fissuresSection: some View {
+    private var fissuresCard: some View {
         if !viewModel.fissures.isEmpty {
-            Section {
-                NavigationLink {
-                    FissureListView(groups: viewModel.fissuresByTier)
-                } label: {
-                    FissuresSummaryRowView(count: viewModel.fissures.count)
+            NavigationLink {
+                FissureListView(groups: viewModel.fissuresByTier)
+            } label: {
+                WorldStateCardView(icon: "tornado", title: Strings.WorldState.fissuresHeader) {
+                    Text("\(viewModel.fissures.count)")
                 }
-            } header: {
-                SectionHeaderLabel(Strings.WorldState.fissuresHeader)
             }
         }
     }
 
     @ViewBuilder
-    private var sortieSection: some View {
+    private var sortieCard: some View {
         if let sortie = viewModel.worldState?.sortie {
-            Section {
-                SortieRowView(sortie: sortie)
-            } header: {
-                SectionHeaderLabel(Strings.WorldState.sortieHeader)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private var archonHuntSection: some View {
-        if let archonHunt = viewModel.worldState?.archonHunt {
-            Section {
-                SortieRowView(sortie: archonHunt)
-            } header: {
-                SectionHeaderLabel(Strings.WorldState.archonHuntHeader)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private var nightwaveSection: some View {
-        if let nightwave = viewModel.worldState?.nightwave {
-            Section {
-                NavigationLink {
-                    NightwaveListView(nightwave: nightwave)
-                } label: {
-                    NightwaveRowView(nightwave: nightwave)
+            NavigationLink {
+                SortieDetailView(title: Strings.WorldState.sortieHeader, sortie: sortie)
+            } label: {
+                WorldStateCardView(icon: "star.circle.fill", title: Strings.WorldState.sortieHeader) {
+                    Text(sortie.boss)
                 }
-            } header: {
-                SectionHeaderLabel(Strings.WorldState.nightwaveHeader)
             }
         }
     }
 
     @ViewBuilder
-    private var voidTraderSection: some View {
+    private var archonHuntCard: some View {
+        if let archonHunt = viewModel.worldState?.archonHunt {
+            NavigationLink {
+                SortieDetailView(title: Strings.WorldState.archonHuntHeader, sortie: archonHunt)
+            } label: {
+                WorldStateCardView(icon: "shield.righthalf.filled", title: Strings.WorldState.archonHuntHeader) {
+                    Text(archonHunt.boss)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var nightwaveCard: some View {
+        if let nightwave = viewModel.worldState?.nightwave {
+            NavigationLink {
+                NightwaveListView(nightwave: nightwave)
+            } label: {
+                WorldStateCardView(icon: "moon.stars.fill", title: Strings.WorldState.nightwaveHeader) {
+                    Text(Strings.WorldState.nightwaveChallengesCount(nightwave.activeChallenges.count))
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var voidTraderCard: some View {
         if let voidTrader = viewModel.worldState?.voidTrader {
-            Section {
-                VoidTraderRowView(voidTrader: voidTrader)
-            } header: {
-                SectionHeaderLabel(Strings.WorldState.voidTraderHeader)
+            NavigationLink {
+                TraderInventoryListView(trader: voidTrader)
+            } label: {
+                WorldStateCardView(icon: "person.fill.questionmark", title: Strings.WorldState.voidTraderHeader) {
+                    LiveCountdownText(date: voidTrader.expiry)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var vaultTraderCard: some View {
+        if let vaultTrader = viewModel.vaultTrader {
+            NavigationLink {
+                TraderInventoryListView(trader: vaultTrader)
+            } label: {
+                WorldStateCardView(icon: "archivebox.fill", title: Strings.WorldState.vaultTraderHeader) {
+                    LiveCountdownText(date: vaultTrader.expiry)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var steelPathCard: some View {
+        if let steelPath = viewModel.steelPath {
+            NavigationLink {
+                SteelPathDetailView(steelPath: steelPath)
+            } label: {
+                WorldStateCardView(icon: "flame.fill", title: Strings.WorldState.steelPathHeader) {
+                    Text(steelPath.remaining)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var alertsCard: some View {
+        if !viewModel.alerts.isEmpty {
+            NavigationLink {
+                AlertListView(alerts: viewModel.alerts)
+            } label: {
+                WorldStateCardView(icon: "exclamationmark.triangle.fill", title: Strings.WorldState.alertsHeader) {
+                    Text("\(viewModel.alerts.count)")
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var archimedeaCard: some View {
+        if !viewModel.archimedeas.isEmpty {
+            NavigationLink {
+                ArchimedeaListView(archimedeas: viewModel.archimedeas)
+            } label: {
+                WorldStateCardView(icon: "atom", title: Strings.WorldState.archimedeaHeader) {
+                    Text("\(viewModel.archimedeas.count)")
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var calendarCard: some View {
+        if let calendar = viewModel.calendar {
+            NavigationLink {
+                CalendarDetailView(calendar: calendar)
+            } label: {
+                WorldStateCardView(icon: "calendar", title: Strings.WorldState.calendarHeader) {
+                    Text(calendar.season)
+                }
             }
         }
     }

@@ -89,6 +89,26 @@ final class WorldStateViewModel {
         (worldState?.fissures ?? []).sorted { ($0.expiry ?? .distantFuture) < ($1.expiry ?? .distantFuture) }
     }
 
+    var alerts: [Alert] {
+        (worldState?.alerts ?? []).sorted { ($0.expiry ?? .distantFuture) < ($1.expiry ?? .distantFuture) }
+    }
+
+    var archimedeas: [Archimedea] {
+        worldState?.archimedeas ?? []
+    }
+
+    var vaultTrader: VoidTrader? {
+        worldState?.vaultTrader
+    }
+
+    var steelPath: SteelPathOfferings? {
+        worldState?.steelPath
+    }
+
+    var calendar: GameCalendar? {
+        worldState?.calendar
+    }
+
     var invasionsByPlanet: [InvasionPlanetGroup] {
         Dictionary(grouping: invasions) { $0.node.nodeNameAndPlanet.planet ?? $0.node }
             .map { InvasionPlanetGroup(planet: $0.key, invasions: $0.value) }
