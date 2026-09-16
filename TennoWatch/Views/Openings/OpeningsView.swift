@@ -23,7 +23,7 @@ struct OpeningsView: View {
                 .navigationTitle(Strings.Openings.title)
                 .overlay {
                     if viewModel.isLoading && viewModel.catalog == nil {
-                        ProgressView()
+                        LotusLoaderView()
                     }
                 }
                 .handleErrorAlert(with: viewModel.errorManager)

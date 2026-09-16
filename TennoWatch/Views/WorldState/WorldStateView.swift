@@ -23,7 +23,7 @@ struct WorldStateView: View {
                 .navigationTitle(Strings.WorldState.title)
                 .overlay {
                     if viewModel.isLoading && viewModel.worldState == nil {
-                        ProgressView()
+                        LotusLoaderView()
                     }
                 }
                 .handleErrorAlert(with: viewModel.errorManager)

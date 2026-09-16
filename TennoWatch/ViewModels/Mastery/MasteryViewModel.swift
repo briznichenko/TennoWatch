@@ -64,6 +64,7 @@ final class MasteryViewModel {
 
     // MARK: - Functions
     func fetchCatalog(forceRefresh: Bool = false) async {
+        isLoading = summary == nil
         defer {
             isLoading = false
         }

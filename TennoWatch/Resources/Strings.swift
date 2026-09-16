@@ -212,4 +212,9 @@ struct Strings {
         static var title: String { Strings.string("error_alert_title_key", "An Error Occurred") }
         static var okButton: String { Strings.string("error_alert_ok_button_key", "OK") }
     }
+
+    struct Common {
+        private init() {}
+        static var loading: String { Strings.string("common_loading_key", "Loading") }
+    }
 }

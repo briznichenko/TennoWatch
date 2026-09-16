@@ -27,7 +27,7 @@ struct TennoWatchApp: App {
     // MARK: - Body
     var body: some Scene {
         WindowGroup {
-            MainView(dependencies: dependencies)
+            RootView(dependencies: dependencies)
                 .tint(.accent)
                 .foregroundStyle(Color.labelPrimary)
                 .preferredColorScheme(themePreference.colorScheme)
