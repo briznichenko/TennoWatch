@@ -33,7 +33,7 @@ struct ProfileView: View {
             .navigationTitle(Strings.Profile.title)
             .overlay {
                 if viewModel.isLoading {
-                    ProgressView()
+                    LotusLoaderView()
                 }
             }
             .toolbar {

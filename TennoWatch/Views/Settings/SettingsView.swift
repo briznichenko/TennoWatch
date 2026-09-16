@@ -78,7 +78,7 @@ struct SettingsView: View {
                             Label(Strings.Settings.refreshCatalog, systemImage: "arrow.clockwise")
                             Spacer()
                             if viewModel.isRefreshing {
-                                ProgressView()
+                                LotusLoaderView(size: 20)
                             }
                         }
                     }

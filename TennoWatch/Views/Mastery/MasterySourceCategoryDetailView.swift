@@ -29,7 +29,7 @@ struct MasterySourceCategoryDetailView: View {
         .listStyle(.plain)
         .overlay {
             if viewModel.isLoading {
-                ProgressView()
+                LotusLoaderView()
             }
         }
         .safeAreaInset(edge: .top) {

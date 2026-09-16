@@ -30,7 +30,7 @@ struct MasteryView: View {
             .navigationTitle(Strings.Mastery.title)
             .overlay {
                 if viewModel.isLoading {
-                    ProgressView()
+                    LotusLoaderView()
                 }
             }
             .handleErrorAlert(with: viewModel.errorManager)
