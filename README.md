@@ -43,6 +43,7 @@ The Mastery catalog itself is generated offline: [Scripts/itemMapper.py](Scripts
 | Networking | `Networking/` | `APIManager` + `Endpoint` — plain `async`/`await` over `URLSession`, talking to `api.warframestat.us` and `api.warframe.com`. |
 | Persistency | `Persistency/` | SwiftData, via a `@ModelActor` service and a `ValueTypeConvertible`/`PersistentModelConvertible` pair that keeps plain value types at the repository/ViewModel boundary instead of leaking `@Model` classes upward. |
 | Repositories | `Repositories/` | One repository per data domain; owns cache policy, fronts networking + persistency. |
+| Coordinators | `Coordinators/` | Per-tab `@Observable` coordinator owning a `NavigationPath` + `Destination` enum; views push by value instead of building the next screen inline. |
 | Services | `Services/` | Stateless business logic — catalog↔profile merge, openings matching, error queue. |
 | Models | `Models/` | Network DTOs, SwiftData-adjacent value models, view-facing derived models. |
 | Theme & Shared UI | `Theme/` | Palette, reusable SwiftUI components, list styling, and a narrow UIKit-appearance bridge (`AppearanceProxies`) for nav-bar/tab-bar tinting SwiftUI can't do natively yet. |
@@ -51,7 +52,7 @@ The Mastery catalog itself is generated offline: [Scripts/itemMapper.py](Scripts
 
 Cross-cutting:
 
-- **MVVM+C.** View → `@Observable` ViewModel → Repository protocol → (Service +) Networking/Persistency. No coordinator yet — navigation is single-level today; one gets introduced once there's real navigation to coordinate.
+- **MVVM+C.** View → `@Observable` ViewModel → Repository protocol → (Service +) Networking/Persistency. Navigation lives in per-tab `Coordinator` objects (`Coordinators/`) that own a `NavigationPath` and resolve a `Destination` enum via `.navigationDestination(for:)` — views push by value, not by building the next view inline. Introduced first for Mastery, the tab with real drill-down; other tabs will get their own coordinator once their navigation grows past single-level.
 - **Swift 6** strict concurrency, target-wide default `MainActor` isolation (Approachable Concurrency) — most types need no explicit `@MainActor`. `DefaultPersistencyService` is the one actor doing real off-main work (`@ModelActor`).
 - **Manual dependency injection** via [`AppDependencies`](TennoWatch/AppDependencies.swift), constructed once and threaded down through views to ViewModels. No DI container.
 - **SwiftUI** only, with UIKit interop limited to the one appearance-proxy bridge noted above.
@@ -71,7 +72,7 @@ Swift Testing, covering networking, repositories, sync/matching services, and on
 - **Combine** — the network/data layer is currently plain `async`/`await`; adopting Combine for live-updating state (e.g. streaming world-state changes) is on the roadmap, not yet implemented.
 - **Player search/lookup** — Profile currently reads from a hardcoded account ID; a real search flow is the next planned feature there.
 - **Platform selector** — World State is hardcoded to PC; PS/Xbox/Switch support is unimplemented.
-- **Coordinator layer** — deferred until there's more than single-level navigation to justify it.
+- **Coordinators for the remaining tabs** — World State, Openings, and Profile still navigate via inline `NavigationLink(destination:)`; they'll each get a `Coordinator` once their drill-down grows past single-level, following the pattern introduced in Mastery.
 
 ## Legal
 

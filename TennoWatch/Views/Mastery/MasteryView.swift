@@ -10,6 +10,7 @@ import SwiftUI
 struct MasteryView: View {
     // MARK: - Object Properties
     @State private var viewModel: MasteryViewModel
+    @State private var coordinator = MasteryCoordinator()
 
     // MARK: - Init
     init(viewModel: MasteryViewModel) {
@@ -18,7 +19,7 @@ struct MasteryView: View {
 
     // MARK: - Body
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $coordinator.path) {
             List {
                 summaryCard
                     .listRowInsets(EdgeInsets())
@@ -33,6 +34,20 @@ struct MasteryView: View {
                 }
             }
             .handleErrorAlert(with: viewModel.errorManager)
+            .navigationDestination(
+                for: MasteryCoordinator.Destination.self
+            ) { destination in
+                switch destination {
+                case .categoryDetail(let category):
+                    let detailViewModel = viewModel
+                        .makeCategoryDetailViewModel(for: category)
+                    MasteryCategoryDetailView(viewModel: detailViewModel)
+                case .sourceDetail(let name):
+                    let detailViewModel = viewModel
+                        .makeSourceDetailViewModel(for: name)
+                    MasterySourceCategoryDetailView(viewModel: detailViewModel)
+                }
+            }
             .task {
                 await viewModel.fetchCatalog()
             }
@@ -71,7 +86,10 @@ struct MasteryView: View {
     private var categoryList: some View {
         Section {
             ForEach(viewModel.categories) { summary in
-                NavigationLink(destination: MasteryCategoryDetailView(viewModel: viewModel.makeCategoryDetailViewModel(for: summary.category))) {
+                NavigationLink(
+                    value: MasteryCoordinator.Destination
+                        .categoryDetail(summary.category)
+                ) {
                     MasteryCategoryView(summary: summary)
                 }
             }
@@ -84,7 +102,10 @@ struct MasteryView: View {
     private var otherSourcesList: some View {
         ForEach(viewModel.nonItemCategories) { summary in
             Section {
-                NavigationLink(destination: MasterySourceCategoryDetailView(viewModel: viewModel.makeSourceDetailViewModel(for: summary.name))) {
+                NavigationLink(
+                    value: MasteryCoordinator.Destination
+                        .sourceDetail(name: summary.name)
+                ) {
                     MasterySourceCategoryView(summary: summary)
                 }
             } header: {
