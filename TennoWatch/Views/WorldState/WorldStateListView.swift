@@ -108,7 +108,7 @@ struct WorldStateListView: View {
             NavigationLink {
                 NightwaveListView(nightwave: nightwave)
             } label: {
-                WorldStateCardView(icon: "moon.stars.fill", title: Strings.WorldState.nightwaveHeader) {
+                WorldStateCardView(icon: "dot.radiowaves.left.and.right", title: Strings.WorldState.nightwaveHeader) {
                     Text(Strings.WorldState.nightwaveChallengesCount(nightwave.activeChallenges.count))
                 }
             }
@@ -134,7 +134,7 @@ struct WorldStateListView: View {
             NavigationLink {
                 TraderInventoryListView(trader: vaultTrader)
             } label: {
-                WorldStateCardView(icon: "archivebox.fill", title: Strings.WorldState.vaultTraderHeader) {
+                WorldStateCardView(icon: "lock.fill", title: Strings.WorldState.vaultTraderHeader) {
                     LiveCountdownText(date: vaultTrader.expiry)
                 }
             }
@@ -160,7 +160,7 @@ struct WorldStateListView: View {
             NavigationLink {
                 AlertListView(alerts: viewModel.alerts)
             } label: {
-                WorldStateCardView(icon: "exclamationmark.triangle.fill", title: Strings.WorldState.alertsHeader) {
+                WorldStateCardView(icon: "bell.fill", title: Strings.WorldState.alertsHeader) {
                     Text("\(viewModel.alerts.count)")
                 }
             }
