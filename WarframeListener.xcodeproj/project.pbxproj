@@ -6,19 +6,78 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		094D42D44CB5792A6DEB0CF9 /* CatalogSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931C9495D84CB38080083348 /* CatalogSyncServiceTests.swift */; };
+		0FCF5FCC376B9ADFAF529C01 /* OpeningsMatchingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D691D8DB179371E7FF44D89 /* OpeningsMatchingServiceTests.swift */; };
+		367AE845B52F2D56E6E34BD5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB16E810A8E0361B8D9EBC7B /* Foundation.framework */; };
+		41FC96247709CD64555C478A /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C1A897F277DE23F9F6AEE6 /* Fixtures.swift */; };
+		5D80EFCFC6E036F1906DD53F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB16E810A8E0361B8D9EBC7B /* Foundation.framework */; };
+		60D19434234B193556C2C9C5 /* WorldStateViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30787DA8F69227A6E5B23DA5 /* WorldStateViewModelTests.swift */; };
+		7BDE3824B27519709EEA16DE /* OpeningsMatchingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40FA22E075B158294C23EA41 /* OpeningsMatchingServiceTests.swift */; };
+		862DD48AFD6E61BB50EBD8BA /* ProfileRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5511A3A008CEFA668878194E /* ProfileRepositoryTests.swift */; };
+		A355E4D4AFFDB970D7307A52 /* CatalogSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8B2E2702DEA0BAB9EDCABA /* CatalogSyncServiceTests.swift */; };
+		C51A6F8E91185347722CE126 /* APIManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE69409AB9264830B26703B /* APIManagerTests.swift */; };
+		CF7672013DA9CDD3100EAA15 /* APIManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72B3A29E3C671BD71B667B76 /* APIManagerTests.swift */; };
+		E55A86AA7ECB516F64F4E561 /* ProfileRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A14417855233A051B8B3492 /* ProfileRepositoryTests.swift */; };
+		E90F8ECD65AF273EC6241195 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D706BD5EF860A92F6CDEB58 /* Fixtures.swift */; };
+		F3177F55C73CA558FFA1B8BA /* WorldStateViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195D439705557131008EF821 /* WorldStateViewModelTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		53148B310B4259EFA4F6197A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7DAA00B9303C70C50040DF25 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7DAA00C0303C70C50040DF25;
+			remoteInfo = WarframeListener;
+		};
+		B0CFCFB8C5496945235F2746 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7DAA00B9303C70C50040DF25 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7DAA00C0303C70C50040DF25;
+			remoteInfo = WarframeListener;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		195D439705557131008EF821 /* WorldStateViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorldStateViewModelTests.swift; sourceTree = "<group>"; };
+		21C1A897F277DE23F9F6AEE6 /* Fixtures.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
+		30787DA8F69227A6E5B23DA5 /* WorldStateViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorldStateViewModelTests.swift; sourceTree = "<group>"; };
+		40FA22E075B158294C23EA41 /* OpeningsMatchingServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OpeningsMatchingServiceTests.swift; sourceTree = "<group>"; };
+		5511A3A008CEFA668878194E /* ProfileRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProfileRepositoryTests.swift; sourceTree = "<group>"; };
+		5D691D8DB179371E7FF44D89 /* OpeningsMatchingServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OpeningsMatchingServiceTests.swift; sourceTree = "<group>"; };
+		72B3A29E3C671BD71B667B76 /* APIManagerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = APIManagerTests.swift; sourceTree = "<group>"; };
 		7DAA00C1303C70C50040DF25 /* WarframeListener.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WarframeListener.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7DE69409AB9264830B26703B /* APIManagerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = APIManagerTests.swift; sourceTree = "<group>"; };
+		931C9495D84CB38080083348 /* CatalogSyncServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CatalogSyncServiceTests.swift; sourceTree = "<group>"; };
+		94037D41B2F4715C41EE7FCD /* WarframeListenerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WarframeListenerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A14417855233A051B8B3492 /* ProfileRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProfileRepositoryTests.swift; sourceTree = "<group>"; };
+		9D706BD5EF860A92F6CDEB58 /* Fixtures.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
+		B9D574040649ACABC712C602 /* WarframeListenerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WarframeListenerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB16E810A8E0361B8D9EBC7B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		CF8B2E2702DEA0BAB9EDCABA /* CatalogSyncServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CatalogSyncServiceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		7DAA00C3303C70C50040DF25 /* WarframeListener */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = WarframeListener;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		336FE1571EE8A7944C4B5FB5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D80EFCFC6E036F1906DD53F /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7DAA00BE303C70C50040DF25 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -29,11 +88,75 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		14077364870A87321C3CD4EC /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				72B3A29E3C671BD71B667B76 /* APIManagerTests.swift */,
+			);
+			name = Networking;
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		218DA466BD6F1E9211722DAD /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				195D439705557131008EF821 /* WorldStateViewModelTests.swift */,
+			);
+			name = ViewModels;
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		32E41E7BEBDD69BFFAD7E3DD /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				CB16E810A8E0361B8D9EBC7B /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		3999E7154251CE5AB9D77BAD /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				CF8B2E2702DEA0BAB9EDCABA /* CatalogSyncServiceTests.swift */,
+				40FA22E075B158294C23EA41 /* OpeningsMatchingServiceTests.swift */,
+			);
+			name = Services;
+			path = Services;
+			sourceTree = "<group>";
+		};
+		3AAFB77432523A80677DA6C4 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				9D706BD5EF860A92F6CDEB58 /* Fixtures.swift */,
+			);
+			name = Support;
+			path = Support;
+			sourceTree = "<group>";
+		};
+		491098740E4361191587F5B0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				32E41E7BEBDD69BFFAD7E3DD /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		625851ED5A3485DFA8C79DA6 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				5511A3A008CEFA668878194E /* ProfileRepositoryTests.swift */,
+			);
+			name = Repositories;
+			path = Repositories;
+			sourceTree = "<group>";
+		};
 		7DAA00B8303C70C50040DF25 = {
 			isa = PBXGroup;
 			children = (
 				7DAA00C3303C70C50040DF25 /* WarframeListener */,
 				7DAA00C2303C70C50040DF25 /* Products */,
+				491098740E4361191587F5B0 /* Frameworks */,
+				F21F758D753B1BBD7D3B5124 /* WarframeListenerTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -41,8 +164,23 @@
 			isa = PBXGroup;
 			children = (
 				7DAA00C1303C70C50040DF25 /* WarframeListener.app */,
+				94037D41B2F4715C41EE7FCD /* WarframeListenerTests.xctest */,
+				B9D574040649ACABC712C602 /* WarframeListenerTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		F21F758D753B1BBD7D3B5124 /* WarframeListenerTests */ = {
+			isa = PBXGroup;
+			children = (
+				14077364870A87321C3CD4EC /* Networking */,
+				625851ED5A3485DFA8C79DA6 /* Repositories */,
+				3999E7154251CE5AB9D77BAD /* Services */,
+				3AAFB77432523A80677DA6C4 /* Support */,
+				218DA466BD6F1E9211722DAD /* ViewModels */,
+			);
+			name = WarframeListenerTests;
+			path = WarframeListenerTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -69,6 +207,24 @@
 			productName = WarframeListener;
 			productReference = 7DAA00C1303C70C50040DF25 /* WarframeListener.app */;
 			productType = "com.apple.product-type.application";
+		};
+		C075BEE9EC112E800C4C8FE2 /* WarframeListenerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 20F98520030BA0987A0D1815 /* Build configuration list for PBXNativeTarget "WarframeListenerTests" */;
+			buildPhases = (
+				3AADE66BC9EC448DC71B51AE /* Sources */,
+				336FE1571EE8A7944C4B5FB5 /* Frameworks */,
+				D3B81E71DA6E7F90018DAAEB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C18F8C0D7204151AB7E45C82 /* PBXTargetDependency */,
+			);
+			name = WarframeListenerTests;
+			productName = WarframeListenerTests;
+			productReference = B9D574040649ACABC712C602 /* WarframeListenerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -101,12 +257,20 @@
 			projectRoot = "";
 			targets = (
 				7DAA00C0303C70C50040DF25 /* WarframeListener */,
+				C075BEE9EC112E800C4C8FE2 /* WarframeListenerTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		7DAA00BF303C70C50040DF25 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3B81E71DA6E7F90018DAAEB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -158,6 +322,19 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		3AADE66BC9EC448DC71B51AE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CF7672013DA9CDD3100EAA15 /* APIManagerTests.swift in Sources */,
+				862DD48AFD6E61BB50EBD8BA /* ProfileRepositoryTests.swift in Sources */,
+				A355E4D4AFFDB970D7307A52 /* CatalogSyncServiceTests.swift in Sources */,
+				7BDE3824B27519709EEA16DE /* OpeningsMatchingServiceTests.swift in Sources */,
+				E90F8ECD65AF273EC6241195 /* Fixtures.swift in Sources */,
+				F3177F55C73CA558FFA1B8BA /* WorldStateViewModelTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7DAA00BD303C70C50040DF25 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -167,7 +344,82 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		C18F8C0D7204151AB7E45C82 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = WarframeListener;
+			target = 7DAA00C0303C70C50040DF25 /* WarframeListener */;
+			targetProxy = 53148B310B4259EFA4F6197A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		497741C2C23B6240A215B120 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TBBZBB993Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.briznichenko.WarframeListenerTests;
+				SDKROOT = iphoneos;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WarframeListener.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WarframeListener";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		589820E2E49CAD8BC8F73577 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TBBZBB993Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.briznichenko.WarframeListenerTests;
+				SDKROOT = iphoneos;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WarframeListener.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WarframeListener";
+			};
+			name = Debug;
+		};
+		6CF0FB67540DA0C927B9B305 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TBBZBB993Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.briznichenko.WarframeListenerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WarframeListener.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WarframeListener";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		7DAA00CA303C70C60040DF25 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -355,9 +607,40 @@
 			};
 			name = Release;
 		};
+		CB59BC695C83B9E424627276 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TBBZBB993Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.briznichenko.WarframeListenerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WarframeListener.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WarframeListener";
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		20F98520030BA0987A0D1815 /* Build configuration list for PBXNativeTarget "WarframeListenerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6CF0FB67540DA0C927B9B305 /* Release */,
+				CB59BC695C83B9E424627276 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		7DAA00BC303C70C50040DF25 /* Build configuration list for PBXProject "WarframeListener" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
