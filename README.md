@@ -20,6 +20,14 @@ It's built on a modern iOS stack — Swift 6 strict concurrency, SwiftUI, SwiftD
 
 Deeper specs for each tab and layer live in [Specs/](Specs/).
 
+<p>
+  <img src="Screenshots/world_state.png" width="180" alt="World State tab" />
+  <img src="Screenshots/mastery.png" width="180" alt="Mastery tab" />
+  <img src="Screenshots/openings.png" width="180" alt="Openings tab" />
+  <img src="Screenshots/profile.png" width="180" alt="Profile tab" />
+  <img src="Screenshots/settings.png" width="180" alt="Settings sheet" />
+</p>
+
 ## Requirements
 
 - Xcode 26 or later
