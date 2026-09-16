@@ -70,25 +70,25 @@ struct MasteryView: View {
 
     private var categoryList: some View {
         Section {
-            ForEach(viewModel.catalogs) { catalog in
-                NavigationLink(destination: MasteryCategoryDetailView(catalogContainer: catalog)) {
-                    MasteryCategoryView(catalogContainer: catalog)
+            ForEach(viewModel.categories) { summary in
+                NavigationLink(destination: MasteryCategoryDetailView(viewModel: viewModel.makeCategoryDetailViewModel(for: summary.category))) {
+                    MasteryCategoryView(summary: summary)
                 }
             }
         } header: {
             SectionHeaderLabel(Strings.Mastery.categoriesHeader)
         }
     }
-    
+
     @ViewBuilder
     private var otherSourcesList: some View {
-        ForEach(viewModel.nonItemSources) { source in
+        ForEach(viewModel.nonItemCategories) { summary in
             Section {
-                NavigationLink(destination: MasterySourceCategoryDetailView(masteryCategory: source)) {
-                    MasterySourceCategoryView(masteryCategory: source)
+                NavigationLink(destination: MasterySourceCategoryDetailView(viewModel: viewModel.makeSourceDetailViewModel(for: summary.name))) {
+                    MasterySourceCategoryView(summary: summary)
                 }
             } header: {
-                SectionHeaderLabel(source.name.sentenceCased)
+                SectionHeaderLabel(summary.name.sentenceCased)
             }
         }
     }

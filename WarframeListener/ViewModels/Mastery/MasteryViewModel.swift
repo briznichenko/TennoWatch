@@ -30,24 +30,21 @@ final class MasteryViewModel {
     private let catalogRepository: CatalogRepository
     let errorManager: ErrorManager
     
-    private(set) var catalog: MasteryCatalog?
-    
+    private(set) var summary: MasteryCatalogSummary?
+
     private(set) var isLoading: Bool = false
-    
+
     // MARK: - Computed Properties
-    var catalogs: [CatalogContainer] {
-        catalog?.items ?? []
+    var categories: [CatalogContainerSummary] {
+        summary?.categories ?? []
     }
-    var nonItemSources: [MasteryCategoryModel] {
-        catalog?.nonItemSources ?? []
+    var nonItemCategories: [MasteryCategorySummary] {
+        summary?.nonItemCategories ?? []
     }
-    
+
     var earnedMasteryXP: Int {
-        let itemsMastery = catalogs.flatMap(\.masteryItems).reduce(0) { $0 + $1.earnedMasteryPoints }
-        let nonItemsMastery = nonItemSources.map(\.sources).joined()
-            .filter { $0.isMastered == true }
-            .reduce(0) { $0 + $1.mastery }
-        return itemsMastery + nonItemsMastery
+        categories.reduce(0) { $0 + $1.earnedMasteryPoints }
+            + nonItemCategories.reduce(0) { $0 + $1.earnedMasteryPoints }
     }
 
     var rankProgress: MasteryRankProgress {
@@ -55,9 +52,9 @@ final class MasteryViewModel {
     }
 
     var obtainableItemsRemaining: Int {
-        catalogs.reduce(0) { $0 + $1.obtainableRemainingCount }
+        categories.reduce(0) { $0 + $1.obtainableRemainingCount }
     }
-    
+
     // MARK: - Init
     init(profileRepository: ProfileRepository, catalogRepository: CatalogRepository, errorManager: ErrorManager) {
         self.profileRepository = profileRepository
@@ -73,13 +70,21 @@ final class MasteryViewModel {
 
         do {
             if let profile = try? await profileRepository.getProfile(forceRefresh: forceRefresh) {
-                catalog = try await catalogRepository.syncMasteryCatalog(with: profile)
+                summary = try await catalogRepository.syncMasterySummary(with: profile)
             } else {
-                catalog = try await catalogRepository.getMasteryCatalog()
+                summary = try await catalogRepository.getMasterySummary()
             }
         } catch {
             errorManager.append(error)
         }
+    }
+
+    func makeCategoryDetailViewModel(for category: CatalogItemModel.Category) -> MasteryCategoryDetailViewModel {
+        .init(category: category, catalogRepository: catalogRepository, errorManager: errorManager)
+    }
+
+    func makeSourceDetailViewModel(for categoryName: String) -> MasterySourceCategoryDetailViewModel {
+        .init(categoryName: categoryName, catalogRepository: catalogRepository, errorManager: errorManager)
     }
     
     // MARK: - Helper Functions

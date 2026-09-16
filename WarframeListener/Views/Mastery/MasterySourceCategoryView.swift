@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct MasterySourceCategoryView: View {
-    let masteryCategory: MasteryCategoryModel
+    let summary: MasteryCategorySummary
 
     var body: some View {
         HStack {
-            Text(masteryCategory.name.sentenceCased)
+            Text(summary.name.sentenceCased)
                 .foregroundStyle(Color.label)
             Spacer()
-            Text(masteryCategory.countText)
+            Text(summary.countText)
                 .font(.subheadline)
                 .foregroundStyle(Color.labelSecondary)
         }

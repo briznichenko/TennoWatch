@@ -62,6 +62,15 @@ extension MasteryCatalogDataModel: ValueTypeConvertible {
             nonItemSources: nonItemSources.map(\.value)
         )
     }
+
+    var summary: MasteryCatalogSummary {
+        .init(
+            totalMasteryMax: totalMasteryMax,
+            obtainableMasteryMax: obtainableMasteryMax,
+            categories: items.map(\.summary),
+            nonItemCategories: nonItemSources.map(\.summary)
+        )
+    }
 }
 
 @Model
@@ -71,16 +80,42 @@ final class CatalogContainerModel {
     var masteryItems: [MasteryItemDataModel]
     var catalog: MasteryCatalogDataModel?
 
+    var itemsCount: Int = 0
+    var obtainableItemsCount: Int = 0
+    var masteredItemsCount: Int = 0
+    var masteredObtainableCount: Int = 0
+    var fullyMasteredPoints: Int = 0
+    var partialPoints: Int = 0
+
     // MARK: - Init
     init(category: CatalogItemModel.Category, masteryItems: [MasteryItemDataModel]) {
         self.category = category
         self.masteryItems = masteryItems
+        self.itemsCount = masteryItems.count
+        self.obtainableItemsCount = masteryItems.filter { $0.catalogItem.obtainable }.count
+        self.masteredItemsCount = masteryItems.filter(\.isMastered).count
+        self.masteredObtainableCount = masteryItems.filter { $0.isMastered && $0.catalogItem.obtainable }.count
+        self.fullyMasteredPoints = masteryItems
+            .filter(\.isMastered)
+            .reduce(0) { $0 + $1.catalogItem.maxRank * $1.catalogItem.pointsPerRank }
+        self.partialPoints = 0
     }
 }
 
 extension CatalogContainerModel: ValueTypeConvertible {
     var value: CatalogContainer {
         .init(category: category, masteryItems: masteryItems.map(\.value))
+    }
+
+    var summary: CatalogContainerSummary {
+        .init(
+            category: category,
+            itemsCount: itemsCount,
+            masteredItemsCount: masteredItemsCount,
+            obtainableItemsCount: obtainableItemsCount,
+            obtainableRemainingCount: obtainableItemsCount - masteredObtainableCount,
+            earnedMasteryPoints: fullyMasteredPoints + partialPoints
+        )
     }
 }
 
@@ -91,16 +126,32 @@ final class MasteryCategoryDataModel {
     var sources: [MasterySourceDataModel]
     var catalog: MasteryCatalogDataModel?
 
+    var itemsCount: Int = 0
+    var masteredItemsCount: Int = 0
+    var masteredPoints: Int = 0
+
     // MARK: - Init
     init(name: String, sources: [MasterySourceDataModel]) {
         self.name = name
         self.sources = sources
+        self.itemsCount = sources.count
+        self.masteredItemsCount = sources.filter(\.isMastered).count
+        self.masteredPoints = sources.filter(\.isMastered).reduce(0) { $0 + $1.mastery }
     }
 }
 
 extension MasteryCategoryDataModel: ValueTypeConvertible {
     var value: MasteryCategoryModel {
         .init(name: name, sources: sources.map(\.value))
+    }
+
+    var summary: MasteryCategorySummary {
+        .init(
+            name: name,
+            itemsCount: itemsCount,
+            masteredItemsCount: masteredItemsCount,
+            earnedMasteryPoints: masteredPoints
+        )
     }
 }
 
@@ -182,4 +233,38 @@ extension MasteryCatalog: PersistentModelConvertible {
             nonItemSources: nonItemSources.map(\.model)
         )
     }
+}
+
+struct MasteryCatalogSummary {
+    // MARK: - Object Properties
+    let totalMasteryMax: Int
+    let obtainableMasteryMax: Int
+    let categories: [CatalogContainerSummary]
+    let nonItemCategories: [MasteryCategorySummary]
+}
+
+struct CatalogContainerSummary: Identifiable, Hashable {
+    // MARK: - Object Properties
+    let category: CatalogItemModel.Category
+    let itemsCount: Int
+    let masteredItemsCount: Int
+    let obtainableItemsCount: Int
+    let obtainableRemainingCount: Int
+    let earnedMasteryPoints: Int
+
+    // MARK: - Computed Properties
+    var id: CatalogItemModel.Category { category }
+    var countText: String { "\(masteredItemsCount) / \(itemsCount)" }
+}
+
+struct MasteryCategorySummary: Identifiable, Hashable {
+    // MARK: - Object Properties
+    let name: String
+    let itemsCount: Int
+    let masteredItemsCount: Int
+    let earnedMasteryPoints: Int
+
+    // MARK: - Computed Properties
+    var id: String { name }
+    var countText: String { "\(masteredItemsCount) / \(itemsCount)" }
 }
