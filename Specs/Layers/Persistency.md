@@ -1,6 +1,6 @@
 # Layer: Persistency
 
-`WarframeListener/Persistency/` — SwiftData-backed local storage, wrapped
+`TennoWatch/Persistency/` — SwiftData-backed local storage, wrapped
 behind a protocol so repositories never touch `ModelContext` directly.
 
 ## The value/model pair (`ValueTypeConvertible.swift`)

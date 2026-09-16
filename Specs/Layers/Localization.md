@@ -1,6 +1,6 @@
 # Layer: Localization
 
-`WarframeListener/Resources/` — `Strings.swift`, `AppLanguage.swift`,
+`TennoWatch/Resources/` — `Strings.swift`, `AppLanguage.swift`,
 `Localizable.xcstrings`.
 
 ## `Strings` namespace

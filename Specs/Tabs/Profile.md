@@ -7,7 +7,7 @@ community `warframestat.us` API everything else uses). Also the tab that
 hosts the Settings entry point (gear icon → sheet).
 
 ## Entry point
-`MainView` → `Tab("Profile")` → [`ProfileView`](../../WarframeListener/Views/Profile/ProfileView.swift),
+`MainView` → `Tab("Profile")` → [`ProfileView`](../../TennoWatch/Views/Profile/ProfileView.swift),
 constructed with `profileRepository` + `errorManager`, but also takes the
 whole `AppDependencies` struct directly (the only tab view that does) purely
 so it can build `SettingsView`'s dependencies when the sheet is presented.

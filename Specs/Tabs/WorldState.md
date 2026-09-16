@@ -6,7 +6,7 @@ now" board. First tab, and the simplest vertical slice in the app: no
 persistence, no profile dependency, single repository.
 
 ## Entry point
-`MainView` → `Tab("World state")` → [`WorldStateView`](../../WarframeListener/Views/WorldState/WorldStateView.swift),
+`MainView` → `Tab("World state")` → [`WorldStateView`](../../TennoWatch/Views/WorldState/WorldStateView.swift),
 constructed with `worldStateRepository` and `errorManager` from `AppDependencies`.
 
 ## Screens
@@ -69,7 +69,7 @@ from Settings or a per-tab picker; not built.
   that changes.
 
 ## Test coverage
-[`WorldStateViewModelTests`](../../WarframeListenerTests/ViewModels/WorldStateViewModelTests.swift)
+[`WorldStateViewModelTests`](../../TennoWatchTests/ViewModels/WorldStateViewModelTests.swift)
 — the only ViewModel under test in the whole app. Covers the fetch/error path
 and (presumably, given the file exists) the grouping/sorting logic. No view
 tests (expected — this is a SwiftUI app, no snapshot/UI test target yet).

@@ -1,6 +1,6 @@
 # Layer: Testing
 
-`WarframeListenerTests/` — Swift Testing (`import Testing`, `@Suite`/`@Test`),
+`TennoWatchTests/` — Swift Testing (`import Testing`, `@Suite`/`@Test`),
 not XCTest. Mirrors the source tree: `Networking/`, `Repositories/`,
 `Services/`, `ViewModels/`, plus a shared `Support/Fixtures.swift`.
 
@@ -45,8 +45,8 @@ spec's own "Known gaps" section for specifics — this is the rollup.
   constructing the full initializer inline in a test.
 
 ## Conventions for a new test file
-1. Mirror the source path: `WarframeListenerTests/<Layer>/<TypeName>Tests.swift`.
-2. `@Suite("<TypeName>")` wrapping `@Test` functions/methods, `@testable import WarframeListener`.
+1. Mirror the source path: `TennoWatchTests/<Layer>/<TypeName>Tests.swift`.
+2. `@Suite("<TypeName>")` wrapping `@Test` functions/methods, `@testable import TennoWatch`.
 3. Stub the narrowest protocol the type under test depends on — don't reach
    for the real `APIManager`/`DefaultPersistencyService` unless the test is
    specifically about that integration (repository tests do use an

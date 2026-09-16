@@ -1,10 +1,10 @@
-# WarframeListener
+# TennoWatch
 
 An iOS app for tracking Warframe Mastery Rank progress, built for pesonal use because no such tool exists on iOS.
 
 ## About
 
-Warframe's Mastery system spans hundreds of weapons, warframes, and other rankable items, but there's no iOS app to track what's left to master or when a needed item is actually available. WarframeListener fills that gap: it matches your account's profile against the full item catalog, then cross-references the remaining items against live game state to tell you when and where you can actually get them.
+Warframe's Mastery system spans hundreds of weapons, warframes, and other rankable items, but there's no iOS app to track what's left to master or when a needed item is actually available. TennoWatch fills that gap: it matches your account's profile against the full item catalog, then cross-references the remaining items against live game state to tell you when and where you can actually get them.
 
 It's built on a modern iOS stack — Swift 6 strict concurrency, SwiftUI, SwiftData, MVVM+C — against Warframe's real, constantly changing data feed rather than static sample data.
 
@@ -20,6 +20,14 @@ It's built on a modern iOS stack — Swift 6 strict concurrency, SwiftUI, SwiftD
 
 Deeper specs for each tab and layer live in [Specs/](Specs/).
 
+<p>
+  <img src="Screenshots/world_state.png" width="180" alt="World State tab" />
+  <img src="Screenshots/mastery.png" width="180" alt="Mastery tab" />
+  <img src="Screenshots/openings.png" width="180" alt="Openings tab" />
+  <img src="Screenshots/profile.png" width="180" alt="Profile tab" />
+  <img src="Screenshots/settings.png" width="180" alt="Settings sheet" />
+</p>
+
 ## Requirements
 
 - Xcode 26 or later
@@ -29,7 +37,7 @@ Deeper specs for each tab and layer live in [Specs/](Specs/).
 ## Getting Started
 
 1. Clone the repo.
-2. Open `WarframeListener.xcodeproj` in Xcode.
+2. Open `TennoWatch.xcodeproj` in Xcode.
 3. Build and run — no API key or configuration needed, the app talks to public endpoints.
 
 The Profile tab currently points at a hardcoded `playerId` rather than a search/lookup flow — see [Roadmap](#roadmap--work-in-progress).
@@ -43,22 +51,23 @@ The Mastery catalog itself is generated offline: [Scripts/itemMapper.py](Scripts
 | Networking | `Networking/` | `APIManager` + `Endpoint` — plain `async`/`await` over `URLSession`, talking to `api.warframestat.us` and `api.warframe.com`. |
 | Persistency | `Persistency/` | SwiftData, via a `@ModelActor` service and a `ValueTypeConvertible`/`PersistentModelConvertible` pair that keeps plain value types at the repository/ViewModel boundary instead of leaking `@Model` classes upward. |
 | Repositories | `Repositories/` | One repository per data domain; owns cache policy, fronts networking + persistency. |
+| Coordinators | `Coordinators/` | Per-tab `@Observable` coordinator owning a `NavigationPath` + `Destination` enum; views push by value instead of building the next screen inline. |
 | Services | `Services/` | Stateless business logic — catalog↔profile merge, openings matching, error queue. |
 | Models | `Models/` | Network DTOs, SwiftData-adjacent value models, view-facing derived models. |
 | Theme & Shared UI | `Theme/` | Palette, reusable SwiftUI components, list styling, and a narrow UIKit-appearance bridge (`AppearanceProxies`) for nav-bar/tab-bar tinting SwiftUI can't do natively yet. |
 | Localization | `Resources/` | `Strings` namespace + `Localizable.xcstrings`, with runtime language switching. |
-| Testing | `WarframeListenerTests/` | Swift Testing coverage, fixtures — see [Testing](#testing). |
+| Testing | `TennoWatchTests/` | Swift Testing coverage, fixtures — see [Testing](#testing). |
 
 Cross-cutting:
 
-- **MVVM+C.** View → `@Observable` ViewModel → Repository protocol → (Service +) Networking/Persistency. No coordinator yet — navigation is single-level today; one gets introduced once there's real navigation to coordinate.
+- **MVVM+C.** View → `@Observable` ViewModel → Repository protocol → (Service +) Networking/Persistency. Navigation lives in per-tab `Coordinator` objects (`Coordinators/`) that own a `NavigationPath` and resolve a `Destination` enum via `.navigationDestination(for:)` — views push by value, not by building the next view inline. Introduced first for Mastery, the tab with real drill-down; other tabs will get their own coordinator once their navigation grows past single-level.
 - **Swift 6** strict concurrency, target-wide default `MainActor` isolation (Approachable Concurrency) — most types need no explicit `@MainActor`. `DefaultPersistencyService` is the one actor doing real off-main work (`@ModelActor`).
-- **Manual dependency injection** via [`AppDependencies`](WarframeListener/AppDependencies.swift), constructed once and threaded down through views to ViewModels. No DI container.
+- **Manual dependency injection** via [`AppDependencies`](TennoWatch/AppDependencies.swift), constructed once and threaded down through views to ViewModels. No DI container.
 - **SwiftUI** only, with UIKit interop limited to the one appearance-proxy bridge noted above.
 
 ## Testing
 
-Swift Testing, covering networking, repositories, sync/matching services, and one ViewModel so far (`WarframeListenerTests/`). Coverage is intentionally partial while the app is still taking shape.
+Swift Testing, covering networking, repositories, sync/matching services, and one ViewModel so far (`TennoWatchTests/`). Coverage is intentionally partial while the app is still taking shape.
 
 ## Data Source
 
@@ -71,7 +80,7 @@ Swift Testing, covering networking, repositories, sync/matching services, and on
 - **Combine** — the network/data layer is currently plain `async`/`await`; adopting Combine for live-updating state (e.g. streaming world-state changes) is on the roadmap, not yet implemented.
 - **Player search/lookup** — Profile currently reads from a hardcoded account ID; a real search flow is the next planned feature there.
 - **Platform selector** — World State is hardcoded to PC; PS/Xbox/Switch support is unimplemented.
-- **Coordinator layer** — deferred until there's more than single-level navigation to justify it.
+- **Coordinators for the remaining tabs** — World State, Openings, and Profile still navigate via inline `NavigationLink(destination:)`; they'll each get a `Coordinator` once their drill-down grows past single-level, following the pattern introduced in Mastery.
 
 ## Legal
 

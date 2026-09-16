@@ -1,4 +1,4 @@
-# WarframeListener — Specs
+# TennoWatch — Specs
 
 Specs for the current state of the app, split along the two
 axes that matter for finding things: **Tabs** (a user-facing feature, top to
@@ -32,15 +32,15 @@ own ViewModel and screen, same as the four tabs.
 | [Models](Layers/Models.md) | `Models/` | Network DTOs, SwiftData-adjacent value models, view-facing derived models |
 | [Theme & Shared UI](Layers/Theme-and-UI-Components.md) | `Theme/` | Palette, reusable SwiftUI components, list styling |
 | [Localization](Layers/Localization.md) | `Resources/` | `Strings` namespace + `Localizable.xcstrings` + runtime language switch |
-| [Testing](Layers/Testing.md) | `WarframeListenerTests/` | Swift Testing coverage, fixtures, what's covered vs. not |
+| [Testing](Layers/Testing.md) | `TennoWatchTests/` | Swift Testing coverage, fixtures, what's covered vs. not |
 
 ## Cross-cutting architecture (applies to every tab)
 
 - **MVVM+C.** View → `@Observable` ViewModel → Repository protocol →
   (Service +) Networking/Persistency. No coordinator yet (single-level
   navigation only); 
-- **Dependency injection** is manual, via [`AppDependencies`](../WarframeListener/AppDependencies.swift),
-  constructed once in `WarframeListenerApp` and threaded down through
+- **Dependency injection** is manual, via [`AppDependencies`](../TennoWatch/AppDependencies.swift),
+  constructed once in `TennoWatchApp` and threaded down through
   `MainView` → tab `View.init` → `ViewModel.init`. There is no DI container.
 - **Loading/error pattern**, repeated in every top-level ViewModel:
   `isLoading` toggled with `defer`, failures caught and pushed to the shared

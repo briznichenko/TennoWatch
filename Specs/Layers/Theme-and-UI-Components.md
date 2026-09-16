@@ -1,6 +1,6 @@
 # Layer: Theme & Shared UI
 
-`WarframeListener/Theme/` — palette, reusable SwiftUI components, and the
+`TennoWatch/Theme/` — palette, reusable SwiftUI components, and the
 one bit of UIKit-appearance bridging the app still needs.
 
 ## Palette
@@ -15,7 +15,7 @@ currently just forwards to two existing colors.
 `PalettePreview.swift` (104 lines) is a SwiftUI preview-only swatch sheet for
 eyeballing the palette in both color schemes — not shipped UI.
 
-## Theme application (`WarframeListenerApp.swift`)
+## Theme application (`TennoWatchApp.swift`)
 `ThemePreference` (`system/light/dark`) drives `.preferredColorScheme(_:)` at
 the `WindowGroup` root; `AppLanguage` drives `.environment(\.locale:)` **plus**
 `.id(languagePreference)` on `MainView` — the `.id()` is what forces SwiftUI
@@ -28,7 +28,7 @@ truth both call sites observe, not two independent copies of state.
 
 `AppearanceProxies.configure()` — one-time UIKit appearance-proxy setup
 (`UINavigationBar.appearance()`, `UITabBarItem.appearance()`) for large-title
-and tab-bar label tinting, called once from `WarframeListenerApp.init()`.
+and tab-bar label tinting, called once from `TennoWatchApp.init()`.
 This exists because SwiftUI's own tab bar / large-title text color styling
 API surface is still incomplete for this use case — one of the few
 UIKit-interop points allowed under this project's "SwiftUI only, no UIKit

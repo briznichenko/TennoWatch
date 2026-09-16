@@ -1,6 +1,6 @@
 # Layer: Repositories
 
-`WarframeListener/Repositories/` — the boundary every ViewModel talks to.
+`TennoWatch/Repositories/` — the boundary every ViewModel talks to.
 One protocol + one default implementation per data domain; this is where
 cache policy and "network vs. local" decisions live, kept out of both
 ViewModels and the networking/persistency layers.
