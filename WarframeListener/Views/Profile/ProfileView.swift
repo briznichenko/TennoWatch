@@ -130,14 +130,14 @@ struct ProfileView: View {
             }
             if !viewModel.itemStats.isEmpty {
                 NavigationLink {
-                    ProfileItemsListView(items: viewModel.itemStats)
+                    ProfileItemsListView(viewModel: .init(items: viewModel.itemStats))
                 } label: {
                     LabeledContent(Strings.Profile.itemsRow, value: "\(viewModel.itemStats.count)")
                 }
             }
             if !viewModel.missionStats.isEmpty {
                 NavigationLink {
-                    ProfileMissionsListView(missions: viewModel.missionStats)
+                    ProfileMissionsListView(viewModel: .init(missions: viewModel.missionStats))
                 } label: {
                     LabeledContent(Strings.Profile.missionsRow, value: "\(viewModel.missionStats.count)")
                 }
