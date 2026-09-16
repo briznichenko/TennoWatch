@@ -13,7 +13,7 @@ struct MasteryItemView: View {
 
     // MARK: - Computed Properties
     private var textColor: Color {
-        viewModel.isDimmed ? .labelSecondary : .label
+        viewModel.isDimmed ? .labelSecondary : .labelPrimary
     }
 
     private var iconStyle: Color {

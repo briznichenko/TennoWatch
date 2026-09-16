@@ -16,7 +16,7 @@ struct IntrinsicRowView: View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
                 Text(intrinsic.name)
-                    .foregroundStyle(Color.label)
+                    .foregroundStyle(Color.labelPrimary)
                 Spacer()
                 Text(Strings.Profile.intrinsicRankText(rank: intrinsic.rank, maxRank: intrinsic.maxRank))
                     .font(.caption)

@@ -50,11 +50,11 @@ struct PaletteView: View {
     // MARK: - Computed Properties
     private var swatches: [PaletteSwatch] {
         [
-            .init(name: "label", color: .label, background: .bg),
+            .init(name: "labelPrimary", color: .labelPrimary, background: .bg),
             .init(name: "labelSecondary", color: .labelSecondary, background: .bg),
             .init(name: "accent", color: .accent, background: .bg),
             .init(name: "accentText", color: .accentText, background: .bg),
-            .init(name: "separator", color: .separator, background: .bg)
+            .init(name: "divider", color: .divider, background: .bg)
         ]
     }
 
@@ -67,10 +67,10 @@ struct PaletteView: View {
                         RoundedRectangle(cornerRadius: 8)
                             .fill(swatch.color)
                             .frame(width: 44, height: 44)
-                            .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(Color.separator))
+                            .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(Color.divider))
                         VStack(alignment: .leading, spacing: 2) {
                             Text(swatch.name)
-                                .foregroundStyle(Color.label)
+                                .foregroundStyle(Color.labelPrimary)
                             Text("\(swatch.hex) · \(String(format: "%.1f", swatch.contrastRatio)):1 on bg")
                                 .font(.caption)
                                 .foregroundStyle(Color.labelSecondary)

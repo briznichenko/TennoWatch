@@ -10,7 +10,7 @@ import SwiftUI
 enum AppearanceProxies {
     static func configure() {
         let navigationBarAppearance = UINavigationBar.appearance()
-        navigationBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor(resource: .label)]
+        navigationBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor(resource: .labelPrimary)]
 
         let tabBarItemAppearance = UITabBarItem.appearance()
         tabBarItemAppearance.setTitleTextAttributes(

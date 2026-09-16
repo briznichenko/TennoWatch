@@ -29,7 +29,7 @@ struct WarframeListenerApp: App {
         WindowGroup {
             MainView(dependencies: dependencies)
                 .tint(.accent)
-                .foregroundStyle(Color.label)
+                .foregroundStyle(Color.labelPrimary)
                 .preferredColorScheme(themePreference.colorScheme)
                 .environment(\.locale, languagePreference.locale ?? .current)
                 .id(languagePreference)

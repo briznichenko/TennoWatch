@@ -38,7 +38,7 @@ final class OpeningsViewModel {
     var timeSensitiveOpenings: [TimeSensitiveOpeningViewModel] {
         matchedOpenings
             .sorted { $0.item.catalogItemModel.name < $1.item.catalogItemModel.name }
-            .map(TimeSensitiveOpeningViewModel.init)
+            .map { TimeSensitiveOpeningViewModel(opening: $0) }
     }
 
     var permanentItems: [MasteryItemViewModel] {
@@ -46,13 +46,13 @@ final class OpeningsViewModel {
         return unmasteredItems
             .filter { !timeSensitiveIDs.contains($0.catalogItemModel.uniqueName) }
             .sorted { $0.catalogItemModel.name < $1.catalogItemModel.name }
-            .map(MasteryItemViewModel.init)
+            .map { MasteryItemViewModel(item: $0) }
     }
 
     var permanentSources: [MasterySourceViewModel] {
         unmasteredSources
             .sorted { $0.name < $1.name }
-            .map(MasterySourceViewModel.init)
+            .map { MasterySourceViewModel(source: $0) }
     }
 
     // MARK: - Init

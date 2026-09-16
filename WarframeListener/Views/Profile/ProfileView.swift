@@ -72,7 +72,7 @@ struct ProfileView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(viewModel.displayName)
                     .font(.system(size: 22, weight: .medium))
-                    .foregroundStyle(Color.label)
+                    .foregroundStyle(Color.labelPrimary)
                 Text(viewModel.playerId)
                     .font(.system(size: 15, weight: .light))
                     .foregroundStyle(Color.secondary)
@@ -112,7 +112,7 @@ struct ProfileView: View {
         VStack(alignment: .leading, spacing: 2) {
             Text(value.formatted())
                 .font(.system(size: 17, weight: .semibold))
-                .foregroundStyle(Color.label)
+                .foregroundStyle(Color.labelPrimary)
             Text(label)
                 .font(.caption2)
                 .foregroundStyle(Color.labelSecondary)

@@ -13,7 +13,7 @@ struct MasterySourceCategoryView: View {
     var body: some View {
         HStack {
             Text(summary.name.sentenceCased)
-                .foregroundStyle(Color.label)
+                .foregroundStyle(Color.labelPrimary)
             Spacer()
             Text(summary.countText)
                 .font(.subheadline)

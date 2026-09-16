@@ -50,7 +50,7 @@ struct MasteryView: View {
                 HStack(alignment: .firstTextBaseline) {
                     Text(Strings.Mastery.rankBadge(progress.rank))
                         .font(.system(size: 26, weight: .medium))
-                        .foregroundStyle(Color.label)
+                        .foregroundStyle(Color.labelPrimary)
                     Spacer()
                     Text("\(progress.currentXP.formatted()) / \(progress.xpForNextRank.formatted())")
                         .font(.caption)

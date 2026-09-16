@@ -38,7 +38,7 @@ struct FilterPills<Option: Hashable>: View {
                 }
                 .overlay {
                     if !isSelected {
-                        Capsule().strokeBorder(Color.separator)
+                        Capsule().strokeBorder(Color.divider)
                     }
                 }
         }

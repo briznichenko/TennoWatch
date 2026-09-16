@@ -13,6 +13,6 @@ extension View {
             .scrollContentBackground(.hidden)
             .background(Color.bg)
             .listRowBackground(Color.surface)
-            .listRowSeparatorTint(.separator)
+            .listRowSeparatorTint(.divider)
     }
 }

@@ -16,7 +16,7 @@ struct ProfileMissionRowView: View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
                 Text(mission.name)
-                    .foregroundStyle(Color.label)
+                    .foregroundStyle(Color.labelPrimary)
                 if let tier = mission.tier {
                     Text(Strings.Profile.missionTierText(tier))
                         .font(.caption)

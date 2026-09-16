@@ -20,7 +20,7 @@ struct TimeSensitiveOpeningRowView: View {
                 .imageScale(.large)
             VStack(alignment: .leading, spacing: 2) {
                 Text(viewModel.name)
-                    .foregroundStyle(Color.label)
+                    .foregroundStyle(Color.labelPrimary)
                 Text(viewModel.sourceText)
                     .font(.caption)
                     .foregroundStyle(Color.labelSecondary)
