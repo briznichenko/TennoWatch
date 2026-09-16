@@ -1,4 +1,4 @@
-# SwiftLint config for WarframeListener.
+# SwiftLint config for TennoWatch.
 # Catch real mistakes (unsafe unwraps, force casts). Metrics and formatting are off.
 
 opt_in_rules:

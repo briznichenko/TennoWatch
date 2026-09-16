@@ -1,6 +1,6 @@
 # Layer: Services
 
-`WarframeListener/Services/` — stateless business logic that's too specific
+`TennoWatch/Services/` — stateless business logic that's too specific
 to belong in a Model but too domain-focused to belong in a Repository. All
 three services here are protocol + pure-function-ish struct implementation,
 easy to unit test in isolation (and, in two of three cases, already are).

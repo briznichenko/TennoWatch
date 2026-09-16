@@ -1,10 +1,10 @@
-# WarframeListener
+# TennoWatch
 
 An iOS app for tracking Warframe Mastery Rank progress, built for pesonal use because no such tool exists on iOS.
 
 ## About
 
-Warframe's Mastery system spans hundreds of weapons, warframes, and other rankable items, but there's no iOS app to track what's left to master or when a needed item is actually available. WarframeListener fills that gap: it matches your account's profile against the full item catalog, then cross-references the remaining items against live game state to tell you when and where you can actually get them.
+Warframe's Mastery system spans hundreds of weapons, warframes, and other rankable items, but there's no iOS app to track what's left to master or when a needed item is actually available. TennoWatch fills that gap: it matches your account's profile against the full item catalog, then cross-references the remaining items against live game state to tell you when and where you can actually get them.
 
 It's built on a modern iOS stack — Swift 6 strict concurrency, SwiftUI, SwiftData, MVVM+C — against Warframe's real, constantly changing data feed rather than static sample data.
 
@@ -29,7 +29,7 @@ Deeper specs for each tab and layer live in [Specs/](Specs/).
 ## Getting Started
 
 1. Clone the repo.
-2. Open `WarframeListener.xcodeproj` in Xcode.
+2. Open `TennoWatch.xcodeproj` in Xcode.
 3. Build and run — no API key or configuration needed, the app talks to public endpoints.
 
 The Profile tab currently points at a hardcoded `playerId` rather than a search/lookup flow — see [Roadmap](#roadmap--work-in-progress).
@@ -47,18 +47,18 @@ The Mastery catalog itself is generated offline: [Scripts/itemMapper.py](Scripts
 | Models | `Models/` | Network DTOs, SwiftData-adjacent value models, view-facing derived models. |
 | Theme & Shared UI | `Theme/` | Palette, reusable SwiftUI components, list styling, and a narrow UIKit-appearance bridge (`AppearanceProxies`) for nav-bar/tab-bar tinting SwiftUI can't do natively yet. |
 | Localization | `Resources/` | `Strings` namespace + `Localizable.xcstrings`, with runtime language switching. |
-| Testing | `WarframeListenerTests/` | Swift Testing coverage, fixtures — see [Testing](#testing). |
+| Testing | `TennoWatchTests/` | Swift Testing coverage, fixtures — see [Testing](#testing). |
 
 Cross-cutting:
 
 - **MVVM+C.** View → `@Observable` ViewModel → Repository protocol → (Service +) Networking/Persistency. No coordinator yet — navigation is single-level today; one gets introduced once there's real navigation to coordinate.
 - **Swift 6** strict concurrency, target-wide default `MainActor` isolation (Approachable Concurrency) — most types need no explicit `@MainActor`. `DefaultPersistencyService` is the one actor doing real off-main work (`@ModelActor`).
-- **Manual dependency injection** via [`AppDependencies`](WarframeListener/AppDependencies.swift), constructed once and threaded down through views to ViewModels. No DI container.
+- **Manual dependency injection** via [`AppDependencies`](TennoWatch/AppDependencies.swift), constructed once and threaded down through views to ViewModels. No DI container.
 - **SwiftUI** only, with UIKit interop limited to the one appearance-proxy bridge noted above.
 
 ## Testing
 
-Swift Testing, covering networking, repositories, sync/matching services, and one ViewModel so far (`WarframeListenerTests/`). Coverage is intentionally partial while the app is still taking shape.
+Swift Testing, covering networking, repositories, sync/matching services, and one ViewModel so far (`TennoWatchTests/`). Coverage is intentionally partial while the app is still taking shape.
 
 ## Data Source
 

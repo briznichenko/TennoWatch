@@ -8,7 +8,7 @@ service — because "mastery" isn't in the profile API response as a single
 number; it's derived by cross-referencing owned items and their ranks.
 
 ## Entry point
-`MainView` → `Tab("Mastery")` → [`MasteryView`](../../WarframeListener/Views/Mastery/MasteryView.swift),
+`MainView` → `Tab("Mastery")` → [`MasteryView`](../../TennoWatch/Views/Mastery/MasteryView.swift),
 constructed with `profileRepository`, `catalogRepository`, `errorManager`.
 
 ## Screens (three-level drill-down)

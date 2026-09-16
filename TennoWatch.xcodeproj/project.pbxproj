@@ -1,0 +1,665 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		094D42D44CB5792A6DEB0CF9 /* CatalogSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931C9495D84CB38080083348 /* CatalogSyncServiceTests.swift */; };
+		0FCF5FCC376B9ADFAF529C01 /* OpeningsMatchingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D691D8DB179371E7FF44D89 /* OpeningsMatchingServiceTests.swift */; };
+		367AE845B52F2D56E6E34BD5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB16E810A8E0361B8D9EBC7B /* Foundation.framework */; };
+		41FC96247709CD64555C478A /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C1A897F277DE23F9F6AEE6 /* Fixtures.swift */; };
+		5D80EFCFC6E036F1906DD53F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB16E810A8E0361B8D9EBC7B /* Foundation.framework */; };
+		60D19434234B193556C2C9C5 /* WorldStateViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30787DA8F69227A6E5B23DA5 /* WorldStateViewModelTests.swift */; };
+		7BDE3824B27519709EEA16DE /* OpeningsMatchingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40FA22E075B158294C23EA41 /* OpeningsMatchingServiceTests.swift */; };
+		862DD48AFD6E61BB50EBD8BA /* ProfileRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5511A3A008CEFA668878194E /* ProfileRepositoryTests.swift */; };
+		A355E4D4AFFDB970D7307A52 /* CatalogSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8B2E2702DEA0BAB9EDCABA /* CatalogSyncServiceTests.swift */; };
+		C51A6F8E91185347722CE126 /* APIManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE69409AB9264830B26703B /* APIManagerTests.swift */; };
+		CF7672013DA9CDD3100EAA15 /* APIManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72B3A29E3C671BD71B667B76 /* APIManagerTests.swift */; };
+		E55A86AA7ECB516F64F4E561 /* ProfileRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A14417855233A051B8B3492 /* ProfileRepositoryTests.swift */; };
+		E90F8ECD65AF273EC6241195 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D706BD5EF860A92F6CDEB58 /* Fixtures.swift */; };
+		F3177F55C73CA558FFA1B8BA /* WorldStateViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195D439705557131008EF821 /* WorldStateViewModelTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		53148B310B4259EFA4F6197A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7DAA00B9303C70C50040DF25 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7DAA00C0303C70C50040DF25;
+			remoteInfo = TennoWatch;
+		};
+		B0CFCFB8C5496945235F2746 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7DAA00B9303C70C50040DF25 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7DAA00C0303C70C50040DF25;
+			remoteInfo = TennoWatch;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		195D439705557131008EF821 /* WorldStateViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorldStateViewModelTests.swift; sourceTree = "<group>"; };
+		21C1A897F277DE23F9F6AEE6 /* Fixtures.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
+		30787DA8F69227A6E5B23DA5 /* WorldStateViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorldStateViewModelTests.swift; sourceTree = "<group>"; };
+		40FA22E075B158294C23EA41 /* OpeningsMatchingServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OpeningsMatchingServiceTests.swift; sourceTree = "<group>"; };
+		5511A3A008CEFA668878194E /* ProfileRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProfileRepositoryTests.swift; sourceTree = "<group>"; };
+		5D691D8DB179371E7FF44D89 /* OpeningsMatchingServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OpeningsMatchingServiceTests.swift; sourceTree = "<group>"; };
+		72B3A29E3C671BD71B667B76 /* APIManagerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = APIManagerTests.swift; sourceTree = "<group>"; };
+		7DAA00C1303C70C50040DF25 /* TennoWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TennoWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7DE69409AB9264830B26703B /* APIManagerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = APIManagerTests.swift; sourceTree = "<group>"; };
+		931C9495D84CB38080083348 /* CatalogSyncServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CatalogSyncServiceTests.swift; sourceTree = "<group>"; };
+		94037D41B2F4715C41EE7FCD /* TennoWatchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TennoWatchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A14417855233A051B8B3492 /* ProfileRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProfileRepositoryTests.swift; sourceTree = "<group>"; };
+		9D706BD5EF860A92F6CDEB58 /* Fixtures.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
+		B9D574040649ACABC712C602 /* TennoWatchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TennoWatchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB16E810A8E0361B8D9EBC7B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		CF8B2E2702DEA0BAB9EDCABA /* CatalogSyncServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CatalogSyncServiceTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		7DAA00C3303C70C50040DF25 /* TennoWatch */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			path = TennoWatch;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		336FE1571EE8A7944C4B5FB5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D80EFCFC6E036F1906DD53F /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7DAA00BE303C70C50040DF25 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		14077364870A87321C3CD4EC /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				72B3A29E3C671BD71B667B76 /* APIManagerTests.swift */,
+			);
+			name = Networking;
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		218DA466BD6F1E9211722DAD /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				195D439705557131008EF821 /* WorldStateViewModelTests.swift */,
+			);
+			name = ViewModels;
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		32E41E7BEBDD69BFFAD7E3DD /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				CB16E810A8E0361B8D9EBC7B /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		3999E7154251CE5AB9D77BAD /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				CF8B2E2702DEA0BAB9EDCABA /* CatalogSyncServiceTests.swift */,
+				40FA22E075B158294C23EA41 /* OpeningsMatchingServiceTests.swift */,
+			);
+			name = Services;
+			path = Services;
+			sourceTree = "<group>";
+		};
+		3AAFB77432523A80677DA6C4 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				9D706BD5EF860A92F6CDEB58 /* Fixtures.swift */,
+			);
+			name = Support;
+			path = Support;
+			sourceTree = "<group>";
+		};
+		491098740E4361191587F5B0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				32E41E7BEBDD69BFFAD7E3DD /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		625851ED5A3485DFA8C79DA6 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				5511A3A008CEFA668878194E /* ProfileRepositoryTests.swift */,
+			);
+			name = Repositories;
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		7DAA00B8303C70C50040DF25 = {
+			isa = PBXGroup;
+			children = (
+				7DAA00C3303C70C50040DF25 /* TennoWatch */,
+				7DAA00C2303C70C50040DF25 /* Products */,
+				491098740E4361191587F5B0 /* Frameworks */,
+				F21F758D753B1BBD7D3B5124 /* TennoWatchTests */,
+			);
+			sourceTree = "<group>";
+		};
+		7DAA00C2303C70C50040DF25 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7DAA00C1303C70C50040DF25 /* TennoWatch.app */,
+				94037D41B2F4715C41EE7FCD /* TennoWatchTests.xctest */,
+				B9D574040649ACABC712C602 /* TennoWatchTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F21F758D753B1BBD7D3B5124 /* TennoWatchTests */ = {
+			isa = PBXGroup;
+			children = (
+				14077364870A87321C3CD4EC /* Networking */,
+				625851ED5A3485DFA8C79DA6 /* Repositories */,
+				3999E7154251CE5AB9D77BAD /* Services */,
+				3AAFB77432523A80677DA6C4 /* Support */,
+				218DA466BD6F1E9211722DAD /* ViewModels */,
+			);
+			name = TennoWatchTests;
+			path = TennoWatchTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7DAA00C0303C70C50040DF25 /* TennoWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7DAA00CC303C70C60040DF25 /* Build configuration list for PBXNativeTarget "TennoWatch" */;
+			buildPhases = (
+				7D4C2305303C97AB00F20105 /* SwiftLint */,
+				7D5FB1E6303F4396009E0596 /* ShellScript */,
+				7DAA00BD303C70C50040DF25 /* Sources */,
+				7DAA00BE303C70C50040DF25 /* Frameworks */,
+				7DAA00BF303C70C50040DF25 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				7DAA00C3303C70C50040DF25 /* TennoWatch */,
+			);
+			name = TennoWatch;
+			productName = TennoWatch;
+			productReference = 7DAA00C1303C70C50040DF25 /* TennoWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C075BEE9EC112E800C4C8FE2 /* TennoWatchTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 20F98520030BA0987A0D1815 /* Build configuration list for PBXNativeTarget "TennoWatchTests" */;
+			buildPhases = (
+				3AADE66BC9EC448DC71B51AE /* Sources */,
+				336FE1571EE8A7944C4B5FB5 /* Frameworks */,
+				D3B81E71DA6E7F90018DAAEB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C18F8C0D7204151AB7E45C82 /* PBXTargetDependency */,
+			);
+			name = TennoWatchTests;
+			productName = TennoWatchTests;
+			productReference = B9D574040649ACABC712C602 /* TennoWatchTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7DAA00B9303C70C50040DF25 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2660;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+					7DAA00C0303C70C50040DF25 = {
+						CreatedOnToolsVersion = 26.6;
+					};
+				};
+			};
+			buildConfigurationList = 7DAA00BC303C70C50040DF25 /* Build configuration list for PBXProject "TennoWatch" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				uk,
+				Base,
+			);
+			mainGroup = 7DAA00B8303C70C50040DF25;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 7DAA00C2303C70C50040DF25 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7DAA00C0303C70C50040DF25 /* TennoWatch */,
+				C075BEE9EC112E800C4C8FE2 /* TennoWatchTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7DAA00BF303C70C50040DF25 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3B81E71DA6E7F90018DAAEB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7D4C2305303C97AB00F20105 /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint > /dev/null; then\n  swiftlint\nelif [ -f /opt/homebrew/bin/swiftlint ]; then\n  /opt/homebrew/bin/swiftlint\nelif [ -f /usr/local/bin/swiftlint ]; then\n  /usr/local/bin/swiftlint\nelse\n  echo \"warning: SwiftLint not installed. Install via 'brew install swiftlint'.\"\nfi\n";
+		};
+		7D5FB1E6303F4396009E0596 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				" $(SRCROOT)/Scripts/input.json",
+				"$(SRCROOT)/Scripts/itemMapper.py",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/Generated/ExternalData.swift",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"$HOME/.pyenv/shims:$PATH\"\npython3 \"$SRCROOT/Scripts/itemMapper.py\" \"$SRCROOT/Scripts/input.json\" > \"$SRCROOT/Generated/ExternalData.swift\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3AADE66BC9EC448DC71B51AE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CF7672013DA9CDD3100EAA15 /* APIManagerTests.swift in Sources */,
+				862DD48AFD6E61BB50EBD8BA /* ProfileRepositoryTests.swift in Sources */,
+				A355E4D4AFFDB970D7307A52 /* CatalogSyncServiceTests.swift in Sources */,
+				7BDE3824B27519709EEA16DE /* OpeningsMatchingServiceTests.swift in Sources */,
+				E90F8ECD65AF273EC6241195 /* Fixtures.swift in Sources */,
+				F3177F55C73CA558FFA1B8BA /* WorldStateViewModelTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7DAA00BD303C70C50040DF25 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C18F8C0D7204151AB7E45C82 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TennoWatch;
+			target = 7DAA00C0303C70C50040DF25 /* TennoWatch */;
+			targetProxy = 53148B310B4259EFA4F6197A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		497741C2C23B6240A215B120 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TBBZBB993Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.briznichenko.TennoWatchTests;
+				SDKROOT = iphoneos;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TennoWatch.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TennoWatch";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		589820E2E49CAD8BC8F73577 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TBBZBB993Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.briznichenko.TennoWatchTests;
+				SDKROOT = iphoneos;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TennoWatch.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TennoWatch";
+			};
+			name = Debug;
+		};
+		6CF0FB67540DA0C927B9B305 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TBBZBB993Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.briznichenko.TennoWatchTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TennoWatch.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TennoWatch";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		7DAA00CA303C70C60040DF25 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = TBBZBB993Z;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		7DAA00CB303C70C60040DF25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = TBBZBB993Z;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		7DAA00CD303C70C60040DF25 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = accentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.briznichenko.TennoWatch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7DAA00CE303C70C60040DF25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = accentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.briznichenko.TennoWatch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CB59BC695C83B9E424627276 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TBBZBB993Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.briznichenko.TennoWatchTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TennoWatch.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TennoWatch";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		20F98520030BA0987A0D1815 /* Build configuration list for PBXNativeTarget "TennoWatchTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6CF0FB67540DA0C927B9B305 /* Release */,
+				CB59BC695C83B9E424627276 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7DAA00BC303C70C50040DF25 /* Build configuration list for PBXProject "TennoWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7DAA00CA303C70C60040DF25 /* Debug */,
+				7DAA00CB303C70C60040DF25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7DAA00CC303C70C60040DF25 /* Build configuration list for PBXNativeTarget "TennoWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7DAA00CD303C70C60040DF25 /* Debug */,
+				7DAA00CE303C70C60040DF25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7DAA00B9303C70C50040DF25 /* Project object */;
+}

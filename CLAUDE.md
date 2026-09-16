@@ -1,4 +1,4 @@
-# WarframeListener
+# TennoWatch
 
 Personal learning project. The point of this repo is to strengthen Swift and
 iOS/macOS skills, and Claude Code working habits, along the way — it is not

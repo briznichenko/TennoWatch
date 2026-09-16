@@ -10,7 +10,7 @@ mastery-catalog sync that the Mastery/Openings tabs otherwise trigger
 implicitly on every fetch.
 
 ## Entry point
-`ProfileView` → `isShowingSettings` sheet → [`SettingsView`](../../WarframeListener/Views/Settings/SettingsView.swift),
+`ProfileView` → `isShowingSettings` sheet → [`SettingsView`](../../TennoWatch/Views/Settings/SettingsView.swift),
 constructed with `persistencyService`, `catalogRepository`, `profileRepository`,
 `errorManager` — the only screen that touches `PersistencyService` directly
 rather than going through a repository, because it needs raw access to

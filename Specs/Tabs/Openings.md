@@ -8,7 +8,7 @@ of the others — nothing here is fetched independently, it's a matching pass
 over data the other two tabs already own.
 
 ## Entry point
-`MainView` → `Tab("Openings")` → [`OpeningsView`](../../WarframeListener/Views/Openings/OpeningsView.swift),
+`MainView` → `Tab("Openings")` → [`OpeningsView`](../../TennoWatch/Views/Openings/OpeningsView.swift),
 constructed with `profileRepository`, `catalogRepository`, `worldStateRepository`,
 `errorManager` — the only tab that depends on all three repositories.
 

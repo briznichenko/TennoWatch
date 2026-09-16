@@ -1,6 +1,6 @@
 # Layer: Models
 
-`WarframeListener/Models/` plus, notably, a chunk of domain models that
+`TennoWatch/Models/` plus, notably, a chunk of domain models that
 actually live under `Persistency/` instead — see the organizational note
 below before assuming everything domain-shaped is in `Models/`.
 

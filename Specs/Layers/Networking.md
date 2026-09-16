@@ -1,6 +1,6 @@
 # Layer: Networking
 
-`WarframeListener/Networking/` — two files, the thinnest layer in the app.
+`TennoWatch/Networking/` — two files, the thinnest layer in the app.
 
 ## `Endpoints.swift`
 - `EndpointProtocol` — `baseURL`, `path`, `queryItems`, computed `url` (can
