@@ -81,7 +81,7 @@ struct Profile: PersistentModelConvertible {
     }
 
     // MARK: - Object Properties
-    let accountID: ID
+    let accountID: OID
     let displayName: String
     let playerLevel: Int
     let items: [ProfileItemModel]

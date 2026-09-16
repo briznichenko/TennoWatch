@@ -27,6 +27,7 @@ struct ProfileView: View {
             List {
                 identityCard
                     .listRowSeparator(.hidden)
+                playerIdSection
                 statsSection
             }
             .navigationTitle(Strings.Profile.title)
@@ -72,25 +73,9 @@ struct ProfileView: View {
                 Text(viewModel.displayName)
                     .font(.system(size: 22, weight: .medium))
                     .foregroundStyle(Color.label)
-                LabeledContent(Strings.Profile.id) {
-                    HStack {
-                        TextField(Strings.Profile.idPlaceholder, text: $viewModel.playerId)
-                            .focused($isIDInputFocused)
-                            .font(.caption)
-                            .foregroundStyle(Color.labelSecondary)
-                            .onSubmit {
-                                Task { await viewModel.fetchProfile() }
-                            }
-                        Image(systemName: "pencil")
-                            .foregroundStyle(isIDInputFocused ? Color.accentColor : .secondary)
-                    }
-                    .padding(10)
-                    .background(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(isIDInputFocused ? Color.accentColor : Color.gray.opacity(0.4), lineWidth: 1)
-                    )
-                }
-                
+                Text(viewModel.playerId)
+                    .font(.system(size: 15, weight: .light))
+                    .foregroundStyle(Color.secondary)
                 HStack(spacing: 20) {
                     statPair(value: viewModel.playerLevel, label: Strings.Profile.masteryRankLabel)
                     statPair(value: viewModel.totalMissionsCompleted, label: Strings.Profile.missionsCompletedLabel)
@@ -100,6 +85,27 @@ struct ProfileView: View {
             }
         }
         .padding(.bottom, 8)
+    }
+    
+    private var playerIdSection: some View {
+        LabeledContent(Strings.Profile.id) {
+            HStack {
+                TextField(Strings.Profile.idPlaceholder, text: $viewModel.playerId)
+                    .focused($isIDInputFocused)
+                    .font(.caption)
+                    .foregroundStyle(Color.labelSecondary)
+                    .onSubmit {
+                        Task { await viewModel.fetchProfile() }
+                    }
+                Image(systemName: "pencil")
+                    .foregroundStyle(isIDInputFocused ? Color.accentColor : .secondary)
+            }
+            .padding(10)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(isIDInputFocused ? Color.accentColor : Color.gray.opacity(0.4), lineWidth: 1)
+            )
+        }
     }
 
     private func statPair(value: Int, label: String) -> some View {

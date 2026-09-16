@@ -13,7 +13,7 @@ final class ProfileViewModel {
     // MARK: - Object Properties
     private(set) var profile: Profile?
     private(set) var isLoading = false
-    var playerId: String = "523b73b91a4d806878000000"
+    var playerId: String
 
     private let profileRepository: ProfileRepository
     let errorManager: ErrorManager
@@ -57,6 +57,9 @@ final class ProfileViewModel {
     init(profileRepository: ProfileRepository, errorManager: ErrorManager) {
         self.profileRepository = profileRepository
         self.errorManager = errorManager
+        #if DEBUG
+        playerId = "523b73b91a4d806878000000"
+        #endif
     }
 
     // MARK: - Functions

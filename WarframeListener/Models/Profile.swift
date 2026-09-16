@@ -18,19 +18,19 @@ struct ProfileModel: NetworkModel {
 }
 
 struct ProfileInfoModel: Decodable {
-    let accountID: ID
+    let accountID: OID
     let displayName: String
     let platformNames: [String]
     let playerLevel: Int
     let loadOutPreset: LoadOutPreset?
 //    let loadOutInventory: LoadOutInventory
-    let guildID: ID
+    let guildID: OID
     let guildName: String
     let guildTier: Int
     let guildXP: Int
     let guildClass: Int
     let guildEmblem: Bool
-    let allianceID: ID
+    let allianceID: OID
     let playerSkills: [String: Int]
     let challengeProgress: [ChallengeProgress]
     let deathMarks: [String]
@@ -104,7 +104,7 @@ struct ProfileInfoModel: Decodable {
 }
 
 // MARK: - ID
-struct ID: Codable, Hashable {
+struct OID: Codable, Hashable {
     let oid: String
 
     enum CodingKeys: String, CodingKey {
@@ -175,7 +175,7 @@ struct LongGun: Decodable {
     let polarity: [Polarity]
     let polarized: Int
     let focusLens: String
-    let itemID: ID
+    let itemID: OID
 
     enum CodingKeys: String, CodingKey {
         case itemType = "ItemType"
@@ -221,7 +221,7 @@ struct Suit: Decodable {
     let polarity: [Polarity]
     let polarized: Int
     let archonCrystalUpgrades: [ArchonCrystalUpgrade]
-    let itemID: ID
+    let itemID: OID
 
     enum CodingKeys: String, CodingKey {
         case itemType = "ItemType"
