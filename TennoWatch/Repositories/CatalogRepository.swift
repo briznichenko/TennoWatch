@@ -10,7 +10,7 @@ import SwiftData
 
 enum SyncPolicy { case daily }
 
-protocol CatalogRepository {
+protocol CatalogRepository: Sendable {
     var syncPolicy: SyncPolicy { get }
 
     func getMasteryCatalog() async throws -> MasteryCatalog
@@ -23,7 +23,10 @@ protocol CatalogRepository {
     func getMasterySources(named name: String) async throws -> MasteryCategoryModel
 }
 
-final class PersistentCatalogRepository: CatalogRepository {
+// `final` + every stored property `let` + every stored property's type Sendable is what
+// makes this safe to state explicitly — the compiler checks the claim, it doesn't just
+// take the annotation's word for it.
+final class PersistentCatalogRepository: CatalogRepository, Sendable {
     enum CatalogError: Error {
         case wrongFilename
         case noCatalogAvailable

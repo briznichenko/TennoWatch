@@ -14,6 +14,7 @@ struct AppDependencies {
     let catalogRepository: CatalogRepository
     let worldStateRepository: WorldStateRepository
     let errorManager: ErrorManager
+    let categoryContainerCache: CategoryContainerCache
 
     // MARK: - Init
     init(modelContainer: ModelContainer) {
@@ -23,5 +24,6 @@ struct AppDependencies {
         self.catalogRepository = PersistentCatalogRepository(persistencyService: persistencyService)
         self.worldStateRepository = DefaultWorldStateRepository()
         self.errorManager = DefaultErrorManager()
+        self.categoryContainerCache = CategoryContainerCache()
     }
 }

@@ -32,7 +32,14 @@ private final class StubAPIService: ServiceProtocol {
     }
 }
 
-private final class StubPersistencyService: PersistencyService {
+// `PersistencyService` now requires `Sendable` (see PersistencyService.swift), so any
+// conformer has to state a Sendable story. This stub genuinely isn't thread-safe — its
+// `var` properties are mutated with no synchronization — but it's also never shared
+// across a concurrency domain: each test constructs its own instance and only touches it
+// within that one test's sequential `await` chain. `@unchecked Sendable` is the honest
+// way to say "the compiler can't verify this, but the usage pattern makes it safe" rather
+// than restructuring a test double into an actor for no real benefit.
+private final class StubPersistencyService: PersistencyService, @unchecked Sendable {
     var storedProfiles: [Profile] = []
     private(set) var savedProfiles: [Profile] = []
 

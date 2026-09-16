@@ -7,6 +7,7 @@
 
 import Foundation
 import Observation
+import Combine
 
 struct WorldCycleDisplay: Identifiable {
     let id: String
@@ -28,6 +29,11 @@ struct FissureTierGroup: Identifiable {
     var id: String { tier }
 }
 
+// This class is MainActor-isolated implicitly, via this target's default actor isolation
+// setting (Approachable Concurrency — see the project README), the same as most view
+// models in this app. Compare `DefaultErrorManager`, which spells `@MainActor` out
+// explicitly: both mean the same thing here. Explicit is only worth adding when a type's
+// isolation wouldn't otherwise be obvious from where and how it's used.
 @Observable
 final class WorldStateViewModel {
     // MARK: - Object Properties
@@ -38,6 +44,11 @@ final class WorldStateViewModel {
 
     private(set) var worldState: WorldState?
     private(set) var isLoading = false
+
+    private var autoRefreshTask: Task<Void, Never>?
+    // Coalesces overlapping calls to `fetchWorldState()` — see that function's doc
+    // comment for why overlapping calls are possible at all.
+    private var inFlightFetch: Task<Void, Never>?
 
     // MARK: - Computed Properties
     var cycles: [WorldCycleDisplay] {
@@ -109,13 +120,45 @@ final class WorldStateViewModel {
     init(worldStateRepository: WorldStateRepository, errorManager: ErrorManager) {
         self.worldStateRepository = worldStateRepository
         self.errorManager = errorManager
+        startAutoRefresh()
+    }
+
+    deinit {
+        autoRefreshTask?.cancel()
+        inFlightFetch?.cancel()
     }
 
     // MARK: - Functions
+
+    // Re-entrancy: `WorldStateView` calls this from `.task` (first appearance),
+    // `.refreshable` (pull-to-refresh), and now also from the auto-refresh timer below —
+    // potentially all three within the same few seconds. Every call hits an `await`
+    // inside `worldStateRepository.getWorldState()`, which is a suspension point: this
+    // MainActor-isolated method can be re-entered while an earlier call is still
+    // suspended there. MainActor isolation only guarantees that two calls never run their
+    // synchronous portions *simultaneously* — it says nothing about a second call
+    // starting before the first has finished. Swift 6 does not flag this: every property
+    // access here is still correctly MainActor-isolated, so there's no data race for the
+    // compiler to catch. What breaks is a *logic* race — two network requests in flight,
+    // and whichever response lands second silently overwrites the other, regardless of
+    // which one was actually requested more recently (a slow first request can clobber a
+    // faster second one, after the second has already resolved). Coalescing into a single
+    // in-flight Task fixes it: a second caller just awaits the first call's result instead
+    // of starting a redundant fetch.
     func fetchWorldState() async {
-        defer {
-            isLoading = false
+        if let inFlightFetch {
+            await inFlightFetch.value
+            return
         }
+        let task = Task { await self.performFetch() }
+        inFlightFetch = task
+        await task.value
+        inFlightFetch = nil
+    }
+
+    // MARK: - Helper Functions
+    private func performFetch() async {
+        defer { isLoading = false }
         isLoading = true
 
         do {
@@ -125,7 +168,35 @@ final class WorldStateViewModel {
         }
     }
 
-    // MARK: - Helper Functions
+    // Combine is genuinely the right tool for *this* piece: a periodic tick is exactly
+    // what `Timer.publish` + `.autoconnect()` is for, and if this ever grows into
+    // "refresh on a timer, but also immediately when the app returns to foreground,
+    // debounced so a flurry of both doesn't double-fire" — that's Combine's `.merge`/
+    // `.debounce` vocabulary, not something worth hand-rolling with raw Tasks and sleeps.
+    //
+    // The bridge to AsyncStream exists because the *consumer* is Concurrency-native, not
+    // Combine-native: `@Observable` classes aren't `ObservableObject`, so there's no
+    // `@Published` property to `.sink` into and no natural place for a `Set<AnyCancellable>`
+    // to live in idiomatic modern SwiftUI code. AsyncStream turns the publisher into
+    // something a `for await` loop inside a plain `Task` can consume directly instead.
+    private func startAutoRefresh() {
+        let ticks = Timer.publish(every: 30, on: .main, in: .common)
+            .autoconnect()
+            .map { _ in () }
+
+        let stream = AsyncStream<Void> { continuation in
+            let cancellable = ticks.sink { _ in continuation.yield() }
+            continuation.onTermination = { _ in cancellable.cancel() }
+        }
+
+        autoRefreshTask = Task { [weak self] in
+            for await _ in stream {
+                guard let self, !Task.isCancelled else { return }
+                await self.fetchWorldState()
+            }
+        }
+    }
+
     private static func timeLeft(until date: Date?) -> String {
         date?.timeLeftDescription ?? ""
     }

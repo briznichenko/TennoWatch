@@ -6,12 +6,16 @@
 //
 
 import SwiftUI
+import MessageUI
 
 struct SettingsView: View {
     // MARK: - Object Properties
     @AppStorage("themePreference") private var themePreference: ThemePreference = .system
     @AppStorage(AppLanguage.storageKey) private var languagePreference: AppLanguage = .system
     @State private var viewModel: SettingsViewModel
+    @State private var supportComposer = SupportMailComposer()
+    @State private var isShowingMailCompose = false
+    @State private var supportStatusText = ""
 
     let displayName: String
 
@@ -92,12 +96,58 @@ struct SettingsView: View {
                 } header: {
                     SectionHeaderLabel(Strings.Settings.catalogHeader)
                 }
+
+                Section {
+                    Button {
+                        guard MFMailComposeViewController.canSendMail() else {
+                            supportStatusText = Strings.Settings.mailUnavailable
+                            return
+                        }
+                        isShowingMailCompose = true
+                    } label: {
+                        Label(Strings.Settings.contactSupport, systemImage: "envelope")
+                    }
+
+                    if !supportStatusText.isEmpty {
+                        Text(supportStatusText)
+                            .font(.caption)
+                            .foregroundStyle(Color.labelSecondary)
+                    }
+                } header: {
+                    SectionHeaderLabel(Strings.Settings.supportHeader)
+                }
             }
             .themedList()
             .navigationTitle(Strings.Settings.title)
             .handleErrorAlert(with: viewModel.errorManager)
             .task {
                 await viewModel.loadCatalogInfo()
+            }
+            .sheet(isPresented: $isShowingMailCompose) {
+                SupportMailComposeView(
+                    recipient: "support@tennowatch.app",
+                    subject: "TennoWatch feedback",
+                    composer: supportComposer
+                )
+                .ignoresSafeArea()
+                .task {
+                    // This is the other half of the continuation bridge: `waitForResult()`
+                    // suspends here until `SupportMailComposer.mailComposeController(_:didFinishWith:error:)`
+                    // resumes it, which only happens once the presented controller has
+                    // actually finished — so `isShowingMailCompose` only flips back to
+                    // false once there's a real result to report.
+                    do {
+                        let result = try await supportComposer.waitForResult()
+                        switch result {
+                        case .sent: supportStatusText = Strings.Settings.supportSent
+                        case .saved: supportStatusText = Strings.Settings.supportSaved
+                        case .cancelled: break
+                        }
+                    } catch {
+                        viewModel.errorManager.append(error)
+                    }
+                    isShowingMailCompose = false
+                }
             }
         }
     }

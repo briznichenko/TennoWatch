@@ -46,6 +46,7 @@ final class MasteryCategoryDetailViewModel {
     // MARK: - Object Properties
     let category: CatalogItemModel.Category
     private let catalogRepository: CatalogRepository
+    private let categoryContainerCache: CategoryContainerCache
     private let errorManager: ErrorManager
 
     private(set) var container: CatalogContainer?
@@ -64,19 +65,37 @@ final class MasteryCategoryDetailViewModel {
     }
 
     // MARK: - Init
-    init(category: CatalogItemModel.Category, catalogRepository: CatalogRepository, errorManager: ErrorManager) {
+    init(
+        category: CatalogItemModel.Category,
+        catalogRepository: CatalogRepository,
+        categoryContainerCache: CategoryContainerCache,
+        errorManager: ErrorManager
+    ) {
         self.category = category
         self.catalogRepository = catalogRepository
+        self.categoryContainerCache = categoryContainerCache
         self.errorManager = errorManager
     }
 
     // MARK: - Functions
     func load() async {
         guard container == nil else { return }
+
+        // Cross-actor call: `categoryContainerCache` runs on its own actor, this view
+        // model runs on MainActor (implicitly, via this module's default isolation), so
+        // reading it is a suspension point even though it's "just a dictionary lookup" —
+        // there's no such thing as a free synchronous read across an actor boundary.
+        if let cached = await categoryContainerCache.value(for: category) {
+            container = cached
+            return
+        }
+
         isLoading = true
         defer { isLoading = false }
         do {
-            container = try await catalogRepository.getCatalogContainer(for: category)
+            let container = try await catalogRepository.getCatalogContainer(for: category)
+            self.container = container
+            await categoryContainerCache.store(container, for: category)
         } catch {
             errorManager.append(error)
         }

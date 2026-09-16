@@ -8,7 +8,11 @@
 import Foundation
 import SwiftData
 
-protocol PersistencyService {
+// `Sendable` here is what lets a `let persistencyService: PersistencyService` stored
+// property be captured into a `@Sendable` closure (e.g. a detached Task) elsewhere.
+// Without it, the *existential* `any PersistencyService` isn't provably safe to hand
+// across an isolation boundary even when every real conformer (an actor) obviously is.
+protocol PersistencyService: Sendable {
     func fetchModel<T: ValueTypeConvertible>(by type: T.Type, with descriptor: FetchDescriptor<T>) async throws -> [T.Value]
     func saveValues<T: PersistentModelConvertible>(_ values: [T]) async throws
     func saveValue<T: PersistentModelConvertible>(_ value: T) async throws

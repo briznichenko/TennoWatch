@@ -28,6 +28,7 @@ struct MainView: View {
                     viewModel: .init(
                         profileRepository: dependencies.profileRepository,
                         catalogRepository: dependencies.catalogRepository,
+                        categoryContainerCache: dependencies.categoryContainerCache,
                         errorManager: dependencies.errorManager
                     )
                 )

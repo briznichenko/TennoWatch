@@ -93,6 +93,12 @@ final class OpeningsViewModel {
     }
 
     // MARK: - Functions
+    // `async let` over `withTaskGroup` here on purpose: there are exactly two independent
+    // fetches, both spelled out at the call site, and that count never changes. TaskGroup
+    // earns its keep when the number of concurrent children is dynamic — see
+    // `MasteryViewModel.prefetchCategoryContainers()`, which fans out over
+    // `CatalogItemModel.Category.allCases` — but for a small, fixed arity like this one,
+    // `async let` says the same thing with less ceremony.
     func fetchOpenings() async {
         isLoading = true
         defer { isLoading = false }

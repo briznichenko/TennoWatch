@@ -80,6 +80,11 @@ struct Strings {
         static var refreshCatalog: String { Strings.string("settings_refresh_catalog_key", "Refresh catalog") }
         static var catalogHeader: String { Strings.string("settings_catalog_header_key", "Catalog") }
         static var title: String { Strings.string("settings_title_key", "Settings") }
+        static var supportHeader: String { Strings.string("settings_support_header_key", "Support") }
+        static var contactSupport: String { Strings.string("settings_contact_support_key", "Contact support") }
+        static var mailUnavailable: String { Strings.string("settings_mail_unavailable_key", "Mail isn't set up on this device") }
+        static var supportSent: String { Strings.string("settings_support_sent_key", "Thanks — your message was sent") }
+        static var supportSaved: String { Strings.string("settings_support_saved_key", "Draft saved") }
     }
 
     struct Mastery {
