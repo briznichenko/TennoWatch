@@ -21,6 +21,10 @@ struct LiveCountdownText: View {
                         width: .narrow
                     )
                 )
+                .font(.caption)
+                .foregroundStyle(Color.labelSecondary)
+                .monospacedDigit()
+
             }
         }
     }

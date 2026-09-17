@@ -33,7 +33,7 @@ struct WorldStateGridView: View {
             .padding(12)
         }
         .buttonStyle(.plain)
-        .background(Color.bg)
+        .background(Color(.systemGroupedBackground))
     }
 
     // MARK: - Cards
