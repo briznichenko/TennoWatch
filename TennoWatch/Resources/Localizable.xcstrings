@@ -469,6 +469,18 @@
         }
       }
     },
+    "openings_vault_trader_source_format_key" : {
+      "comment" : "Source description for a Prime Vault trader opening, e.g. 'Prime Vault · Larunda Relay · 2d 4h'.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prime Vault · %@ · %@"
+          }
+        }
+      }
+    },
     "profile_display_name_unknown_key" : {
       "comment" : "Fallback display name when no profile has been loaded yet.",
       "extractionState" : "manual",
@@ -483,6 +495,102 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Невідомо"
+          }
+        }
+      }
+    },
+    "profile_id_help_cancel_button_key" : {
+      "comment" : "Cancel button on the player ID help alert.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "profile_id_help_credit_key" : {
+      "comment" : "Footer text asking users to be respectful of Digital Extremes' profile endpoint and not sync repeatedly.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This pulls directly from Digital Extremes' own profile endpoint. Please be respectful of it: only sync your own profile, and avoid syncing repeatedly in a short time."
+          }
+        }
+      }
+    },
+    "profile_id_help_dont_show_again_key" : {
+      "comment" : "Checkbox label on the player ID help alert to suppress it from showing automatically again.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Don't show again"
+          }
+        }
+      }
+    },
+    "profile_id_help_intro_key" : {
+      "comment" : "Footer text under the player ID field explaining how to find your player ID.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To find your player ID, sign in at warframe.com, open the link below, and copy the value after \"user_id\"."
+          }
+        }
+      }
+    },
+    "profile_id_help_link_title_key" : {
+      "comment" : "Title of the link to Digital Extremes' user-data endpoint shown under the player ID field.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "warframe.com/api/user-data"
+          }
+        }
+      }
+    },
+    "profile_id_help_ok_button_key" : {
+      "comment" : "OK button on the player ID help alert.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
+    "profile_id_help_title_key" : {
+      "comment" : "Title of the player ID help alert.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finding Your Player ID"
+          }
+        }
+      }
+    },
+    "profile_id_help_trigger_key" : {
+      "comment" : "Button that reopens the player ID help alert on demand.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How to find your ID"
           }
         }
       }
@@ -519,6 +627,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Введіть ID гравця"
+          }
+        }
+      }
+    },
+    "profile_sync_button_key" : {
+      "comment" : "Button that fetches the profile for the currently entered player ID.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync Profile"
           }
         }
       }
@@ -815,6 +935,30 @@
         }
       }
     },
+    "world_state_alerts_header_key" : {
+      "comment" : "Section header for the Alerts card on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alerts"
+          }
+        }
+      }
+    },
+    "world_state_archimedea_header_key" : {
+      "comment" : "Section header for the Archimedea card on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archimedea"
+          }
+        }
+      }
+    },
     "world_state_archon_hunt_header_key" : {
       "comment" : "Section header for the archon hunt on the world state screen.",
       "extractionState" : "manual",
@@ -829,6 +973,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Полювання на архонта"
+          }
+        }
+      }
+    },
+    "world_state_archon_hunt_reward_amber_key" : {
+      "comment" : "Archon Shard reward name for the archon hunt on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amber Archon Shard"
+          }
+        }
+      }
+    },
+    "world_state_archon_hunt_reward_azure_key" : {
+      "comment" : "Archon Shard reward name for the archon hunt on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Azure Archon Shard"
+          }
+        }
+      }
+    },
+    "world_state_archon_hunt_reward_crimson_key" : {
+      "comment" : "Archon Shard reward name for the archon hunt on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crimson Archon Shard"
+          }
+        }
+      }
+    },
+    "world_state_calendar_header_key" : {
+      "comment" : "Section header for the Calendar card on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendar"
           }
         }
       }
@@ -865,6 +1057,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Цетус"
+          }
+        }
+      }
+    },
+    "world_state_credits_format_key" : {
+      "comment" : "Credit cost/value shown on a world state card, e.g. '5000 credits'.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld credits"
+          }
+        }
+      }
+    },
+    "world_state_current_reward_header_key" : {
+      "comment" : "Section header for the current reward in a rotation, e.g. Steel Path or Archimedea.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Current reward"
           }
         }
       }
@@ -995,6 +1211,18 @@
         }
       }
     },
+    "world_state_ducats_format_key" : {
+      "comment" : "Ducat cost/value shown on a world state card, e.g. '350 ducats'.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld ducats"
+          }
+        }
+      }
+    },
     "world_state_earth_cycle_key" : {
       "comment" : "Row title for the Earth day/night cycle.",
       "extractionState" : "manual",
@@ -1009,6 +1237,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Земля"
+          }
+        }
+      }
+    },
+    "world_state_evergreens_header_key" : {
+      "comment" : "Section header for evergreen (always-available) rewards on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Evergreens"
+          }
+        }
+      }
+    },
+    "world_state_expires_in_key" : {
+      "comment" : "Label for the time remaining before a world state item expires.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expires in"
           }
         }
       }
@@ -1031,6 +1283,18 @@
         }
       }
     },
+    "world_state_incursion_header_key" : {
+      "comment" : "Section header for the active Steel Path incursion on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incursion"
+          }
+        }
+      }
+    },
     "world_state_invasions_header_key" : {
       "comment" : "Section header for invasions on the world state screen.",
       "extractionState" : "manual",
@@ -1045,6 +1309,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Вторгнення"
+          }
+        }
+      }
+    },
+    "world_state_inventory_header_key" : {
+      "comment" : "Section header for a trader's inventory list on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inventory"
+          }
+        }
+      }
+    },
+    "world_state_missions_count_format_key" : {
+      "comment" : "Count of missions available for an opening, e.g. '3 missions'.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld missions"
           }
         }
       }
@@ -1067,6 +1355,30 @@
         }
       }
     },
+    "world_state_no_active_incursion_key" : {
+      "comment" : "Placeholder text shown when there is no active Steel Path incursion.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No active incursion"
+          }
+        }
+      }
+    },
+    "world_state_rotation_header_key" : {
+      "comment" : "Section header for reward rotation info on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rotation"
+          }
+        }
+      }
+    },
     "world_state_sortie_header_key" : {
       "comment" : "Section header for the daily sortie on the world state screen.",
       "extractionState" : "manual",
@@ -1081,6 +1393,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Вилазка"
+          }
+        }
+      }
+    },
+    "world_state_steel_essence_format_key" : {
+      "comment" : "Steel Essence cost shown on a world state card, e.g. '100 Steel Essence'.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Steel Essence"
+          }
+        }
+      }
+    },
+    "world_state_steel_path_header_key" : {
+      "comment" : "Section header for the Steel Path card on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teshin"
           }
         }
       }
@@ -1117,6 +1453,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Орб Валліс"
+          }
+        }
+      }
+    },
+    "world_state_vault_trader_header_key" : {
+      "comment" : "Section header for the Prime Vault trader card on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prime vault"
           }
         }
       }

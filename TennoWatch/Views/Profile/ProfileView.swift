@@ -11,6 +11,8 @@ struct ProfileView: View {
     // MARK: - Object Properties
     @State private var viewModel: ProfileViewModel
     @State private var isShowingSettings = false
+    @State private var isShowingIdHelp = false
+    @AppStorage("profileIdHelpDontShowAgain") private var dontShowIdHelpAgain = false
     @FocusState private var isIDInputFocused
 
     private let dependencies: AppDependencies
@@ -23,47 +25,61 @@ struct ProfileView: View {
 
     // MARK: - Body
     var body: some View {
-        NavigationStack {
-            List {
-                identityCard
-                    .listRowSeparator(.hidden)
-                playerIdSection
-                statsSection
-            }
-            .navigationTitle(Strings.Profile.title)
-            .overlay {
-                if viewModel.isLoading {
-                    LotusLoaderView()
+        ZStack {
+            NavigationStack {
+                List {
+                    identityCard
+                        .listRowSeparator(.hidden)
+                    playerIdSection
+                    statsSection
                 }
-            }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        isShowingSettings = true
-                    } label: {
-                        Image(systemName: "gearshape")
+                .navigationTitle(Strings.Profile.title)
+                .overlay {
+                    if viewModel.isLoading {
+                        LotusLoaderView()
                     }
                 }
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            isShowingSettings = true
+                        } label: {
+                            Image(systemName: "gearshape")
+                        }
+                    }
+                }
+                .handleErrorAlert(with: viewModel.errorManager)
+                .sheet(isPresented: $isShowingSettings) {
+                    SettingsView(
+                        viewModel: .init(
+                            persistencyService: dependencies.persistencyService,
+                            catalogRepository: dependencies.catalogRepository,
+                            profileRepository: dependencies.profileRepository,
+                            errorManager: dependencies.errorManager
+                        ),
+                        displayName: viewModel.displayName
+                    )
+                }
+                .task {
+                    await viewModel.fetchProfile()
+                }
+                .refreshable {
+                    await viewModel.fetchProfile(forceRefresh: true)
+                }
             }
-            .handleErrorAlert(with: viewModel.errorManager)
-            .sheet(isPresented: $isShowingSettings) {
-                SettingsView(
-                    viewModel: .init(
-                        persistencyService: dependencies.persistencyService,
-                        catalogRepository: dependencies.catalogRepository,
-                        profileRepository: dependencies.profileRepository,
-                        errorManager: dependencies.errorManager
-                    ),
-                    displayName: viewModel.displayName
+
+            if isShowingIdHelp {
+                PlayerIdHelpAlertView(
+                    dontShowAgain: dontShowIdHelpAgain,
+                    onCancel: { isShowingIdHelp = false },
+                    onConfirm: { dontShowAgain in
+                        dontShowIdHelpAgain = dontShowAgain
+                        isShowingIdHelp = false
+                    }
                 )
             }
-            .task {
-                await viewModel.fetchProfile()
-            }
-            .refreshable {
-                await viewModel.fetchProfile(forceRefresh: true)
-            }
         }
+        .animation(.easeInOut(duration: 0.2), value: isShowingIdHelp)
     }
 
     // MARK: - Subviews
@@ -88,23 +104,44 @@ struct ProfileView: View {
     }
     
     private var playerIdSection: some View {
-        LabeledContent(Strings.Profile.id) {
-            HStack {
-                TextField(Strings.Profile.idPlaceholder, text: $viewModel.playerId)
-                    .focused($isIDInputFocused)
-                    .font(.caption)
-                    .foregroundStyle(Color.labelSecondary)
-                    .onSubmit {
-                        Task { await viewModel.fetchProfile() }
-                    }
-                Image(systemName: "pencil")
-                    .foregroundStyle(isIDInputFocused ? Color.accentColor : .secondary)
+        Section {
+            LabeledContent(Strings.Profile.id) {
+                HStack {
+                    TextField(Strings.Profile.idPlaceholder, text: $viewModel.playerId)
+                        .focused($isIDInputFocused)
+                        .font(.caption)
+                        .foregroundStyle(Color.labelSecondary)
+                        .onSubmit {
+                            Task { await viewModel.fetchProfile() }
+                        }
+                    Image(systemName: "pencil")
+                        .foregroundStyle(isIDInputFocused ? Color.accentColor : .secondary)
+                }
+                .padding(10)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(isIDInputFocused ? Color.accentColor : Color.gray.opacity(0.4), lineWidth: 1)
+                )
             }
-            .padding(10)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(isIDInputFocused ? Color.accentColor : Color.gray.opacity(0.4), lineWidth: 1)
-            )
+            Button {
+                Task { await viewModel.fetchProfile(forceRefresh: true) }
+            } label: {
+                HStack {
+                    Label(Strings.Profile.syncButton, systemImage: "arrow.triangle.2.circlepath")
+                    Spacer()
+                    if viewModel.isLoading {
+                        LotusLoaderView(size: 20)
+                    }
+                }
+            }
+            .disabled(viewModel.isLoading || viewModel.playerId.isEmpty)
+        } footer: {
+            Button {
+                isShowingIdHelp = true
+            } label: {
+                Label(Strings.Profile.idHelpTrigger, systemImage: "info.circle")
+            }
+            .font(.caption)
         }
     }
 

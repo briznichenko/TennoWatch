@@ -19,7 +19,7 @@ struct WorldStateView: View {
     // MARK: - Body
     var body: some View {
         NavigationStack {
-            WorldStateListView(viewModel: viewModel)
+            WorldStateGridView(viewModel: viewModel)
                 .navigationTitle(Strings.WorldState.title)
                 .overlay {
                     if viewModel.isLoading && viewModel.worldState == nil {

@@ -7,18 +7,25 @@
 
 import SwiftUI
 
-/// A "time remaining" label that keeps itself up to date. `Text(_:style:)`
-/// re-renders on its own schedule, so no Combine `Timer` publisher or manual
-/// refresh loop is needed for a ticking countdown.
 struct LiveCountdownText: View {
     let date: Date?
-
+    
     var body: some View {
         if let date {
-            Text(date, style: .timer)
+            TimelineView(.periodic(from: .now, by: 1)) { context in
+                let duration = max(0, date.timeIntervalSince(context.date))
+                Text(
+                    Duration.seconds(duration),
+                    format: .units(
+                        allowed: [.days, .hours, .minutes, .seconds],
+                        width: .narrow
+                    )
+                )
                 .font(.caption)
                 .foregroundStyle(Color.labelSecondary)
                 .monospacedDigit()
+
+            }
         }
     }
 }

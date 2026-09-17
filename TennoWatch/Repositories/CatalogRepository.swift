@@ -13,6 +13,8 @@ enum SyncPolicy { case daily }
 protocol CatalogRepository {
     var syncPolicy: SyncPolicy { get }
 
+    func prepareCatalog() async throws
+
     func getMasteryCatalog() async throws -> MasteryCatalog
     func syncMasteryCatalog(with profileModel: Profile) async throws -> MasteryCatalog
 
@@ -42,6 +44,10 @@ final class PersistentCatalogRepository: CatalogRepository {
     }
 
     // MARK: - Functions
+    func prepareCatalog() async throws {
+        try await ensureCatalogSeeded()
+    }
+
     func getMasteryCatalog() async throws -> MasteryCatalog {
         try await ensureCatalogSeeded()
         return try await persistencyService.perform { context in

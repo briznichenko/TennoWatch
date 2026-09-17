@@ -41,8 +41,23 @@ struct Strings {
         static var fissuresHeader: String { Strings.string("world_state_fissures_header_key", "Fissures") }
         static var sortieHeader: String { Strings.string("world_state_sortie_header_key", "Sortie") }
         static var archonHuntHeader: String { Strings.string("world_state_archon_hunt_header_key", "Archon hunt") }
+        static var archonHuntRewardCrimson: String { Strings.string("world_state_archon_hunt_reward_crimson_key", "Crimson Archon Shard") }
+        static var archonHuntRewardAmber: String { Strings.string("world_state_archon_hunt_reward_amber_key", "Amber Archon Shard") }
+        static var archonHuntRewardAzure: String { Strings.string("world_state_archon_hunt_reward_azure_key", "Azure Archon Shard") }
         static var nightwaveHeader: String { Strings.string("world_state_nightwave_header_key", "Nightwave") }
         static var voidTraderHeader: String { Strings.string("world_state_void_trader_header_key", "Void trader") }
+        static var vaultTraderHeader: String { Strings.string("world_state_vault_trader_header_key", "Prime vault") }
+        static var steelPathHeader: String { Strings.string("world_state_steel_path_header_key", "Steel path") }
+        static var alertsHeader: String { Strings.string("world_state_alerts_header_key", "Alerts") }
+        static var archimedeaHeader: String { Strings.string("world_state_archimedea_header_key", "Archimedea") }
+        static var calendarHeader: String { Strings.string("world_state_calendar_header_key", "Calendar") }
+        static var expiresIn: String { Strings.string("world_state_expires_in_key", "Expires in") }
+        static var inventoryHeader: String { Strings.string("world_state_inventory_header_key", "Inventory") }
+        static var currentRewardHeader: String { Strings.string("world_state_current_reward_header_key", "Current reward") }
+        static var rotationHeader: String { Strings.string("world_state_rotation_header_key", "Rotation") }
+        static var evergreensHeader: String { Strings.string("world_state_evergreens_header_key", "Evergreens") }
+        static var incursionHeader: String { Strings.string("world_state_incursion_header_key", "Incursion") }
+        static var noActiveIncursion: String { Strings.string("world_state_no_active_incursion_key", "No active incursion") }
         static var cetusCycle: String { Strings.string("world_state_cetus_cycle_key", "Cetus") }
         static var vallisCycle: String { Strings.string("world_state_vallis_cycle_key", "Orb Vallis") }
         static var cambionCycle: String { Strings.string("world_state_cambion_cycle_key", "Cambion Drift") }
@@ -63,6 +78,22 @@ struct Strings {
 
         static func nightwaveStandingAvailable(_ standing: Int) -> String {
             String(format: Strings.string("world_state_nightwave_standing_available_format_key", "+%lld standing"), standing)
+        }
+
+        static func missionsCount(_ count: Int) -> String {
+            String(format: Strings.string("world_state_missions_count_format_key", "%lld missions"), count)
+        }
+
+        static func ducats(_ ducats: Int) -> String {
+            String(format: Strings.string("world_state_ducats_format_key", "%lld ducats"), ducats)
+        }
+
+        static func credits(_ credits: Int) -> String {
+            String(format: Strings.string("world_state_credits_format_key", "%lld credits"), credits)
+        }
+
+        static func steelEssence(_ cost: Int) -> String {
+            String(format: Strings.string("world_state_steel_essence_format_key", "%lld Steel Essence"), cost)
         }
     }
 
@@ -130,12 +161,25 @@ struct Strings {
         static func voidTraderSource(location: String, timeLeft: String) -> String {
             String(format: Strings.string("openings_void_trader_source_format_key", "Baro Ki'Teer · %@ · %@"), location, timeLeft)
         }
+
+        static func vaultTraderSource(location: String, timeLeft: String) -> String {
+            String(format: Strings.string("openings_vault_trader_source_format_key", "Prime Vault · %@ · %@"), location, timeLeft)
+        }
     }
 
     struct Profile {
         private init() {}
         static var id: String { Strings.string("profile_id_key", "Player ID") }
         static var idPlaceholder: String { Strings.string("profile_id_placeholder_key", "Enter player ID") }
+        static var syncButton: String { Strings.string("profile_sync_button_key", "Sync Profile") }
+        static var idHelpIntro: String { Strings.string("profile_id_help_intro_key", "To find your player ID, sign in at warframe.com, open the link below, and copy the value after \"user_id\".") }
+        static var idHelpLinkTitle: String { Strings.string("profile_id_help_link_title_key", "warframe.com/api/user-data") }
+        static var idHelpCredit: String { Strings.string("profile_id_help_credit_key", "This pulls directly from Digital Extremes' own profile endpoint. Please be respectful of it: only sync your own profile, and avoid syncing repeatedly in a short time.") }
+        static var idHelpTitle: String { Strings.string("profile_id_help_title_key", "Finding Your Player ID") }
+        static var idHelpTrigger: String { Strings.string("profile_id_help_trigger_key", "How to find your ID") }
+        static var idHelpDontShowAgain: String { Strings.string("profile_id_help_dont_show_again_key", "Don't show again") }
+        static var idHelpCancelButton: String { Strings.string("profile_id_help_cancel_button_key", "Cancel") }
+        static var idHelpOkButton: String { Strings.string("profile_id_help_ok_button_key", "OK") }
         static var title: String { Strings.string("profile_title_key", "Profile") }
         static var displayNameUnknown: String { Strings.string("profile_display_name_unknown_key", "Unknown") }
         static var accountIdLabel: String { Strings.string("profile_account_id_label_key", "Account ID") }

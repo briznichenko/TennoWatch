@@ -12,7 +12,12 @@ struct NightwaveChallengeRowView: View {
 
     var body: some View {
         HStack {
-            Text(challenge.title)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(challenge.title)
+                Text(challenge.desc)
+                    .font(.caption)
+                    .foregroundStyle(Color.labelSecondary)
+            }
             Spacer()
             Text("+\(Int(challenge.reputation))")
                 .font(.caption)
