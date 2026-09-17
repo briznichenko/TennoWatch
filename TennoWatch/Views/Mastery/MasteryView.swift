@@ -11,6 +11,7 @@ struct MasteryView: View {
     // MARK: - Object Properties
     @State private var viewModel: MasteryViewModel
     @State private var coordinator = MasteryCoordinator()
+    @State private var isCategoriesExpanded: Bool = true
     
     private static let categoryColumns = [GridItem(.flexible()), GridItem(.flexible())]
 
@@ -29,7 +30,7 @@ struct MasteryView: View {
                 categoryList
                 otherSourcesList
             }
-            .listStyle(.plain)
+            .listStyle(.sidebar)
             .background(Color(.systemGroupedBackground))
             .navigationTitle(Strings.Mastery.title)
             .overlay {
@@ -98,7 +99,7 @@ struct MasteryView: View {
     }
 
     private var categoryList: some View {
-        Section {
+        Section(isExpanded: $isCategoriesExpanded) {
             LazyVGrid(columns: Self.categoryColumns, spacing: 12) {
                 ForEach(viewModel.categories) { summary in
                     CardView(

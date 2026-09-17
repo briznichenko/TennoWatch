@@ -123,7 +123,11 @@ struct WorldStateGridView: View {
                 TraderInventoryListView(trader: voidTrader)
             } label: {
                 CardView(icon: "person.fill.questionmark", title: Strings.WorldState.voidTraderHeader) {
-                    LiveCountdownText(date: voidTrader.expiry)
+                    if let activation = voidTrader.activation, let expiry = voidTrader.expiry {
+                        let date = activation > Date.now ? activation : expiry
+                        LiveCountdownText(date: date)
+                    }
+                    
                 }
             }
         }
@@ -149,7 +153,7 @@ struct WorldStateGridView: View {
                 SteelPathDetailView(steelPath: steelPath)
             } label: {
                 CardView(icon: "graduationcap.fill", title: Strings.WorldState.steelPathHeader) {
-                    Text(steelPath.remaining)
+                    LiveCountdownText(date: steelPath.expiry)
                 }
             }
         }

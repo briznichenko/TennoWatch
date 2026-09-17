@@ -14,7 +14,6 @@ final class SettingsViewModel {
     private(set) var gameVersion: String?
     private(set) var catalogGeneratedAt: Date?
     private(set) var isRefreshing = false
-    private(set) var statusText: String = ""
 
     private let persistencyService: PersistencyService
     private let catalogRepository: CatalogRepository
@@ -38,7 +37,7 @@ final class SettingsViewModel {
     func loadCatalogInfo() async {
         do {
             let catalogs = try await persistencyService.fetchModel(by: MasteryCatalogDataModel.self)
-            gameVersion = catalogs.first?.gameVersion
+            gameVersion = "\(catalogs.first?.gameVersion.hash ?? 0)"
             catalogGeneratedAt = catalogs.first?.generatedAt
         } catch {
             errorManager.append(error)

@@ -83,12 +83,6 @@ struct SettingsView: View {
                         }
                     }
                     .disabled(viewModel.isRefreshing)
-
-                    if !viewModel.statusText.isEmpty {
-                        Text(viewModel.statusText)
-                            .font(.caption)
-                            .foregroundStyle(Color.labelSecondary)
-                    }
                 } header: {
                     SectionHeaderLabel(Strings.Settings.catalogHeader)
                 }

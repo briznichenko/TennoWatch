@@ -10,13 +10,14 @@ import SwiftUI
 struct OpeningsListView: View {
     // MARK: - Object Properties
     let viewModel: OpeningsViewModel
+    @State private var isPermanentSectionExpanded: Bool = false
 
     // MARK: - Body
     var body: some View {
         List {
             timeSensitiveSection
             permanentSection
-        }
+        }.listStyle(.sidebar)
     }
 
     // MARK: - Subviews
@@ -38,7 +39,7 @@ struct OpeningsListView: View {
 
     @ViewBuilder
     private var permanentSection: some View {
-        Section {
+        Section(isExpanded: $isPermanentSectionExpanded) {
             if viewModel.permanentItemCategories.isEmpty && viewModel.permanentSourceCategories.isEmpty {
                 Text(Strings.Openings.emptyPermanent)
                     .foregroundStyle(Color.labelSecondary)

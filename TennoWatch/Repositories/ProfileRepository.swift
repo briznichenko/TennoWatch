@@ -30,21 +30,33 @@ final class PersistentProfileRepository: ProfileRepository {
 
     private let profileService: ServiceProtocol
     private let persistencyService: PersistencyService
+    private var accountIDStore: AccountIDStoring
 
     // MARK: - Init
-    init(profileService: ServiceProtocol = APIManager(), persistencyService: PersistencyService) {
+    init(
+        profileService: ServiceProtocol = APIManager(),
+        persistencyService: PersistencyService,
+        accountIDStore: AccountIDStoring = UserDefaultsAccountIDStore()
+    ) {
         self.profileService = profileService
         self.persistencyService = persistencyService
+        self.accountIDStore = accountIDStore
     }
 
     // MARK: - Functions
     func getProfile(withPlayerId playerId: String?, forceRefresh: Bool) async throws -> Profile {
-        let storedProfile = try await persistencyService.fetchModel(by: ProfileDataModel.self).first
+        let storedProfiles = try await persistencyService.fetchModel(by: ProfileDataModel.self)
+        let targetAccountID = playerId ?? accountIDStore.currentAccountID
+        // With no requested account, fall back to whatever's on disk. Once a target is known,
+        // a stored profile for a *different* account must never stand in for it (that returned
+        // the wrong Tenno's data when a second account's profile was already cached).
+        let storedProfile = targetAccountID.map { id in storedProfiles.first { $0.accountID.oid == id } } ?? storedProfiles.first
+
         if !forceRefresh, let storedProfile, Calendar.current.isDateInToday(storedProfile.lastUpdated) && syncPolicy == .daily {
             return storedProfile
         }
 
-        guard let playerId = playerId ?? storedProfile?.accountID.oid else { throw ProfileError.noPlayerId }
+        guard let playerId = targetAccountID ?? storedProfile?.accountID.oid else { throw ProfileError.noPlayerId }
         let fetchedProfile: ProfileModel = try await profileService.fetch(.profile(playerId: playerId))
         if let result = fetchedProfile.results.first {
             let profile: Profile = .init(
@@ -57,6 +69,7 @@ final class PersistentProfileRepository: ProfileRepository {
                 accountStats: .init(stats: fetchedProfile.stats),
                 lastUpdated: Date())
             try await persistencyService.saveValue(profile)
+            accountIDStore.currentAccountID = profile.accountID.oid
             return profile
         } else {
             throw ProfileError.noPlayerId

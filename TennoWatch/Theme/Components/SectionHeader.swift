@@ -16,8 +16,12 @@ struct SectionHeaderLabel: View {
 
     var body: some View {
         Text(title)
-            .font(.system(size: 11))
+            .font(.title2)
             .tracking(0.44)
             .foregroundStyle(Color.labelSecondary)
     }
+}
+
+#Preview {
+    SectionHeaderLabel("Test")
 }
