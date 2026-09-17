@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-struct WorldStateCardView<Summary: View>: View {
+struct CardView<Summary: View>: View {
     // MARK: - Object Properties
     let icon: String
     let title: String
@@ -33,10 +33,10 @@ struct WorldStateCardView<Summary: View>: View {
 
 #Preview {
     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-        WorldStateCardView(icon: "envelope.fill", title: "Alerts") {
+        CardView(icon: "envelope.fill", title: "Alerts") {
             Text("3")
         }
-        WorldStateCardView(icon: "person.fill.questionmark", title: "Void trader") {
+        CardView(icon: "person.fill.questionmark", title: "Void trader") {
             LiveCountdownText(date: .now.addingTimeInterval(3600))
         }
     }

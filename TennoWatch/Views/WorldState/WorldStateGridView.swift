@@ -43,7 +43,7 @@ struct WorldStateGridView: View {
             NavigationLink {
                 CycleListView(cycles: viewModel.cycles)
             } label: {
-                WorldStateCardView(icon: "clock.arrow.2.circlepath", title: Strings.WorldState.cyclesHeader) {
+                CardView(icon: "clock.arrow.2.circlepath", title: Strings.WorldState.cyclesHeader) {
                     Text("\(viewModel.cycles.count)")
                 }
             }
@@ -56,7 +56,7 @@ struct WorldStateGridView: View {
             NavigationLink {
                 InvasionListView(groups: viewModel.invasionsByPlanet)
             } label: {
-                WorldStateCardView(icon: "flame.fill", title: Strings.WorldState.invasionsHeader) {
+                CardView(icon: "flame.fill", title: Strings.WorldState.invasionsHeader) {
                     Text("\(viewModel.invasions.count)")
                 }
             }
@@ -69,7 +69,7 @@ struct WorldStateGridView: View {
             NavigationLink {
                 FissureListView(groups: viewModel.fissuresByTier)
             } label: {
-                WorldStateCardView(icon: "tornado", title: Strings.WorldState.fissuresHeader) {
+                CardView(icon: "tornado", title: Strings.WorldState.fissuresHeader) {
                     Text("\(viewModel.fissures.count)")
                 }
             }
@@ -82,7 +82,7 @@ struct WorldStateGridView: View {
             NavigationLink {
                 SortieDetailView(title: Strings.WorldState.sortieHeader, sortie: sortie)
             } label: {
-                WorldStateCardView(icon: "star.circle.fill", title: Strings.WorldState.sortieHeader) {
+                CardView(icon: "star.circle.fill", title: Strings.WorldState.sortieHeader) {
                     Text(sortie.boss)
                 }
             }
@@ -95,7 +95,7 @@ struct WorldStateGridView: View {
             NavigationLink {
                 SortieDetailView(title: Strings.WorldState.archonHuntHeader, sortie: archonHunt)
             } label: {
-                WorldStateCardView(icon: "shield.righthalf.filled", title: Strings.WorldState.archonHuntHeader) {
+                CardView(icon: "shield.righthalf.filled", title: Strings.WorldState.archonHuntHeader) {
                     Text(archonHunt.boss)
                 }
             }
@@ -108,7 +108,7 @@ struct WorldStateGridView: View {
             NavigationLink {
                 NightwaveListView(nightwave: nightwave)
             } label: {
-                WorldStateCardView(icon: "dot.radiowaves.left.and.right", title: Strings.WorldState.nightwaveHeader) {
+                CardView(icon: "dot.radiowaves.left.and.right", title: Strings.WorldState.nightwaveHeader) {
                     Text(Strings.WorldState.nightwaveChallengesCount(nightwave.activeChallenges.count))
                 }
             }
@@ -121,7 +121,7 @@ struct WorldStateGridView: View {
             NavigationLink {
                 TraderInventoryListView(trader: voidTrader)
             } label: {
-                WorldStateCardView(icon: "person.fill.questionmark", title: Strings.WorldState.voidTraderHeader) {
+                CardView(icon: "person.fill.questionmark", title: Strings.WorldState.voidTraderHeader) {
                     LiveCountdownText(date: voidTrader.expiry)
                 }
             }
@@ -134,7 +134,7 @@ struct WorldStateGridView: View {
             NavigationLink {
                 TraderInventoryListView(trader: vaultTrader)
             } label: {
-                WorldStateCardView(icon: "lock.fill", title: Strings.WorldState.vaultTraderHeader) {
+                CardView(icon: "lock.fill", title: Strings.WorldState.vaultTraderHeader) {
                     LiveCountdownText(date: vaultTrader.expiry)
                 }
             }
@@ -147,7 +147,7 @@ struct WorldStateGridView: View {
             NavigationLink {
                 SteelPathDetailView(steelPath: steelPath)
             } label: {
-                WorldStateCardView(icon: "graduationcap.fill", title: Strings.WorldState.steelPathHeader) {
+                CardView(icon: "graduationcap.fill", title: Strings.WorldState.steelPathHeader) {
                     Text(steelPath.remaining)
                 }
             }
@@ -160,7 +160,7 @@ struct WorldStateGridView: View {
             NavigationLink {
                 AlertListView(alerts: viewModel.alerts)
             } label: {
-                WorldStateCardView(icon: "bell.fill", title: Strings.WorldState.alertsHeader) {
+                CardView(icon: "bell.fill", title: Strings.WorldState.alertsHeader) {
                     Text("\(viewModel.alerts.count)")
                 }
             }
@@ -173,7 +173,7 @@ struct WorldStateGridView: View {
             NavigationLink {
                 ArchimedeaListView(archimedeas: viewModel.archimedeas)
             } label: {
-                WorldStateCardView(icon: "atom", title: Strings.WorldState.archimedeaHeader) {
+                CardView(icon: "atom", title: Strings.WorldState.archimedeaHeader) {
                     Text("\(viewModel.archimedeas.count)")
                 }
             }
@@ -186,7 +186,7 @@ struct WorldStateGridView: View {
             NavigationLink {
                 CalendarDetailView(calendar: calendar)
             } label: {
-                WorldStateCardView(icon: "calendar", title: Strings.WorldState.calendarHeader) {
+                CardView(icon: "calendar", title: Strings.WorldState.calendarHeader) {
                     Text(calendar.season)
                 }
             }

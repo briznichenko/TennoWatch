@@ -217,6 +217,18 @@
         }
       }
     },
+    "mastery_breakdown_header_key" : {
+      "comment" : "Section header above the mastery point breakdown by category, mirroring the in-game profile panel.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mastery Breakdown"
+          }
+        }
+      }
+    },
     "mastery_categories_header_key" : {
       "comment" : "Section header above the list of mastery categories.",
       "extractionState" : "manual",

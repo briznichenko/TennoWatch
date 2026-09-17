@@ -144,6 +144,8 @@ struct Strings {
                 rank, maxRank, pointsRemaining
             )
         }
+
+        static var breakdownHeader: String { Strings.string("mastery_breakdown_header_key", "Mastery Breakdown") }
     }
 
     struct Openings {

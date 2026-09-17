@@ -10,6 +10,10 @@ import SwiftData
 
 enum SyncPolicy { case daily }
 
+enum MasterySourceType: String {
+    case nodes, intrinsics, junctions
+}
+
 protocol CatalogRepository {
     var syncPolicy: SyncPolicy { get }
 
@@ -22,13 +26,14 @@ protocol CatalogRepository {
     func syncMasterySummary(with profileModel: Profile) async throws -> MasteryCatalogSummary
 
     func getCatalogContainer(for category: CatalogItemModel.Category) async throws -> CatalogContainer
-    func getMasterySources(named name: String) async throws -> MasteryCategoryModel
+    func getMasterySources(named source: MasterySourceType?) async throws -> MasteryCategoryModel
 }
 
 final class PersistentCatalogRepository: CatalogRepository {
     enum CatalogError: Error {
         case wrongFilename
         case noCatalogAvailable
+        case wrongCategory
     }
 
     // MARK: - Object Properties
@@ -90,10 +95,12 @@ final class PersistentCatalogRepository: CatalogRepository {
         }
     }
 
-    func getMasterySources(named name: String) async throws -> MasteryCategoryModel {
-        try await persistencyService.perform { context in
+    func getMasterySources(named source: MasterySourceType?) async throws -> MasteryCategoryModel {
+        guard let source else { throw CatalogError.wrongCategory }
+        let matchString = source.rawValue
+        return try await persistencyService.perform { context in
             let descriptor = FetchDescriptor<MasteryCategoryDataModel>(
-                predicate: #Predicate { $0.name == name }
+                predicate: #Predicate { $0.name == matchString }
             )
             guard let category = try context.fetch(descriptor).first else {
                 throw CatalogError.noCatalogAvailable

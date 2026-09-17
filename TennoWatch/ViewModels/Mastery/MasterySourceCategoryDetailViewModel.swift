@@ -46,7 +46,7 @@ final class MasterySourceCategoryDetailViewModel {
         isLoading = true
         defer { isLoading = false }
         do {
-            category = try await catalogRepository.getMasterySources(named: categoryName)
+            category = try await catalogRepository.getMasterySources(named: .init(rawValue: categoryName))
         } catch {
             errorManager.append(error)
         }

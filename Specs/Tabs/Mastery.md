@@ -39,6 +39,9 @@ constructed with `profileRepository`, `catalogRepository`, `errorManager`.
   categories. `rankProgress` runs the game's actual MR curve
   (`2500 * rank * (rank + 1)`, hardcoded — this is Warframe's real formula,
   not a guess) via a static helper, not delegated to a model or service.
+  That quadratic curve only holds through rank 30 (the cap, 2,325,000 XP);
+  every "Legendary" rank past 30 costs a flat 162,000 XP instead, which the
+  helper branches on separately.
   Exposes `makeCategoryDetailViewModel(for:)` / `makeSourceDetailViewModel(for:)`
   factories for the two detail-screen types.
 - **`MasteryCategoryDetailViewModel`** — loads the *full* `CatalogContainer`

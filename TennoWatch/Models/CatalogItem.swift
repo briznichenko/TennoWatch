@@ -104,6 +104,51 @@ struct CatalogItemModel: Codable, Hashable, Identifiable, Equatable {
                 "railjack"
             }
         }
+
+        var iconName: String {
+            switch self {
+            case .suits:
+                "person.fill"
+            case .spaceSuits:
+                "airplane"
+            case .mechSuits:
+                "gearshape.fill"
+            case .sentinels:
+                "circle.hexagongrid.fill"
+            case .kubrowPets:
+                "pawprint.fill"
+            case .specialItems:
+                "sparkles"
+            case .longGuns:
+                "scope"
+            case .pistols:
+                "target"
+            case .melee:
+                "figure.fencing"
+            case .spaceGuns:
+                "bolt.fill"
+            case .spaceMelee:
+                "wind"
+            case .sentinelWeapons:
+                "bolt.circle.fill"
+            case .operatorAmps:
+                "wand.and.stars"
+            case .zaw:
+                "hammer.fill"
+            case .kitgun:
+                "wrench.and.screwdriver.fill"
+            case .amp:
+                "wand.and.rays"
+            case .moa:
+                "figure.walk"
+            case .hound:
+                "pawprint.circle.fill"
+            case .kdrive:
+                "gauge.high"
+            case .railjack:
+                "airplane.departure"
+            }
+        }
     }
     
     // MARK: - Computed Properties
