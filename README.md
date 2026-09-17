@@ -42,7 +42,7 @@ Deeper specs for each tab and layer live in [Specs/](Specs/).
 
 The Profile tab currently points at a hardcoded `playerId` rather than a search/lookup flow — see [Roadmap](#roadmap--work-in-progress).
 
-The Mastery catalog itself is generated offline: [Scripts/itemMapper.py](Scripts/itemMapper.py) maps game item paths to display names into [Generated/ExternalData.swift](Generated/ExternalData.swift), which is checked into the repo. You only need to re-run it after a game update adds new items.
+The Mastery catalog itself is generated offline: [Scripts/generate_catalog](Scripts/generate_catalog) fetches Digital Extremes' live `PublicExport` feed and rebuilds [TennoWatch/Resources/masterycatalog.json](TennoWatch/Resources/masterycatalog.json) from scratch (`cd Scripts/generate_catalog && npm install && npm run generate`), and [Scripts/itemMapper.py](Scripts/itemMapper.py) separately maps game item paths to display names into [Generated/ExternalData.swift](Generated/ExternalData.swift). Both are checked into the repo; you only need to re-run them after a game update adds new items.
 
 ## Architecture
 

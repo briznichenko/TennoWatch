@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "gameVersion": "ExportWeapons_en.json!00_zwapa0tHPowLsyegwAU-zw,ExportWarframes_en.json!00_gFCc6M4iI-LF11CBMzq4FQ,ExportSentinels_en.json!00_8iGr2T9MTskXt5zeKEVNmQ",
-  "generatedAt": "2026-08-26T21:59:52.618Z",
-  "totalMasteryMax": 3188426,
-  "obtainableMasteryMax": 3176426,
+  "gameVersion": "ExportWarframes_en.json!00_gFCc6M4iI-LF11CBMzq4FQ,ExportWeapons_en.json!00_zwapa0tHPowLsyegwAU-zw,ExportSentinels_en.json!00_8iGr2T9MTskXt5zeKEVNmQ",
+  "generatedAt": "2026-09-17T12:31:42Z",
+  "totalMasteryMax": 3185426,
+  "obtainableMasteryMax": 3170426,
   "items": [
     {
       "uniqueName": "/Lotus/Powersuits/Alchemist/Alchemist",
@@ -2115,7 +2115,7 @@
       "xpPerRankSq": 1000,
       "icon": "/Lotus/Interface/Icons/Store/Hoverboards/Theme/HoverboardCorpusADeck.png!00_zH02wOgQ6+wlvdGVpiqbkQ",
       "obtainable": true,
-      "requiresGilding": true
+      "requiresGilding": false
     },
     {
       "uniqueName": "/Lotus/Types/Vehicles/Hoverboard/HoverboardParts/PartComponents/HoverboardCorpusB/HoverboardCorpusBDeck",
@@ -2126,7 +2126,7 @@
       "xpPerRankSq": 1000,
       "icon": "/Lotus/Interface/Icons/Store/Hoverboards/Theme/HoverboardCorpusBDeck.png!00_7Z8NvoKWu5sEYnWuen0QWQ",
       "obtainable": true,
-      "requiresGilding": true
+      "requiresGilding": false
     },
     {
       "uniqueName": "/Lotus/Types/Vehicles/Hoverboard/HoverboardParts/PartComponents/HoverboardCorpusC/HoverboardCorpusCDeck",
@@ -2137,7 +2137,7 @@
       "xpPerRankSq": 1000,
       "icon": "/Lotus/Interface/Icons/StoreIcons/Hoverboard/Parts/HoverboardCorpusCDeck.png!00_xJEqDHZNSjUGf2G3eXlgHg",
       "obtainable": true,
-      "requiresGilding": true
+      "requiresGilding": false
     },
     {
       "uniqueName": "/Lotus/Types/Vehicles/Hoverboard/HoverboardParts/PartComponents/HoverboardInfestedB/HoverboardInfestedBDeck",
@@ -2148,7 +2148,7 @@
       "xpPerRankSq": 1000,
       "icon": "/Lotus/Interface/Icons/StoreIcons/Hoverboard/Parts/HoverboardInfestedBDeck.png!00_oXDlG0bOzZoTLAmCJgCKEg",
       "obtainable": true,
-      "requiresGilding": true
+      "requiresGilding": false
     },
     {
       "uniqueName": "/Lotus/Types/Vehicles/Hoverboard/HoverboardParts/PartComponents/HoverboardSolarisA/HoverboardSolarisADeck",
@@ -2159,7 +2159,7 @@
       "xpPerRankSq": 1000,
       "icon": "/Lotus/Interface/Icons/Store/Hoverboards/Theme/HoverboardSolarisADeck.png!00_dzGDsEJxxJQcnOLpv9LXbA",
       "obtainable": true,
-      "requiresGilding": true
+      "requiresGilding": false
     },
     {
       "uniqueName": "/Lotus/Weapons/Archon/Melee/DualDaggers/ArchonDualDaggersPlayerWep",
@@ -5693,17 +5693,6 @@
       "requiresGilding": false
     },
     {
-      "uniqueName": "/Lotus/Weapons/Tenno/Grimoire/TnDoppelgangerGrimoire",
-      "name": "Grimoire",
-      "category": "Pistols",
-      "maxRank": 30,
-      "pointsPerRank": 100,
-      "xpPerRankSq": 500,
-      "icon": "/Lotus/Interface/Icons/StoreIcons/Weapons/SecondaryWeapons/Weapons/Grimoire.png!00_i9NOgyYNWmCnMXXnhQixow",
-      "obtainable": true,
-      "requiresGilding": false
-    },
-    {
       "uniqueName": "/Lotus/Weapons/Tenno/Grimoire/TnGrimoire",
       "name": "Grimoire",
       "category": "Pistols",
@@ -8813,7 +8802,7 @@
       "pointsPerRank": 100,
       "xpPerRankSq": 500,
       "icon": "/Lotus/Interface/Icons/StoreIcons/Weapons/SecondaryWeapons/Weapons/Talons.png!00_WRPYXuYIO4QJ5gS6GOm92Q",
-      "obtainable": true,
+      "obtainable": false,
       "requiresGilding": false
     },
     {

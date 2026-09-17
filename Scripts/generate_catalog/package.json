@@ -1,0 +1,14 @@
+{
+  "name": "generate_catalog",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Regenerates TennoWatch/Resources/masterycatalog.json from Digital Extremes' live PublicExport feed.",
+  "scripts": {
+    "generate": "node generate_catalog.mjs"
+  },
+  "dependencies": {
+    "lzma": "^2.3.2",
+    "node-fetch": "^3.3.2"
+  }
+}

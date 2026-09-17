@@ -42,6 +42,9 @@ build_out/
 # macOS
 .DS_Store
 
+# Node (Scripts/generate_catalog)
+node_modules/
+
 # claude
 .claude/agents
 .claude/agent-memory-local/*
