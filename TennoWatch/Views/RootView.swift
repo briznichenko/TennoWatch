@@ -26,7 +26,7 @@ struct RootView: View {
             }
         }
         .task {
-            try? await Task.sleep(for: .milliseconds(1100))
+            try? await dependencies.catalogRepository.prepareCatalog()
             withAnimation(.easeInOut(duration: 0.35)) {
                 isShowingSplash = false
             }
