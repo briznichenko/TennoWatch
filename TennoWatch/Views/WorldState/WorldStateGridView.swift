@@ -29,6 +29,7 @@ struct WorldStateGridView: View {
                 alertsCard
                 archimedeaCard
                 calendarCard
+                flashSalesCard
             }
             .padding(12)
         }
@@ -188,6 +189,19 @@ struct WorldStateGridView: View {
             } label: {
                 CardView(icon: "calendar", title: Strings.WorldState.calendarHeader) {
                     Text(calendar.season)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var flashSalesCard: some View {
+        if !viewModel.flashSales.isEmpty {
+            NavigationLink {
+                FlashSaleListView(flashSales: viewModel.flashSales)
+            } label: {
+                CardView(icon: "tag.fill", title: Strings.WorldState.flashSalesHeader) {
+                    Text("\(viewModel.flashSales.count)")
                 }
             }
         }

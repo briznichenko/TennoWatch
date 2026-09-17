@@ -50,6 +50,7 @@ struct Strings {
         static var steelPathHeader: String { Strings.string("world_state_steel_path_header_key", "Steel path") }
         static var alertsHeader: String { Strings.string("world_state_alerts_header_key", "Alerts") }
         static var archimedeaHeader: String { Strings.string("world_state_archimedea_header_key", "Archimedea") }
+        static var flashSalesHeader: String { Strings.string("world_state_flash_sales_header_key", "Flash sales") }
         static var calendarHeader: String { Strings.string("world_state_calendar_header_key", "Calendar") }
         static var expiresIn: String { Strings.string("world_state_expires_in_key", "Expires in") }
         static var inventoryHeader: String { Strings.string("world_state_inventory_header_key", "Inventory") }
@@ -90,6 +91,10 @@ struct Strings {
 
         static func credits(_ credits: Int) -> String {
             String(format: Strings.string("world_state_credits_format_key", "%lld credits"), credits)
+        }
+
+        static func discount(_ percent: Int) -> String {
+            String(format: Strings.string("world_state_discount_format_key", "%lld%% off"), percent)
         }
 
         static func steelEssence(_ cost: Int) -> String {

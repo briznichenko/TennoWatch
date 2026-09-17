@@ -97,6 +97,15 @@ final class WorldStateViewModel {
         worldState?.archimedeas ?? []
     }
 
+    var flashSales: [FlashSale] {
+        let weekFromNow = Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now
+        let withinWeek = (worldState?.flashSales ?? []).filter { sale in
+            guard let activation = sale.activation, let expiry = sale.expiry else { return false }
+            return activation <= weekFromNow && expiry <= weekFromNow
+        }
+        return Array(withinWeek.suffix(5))
+    }
+
     var vaultTrader: VoidTrader? {
         worldState?.vaultTrader
     }

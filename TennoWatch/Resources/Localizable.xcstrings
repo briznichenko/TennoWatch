@@ -1223,6 +1223,18 @@
         }
       }
     },
+    "world_state_discount_format_key" : {
+      "comment" : "Discount percentage shown on a flash sale row, e.g. '50% off'.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%% off"
+          }
+        }
+      }
+    },
     "world_state_ducats_format_key" : {
       "comment" : "Ducat cost/value shown on a world state card, e.g. '350 ducats'.",
       "extractionState" : "manual",
@@ -1291,6 +1303,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Розломи"
+          }
+        }
+      }
+    },
+    "world_state_flash_sales_header_key" : {
+      "comment" : "Section header for the Flash sales card on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flash sales"
           }
         }
       }
