@@ -9,13 +9,19 @@ import SwiftUI
 
 struct LiveCountdownText: View {
     let date: Date?
-
+    
     var body: some View {
         if let date {
-            Text(date, style: .timer)
-                .font(.caption)
-                .foregroundStyle(Color.labelSecondary)
-                .monospacedDigit()
+            TimelineView(.periodic(from: .now, by: 1)) { context in
+                let duration = max(0, date.timeIntervalSince(context.date))
+                Text(
+                    Duration.seconds(duration),
+                    format: .units(
+                        allowed: [.days, .hours, .minutes, .seconds],
+                        width: .narrow
+                    )
+                )
+            }
         }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  WorldStateListView.swift
+//  WorldStateGridView.swift
 //  TennoWatch
 //
 //  Created by Andrii Bryzhnychenko on 9/15/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct WorldStateListView: View {
+struct WorldStateGridView: View {
     // MARK: - Object Properties
     let viewModel: WorldStateViewModel
 
@@ -56,7 +56,7 @@ struct WorldStateListView: View {
             NavigationLink {
                 InvasionListView(groups: viewModel.invasionsByPlanet)
             } label: {
-                WorldStateCardView(icon: "person.3.fill", title: Strings.WorldState.invasionsHeader) {
+                WorldStateCardView(icon: "flame.fill", title: Strings.WorldState.invasionsHeader) {
                     Text("\(viewModel.invasions.count)")
                 }
             }
@@ -147,7 +147,7 @@ struct WorldStateListView: View {
             NavigationLink {
                 SteelPathDetailView(steelPath: steelPath)
             } label: {
-                WorldStateCardView(icon: "flame.fill", title: Strings.WorldState.steelPathHeader) {
+                WorldStateCardView(icon: "graduationcap.fill", title: Strings.WorldState.steelPathHeader) {
                     Text(steelPath.remaining)
                 }
             }

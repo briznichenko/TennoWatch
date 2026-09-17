@@ -14,6 +14,15 @@ struct SortieRowView: View {
         VStack(alignment: .leading, spacing: 6) {
             Text(sortie.boss)
                 .font(.headline)
+            if let reward = sortie.archonHuntReward {
+                HStack(spacing: 4) {
+                    Image(systemName: "suit.diamond.fill")
+                        .foregroundStyle(reward.tint)
+                    Text(reward.displayName)
+                        .font(.caption)
+                        .foregroundStyle(Color.labelSecondary)
+                }
+            }
             if !sortie.variants.isEmpty {
                 ForEach(sortie.variants, id: \.nodeKey) { variant in
                     SortieVariantRowView(variant: variant)
@@ -29,6 +38,16 @@ struct SortieRowView: View {
                     }
                 }
             }
+        }
+    }
+}
+
+private extension ArchonHuntReward {
+    var tint: Color {
+        switch self {
+        case .crimson: .archonCrimson
+        case .amber: .archonAmber
+        case .azure: .archonAzure
         }
     }
 }
@@ -52,50 +71,5 @@ private struct SortieVariantRowView: View {
                 .font(.caption2)
                 .foregroundStyle(Color.labelSecondary)
         }
-    }
-}
-
-#Preview {
-    List {
-        SortieRowView(
-            sortie: .init(
-                activation: .now,
-                expiry: .now.addingTimeInterval(3600),
-                id: "sortie",
-                boss: "Sortie Boss",
-                faction: "Grineer",
-                factionKey: "grineer",
-                missions: [
-                    .init(
-                        advancedSpawners: [],
-                        archwingRequired: false,
-                        consumeRequiredItems: nil,
-                        description: nil,
-                        enemySpec: nil,
-                        exclusiveWeapon: nil,
-                        faction: "Grineer",
-                        factionKey: "grineer",
-                        goalTag: nil,
-                        isSharkwing: false,
-                        leadersAlwaysAllowed: nil,
-                        levelAuras: [],
-                        levelOverride: nil,
-                        maxEnemyLevel: nil,
-                        maxWaveNum: nil,
-                        minEnemyLevel: nil,
-                        nightmare: false,
-                        node: "Node (Planet)",
-                        nodeKey: "node",
-                        requiredItems: [],
-                        reward: nil,
-                        target: nil,
-                        type: "Exterminate",
-                        typeKey: "exterminate"
-                    )
-                ],
-                rewardPool: "",
-                variants: []
-            )
-        )
     }
 }

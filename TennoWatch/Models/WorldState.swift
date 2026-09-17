@@ -430,6 +430,35 @@ struct Sortie: NetworkModel {
     let variants: [SortieVariant]
 }
 
+/// Archon Hunt has no reward field in the API response, but its guaranteed
+/// (non-Tauforged) drop is implied by which Archon is this week's boss.
+enum ArchonHuntReward: String, CaseIterable {
+    case crimson
+    case amber
+    case azure
+
+    init?(archonBoss boss: String) {
+        switch boss {
+        case "Archon Amar": self = .crimson
+        case "Archon Nira": self = .amber
+        case "Archon Boreal": self = .azure
+        default: return nil
+        }
+    }
+
+    var displayName: String {
+        switch self {
+        case .crimson: Strings.WorldState.archonHuntRewardCrimson
+        case .amber: Strings.WorldState.archonHuntRewardAmber
+        case .azure: Strings.WorldState.archonHuntRewardAzure
+        }
+    }
+}
+
+extension Sortie {
+    var archonHuntReward: ArchonHuntReward? { ArchonHuntReward(archonBoss: boss) }
+}
+
 struct News: NetworkModel {
     let activation: Date?
     let expiry: Date?

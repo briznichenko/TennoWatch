@@ -499,6 +499,102 @@
         }
       }
     },
+    "profile_id_help_cancel_button_key" : {
+      "comment" : "Cancel button on the player ID help alert.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "profile_id_help_credit_key" : {
+      "comment" : "Footer text asking users to be respectful of Digital Extremes' profile endpoint and not sync repeatedly.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This pulls directly from Digital Extremes' own profile endpoint. Please be respectful of it: only sync your own profile, and avoid syncing repeatedly in a short time."
+          }
+        }
+      }
+    },
+    "profile_id_help_dont_show_again_key" : {
+      "comment" : "Checkbox label on the player ID help alert to suppress it from showing automatically again.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Don't show again"
+          }
+        }
+      }
+    },
+    "profile_id_help_intro_key" : {
+      "comment" : "Footer text under the player ID field explaining how to find your player ID.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To find your player ID, sign in at warframe.com, open the link below, and copy the value after \"user_id\"."
+          }
+        }
+      }
+    },
+    "profile_id_help_link_title_key" : {
+      "comment" : "Title of the link to Digital Extremes' user-data endpoint shown under the player ID field.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "warframe.com/api/user-data"
+          }
+        }
+      }
+    },
+    "profile_id_help_ok_button_key" : {
+      "comment" : "OK button on the player ID help alert.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
+    "profile_id_help_title_key" : {
+      "comment" : "Title of the player ID help alert.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finding Your Player ID"
+          }
+        }
+      }
+    },
+    "profile_id_help_trigger_key" : {
+      "comment" : "Button that reopens the player ID help alert on demand.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How to find your ID"
+          }
+        }
+      }
+    },
     "profile_id_key" : {
       "comment" : "Label for the player ID field on the profile screen.",
       "extractionState" : "manual",
@@ -531,6 +627,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Введіть ID гравця"
+          }
+        }
+      }
+    },
+    "profile_sync_button_key" : {
+      "comment" : "Button that fetches the profile for the currently entered player ID.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync Profile"
           }
         }
       }
@@ -865,6 +973,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Полювання на архонта"
+          }
+        }
+      }
+    },
+    "world_state_archon_hunt_reward_amber_key" : {
+      "comment" : "Archon Shard reward name for the archon hunt on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amber Archon Shard"
+          }
+        }
+      }
+    },
+    "world_state_archon_hunt_reward_azure_key" : {
+      "comment" : "Archon Shard reward name for the archon hunt on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Azure Archon Shard"
+          }
+        }
+      }
+    },
+    "world_state_archon_hunt_reward_crimson_key" : {
+      "comment" : "Archon Shard reward name for the archon hunt on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crimson Archon Shard"
           }
         }
       }
@@ -1253,6 +1397,30 @@
         }
       }
     },
+    "world_state_steel_essence_format_key" : {
+      "comment" : "Steel Essence cost shown on a world state card, e.g. '100 Steel Essence'.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Steel Essence"
+          }
+        }
+      }
+    },
+    "world_state_steel_path_header_key" : {
+      "comment" : "Section header for the Steel Path card on the world state screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teshin"
+          }
+        }
+      }
+    },
     "world_state_title_key" : {
       "comment" : "Navigation title for the world state screen.",
       "extractionState" : "manual",
@@ -1285,30 +1453,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Орб Валліс"
-          }
-        }
-      }
-    },
-    "world_state_steel_essence_format_key" : {
-      "comment" : "Steel Essence cost shown on a world state card, e.g. '100 Steel Essence'.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld Steel Essence"
-          }
-        }
-      }
-    },
-    "world_state_steel_path_header_key" : {
-      "comment" : "Section header for the Steel Path card on the world state screen.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Steel path"
           }
         }
       }
