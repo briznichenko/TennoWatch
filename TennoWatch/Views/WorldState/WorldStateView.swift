@@ -41,6 +41,9 @@ struct WorldStateView: View {
     WorldStateView(
         viewModel: .init(
             worldStateRepository: DefaultWorldStateRepository(),
+            voidTraderNotificationScheduler: DefaultVoidTraderNotificationScheduler(
+                notificationService: DefaultNotificationService()
+            ),
             errorManager: DefaultErrorManager()
         )
     )

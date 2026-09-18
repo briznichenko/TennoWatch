@@ -11,6 +11,7 @@ struct SettingsView: View {
     // MARK: - Object Properties
     @AppStorage("themePreference") private var themePreference: ThemePreference = .system
     @AppStorage(AppLanguage.storageKey) private var languagePreference: AppLanguage = .system
+    @AppStorage(DefaultVoidTraderNotificationScheduler.preferenceKey) private var isVoidTraderNotificationsEnabled = false
     @State private var viewModel: SettingsViewModel
 
     let displayName: String
@@ -43,6 +44,12 @@ struct SettingsView: View {
                     }
                 } header: {
                     SectionHeaderLabel(Strings.Settings.languageHeader)
+                }
+
+                Section {
+                    Toggle(Strings.Settings.voidTraderNotificationsLabel, isOn: $isVoidTraderNotificationsEnabled)
+                } header: {
+                    SectionHeaderLabel(Strings.Settings.notificationsHeader)
                 }
 
                 Section {
@@ -92,6 +99,9 @@ struct SettingsView: View {
             .handleErrorAlert(with: viewModel.errorManager)
             .task {
                 await viewModel.loadCatalogInfo()
+            }
+            .onChange(of: isVoidTraderNotificationsEnabled) { _, isEnabled in
+                Task { await viewModel.setVoidTraderNotificationsEnabled(isEnabled) }
             }
         }
     }

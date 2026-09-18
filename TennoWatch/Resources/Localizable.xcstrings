@@ -1540,6 +1540,54 @@
           }
         }
       }
+    },
+    "notifications_void_trader_body_format_key" : {
+      "comment" : "Body of the void trader arrival notification. First %@ is the trader name, second %@ is the location.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ is now at %@."
+          }
+        }
+      }
+    },
+    "notifications_void_trader_title_key" : {
+      "comment" : "Title of the local notification sent when the void trader arrives.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Void Trader has arrived"
+          }
+        }
+      }
+    },
+    "settings_notifications_header_key" : {
+      "comment" : "Header for the notifications settings section.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications"
+          }
+        }
+      }
+    },
+    "settings_void_trader_notifications_label_key" : {
+      "comment" : "Label for the toggle that enables the void trader arrival notification.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Void Trader arrival"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

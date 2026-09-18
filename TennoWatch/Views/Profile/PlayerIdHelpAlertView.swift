@@ -35,7 +35,7 @@ struct PlayerIdHelpAlertView: View {
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(Strings.Profile.idHelpIntro)
-                    Link(Strings.Profile.idHelpLinkTitle, destination: URL(string: "https://www.warframe.com/api/user-data")!)
+                    Link(Strings.Profile.idHelpLinkTitle, destination: URL("https://www.warframe.com/api/user-data"))
                     Text(Strings.Profile.idHelpCredit)
                 }
                 .font(.footnote)

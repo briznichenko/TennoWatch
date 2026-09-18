@@ -32,6 +32,7 @@ struct FissureTierGroup: Identifiable {
 final class WorldStateViewModel {
     // MARK: - Object Properties
     private let worldStateRepository: WorldStateRepository
+    private let voidTraderNotificationScheduler: VoidTraderNotificationScheduler
     let errorManager: ErrorManager
 
     private static let fissureTierOrder = ["Lith", "Meso", "Neo", "Axi", "Requiem", "Omnia"]
@@ -135,8 +136,13 @@ final class WorldStateViewModel {
     }
 
     // MARK: - Init
-    init(worldStateRepository: WorldStateRepository, errorManager: ErrorManager) {
+    init(
+        worldStateRepository: WorldStateRepository,
+        voidTraderNotificationScheduler: VoidTraderNotificationScheduler,
+        errorManager: ErrorManager
+    ) {
         self.worldStateRepository = worldStateRepository
+        self.voidTraderNotificationScheduler = voidTraderNotificationScheduler
         self.errorManager = errorManager
     }
 
@@ -149,6 +155,7 @@ final class WorldStateViewModel {
 
         do {
             worldState = try await worldStateRepository.getWorldState()
+            try await voidTraderNotificationScheduler.syncArrivalNotification(for: worldState?.voidTrader)
         } catch {
             errorManager.append(error)
         }
