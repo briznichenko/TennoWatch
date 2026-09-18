@@ -46,6 +46,8 @@ struct Strings {
         static var archonHuntRewardAzure: String { Strings.string("world_state_archon_hunt_reward_azure_key", "Azure Archon Shard") }
         static var nightwaveHeader: String { Strings.string("world_state_nightwave_header_key", "Nightwave") }
         static var voidTraderHeader: String { Strings.string("world_state_void_trader_header_key", "Void trader") }
+        static var voidTraderArrival: String { Strings.string("world_state_void_trader_arrival_key", "Arrival:") }
+        static var voidTraderDeparture: String { Strings.string("world_state_void_trader_departure_key", "Departure:") }
         static var vaultTraderHeader: String { Strings.string("world_state_vault_trader_header_key", "Prime vault") }
         static var steelPathHeader: String { Strings.string("world_state_steel_path_header_key", "Steel path") }
         static var alertsHeader: String { Strings.string("world_state_alerts_header_key", "Alerts") }
@@ -116,6 +118,16 @@ struct Strings {
         static var refreshCatalog: String { Strings.string("settings_refresh_catalog_key", "Refresh catalog") }
         static var catalogHeader: String { Strings.string("settings_catalog_header_key", "Catalog") }
         static var title: String { Strings.string("settings_title_key", "Settings") }
+        static var notificationsHeader: String { Strings.string("settings_notifications_header_key", "Notifications") }
+        static var voidTraderNotificationsLabel: String { Strings.string("settings_void_trader_notifications_label_key", "Void Trader arrival") }
+    }
+
+    struct Notifications {
+        private init() {}
+        static var voidTraderTitle: String { Strings.string("notifications_void_trader_title_key", "Void Trader has arrived") }
+        static func voidTraderBody(_ character: String, location: String) -> String {
+            String(format: Strings.string("notifications_void_trader_body_format_key", "%@ is now at %@."), character, location)
+        }
     }
 
     struct Mastery {

@@ -111,23 +111,35 @@ final class PersistentCatalogRepository: CatalogRepository {
 
     // MARK: - Helper Functions
     private func ensureCatalogSeeded(filename: String = "masterycatalog") async throws {
-        let isSeeded = try await persistencyService.perform { context in
-            try context.fetchCount(FetchDescriptor<MasteryCatalogDataModel>()) > 0
+        let container = try Self.loadContainer(filename: filename)
+        let bundledVersion = container.schemaVersion
+        let isCurrent = try await persistencyService.perform { context in
+            try context.fetch(FetchDescriptor<MasteryCatalogDataModel>())
+                .contains { $0.schemaVersion == bundledVersion }
         }
-        guard !isSeeded else { return }
-        let container = try Self.loadCatalog(filename: filename)
-        try await persistencyService.saveValue(container)
+        guard !isCurrent else { return }
+
+        try await persistencyService.perform { context in
+            try context.delete(model: MasterySourceDataModel.self)
+            try context.delete(model: MasteryCategoryDataModel.self)
+            try context.delete(model: MasteryItemDataModel.self)
+            try context.delete(model: CatalogItemDataModel.self)
+            try context.delete(model: CatalogContainerModel.self)
+            try context.delete(model: MasteryCatalogDataModel.self)
+            try context.save()
+        }
+
+        try await persistencyService.saveValue(MasteryCatalog(container: container))
     }
 
-    private static func loadCatalog(filename: String) throws -> MasteryCatalog {
+    private static func loadContainer(filename: String) throws -> MasteryCatalogContainer {
         guard let url = Bundle.main.url(forResource: filename, withExtension: "json") else {
             throw CatalogError.wrongFilename
         }
         let data = try Data(contentsOf: url)
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
-        let container = try decoder.decode(MasteryCatalogContainer.self, from: data)
-        return .init(container: container)
+        return try decoder.decode(MasteryCatalogContainer.self, from: data)
     }
 
     private static func fetchCatalogModel(in context: ModelContext) throws -> MasteryCatalogDataModel {

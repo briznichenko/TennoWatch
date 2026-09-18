@@ -19,6 +19,7 @@ struct MainView: View {
                 WorldStateView(
                     viewModel: .init(
                         worldStateRepository: dependencies.worldStateRepository,
+                        voidTraderNotificationScheduler: dependencies.voidTraderNotificationScheduler,
                         errorManager: dependencies.errorManager
                     )
                 )

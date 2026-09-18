@@ -55,6 +55,9 @@ struct ProfileView: View {
                             persistencyService: dependencies.persistencyService,
                             catalogRepository: dependencies.catalogRepository,
                             profileRepository: dependencies.profileRepository,
+                            worldStateRepository: dependencies.worldStateRepository,
+                            notificationService: dependencies.notificationService,
+                            voidTraderNotificationScheduler: dependencies.voidTraderNotificationScheduler,
                             errorManager: dependencies.errorManager
                         ),
                         displayName: viewModel.displayName

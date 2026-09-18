@@ -61,7 +61,7 @@ struct DefaultCatalogSyncService: CatalogSyncService {
     ) -> Bool {
         if uniqueName.hasSuffix(steelPathSuffix) {
             let tag = String(uniqueName.dropLast(steelPathSuffix.count))
-            return missions[tag]?.tier != nil
+            return missions[tag]?.tier == 1
         }
         if let mission = missions[uniqueName] {
             return mission.completes > 0

@@ -124,8 +124,11 @@ struct WorldStateGridView: View {
             } label: {
                 CardView(icon: "person.fill.questionmark", title: Strings.WorldState.voidTraderHeader) {
                     if let activation = voidTrader.activation, let expiry = voidTrader.expiry {
-                        let date = activation > Date.now ? activation : expiry
-                        LiveCountdownText(date: date)
+                        let hasArrived = activation > Date.now
+                        VStack(alignment: .leading) {
+                            Text(hasArrived ? Strings.WorldState.voidTraderArrival : Strings.WorldState.voidTraderDeparture)
+                            LiveCountdownText(date: hasArrived ? activation : expiry)
+                        }
                     }
                     
                 }

@@ -120,10 +120,10 @@ final class MasteryViewModel {
     // MARK: - Helper Functions
     private static func rankProgress(forXP xp: Int) -> MasteryRankProgress {
         let legendaryCapRank = 30
-        let legendaryCapXP = 2500 * legendaryCapRank * (legendaryCapRank + 1)
-        let legendaryRankXP = 162_000
+        let legendaryCapXP = 2500 * legendaryCapRank * legendaryCapRank
+        let legendaryRankXP = 147_500
         func cumulativeXP(for rank: Int) -> Int {
-            guard rank > legendaryCapRank else { return 2500 * rank * (rank + 1) }
+            guard rank > legendaryCapRank else { return 2500 * rank * rank }
             return legendaryCapXP + (rank - legendaryCapRank) * legendaryRankXP
         }
         var completedRanks = 0
@@ -131,7 +131,7 @@ final class MasteryViewModel {
             completedRanks += 1
         }
         return MasteryRankProgress(
-            rank: completedRanks + 1,
+            rank: completedRanks,
             currentXP: xp,
             xpForCurrentRank: cumulativeXP(for: completedRanks),
             xpForNextRank: cumulativeXP(for: completedRanks + 1)
@@ -166,13 +166,13 @@ final class MasteryViewModel {
             row("Warframes", points(for: [.suits])),
             row("Primary Weapons", points(for: [.longGuns])),
             row("Secondary Weapons", points(for: [.pistols])),
-            row("Melee Weapons", points(for: [.melee])),
-            row("Kitguns", points(for: [.kitgun, .zaw]))
+            row("Melee Weapons", points(for: [.melee, .zaw])),
+            row("Kitguns", points(for: [.kitgun]))
         ]
 
         let missionsAndIntrinsics = [
-            row("Missions", points(in: nodes.sources) { !$0.name.contains("Steel Path") }),
-            row("Steel Path Missions", points(in: nodes.sources) { $0.name.contains("Steel Path") }),
+            row("Missions", points(in: nodes.sources) { !$0.name.contains("Steel Path") } + points(in: junctions.sources) { !$0.name.contains("Steel Path") }),
+            row("Steel Path Missions", points(in: nodes.sources) { $0.name.contains("Steel Path") } + points(in: junctions.sources) { $0.name.contains("Steel Path") }),
             row("Railjack Intrinsics", points(in: intrinsics.sources) { $0.name.contains("Railjack") }),
             row("Drifter Intrinsics", points(in: intrinsics.sources) { $0.name.contains("Drifter") })
         ]
@@ -180,7 +180,7 @@ final class MasteryViewModel {
         let companions = [
             row("Sentinels", points(for: [.sentinels])),
             row("Sentinel Weapons", points(for: [.sentinelWeapons])),
-            row("Companions", points(for: [.kubrowPets, .moa, .hound]))
+            row("Companions", points(for: [.kubrowPets, .moa, .hound, .specialItems]))
         ]
 
         let archAndModular = [
@@ -193,9 +193,7 @@ final class MasteryViewModel {
         ]
 
         let other = [
-            row("Special Items", points(for: [.specialItems])),
-            row("Railjack Components", points(for: [.railjack])),
-            row("Junctions", points(in: junctions.sources) { _ in true })
+            row("Railjack Components", points(for: [.railjack]))
         ]
 
         return [weapons, missionsAndIntrinsics, companions, archAndModular, other]
