@@ -43,7 +43,12 @@ struct MainView: View {
                     )
                 )
             }
-            Tab(Strings.Main.tabProfile, systemImage: "person") {
+            Tab(Strings.Main.tabProfile, systemImage: "person", role: {
+                    if #available(anyAppleOS 27.0, *) {
+                        .prominent
+                    } else { nil }
+                }()
+            ) {
                 ProfileView(
                     viewModel: .init(
                         profileRepository: dependencies.profileRepository,

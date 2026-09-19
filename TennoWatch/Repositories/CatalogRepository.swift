@@ -120,16 +120,22 @@ final class PersistentCatalogRepository: CatalogRepository {
         guard !isCurrent else { return }
 
         try await persistencyService.perform { context in
-            try context.delete(model: MasterySourceDataModel.self)
-            try context.delete(model: MasteryCategoryDataModel.self)
-            try context.delete(model: MasteryItemDataModel.self)
-            try context.delete(model: CatalogItemDataModel.self)
-            try context.delete(model: CatalogContainerModel.self)
-            try context.delete(model: MasteryCatalogDataModel.self)
+            try Self.deleteAll(MasterySourceDataModel.self, in: context)
+            try Self.deleteAll(MasteryCategoryDataModel.self, in: context)
+            try Self.deleteAll(MasteryItemDataModel.self, in: context)
+            try Self.deleteAll(CatalogItemDataModel.self, in: context)
+            try Self.deleteAll(CatalogContainerModel.self, in: context)
+            try Self.deleteAll(MasteryCatalogDataModel.self, in: context)
             try context.save()
         }
 
         try await persistencyService.saveValue(MasteryCatalog(container: container))
+    }
+
+    private static func deleteAll<T: PersistentModel>(_ type: T.Type, in context: ModelContext) throws {
+        for model in try context.fetch(FetchDescriptor<T>()) {
+            context.delete(model)
+        }
     }
 
     private static func loadContainer(filename: String) throws -> MasteryCatalogContainer {
