@@ -10,8 +10,14 @@ import SwiftData
 
 enum SyncPolicy { case daily }
 
+enum MasterySourceType: String {
+    case nodes, intrinsics, junctions
+}
+
 protocol CatalogRepository {
     var syncPolicy: SyncPolicy { get }
+
+    func prepareCatalog() async throws
 
     func getMasteryCatalog() async throws -> MasteryCatalog
     func syncMasteryCatalog(with profileModel: Profile) async throws -> MasteryCatalog
@@ -20,13 +26,14 @@ protocol CatalogRepository {
     func syncMasterySummary(with profileModel: Profile) async throws -> MasteryCatalogSummary
 
     func getCatalogContainer(for category: CatalogItemModel.Category) async throws -> CatalogContainer
-    func getMasterySources(named name: String) async throws -> MasteryCategoryModel
+    func getMasterySources(named source: MasterySourceType?) async throws -> MasteryCategoryModel
 }
 
 final class PersistentCatalogRepository: CatalogRepository {
     enum CatalogError: Error {
         case wrongFilename
         case noCatalogAvailable
+        case wrongCategory
     }
 
     // MARK: - Object Properties
@@ -42,6 +49,10 @@ final class PersistentCatalogRepository: CatalogRepository {
     }
 
     // MARK: - Functions
+    func prepareCatalog() async throws {
+        try await ensureCatalogSeeded()
+    }
+
     func getMasteryCatalog() async throws -> MasteryCatalog {
         try await ensureCatalogSeeded()
         return try await persistencyService.perform { context in
@@ -84,10 +95,12 @@ final class PersistentCatalogRepository: CatalogRepository {
         }
     }
 
-    func getMasterySources(named name: String) async throws -> MasteryCategoryModel {
-        try await persistencyService.perform { context in
+    func getMasterySources(named source: MasterySourceType?) async throws -> MasteryCategoryModel {
+        guard let source else { throw CatalogError.wrongCategory }
+        let matchString = source.rawValue
+        return try await persistencyService.perform { context in
             let descriptor = FetchDescriptor<MasteryCategoryDataModel>(
-                predicate: #Predicate { $0.name == name }
+                predicate: #Predicate { $0.name == matchString }
             )
             guard let category = try context.fetch(descriptor).first else {
                 throw CatalogError.noCatalogAvailable
@@ -98,23 +111,41 @@ final class PersistentCatalogRepository: CatalogRepository {
 
     // MARK: - Helper Functions
     private func ensureCatalogSeeded(filename: String = "masterycatalog") async throws {
-        let isSeeded = try await persistencyService.perform { context in
-            try context.fetchCount(FetchDescriptor<MasteryCatalogDataModel>()) > 0
+        let container = try Self.loadContainer(filename: filename)
+        let bundledVersion = container.schemaVersion
+        let isCurrent = try await persistencyService.perform { context in
+            try context.fetch(FetchDescriptor<MasteryCatalogDataModel>())
+                .contains { $0.schemaVersion == bundledVersion }
         }
-        guard !isSeeded else { return }
-        let container = try Self.loadCatalog(filename: filename)
-        try await persistencyService.saveValue(container)
+        guard !isCurrent else { return }
+
+        try await persistencyService.perform { context in
+            try Self.deleteAll(MasterySourceDataModel.self, in: context)
+            try Self.deleteAll(MasteryCategoryDataModel.self, in: context)
+            try Self.deleteAll(MasteryItemDataModel.self, in: context)
+            try Self.deleteAll(CatalogItemDataModel.self, in: context)
+            try Self.deleteAll(CatalogContainerModel.self, in: context)
+            try Self.deleteAll(MasteryCatalogDataModel.self, in: context)
+            try context.save()
+        }
+
+        try await persistencyService.saveValue(MasteryCatalog(container: container))
     }
 
-    private static func loadCatalog(filename: String) throws -> MasteryCatalog {
+    private static func deleteAll<T: PersistentModel>(_ type: T.Type, in context: ModelContext) throws {
+        for model in try context.fetch(FetchDescriptor<T>()) {
+            context.delete(model)
+        }
+    }
+
+    private static func loadContainer(filename: String) throws -> MasteryCatalogContainer {
         guard let url = Bundle.main.url(forResource: filename, withExtension: "json") else {
             throw CatalogError.wrongFilename
         }
         let data = try Data(contentsOf: url)
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
-        let container = try decoder.decode(MasteryCatalogContainer.self, from: data)
-        return .init(container: container)
+        return try decoder.decode(MasteryCatalogContainer.self, from: data)
     }
 
     private static func fetchCatalogModel(in context: ModelContext) throws -> MasteryCatalogDataModel {

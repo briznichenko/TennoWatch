@@ -12,6 +12,7 @@ final class MasteryCoordinator {
     enum Destination: Hashable {
         case categoryDetail(CatalogItemModel.Category)
         case sourceDetail(name: String)
+        case breakdown
     }
 
     // MARK: - Object Properties
@@ -24,6 +25,10 @@ final class MasteryCoordinator {
 
     func showSourceDetail(named name: String) {
         path.append(Destination.sourceDetail(name: name))
+    }
+
+    func showBreakdown() {
+        path.append(Destination.breakdown)
     }
 
     func pop() {

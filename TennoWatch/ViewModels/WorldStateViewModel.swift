@@ -32,6 +32,7 @@ struct FissureTierGroup: Identifiable {
 final class WorldStateViewModel {
     // MARK: - Object Properties
     private let worldStateRepository: WorldStateRepository
+    private let voidTraderNotificationScheduler: VoidTraderNotificationScheduler
     let errorManager: ErrorManager
 
     private static let fissureTierOrder = ["Lith", "Meso", "Neo", "Axi", "Requiem", "Omnia"]
@@ -89,6 +90,35 @@ final class WorldStateViewModel {
         (worldState?.fissures ?? []).sorted { ($0.expiry ?? .distantFuture) < ($1.expiry ?? .distantFuture) }
     }
 
+    var alerts: [Alert] {
+        (worldState?.alerts ?? []).sorted { ($0.expiry ?? .distantFuture) < ($1.expiry ?? .distantFuture) }
+    }
+
+    var archimedeas: [Archimedea] {
+        worldState?.archimedeas ?? []
+    }
+
+    var flashSales: [FlashSale] {
+        let weekFromNow = Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now
+        let withinWeek = (worldState?.flashSales ?? []).filter { sale in
+            guard let activation = sale.activation, let expiry = sale.expiry else { return false }
+            return activation <= weekFromNow && expiry <= weekFromNow
+        }
+        return Array(withinWeek.suffix(5))
+    }
+
+    var vaultTrader: VoidTrader? {
+        worldState?.vaultTrader
+    }
+
+    var steelPath: SteelPathOfferings? {
+        worldState?.steelPath
+    }
+
+    var calendar: GameCalendar? {
+        worldState?.calendar
+    }
+
     var invasionsByPlanet: [InvasionPlanetGroup] {
         Dictionary(grouping: invasions) { $0.node.nodeNameAndPlanet.planet ?? $0.node }
             .map { InvasionPlanetGroup(planet: $0.key, invasions: $0.value) }
@@ -106,8 +136,13 @@ final class WorldStateViewModel {
     }
 
     // MARK: - Init
-    init(worldStateRepository: WorldStateRepository, errorManager: ErrorManager) {
+    init(
+        worldStateRepository: WorldStateRepository,
+        voidTraderNotificationScheduler: VoidTraderNotificationScheduler,
+        errorManager: ErrorManager
+    ) {
         self.worldStateRepository = worldStateRepository
+        self.voidTraderNotificationScheduler = voidTraderNotificationScheduler
         self.errorManager = errorManager
     }
 
@@ -120,6 +155,7 @@ final class WorldStateViewModel {
 
         do {
             worldState = try await worldStateRepository.getWorldState()
+            try await voidTraderNotificationScheduler.syncArrivalNotification(for: worldState?.voidTrader)
         } catch {
             errorManager.append(error)
         }

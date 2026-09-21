@@ -25,6 +25,8 @@ final class TimeSensitiveOpeningViewModel: Identifiable {
             Strings.Openings.invasionSource(node: node, faction: faction, percent: Int(completion.rounded()))
         case .voidTrader(let location, let expiry):
             Strings.Openings.voidTraderSource(location: location, timeLeft: expiry?.timeLeftDescription ?? "")
+        case .vaultTrader(let location, let expiry):
+            Strings.Openings.vaultTraderSource(location: location, timeLeft: expiry?.timeLeftDescription ?? "")
         }
     }
 

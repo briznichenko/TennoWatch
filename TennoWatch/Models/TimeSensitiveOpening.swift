@@ -11,6 +11,7 @@ struct TimeSensitiveOpening: Identifiable, Hashable {
     enum Source: Hashable {
         case invasion(node: String, faction: String, completion: Double)
         case voidTrader(location: String, expiry: Date?)
+        case vaultTrader(location: String, expiry: Date?)
     }
 
     // MARK: - Object Properties

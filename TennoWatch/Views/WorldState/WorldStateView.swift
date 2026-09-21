@@ -19,7 +19,7 @@ struct WorldStateView: View {
     // MARK: - Body
     var body: some View {
         NavigationStack {
-            WorldStateListView(viewModel: viewModel)
+            WorldStateGridView(viewModel: viewModel)
                 .navigationTitle(Strings.WorldState.title)
                 .overlay {
                     if viewModel.isLoading && viewModel.worldState == nil {
@@ -41,6 +41,9 @@ struct WorldStateView: View {
     WorldStateView(
         viewModel: .init(
             worldStateRepository: DefaultWorldStateRepository(),
+            voidTraderNotificationScheduler: DefaultVoidTraderNotificationScheduler(
+                notificationService: DefaultNotificationService()
+            ),
             errorManager: DefaultErrorManager()
         )
     )

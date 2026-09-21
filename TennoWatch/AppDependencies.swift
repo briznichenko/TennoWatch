@@ -14,6 +14,8 @@ struct AppDependencies {
     let catalogRepository: CatalogRepository
     let worldStateRepository: WorldStateRepository
     let errorManager: ErrorManager
+    let notificationService: NotificationService
+    let voidTraderNotificationScheduler: VoidTraderNotificationScheduler
 
     // MARK: - Init
     init(modelContainer: ModelContainer) {
@@ -23,5 +25,8 @@ struct AppDependencies {
         self.catalogRepository = PersistentCatalogRepository(persistencyService: persistencyService)
         self.worldStateRepository = DefaultWorldStateRepository()
         self.errorManager = DefaultErrorManager()
+        let notificationService = DefaultNotificationService()
+        self.notificationService = notificationService
+        self.voidTraderNotificationScheduler = DefaultVoidTraderNotificationScheduler(notificationService: notificationService)
     }
 }

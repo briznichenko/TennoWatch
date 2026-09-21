@@ -136,10 +136,34 @@ struct WorldEvent: NetworkModel {
     let victimNode: String?
 }
 
+struct CalendarChallenge: NetworkModel {
+    let title: String
+    let description: String
+}
+
+struct CalendarUpgrade: NetworkModel {
+    let title: String
+    let description: String
+}
+
+struct CalendarEvent: NetworkModel {
+    let `type`: String
+    let challenge: CalendarChallenge?
+    let reward: String?
+    let uniqueName: String?
+    let upgrade: CalendarUpgrade?
+}
+
+struct CalendarDay: NetworkModel {
+    let date: Date
+    let events: [CalendarEvent]
+}
+
 struct GameCalendar: NetworkModel {
     let activation: Date?
     let expiry: Date?
     let id: String?
+    let days: [CalendarDay]
     let requirements: [String]
     let season: String
     let version: Double
@@ -406,6 +430,35 @@ struct Sortie: NetworkModel {
     let variants: [SortieVariant]
 }
 
+/// Archon Hunt has no reward field in the API response, but its guaranteed
+/// (non-Tauforged) drop is implied by which Archon is this week's boss.
+enum ArchonHuntReward: String, CaseIterable {
+    case crimson
+    case amber
+    case azure
+
+    init?(archonBoss boss: String) {
+        switch boss {
+        case "Archon Amar": self = .crimson
+        case "Archon Nira": self = .amber
+        case "Archon Boreal": self = .azure
+        default: return nil
+        }
+    }
+
+    var displayName: String {
+        switch self {
+        case .crimson: Strings.WorldState.archonHuntRewardCrimson
+        case .amber: Strings.WorldState.archonHuntRewardAmber
+        case .azure: Strings.WorldState.archonHuntRewardAzure
+        }
+    }
+}
+
+extension Sortie {
+    var archonHuntReward: ArchonHuntReward? { ArchonHuntReward(archonBoss: boss) }
+}
+
 struct News: NetworkModel {
     let activation: Date?
     let expiry: Date?
@@ -479,10 +532,25 @@ struct Simaris: NetworkModel {
     let target: String
 }
 
+struct SteelPathReward: NetworkModel {
+    let name: String
+    let cost: Double
+}
+
+struct SteelPathIncursion: NetworkModel {
+    let id: String?
+    let activation: Date?
+    let expiry: Date?
+}
+
 struct SteelPathOfferings: NetworkModel {
     let activation: Date
     let expiry: Date
     let remaining: String
+    let currentReward: SteelPathReward?
+    let rotation: [SteelPathReward]
+    let evergreens: [SteelPathReward]
+    let incursions: SteelPathIncursion?
 }
 
 struct SyndicateMission: NetworkModel {
