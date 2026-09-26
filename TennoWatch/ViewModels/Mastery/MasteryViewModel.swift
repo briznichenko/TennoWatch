@@ -24,10 +24,10 @@ struct MasteryRankProgress {
     var fraction: Double {
         let span = Double(xpForNextRank - xpForCurrentRank)
         guard span > 0 else { return 1 }
-        return Double(currentXP - xpForCurrentRank) / span
+        return min(1, max(0, Double(currentXP - xpForCurrentRank) / span))
     }
 
-    var xpToNextRank: Int { xpForNextRank - currentXP }
+    var xpToNextRank: Int { max(0, xpForNextRank - currentXP) }
 }
 
 @Observable
@@ -38,6 +38,7 @@ final class MasteryViewModel {
     let errorManager: ErrorManager
     
     private(set) var summary: MasteryCatalogSummary?
+    private(set) var playerRank: Int?
     private(set) var breakdownSections: [[MasteryBreakdownRow]] = []
 
     private(set) var isLoading: Bool = false
@@ -56,7 +57,7 @@ final class MasteryViewModel {
     }
 
     var rankProgress: MasteryRankProgress {
-        Self.rankProgress(forXP: earnedMasteryXP)
+        Self.rankProgress(forXP: earnedMasteryXP, playerRank: playerRank)
     }
 
     var obtainableItemsRemaining: Int {
@@ -96,6 +97,7 @@ final class MasteryViewModel {
             }
             guard !Task.isCancelled else { return }
             summary = updatedSummary
+            playerRank = profile?.playerLevel
             breakdownSections = []
         } catch {
             if !Task.isCancelled {
@@ -130,7 +132,7 @@ final class MasteryViewModel {
     }
     
     // MARK: - Helper Functions
-    private static func rankProgress(forXP xp: Int) -> MasteryRankProgress {
+    private static func rankProgress(forXP xp: Int, playerRank: Int?) -> MasteryRankProgress {
         let legendaryCapRank = 30
         let legendaryCapXP = 2500 * legendaryCapRank * legendaryCapRank
         let legendaryRankXP = 147_500
@@ -142,11 +144,12 @@ final class MasteryViewModel {
         while cumulativeXP(for: completedRanks + 1) <= xp {
             completedRanks += 1
         }
+        let rank = playerRank.map { max(0, $0) } ?? completedRanks
         return MasteryRankProgress(
-            rank: completedRanks,
+            rank: rank,
             currentXP: xp,
-            xpForCurrentRank: cumulativeXP(for: completedRanks),
-            xpForNextRank: cumulativeXP(for: completedRanks + 1)
+            xpForCurrentRank: cumulativeXP(for: rank),
+            xpForNextRank: cumulativeXP(for: rank + 1)
         )
     }
 

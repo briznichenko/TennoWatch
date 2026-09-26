@@ -88,10 +88,10 @@ final class SettingsViewModel {
         defer { isClearingCache = false }
 
         do {
-            try await persistencyService.clearAllData()
             guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
                 throw ClearCacheError.missingBundleIdentifier
             }
+            try await persistencyService.clearAllData()
             voidTraderNotificationScheduler.cancelArrivalNotification()
             UserDefaults.standard.removePersistentDomain(forName: bundleIdentifier)
             gameVersion = nil

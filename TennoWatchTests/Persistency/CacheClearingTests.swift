@@ -1,3 +1,4 @@
+import Foundation
 import SwiftData
 import Testing
 @testable import TennoWatch
@@ -6,10 +7,11 @@ import Testing
 struct CacheClearingTests {
     @Test("Clear removes profile, related records, and catalog")
     func clearsAllStoredModels() async throws {
+        let storeURL = FileManager.default.temporaryDirectory.appendingPathComponent("cache-clearing-\(UUID().uuidString).sqlite")
         let container = try ModelContainer(
             for: ProfileDataModel.self,
             MasteryCatalogDataModel.self,
-            configurations: .init(isStoredInMemoryOnly: true)
+            configurations: .init(url: storeURL, cloudKitDatabase: .none)
         )
         let service = DefaultPersistencyService(modelContainer: container)
         try await service.saveValue(Profile.stub(
