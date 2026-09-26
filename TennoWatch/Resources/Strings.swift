@@ -120,6 +120,9 @@ struct Strings {
         static var title: String { Strings.string("settings_title_key", "Settings") }
         static var notificationsHeader: String { Strings.string("settings_notifications_header_key", "Notifications") }
         static var voidTraderNotificationsLabel: String { Strings.string("settings_void_trader_notifications_label_key", "Void Trader arrival") }
+        static var storageHeader: String { Strings.string("settings_storage_header_key", "Storage") }
+        static var clearCache: String { Strings.string("settings_clear_cache_key", "Clear cache") }
+        static var clearCacheConfirmation: String { Strings.string("settings_clear_cache_confirmation_key", "Delete all saved profiles, catalog data, and preferences from this device?") }
     }
 
     struct Notifications {

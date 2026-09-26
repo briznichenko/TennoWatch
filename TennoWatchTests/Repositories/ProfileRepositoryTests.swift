@@ -109,6 +109,39 @@ struct ProfileRepositoryTests {
         #expect(service.fetchCount == 0)
     }
 
+    @Test("Loading a cached profile makes its account active for other tabs")
+    func cachedProfileUpdatesActiveAccount() async throws {
+        let persistency = StubPersistencyService()
+        persistency.storedProfiles = [
+            .stub(accountID: "other-id", lastUpdated: .now),
+            .stub(accountID: "selected-id", lastUpdated: .now)
+        ]
+        let service = StubAPIService()
+        let accountIDStore = StubAccountIDStore()
+        let sut = PersistentProfileRepository(profileService: service, persistencyService: persistency, accountIDStore: accountIDStore)
+
+        let selectedProfile = try await sut.getProfile(withPlayerId: "selected-id", forceRefresh: false)
+        let profileForMastery = try await sut.getProfile(withPlayerId: nil, forceRefresh: false)
+
+        #expect(selectedProfile.accountID.oid == "selected-id")
+        #expect(profileForMastery.accountID.oid == "selected-id")
+        #expect(accountIDStore.currentAccountID == "selected-id")
+        #expect(service.fetchCount == 0)
+    }
+
+    @Test("An explicit account ID never falls back to another cached account")
+    func explicitAccountDoesNotUseOtherCache() async {
+        let persistency = StubPersistencyService()
+        persistency.storedProfiles = [.stub(accountID: "other-id", lastUpdated: .now)]
+        let service = StubAPIService()
+        let sut = PersistentProfileRepository(profileService: service, persistencyService: persistency, accountIDStore: StubAccountIDStore())
+
+        await #expect(throws: StubAPIService.StubError.sentinel) {
+            try await sut.getProfile(withPlayerId: "selected-id", forceRefresh: false)
+        }
+        #expect(service.fetchCount == 1)
+    }
+
     @Test("Requesting a different account than the one cached ignores the stale cache and fetches that account instead")
     func differentPlayerIdIgnoresOtherAccountsCache() async throws {
         let persistency = StubPersistencyService()

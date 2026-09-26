@@ -16,11 +16,13 @@ struct ProfileView: View {
     @FocusState private var isIDInputFocused
 
     private let dependencies: AppDependencies
+    private let onCacheCleared: () -> Void
 
     // MARK: - Init
-    init(viewModel: ProfileViewModel, dependencies: AppDependencies) {
+    init(viewModel: ProfileViewModel, dependencies: AppDependencies, onCacheCleared: @escaping () -> Void) {
         self.viewModel = viewModel
         self.dependencies = dependencies
+        self.onCacheCleared = onCacheCleared
     }
 
     // MARK: - Body
@@ -60,7 +62,8 @@ struct ProfileView: View {
                             voidTraderNotificationScheduler: dependencies.voidTraderNotificationScheduler,
                             errorManager: dependencies.errorManager
                         ),
-                        displayName: viewModel.displayName
+                        displayName: viewModel.displayName,
+                        onCacheCleared: onCacheCleared
                     )
                 }
                 .task {

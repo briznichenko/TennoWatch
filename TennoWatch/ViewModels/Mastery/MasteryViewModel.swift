@@ -82,13 +82,25 @@ final class MasteryViewModel {
         }
 
         do {
-            if let profile = try? await profileRepository.getProfile(forceRefresh: forceRefresh) {
-                summary = try await catalogRepository.syncMasterySummary(with: profile)
-            } else {
-                summary = try await catalogRepository.getMasterySummary()
+            let profile: Profile?
+            do {
+                profile = try await profileRepository.getProfile(forceRefresh: forceRefresh)
+            } catch PersistentProfileRepository.ProfileError.noPlayerId {
+                profile = nil
             }
+            let updatedSummary: MasteryCatalogSummary
+            if let profile {
+                updatedSummary = try await catalogRepository.syncMasterySummary(with: profile)
+            } else {
+                updatedSummary = try await catalogRepository.getMasterySummary()
+            }
+            guard !Task.isCancelled else { return }
+            summary = updatedSummary
+            breakdownSections = []
         } catch {
-            errorManager.append(error)
+            if !Task.isCancelled {
+                errorManager.append(error)
+            }
         }
     }
 

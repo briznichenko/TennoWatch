@@ -12,6 +12,7 @@ struct MasteryView: View {
     @State private var viewModel: MasteryViewModel
     @State private var coordinator = MasteryCoordinator()
     @State private var isCategoriesExpanded: Bool = true
+    @AppStorage(UserDefaultsAccountIDStore.storageKey) private var currentAccountID: String?
     
     private static let categoryColumns = [GridItem(.flexible()), GridItem(.flexible())]
 
@@ -55,7 +56,7 @@ struct MasteryView: View {
                     MasteryBreakdownView(viewModel: viewModel)
                 }
             }
-            .task {
+            .task(id: currentAccountID) {
                 await viewModel.fetchCatalog()
             }
             .refreshable {

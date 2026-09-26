@@ -46,6 +46,11 @@ private final class ControlledWorldStateRepository: WorldStateRepository {
     }
 }
 
+private struct StubVoidTraderNotificationScheduler: VoidTraderNotificationScheduler {
+    func syncArrivalNotification(for voidTrader: VoidTrader?) async throws {}
+    func cancelArrivalNotification() {}
+}
+
 @Suite("WorldStateViewModel")
 struct WorldStateViewModelTests {
     // MARK: - Teardown
@@ -57,7 +62,7 @@ struct WorldStateViewModelTests {
         let repository = StubWorldStateRepository()
         repository.result = .success(.stub(invasions: [.stub(node: "Foo")]))
         let errorManager = DefaultErrorManager()
-        let sut = WorldStateViewModel(worldStateRepository: repository, errorManager: errorManager)
+        let sut = WorldStateViewModel(worldStateRepository: repository, voidTraderNotificationScheduler: StubVoidTraderNotificationScheduler(), errorManager: errorManager)
 
         await sut.fetchWorldState()
 
@@ -71,7 +76,7 @@ struct WorldStateViewModelTests {
         let repository = StubWorldStateRepository()
         repository.result = .failure(StubWorldStateRepository.StubError.sentinel)
         let errorManager = DefaultErrorManager()
-        let sut = WorldStateViewModel(worldStateRepository: repository, errorManager: errorManager)
+        let sut = WorldStateViewModel(worldStateRepository: repository, voidTraderNotificationScheduler: StubVoidTraderNotificationScheduler(), errorManager: errorManager)
 
         await sut.fetchWorldState()
 
@@ -93,7 +98,7 @@ struct WorldStateViewModelTests {
         let repository = StubWorldStateRepository()
         repository.result = .success(worldState)
         let errorManager = DefaultErrorManager()
-        let sut = WorldStateViewModel(worldStateRepository: repository, errorManager: errorManager)
+        let sut = WorldStateViewModel(worldStateRepository: repository, voidTraderNotificationScheduler: StubVoidTraderNotificationScheduler(), errorManager: errorManager)
 
         await sut.fetchWorldState()
         let cycles = sut.cycles
@@ -140,7 +145,7 @@ struct WorldStateViewModelTests {
         let repository = StubWorldStateRepository()
         repository.result = .success(worldState)
         let errorManager = DefaultErrorManager()
-        let sut = WorldStateViewModel(worldStateRepository: repository, errorManager: errorManager)
+        let sut = WorldStateViewModel(worldStateRepository: repository, voidTraderNotificationScheduler: StubVoidTraderNotificationScheduler(), errorManager: errorManager)
 
         await sut.fetchWorldState()
 
@@ -152,7 +157,7 @@ struct WorldStateViewModelTests {
     func isLoadingReflectsInFlightFetch() async {
         let repository = ControlledWorldStateRepository()
         let errorManager = DefaultErrorManager()
-        let sut = WorldStateViewModel(worldStateRepository: repository, errorManager: errorManager)
+        let sut = WorldStateViewModel(worldStateRepository: repository, voidTraderNotificationScheduler: StubVoidTraderNotificationScheduler(), errorManager: errorManager)
 
         let fetchTask = Task { await sut.fetchWorldState() }
         await repository.waitForRequestToStart()

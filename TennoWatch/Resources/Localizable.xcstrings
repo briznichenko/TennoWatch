@@ -769,6 +769,42 @@
         }
       }
     },
+    "settings_clear_cache_confirmation_key" : {
+      "comment" : "Confirmation before removing all local database data and preferences.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete all saved profiles, catalog data, and preferences from this device?"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Видалити всі збережені профілі, дані каталогу й налаштування з цього пристрою?"
+          }
+        }
+      }
+    },
+    "settings_clear_cache_key" : {
+      "comment" : "Button that removes all local database data and preferences.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear cache"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Очистити кеш"
+          }
+        }
+      }
+    },
     "settings_catalog_header_key" : {
       "comment" : "Section header above the catalog version/refresh rows.",
       "extractionState" : "manual",
@@ -903,6 +939,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Оновити каталог"
+          }
+        }
+      }
+    },
+    "settings_storage_header_key" : {
+      "comment" : "Header for the local storage settings section.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Storage"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сховище"
           }
         }
       }

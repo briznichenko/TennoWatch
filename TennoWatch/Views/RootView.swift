@@ -13,6 +13,7 @@ struct RootView: View {
     let dependencies: AppDependencies
 
     @State private var isShowingSplash = true
+    @State private var cacheResetID = UUID()
 
     // MARK: - Body
     var body: some View {
@@ -21,8 +22,11 @@ struct RootView: View {
                 SplashView()
                     .transition(.opacity)
             } else {
-                MainView(dependencies: dependencies)
-                    .transition(.opacity)
+                MainView(dependencies: dependencies) {
+                    cacheResetID = UUID()
+                }
+                .id(cacheResetID)
+                .transition(.opacity)
             }
         }
         .task {

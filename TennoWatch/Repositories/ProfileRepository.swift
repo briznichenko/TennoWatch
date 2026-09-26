@@ -50,9 +50,15 @@ final class PersistentProfileRepository: ProfileRepository {
         // With no requested account, fall back to whatever's on disk. Once a target is known,
         // a stored profile for a *different* account must never stand in for it (that returned
         // the wrong Tenno's data when a second account's profile was already cached).
-        let storedProfile = targetAccountID.map { id in storedProfiles.first { $0.accountID.oid == id } } ?? storedProfiles.first
+        let storedProfile: Profile?
+        if let targetAccountID {
+            storedProfile = storedProfiles.first { $0.accountID.oid == targetAccountID }
+        } else {
+            storedProfile = storedProfiles.first
+        }
 
         if !forceRefresh, let storedProfile, Calendar.current.isDateInToday(storedProfile.lastUpdated) && syncPolicy == .daily {
+            accountIDStore.currentAccountID = storedProfile.accountID.oid
             return storedProfile
         }
 

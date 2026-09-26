@@ -11,6 +11,12 @@ const FOUNDERS_NAMES = new Set(["Excalibur Prime", "Skana Prime", "Lato Prime"])
 const EXCLUDED_UNIQUE_NAMES = new Set([
     "/Lotus/Weapons/Tenno/ThrowingWeapons/U18ThrowingKnives/U18throwingknives"
 ]);
+const KITGUN_PRIMARY_NAMES = new Set([
+    "/Lotus/Weapons/SolarisUnited/Secondary/SUModularSecondarySet1/Barrel/SUModularSecondaryBarrelBPart",
+    "/Lotus/Weapons/SolarisUnited/Secondary/SUModularSecondarySet1/Barrel/SUModularSecondaryBarrelCPart",
+    "/Lotus/Weapons/Infested/Pistols/InfKitGun/Barrels/InfBarrelBeam/InfModularBarrelBeamPart",
+    "/Lotus/Weapons/Infested/Pistols/InfKitGun/Barrels/InfBarrelEgg/InfModularBarrelEggPart"
+]);
 
 const GILDED_CATEGORIES = new Set(["KITGUN", "ZAW", "AMP", "MOA", "HOUND"]);
 const DOUBLE_POINTS_CATEGORIES = new Set([
@@ -131,13 +137,16 @@ async function main() {
     for (const { raw, source } of items) {
         const category = categorizeItem(raw, source);
         if (!category) continue;
-        if (catalogItemsByUniqueName.has(raw.uniqueName)) continue;
+        const uniqueName = KITGUN_PRIMARY_NAMES.has(raw.uniqueName)
+            ? `${raw.uniqueName}_Primary`
+            : raw.uniqueName;
+        if (catalogItemsByUniqueName.has(uniqueName)) continue;
 
         const { maxRank, pointsPerRank, xpPerRankSq, requiresGilding } = computeFields(category, raw);
         const obtainable = !FOUNDERS_NAMES.has(raw.name) && !EXCLUDED_UNIQUE_NAMES.has(raw.uniqueName);
 
-        catalogItemsByUniqueName.set(raw.uniqueName, {
-            uniqueName: raw.uniqueName,
+        catalogItemsByUniqueName.set(uniqueName, {
+            uniqueName,
             name: raw.name,
             category,
             maxRank,
@@ -185,7 +194,7 @@ async function main() {
         nonItemSources: existing.nonItemSources
     };
 
-    fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2) + "\n");
+    fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output) + "\n");
     console.log(`Wrote ${catalogItems.length} items to ${OUTPUT_PATH}`);
     console.log(`totalMasteryMax: ${totalMasteryMax}, obtainableMasteryMax: ${obtainableMasteryMax}`);
 }

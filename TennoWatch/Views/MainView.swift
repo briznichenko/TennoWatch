@@ -11,6 +11,7 @@ import SwiftData
 struct MainView: View {
     // MARK: - Object Properties
     let dependencies: AppDependencies
+    let onCacheCleared: () -> Void
 
     // MARK: - Body
     var body: some View {
@@ -54,7 +55,8 @@ struct MainView: View {
                         profileRepository: dependencies.profileRepository,
                         errorManager: dependencies.errorManager
                     ),
-                    dependencies: dependencies
+                    dependencies: dependencies,
+                    onCacheCleared: onCacheCleared
                 )
             }
         }
@@ -66,6 +68,6 @@ struct MainView: View {
 #Preview {
     let container = try? ModelContainer(for: ProfileDataModel.self, MasteryCatalogDataModel.self, configurations: .init(isStoredInMemoryOnly: true))
     if let container {
-        MainView(dependencies: AppDependencies(modelContainer: container))
+        MainView(dependencies: AppDependencies(modelContainer: container), onCacheCleared: {})
     }
 }
