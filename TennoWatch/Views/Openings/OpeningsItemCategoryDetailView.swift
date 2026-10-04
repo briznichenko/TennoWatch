@@ -8,17 +8,21 @@
 import SwiftUI
 
 struct OpeningsItemCategoryDetailView: View {
-    let categoryTitle: String
-    let items: [MasteryItemViewModel]
+    @State private var viewModel: OpeningsItemCategoryDetailViewModel
+
+    init(viewModel: OpeningsItemCategoryDetailViewModel) {
+        self.viewModel = viewModel
+    }
 
     var body: some View {
         List {
-            ForEach(items) { item in
+            ForEach(viewModel.filteredItems) { item in
                 MasteryItemView(viewModel: item)
             }
         }
         .listStyle(.plain)
-        .navigationTitle(categoryTitle)
+        .searchable(text: $viewModel.searchText, prompt: Strings.Common.searchItems)
+        .navigationTitle(viewModel.categoryTitle)
         .navigationBarTitleDisplayMode(.inline)
     }
 }

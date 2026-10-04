@@ -30,11 +30,15 @@ final class ProfileMissionsListViewModel {
 
     // MARK: - Computed Properties
     var sortedMissions: [MissionStat] {
-        let filtered = searchText.isEmpty ? missions : missions.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        let filtered = missions.filter { $0.name.matchesSearch(searchText) || $0.tag.matchesSearch(searchText) }
         switch sortOption {
         case .completes: return filtered.sorted { $0.completes > $1.completes }
         case .name: return filtered.sorted { $0.name < $1.name }
         }
+    }
+
+    var starChartSections: [StarChartSection<MissionStat>] {
+        StarChartMode.sections(from: sortedMissions, mode: \.starChartMode)
     }
 
     // MARK: - Init

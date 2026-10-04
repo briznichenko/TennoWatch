@@ -22,11 +22,24 @@ struct MasterySourceCategoryDetailView: View {
     // MARK: - Body
     var body: some View {
         List {
-            ForEach(viewModel.sortedItems, id: \.self) { item in
-                MasterySourceView(viewModel: .init(source: item))
+            if viewModel.isStarChartCategory {
+                ForEach(viewModel.starChartSections) { section in
+                    Section {
+                        ForEach(section.items, id: \.uniqueName) { item in
+                            MasterySourceView(viewModel: .init(source: item))
+                        }
+                    } header: {
+                        SectionHeaderLabel(section.mode.title)
+                    }
+                }
+            } else {
+                ForEach(viewModel.sortedItems, id: \.uniqueName) { item in
+                    MasterySourceView(viewModel: .init(source: item))
+                }
             }
         }
         .listStyle(.plain)
+        .searchable(text: $viewModel.searchText, prompt: viewModel.isStarChartCategory ? Strings.Common.searchNodes : Strings.Common.search)
         .overlay {
             if viewModel.isLoading {
                 LotusLoaderView()

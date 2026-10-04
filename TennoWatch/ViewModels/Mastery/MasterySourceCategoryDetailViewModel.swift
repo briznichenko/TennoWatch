@@ -21,16 +21,27 @@ final class MasterySourceCategoryDetailViewModel {
     private(set) var category: MasteryCategoryModel?
     private(set) var isLoading = false
 
+    var searchText = ""
     var filter: Filter = .missing
     var sortOption: SortOption = .name
 
     // MARK: - Computed Properties
     var sortedItems: [MasterySourceModel] {
-        let filtered = (category?.sources ?? []).filter { filter.matches($0.masteryState) }
+        let filtered = (category?.sources ?? []).filter {
+            filter.matches($0.masteryState) && ($0.name.matchesSearch(searchText) || $0.uniqueName.matchesSearch(searchText))
+        }
         switch sortOption {
         case .name: return filtered.sorted { $0.name < $1.name }
         case .pointsRemaining: return filtered.sorted { $0.mastery < $1.mastery }
         }
+    }
+
+    var isStarChartCategory: Bool {
+        categoryName == MasterySourceType.nodes.rawValue || categoryName == MasterySourceType.junctions.rawValue
+    }
+
+    var starChartSections: [StarChartSection<MasterySourceModel>] {
+        StarChartMode.sections(from: sortedItems, mode: \.starChartMode)
     }
 
     // MARK: - Init

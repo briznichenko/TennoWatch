@@ -8,17 +8,33 @@
 import SwiftUI
 
 struct OpeningsSourceCategoryDetailView: View {
-    let categoryTitle: String
-    let sources: [MasterySourceViewModel]
+    @State private var viewModel: OpeningsSourceCategoryDetailViewModel
+
+    init(viewModel: OpeningsSourceCategoryDetailViewModel) {
+        self.viewModel = viewModel
+    }
 
     var body: some View {
         List {
-            ForEach(sources) { source in
-                MasterySourceView(viewModel: source)
+            if viewModel.isStarChartCategory {
+                ForEach(viewModel.starChartSections) { section in
+                    Section {
+                        ForEach(section.items) { source in
+                            MasterySourceView(viewModel: source)
+                        }
+                    } header: {
+                        SectionHeaderLabel(section.mode.title)
+                    }
+                }
+            } else {
+                ForEach(viewModel.filteredSources) { source in
+                    MasterySourceView(viewModel: source)
+                }
             }
         }
         .listStyle(.plain)
-        .navigationTitle(categoryTitle)
+        .searchable(text: $viewModel.searchText, prompt: viewModel.isStarChartCategory ? Strings.Common.searchNodes : Strings.Common.search)
+        .navigationTitle(viewModel.categoryName.sentenceCased)
         .navigationBarTitleDisplayMode(.inline)
     }
 }

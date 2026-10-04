@@ -27,6 +27,7 @@ struct MasteryCategoryDetailView: View {
             }
         }
         .listStyle(.plain)
+        .searchable(text: $viewModel.searchText, prompt: Strings.Common.searchItems)
         .overlay {
             if viewModel.isLoading {
                 LotusLoaderView()

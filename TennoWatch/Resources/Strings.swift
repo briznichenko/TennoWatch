@@ -135,6 +135,8 @@ struct Strings {
 
     struct Mastery {
         private init() {}
+        static var baseStarChart: String { Strings.string("mastery_base_star_chart_key", "Base Star Chart") }
+        static var steelPath: String { Strings.string("mastery_steel_path_key", "Steel Path") }
         static var title: String { Strings.string("mastery_title_key", "Mastery") }
         static var categoriesHeader: String { Strings.string("mastery_categories_header_key", "Categories") }
         static var sortBy: String { Strings.string("mastery_sort_by_key", "Sort by") }
@@ -289,6 +291,10 @@ struct Strings {
 
     struct Common {
         private init() {}
+        static var search: String { Strings.string("common_search_key", "Search") }
+        static var searchItems: String { Strings.string("common_search_items_key", "Search items") }
+        static var searchNodes: String { Strings.string("common_search_nodes_key", "Search nodes") }
+        static var noSearchResults: String { Strings.string("common_no_search_results_key", "No matching items or nodes") }
         static var loading: String { Strings.string("common_loading_key", "Loading") }
     }
 }

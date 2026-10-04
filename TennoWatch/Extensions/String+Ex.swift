@@ -8,6 +8,11 @@
 import Foundation
 
 extension String {
+    func matchesSearch(_ searchText: String) -> Bool {
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        return query.isEmpty || localizedStandardContains(query)
+    }
+
     var sentenceCased: String {
         guard let first else { return self }
         return first.uppercased() + dropFirst()

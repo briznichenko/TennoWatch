@@ -51,12 +51,16 @@ final class MasteryCategoryDetailViewModel {
     private(set) var container: CatalogContainer?
     private(set) var isLoading = false
 
+    var searchText = ""
     var filter: Filter = .missing
     var sortOption: SortOption = .name
 
     // MARK: - Computed Properties
     var sortedItems: [MasteryItem] {
-        let filtered = (container?.masteryItems ?? []).filter { filter.matches($0.masteryState) }
+        let filtered = (container?.masteryItems ?? []).filter {
+            filter.matches($0.masteryState)
+                && ($0.catalogItemModel.name.matchesSearch(searchText) || $0.catalogItemModel.uniqueName.matchesSearch(searchText))
+        }
         switch sortOption {
         case .name: return filtered.sorted { $0.catalogItemModel.name < $1.catalogItemModel.name }
         case .pointsRemaining: return filtered.sorted { $0.remainingMasteryPoints > $1.remainingMasteryPoints }

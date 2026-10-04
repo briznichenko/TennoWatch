@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SortieRowView: View {
     let sortie: Sortie
+    var searchText = ""
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -24,11 +25,15 @@ struct SortieRowView: View {
                 }
             }
             if !sortie.variants.isEmpty {
-                ForEach(sortie.variants, id: \.nodeKey) { variant in
+                ForEach(sortie.variants.filter {
+                    [$0.node, $0.nodeKey, $0.missionType, $0.modifier].joined(separator: " ").matchesSearch(searchText)
+                }, id: \.nodeKey) { variant in
                     SortieVariantRowView(variant: variant)
                 }
             } else {
-                ForEach(sortie.missions, id: \.nodeKey) { mission in
+                ForEach(sortie.missions.filter {
+                    [$0.node, $0.nodeKey, $0.type].joined(separator: " ").matchesSearch(searchText)
+                }, id: \.nodeKey) { mission in
                     HStack {
                         Text(mission.node)
                         Spacer()

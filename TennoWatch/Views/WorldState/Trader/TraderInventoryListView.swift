@@ -8,13 +8,15 @@ import SwiftUI
 struct TraderInventoryListView: View {
     let trader: VoidTrader
 
+    @State private var searchText = ""
+
     var body: some View {
         List {
             Section {
                 VoidTraderRowView(voidTrader: trader)
             }
             Section {
-                ForEach(trader.inventory, id: \.uniqueName) { item in
+                ForEach(trader.inventory.filter { $0.item.matchesSearch(searchText) || $0.uniqueName.matchesSearch(searchText) }, id: \.uniqueName) { item in
                     TraderInventoryItemRowView(item: item)
                 }
             } header: {
@@ -22,6 +24,7 @@ struct TraderInventoryListView: View {
             }
         }
         .listStyle(.plain)
+        .searchable(text: $searchText, prompt: Strings.Common.searchItems)
         .navigationTitle(trader.character)
         .navigationBarTitleDisplayMode(.inline)
     }

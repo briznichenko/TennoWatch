@@ -49,7 +49,7 @@ struct MissionStat: Identifiable, Hashable {
     let completes: Int
 
     // MARK: - Computed Properties
-    var id: String { tag }
+    var id: String { "\(tag)#\(tier ?? 0)" }
 }
 
 struct AccountStatRow: Identifiable, Hashable {

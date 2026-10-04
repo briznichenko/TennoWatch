@@ -21,8 +21,14 @@ struct ProfileMissionsListView: View {
     // MARK: - Body
     var body: some View {
         List {
-            ForEach(viewModel.sortedMissions) { mission in
-                ProfileMissionRowView(mission: mission)
+            ForEach(viewModel.starChartSections) { section in
+                Section {
+                    ForEach(section.items) { mission in
+                        ProfileMissionRowView(mission: mission)
+                    }
+                } header: {
+                    SectionHeaderLabel(section.mode.title)
+                }
             }
         }
         .listStyle(.plain)
