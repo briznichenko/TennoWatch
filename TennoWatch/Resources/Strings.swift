@@ -191,6 +191,14 @@ struct Strings {
 
     struct Profile {
         private init() {}
+        static var savedProfilesHeader: String { Strings.string("profile_saved_profiles_header_key", "Saved profiles") }
+        static var manualProfile: String { Strings.string("profile_manual_profile_key", "Manual tracking") }
+        static var manualProfileDescription: String { Strings.string("profile_manual_profile_description_key", "Local profile") }
+        static var deleteProfileTitle: String { Strings.string("profile_delete_profile_title_key", "Delete profile?") }
+        static var deleteProfileButton: String { Strings.string("profile_delete_profile_button_key", "Delete profile") }
+        static func deleteProfileMessage(_ name: String) -> String {
+            String(format: Strings.string("profile_delete_profile_message_key", "Remove %@ and its saved progress from this device?"), name)
+        }
         static var id: String { Strings.string("profile_id_key", "Player ID") }
         static var idPlaceholder: String { Strings.string("profile_id_placeholder_key", "Enter player ID") }
         static var syncButton: String { Strings.string("profile_sync_button_key", "Sync Profile") }

@@ -535,6 +535,39 @@
         }
       }
     },
+    "profile_delete_profile_button_key" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete profile"
+          }
+        }
+      }
+    },
+    "profile_delete_profile_message_key" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove %@ and its saved progress from this device?"
+          }
+        }
+      }
+    },
+    "profile_delete_profile_title_key" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete profile?"
+          }
+        }
+      }
+    },
     "profile_display_name_unknown_key" : {
       "comment" : "Fallback display name when no profile has been loaded yet.",
       "extractionState" : "manual",
@@ -685,6 +718,39 @@
         }
       }
     },
+    "profile_manual_profile_description_key" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Local profile"
+          }
+        }
+      }
+    },
+    "profile_manual_profile_key" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manual tracking"
+          }
+        }
+      }
+    },
+    "profile_saved_profiles_header_key" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved profiles"
+          }
+        }
+      }
+    },
     "profile_sync_button_key" : {
       "comment" : "Button that fetches the profile for the currently entered player ID.",
       "extractionState" : "manual",
@@ -769,42 +835,6 @@
         }
       }
     },
-    "settings_clear_cache_confirmation_key" : {
-      "comment" : "Confirmation before removing all local database data and preferences.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete all saved profiles, catalog data, and preferences from this device?"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Видалити всі збережені профілі, дані каталогу й налаштування з цього пристрою?"
-          }
-        }
-      }
-    },
-    "settings_clear_cache_key" : {
-      "comment" : "Button that removes all local database data and preferences.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clear cache"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Очистити кеш"
-          }
-        }
-      }
-    },
     "settings_catalog_header_key" : {
       "comment" : "Section header above the catalog version/refresh rows.",
       "extractionState" : "manual",
@@ -855,6 +885,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "—"
+          }
+        }
+      }
+    },
+    "settings_clear_cache_confirmation_key" : {
+      "comment" : "Confirmation before removing all local database data and preferences.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete all saved profiles, catalog data, and preferences from this device?"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Видалити всі збережені профілі, дані каталогу й налаштування з цього пристрою?"
+          }
+        }
+      }
+    },
+    "settings_clear_cache_key" : {
+      "comment" : "Button that removes all local database data and preferences.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear cache"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Очистити кеш"
           }
         }
       }
@@ -1661,54 +1727,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Заріман"
-          }
-        }
-      }
-    },
-    "notifications_void_trader_body_format_key" : {
-      "comment" : "Body of the void trader arrival notification. First %@ is the trader name, second %@ is the location.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ is now at %@."
-          }
-        }
-      }
-    },
-    "notifications_void_trader_title_key" : {
-      "comment" : "Title of the local notification sent when the void trader arrives.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Void Trader has arrived"
-          }
-        }
-      }
-    },
-    "settings_notifications_header_key" : {
-      "comment" : "Header for the notifications settings section.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notifications"
-          }
-        }
-      }
-    },
-    "settings_void_trader_notifications_label_key" : {
-      "comment" : "Label for the toggle that enables the void trader arrival notification.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Void Trader arrival"
           }
         }
       }

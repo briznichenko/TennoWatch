@@ -35,14 +35,10 @@ so it can build `SettingsView`'s dependencies when the sheet is presented.
 - `playerId: String` is the one piece of *user-editable* state living
   directly on a top-level ViewModel in this app (everything else is
   read-only display state) — bound two-way to the `TextField`.
-- `#if DEBUG` seeds `playerId` with a hardcoded test account ID at init, so
-  the tab isn't empty on first run in development. **This is the
-  `523b73b91a4d806878000000` the README flags as the known gap** — there's
-  no search/lookup flow, just this field.
-- `fetchProfile(forceRefresh:)` guards on `playerId.isEmpty` and pushes a
-  `ProfileError.noPlayerId` to `errorManager` rather than silently no-op-ing
-  — the only tab that treats "missing required input" as a user-facing error
-  rather than an empty state.
+- `load()` restores the saved active profile without requiring a network request. A first launch creates a local manual profile with a persisted UUID.
+- `savedProfiles` backs the profile picker. Selection is cached and works offline; swipe-to-delete asks for confirmation and removes that profile's owned progress.
+- `fetchProfile(forceRefresh:)` trims the input ID and imports or refreshes that account. The identity card displays the saved account ID independently of the editable input.
+- If the last profile is deleted, the repository creates a fresh manual profile. A local profile is never sent to the remote profile endpoint; manual item editing remains future work.
 - All other computed properties (`intrinsicGroups`, `itemStats`,
   `missionStats`, `accountStatRows`, `totalMissionsCompleted`, `totalKills`,
   `intrinsicsSummaryText`) are thin derivations off `profile: Profile?`,
@@ -59,13 +55,11 @@ force-refresh here also refreshes what Mastery/Openings will see next.
 
 ## Known gaps / TODOs
 - README-documented: no player search/lookup UI, just a raw ID text field
-  seeded with a debug value. This is the single most likely "next real
-  feature" for this tab.
+  for importing another profile.
 - No validation on the player-ID field format (Warframe account IDs are
   24-char hex Mongo ObjectIDs) — a malformed ID just round-trips to a normal
   fetch failure via `errorManager`.
 
 ## Test coverage
 None directly (no `ProfileViewModelTests`). `ProfileRepositoryTests` covers
-the repository layer's cache/force-refresh logic, which is most of this
-tab's actual risk surface.
+the cache/force-refresh logic. `ProfileIsolationTests` verifies switching, deletion, the manual profile, and delayed-request selection safety.

@@ -60,7 +60,7 @@ struct MasteryView: View {
                 await viewModel.fetchCatalog()
             }
             .refreshable {
-                await viewModel.fetchCatalog(forceRefresh: true)
+                await viewModel.fetchCatalog()
             }
         }
     }

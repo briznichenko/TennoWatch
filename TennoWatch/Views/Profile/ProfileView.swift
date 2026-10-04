@@ -10,6 +10,8 @@ import SwiftUI
 struct ProfileView: View {
     // MARK: - Object Properties
     @State private var viewModel: ProfileViewModel
+    @State private var profileToDelete: Profile?
+    @State private var isShowingDeleteConfirmation = false
     @State private var isShowingSettings = false
     @State private var isShowingIdHelp = false
     @AppStorage("profileIdHelpDontShowAgain") private var dontShowIdHelpAgain = false
@@ -32,6 +34,7 @@ struct ProfileView: View {
                 List {
                     identityCard
                         .listRowSeparator(.hidden)
+                    savedProfilesSection
                     playerIdSection
                     statsSection
                 }
@@ -67,10 +70,24 @@ struct ProfileView: View {
                     )
                 }
                 .task {
-                    await viewModel.fetchProfile()
+                    await viewModel.load()
                 }
                 .refreshable {
-                    await viewModel.fetchProfile(forceRefresh: true)
+                    if viewModel.profile?.isLocal != true {
+                        await viewModel.fetchProfile(forceRefresh: true)
+                    }
+                }
+                .confirmationDialog(
+                    Strings.Profile.deleteProfileTitle,
+                    isPresented: $isShowingDeleteConfirmation,
+                    titleVisibility: .visible,
+                    presenting: profileToDelete
+                ) { profile in
+                    Button(Strings.Profile.deleteProfileButton, role: .destructive) {
+                        Task { await viewModel.deleteProfile(profile) }
+                    }
+                } message: { profile in
+                    Text(Strings.Profile.deleteProfileMessage(viewModel.name(for: profile)))
                 }
             }
 
@@ -95,7 +112,7 @@ struct ProfileView: View {
                 Text(viewModel.displayName)
                     .font(.system(size: 22, weight: .medium))
                     .foregroundStyle(Color.labelPrimary)
-                Text(viewModel.playerId)
+                Text(viewModel.profile?.isLocal == true ? Strings.Profile.manualProfileDescription : viewModel.accountId)
                     .font(.system(size: 15, weight: .light))
                     .foregroundStyle(Color.secondary)
                 HStack(spacing: 20) {
@@ -109,6 +126,50 @@ struct ProfileView: View {
         .padding(.bottom, 8)
     }
     
+    private var savedProfilesSection: some View {
+        Section {
+            ForEach(viewModel.savedProfiles, id: \.accountID.oid) { profile in
+                Button {
+                    Task { await viewModel.selectProfile(profile) }
+                } label: {
+                    HStack {
+                        Label(viewModel.name(for: profile), systemImage: profile.isLocal ? "pencil.circle" : "person.crop.circle")
+                        Spacer()
+                        if profile.accountID.oid == viewModel.accountId {
+                            Image(systemName: "checkmark")
+                        }
+                    }
+                }
+                .swipeActions {
+                    Button(role: .destructive) {
+                        profileToDelete = profile
+                        isShowingDeleteConfirmation = true
+                    } label: {
+                        Label(Strings.Profile.deleteProfileButton, systemImage: "trash")
+                    }
+                }
+                .contextMenu {
+                    Button(role: .destructive) {
+                        profileToDelete = profile
+                        isShowingDeleteConfirmation = true
+                    } label: {
+                        Label(Strings.Profile.deleteProfileButton, systemImage: "trash")
+                    }
+                }
+            }
+            if !viewModel.savedProfiles.contains(where: \.isLocal) {
+                Button {
+                    Task { await viewModel.createLocalProfile() }
+                } label: {
+                    Label(Strings.Profile.manualProfile, systemImage: "plus.circle")
+                }
+            }
+        } header: {
+            SectionHeaderLabel(Strings.Profile.savedProfilesHeader)
+        }
+        .disabled(viewModel.isLoading)
+    }
+
     private var playerIdSection: some View {
         Section {
             LabeledContent(Strings.Profile.id) {

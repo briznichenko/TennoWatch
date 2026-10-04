@@ -19,7 +19,7 @@ struct CatalogSyncServiceTests {
     @Test("A steel-path source is mastered when the base mission has a steel path tier")
     func steelPathSourceIsMasteredFromBaseTier() {
         let source = MasterySourceModel(uniqueName: "/Lotus/Mission#steelPath", name: "Steel Path Mission", mastery: 1, isMastered: nil)
-        let profile = Profile.stub(missions: [.init(completes: 1, tier: 2, tag: "/Lotus/Mission")])
+        let profile = Profile.stub(missions: [.init(completes: 1, tier: 1, tag: "/Lotus/Mission")])
 
         let synced = sut.mergeProfile(profile, into: [source])
 

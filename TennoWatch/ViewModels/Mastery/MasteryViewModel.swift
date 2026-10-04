@@ -97,10 +97,10 @@ final class MasteryViewModel {
             }
             guard !Task.isCancelled else { return }
             summary = updatedSummary
-            playerRank = profile?.playerLevel
+            playerRank = profile?.isLocal == true ? nil : profile?.playerLevel
             breakdownSections = []
         } catch {
-            if !Task.isCancelled {
+            if !Task.isCancelled && !(error is CancellationError) {
                 errorManager.append(error)
             }
         }
@@ -145,18 +145,15 @@ final class MasteryViewModel {
             completedRanks += 1
         }
         let rank = playerRank.map { max(0, $0) } ?? completedRanks
+        let currentXP = cumulativeXP(for: rank)
         return MasteryRankProgress(
             rank: rank,
             currentXP: xp,
-            xpForCurrentRank: cumulativeXP(for: rank),
+            xpForCurrentRank: currentXP,
             xpForNextRank: cumulativeXP(for: rank + 1)
         )
     }
 
-    // Groups every `CatalogItemModel.Category` and non-item source into the same
-    // rows/order the in-game "Mastery Breakdown" panel uses, so the two can be
-    // compared line by line. Every case is placed somewhere (see the "Other" section)
-    // so the rows' total always equals `earnedMasteryXP` exactly.
     private static func makeBreakdownSections(
         categories: [CatalogContainerSummary],
         nodes: MasteryCategoryModel,
@@ -213,5 +210,4 @@ final class MasteryViewModel {
 
         return [weapons, missionsAndIntrinsics, companions, archAndModular, other]
     }
-
 }

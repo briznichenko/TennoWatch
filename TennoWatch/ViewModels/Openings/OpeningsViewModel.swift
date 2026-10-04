@@ -99,8 +99,10 @@ final class OpeningsViewModel {
 
         async let fetchedCatalog = fetchCatalog()
         async let fetchedWorldState = fetchWorldState()
-        catalog = await fetchedCatalog
-        worldState = await fetchedWorldState
+        let result = await (fetchedCatalog, fetchedWorldState)
+        guard !Task.isCancelled else { return }
+        catalog = result.0
+        worldState = result.1
     }
 
     func permanentItems(in category: CatalogItemModel.Category) -> [MasteryItemViewModel] {
@@ -119,12 +121,12 @@ final class OpeningsViewModel {
     // MARK: - Helper Functions
     private func fetchCatalog() async -> MasteryCatalog? {
         do {
-            if let profile = try? await profileRepository.getProfile() {
-                return try await catalogRepository.syncMasteryCatalog(with: profile)
-            }
-            return try await catalogRepository.getMasteryCatalog()
+            let profile = try await profileRepository.getProfile()
+            return try await catalogRepository.syncMasteryCatalog(with: profile)
         } catch {
-            errorManager.append(error)
+            if !Task.isCancelled && !(error is CancellationError) {
+                errorManager.append(error)
+            }
             return nil
         }
     }
@@ -133,7 +135,9 @@ final class OpeningsViewModel {
         do {
             return try await worldStateRepository.getWorldState()
         } catch {
-            errorManager.append(error)
+            if !Task.isCancelled && !(error is CancellationError) {
+                errorManager.append(error)
+            }
             return nil
         }
     }

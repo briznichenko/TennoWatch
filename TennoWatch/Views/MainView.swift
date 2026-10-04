@@ -12,6 +12,7 @@ struct MainView: View {
     // MARK: - Object Properties
     let dependencies: AppDependencies
     let onCacheCleared: () -> Void
+    @AppStorage(UserDefaultsAccountIDStore.storageKey) private var currentAccountID: String?
 
     // MARK: - Body
     var body: some View {
@@ -33,6 +34,7 @@ struct MainView: View {
                         errorManager: dependencies.errorManager
                     )
                 )
+                .id(currentAccountID)
             }
             Tab(Strings.Main.tabOpenings, systemImage: "target") {
                 OpeningsView(
@@ -43,6 +45,7 @@ struct MainView: View {
                         errorManager: dependencies.errorManager
                     )
                 )
+                .id(currentAccountID)
             }
             Tab(Strings.Main.tabProfile, systemImage: "person", role: {
                     if #available(anyAppleOS 27.0, *) {

@@ -27,10 +27,12 @@ struct MasteryItemPersistenceTests {
         )
         let persistency = DefaultPersistencyService(modelContainer: container)
         try await persistency.saveValue(profile)
-        try await persistency.saveValue(profile)
         let cachedProfile = try #require(await persistency.fetchModel(by: ProfileDataModel.self).first)
         #expect(cachedProfile.items.contains { $0.type == "/Lotus/Weapons/Lasria/AK47/TC2024AK47Weapon" })
-        let repository = PersistentCatalogRepository(persistencyService: persistency)
+        let defaults = try #require(UserDefaults(suiteName: UUID().uuidString))
+        let accountStore = UserDefaultsAccountIDStore(defaults: defaults)
+        accountStore.currentAccountID = profile.accountID.oid
+        let repository = PersistentCatalogRepository(persistencyService: persistency, accountIDStore: accountStore)
 
         let summary = try await repository.syncMasterySummary(with: cachedProfile)
         let category = try await repository.getCatalogContainer(for: .longGuns)
