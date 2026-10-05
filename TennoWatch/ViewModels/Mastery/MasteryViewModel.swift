@@ -89,12 +89,7 @@ final class MasteryViewModel {
             } catch PersistentProfileRepository.ProfileError.noPlayerId {
                 profile = nil
             }
-            let updatedSummary: MasteryCatalogSummary
-            if let profile {
-                updatedSummary = try await catalogRepository.syncMasterySummary(with: profile)
-            } else {
-                updatedSummary = try await catalogRepository.getMasterySummary()
-            }
+            let updatedSummary = try await catalogRepository.getMasterySummary()
             guard !Task.isCancelled else { return }
             summary = updatedSummary
             playerRank = profile?.isLocal == true ? nil : profile?.playerLevel
@@ -109,9 +104,12 @@ final class MasteryViewModel {
     func loadBreakdown() async {
         guard breakdownSections.isEmpty else { return }
         do {
-            let nodes = try await catalogRepository.getMasterySources(named: .nodes)
-            let intrinsics = try await catalogRepository.getMasterySources(named: .intrinsics)
-            let junctions = try await catalogRepository.getMasterySources(named: .junctions)
+            let sources = try await catalogRepository.getMasterySourceCategories()
+            guard let nodes = sources.first(where: { $0.name == MasterySourceType.nodes.rawValue }),
+                  let intrinsics = sources.first(where: { $0.name == MasterySourceType.intrinsics.rawValue }),
+                  let junctions = sources.first(where: { $0.name == MasterySourceType.junctions.rawValue }) else {
+                throw PersistentCatalogRepository.CatalogError.wrongCategory
+            }
             breakdownSections = Self.makeBreakdownSections(
                 categories: categories,
                 nodes: nodes,

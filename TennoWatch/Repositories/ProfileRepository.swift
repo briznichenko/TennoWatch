@@ -59,6 +59,7 @@ final class PersistentProfileRepository: ProfileRepository {
         let targetID = playerId ?? initialID ?? profiles.first(where: { !$0.isLocal })?.accountID.oid
         let cached = profiles.first { $0.accountID.oid == targetID }
         let profile: Profile
+        var didRefresh = false
         if targetID == nil {
             profile = try await persistencyService.perform { context in
                 let local = try Self.resolveProfile(in: context, accountID: nil)
@@ -90,8 +91,13 @@ final class PersistentProfileRepository: ProfileRepository {
                     throw error
                 }
             }
+            didRefresh = true
         }
-        _ = try await catalogRepository.syncMasterySummary(with: profile)
+        if didRefresh {
+            _ = try await catalogRepository.syncMasterySummary(with: profile)
+        } else {
+            try await catalogRepository.prepareCatalog(for: profile)
+        }
         try Task.checkCancellation()
         guard revision == selectionRevision, accountIDStore.currentAccountID == initialID else {
             throw CancellationError()
@@ -114,7 +120,7 @@ final class PersistentProfileRepository: ProfileRepository {
         let profile = try await persistencyService.perform { context in
             try Self.resolveProfile(in: context, accountID: accountID).value
         }
-        _ = try await catalogRepository.syncMasterySummary(with: profile)
+        try await catalogRepository.prepareCatalog(for: profile)
         try Task.checkCancellation()
         guard revision == selectionRevision else { throw CancellationError() }
         accountIDStore.currentAccountID = accountID

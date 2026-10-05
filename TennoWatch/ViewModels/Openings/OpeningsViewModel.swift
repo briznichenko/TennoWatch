@@ -132,8 +132,8 @@ final class OpeningsViewModel {
     // MARK: - Helper Functions
     private func fetchCatalog() async -> MasteryCatalog? {
         do {
-            let profile = try await profileRepository.getProfile()
-            return try await catalogRepository.syncMasteryCatalog(with: profile)
+            _ = try await profileRepository.getProfile()
+            return try await catalogRepository.getMasteryCatalog()
         } catch {
             if !Task.isCancelled && !(error is CancellationError) {
                 errorManager.append(error)

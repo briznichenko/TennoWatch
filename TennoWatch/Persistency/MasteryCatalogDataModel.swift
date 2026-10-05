@@ -15,6 +15,7 @@ final class MasteryCatalogDataModel {
     var profile: ProfileDataModel?
     var gameVersion: String
     var generatedAt: Date
+    var syncedProfileLastUpdated: Date?
     var totalMasteryMax: Int
     var obtainableMasteryMax: Int
     @Relationship(deleteRule: .cascade, inverse: \CatalogContainerModel.catalog)

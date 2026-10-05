@@ -17,6 +17,20 @@ private final class ProfileIsolationAccountStore: AccountIDStoring {
     var currentAccountID: String?
 }
 
+private final class CountingCatalogSyncService: CatalogSyncService {
+    private(set) var sourceMergeCount = 0
+    private let service = DefaultCatalogSyncService()
+
+    func mergeProfile(_ profile: Profile, into items: [MasteryItem]) -> [MasteryItem] {
+        service.mergeProfile(profile, into: items)
+    }
+
+    func mergeProfile(_ profile: Profile, into sources: [MasterySourceModel]) -> [MasterySourceModel] {
+        sourceMergeCount += 1
+        return service.mergeProfile(profile, into: sources)
+    }
+}
+
 private final class DelayedProfileAPI: ServiceProtocol {
     private var request: CheckedContinuation<ProfileModel, Error>?
     private var started: CheckedContinuation<Void, Never>?
@@ -212,5 +226,80 @@ struct ProfileIsolationTests {
         #expect(counts.1 == 0)
         let saved = try await profiles.getSavedProfiles()
         #expect(saved.first?.lastUpdated == .distantPast)
+    }
+
+    @Test("Cached profile loads and catalog navigation reuse the synchronized graph")
+    func unchangedReadsDoNotMergeAgain() async throws {
+        let (persistence, _, _, api, store) = try makeRepositories()
+        let sync = CountingCatalogSyncService()
+        let catalog = PersistentCatalogRepository(
+            persistencyService: persistence, catalogSyncService: sync, accountIDStore: store
+        )
+        let profiles = PersistentProfileRepository(
+            profileService: api, persistencyService: persistence,
+            accountIDStore: store, catalogRepository: catalog
+        )
+        api.response = response(accountID: "A", xp: 900_000, completed: true)
+        _ = try await profiles.getProfile(withPlayerId: "A", forceRefresh: true)
+        let initialMergeCount = sync.sourceMergeCount
+        #expect(initialMergeCount > 0)
+
+        _ = try await profiles.getProfile()
+        _ = try await profiles.selectProfile(accountID: "A")
+        _ = try await catalog.getMasterySummary()
+        _ = try await catalog.getMasteryCatalog()
+        #expect(try await ax52(in: catalog).isMastered)
+        let sources = try await catalog.getMasterySourceCategories()
+        #expect(Set(sources.map(\.name)) == Set(["nodes", "intrinsics", "junctions"]))
+        #expect(sync.sourceMergeCount == initialMergeCount)
+        #expect(api.fetchCount == 1)
+        let hasChanges = try await persistence.perform { $0.hasChanges }
+        #expect(!hasChanges)
+
+        api.response = response(accountID: "A", xp: 0)
+        _ = try await profiles.getProfile(forceRefresh: true)
+        #expect(sync.sourceMergeCount == initialMergeCount * 2)
+        #expect(try await ax52(in: catalog).rank == 0)
+    }
+
+    @Test("A catalog read recovers a profile update that has not been synchronized yet")
+    func changedProfileInvalidatesCatalog() async throws {
+        let (persistence, profiles, _, api, store) = try makeRepositories()
+        api.response = response(accountID: "A", xp: 900_000)
+        _ = try await profiles.getProfile(withPlayerId: "A", forceRefresh: true)
+        let context = ModelContext(persistence.modelContainer)
+        let profile = try PersistentProfileRepository.resolveProfile(in: context, accountID: "A")
+        profile.items.first?.xp = 0
+        profile.lastUpdated = profile.lastUpdated.addingTimeInterval(1)
+        try context.save()
+        let catalog = PersistentCatalogRepository(
+            persistencyService: DefaultPersistencyService(modelContainer: persistence.modelContainer),
+            accountIDStore: store
+        )
+        #expect(try await ax52(in: catalog).rank == 0)
+        let summary = try await catalog.getMasterySummary()
+        #expect(summary.categories.first { $0.category == .longGuns }?.earnedMasteryPoints == 0)
+    }
+
+    @Test("An outdated owned catalog is rebuilt and synchronized on read")
+    func outdatedCatalogIsRebuilt() async throws {
+        let (persistence, profiles, _, api, store) = try makeRepositories()
+        api.response = response(accountID: "A", xp: 900_000, completed: true)
+        _ = try await profiles.getProfile(withPlayerId: "A", forceRefresh: true)
+        let context = ModelContext(persistence.modelContainer)
+        let profile = try PersistentProfileRepository.resolveProfile(in: context, accountID: "A")
+        profile.masteryCatalog?.schemaVersion = -1
+        try context.save()
+        let catalog = PersistentCatalogRepository(
+            persistencyService: DefaultPersistencyService(modelContainer: persistence.modelContainer),
+            accountIDStore: store
+        )
+        #expect(try await ax52(in: catalog).isMastered)
+        let counts = try await persistence.perform { context in
+            (try context.fetchCount(FetchDescriptor<MasteryCatalogDataModel>()),
+             try context.fetchCount(FetchDescriptor<ProfileDataModel>()))
+        }
+        #expect(counts.0 == 1)
+        #expect(counts.1 == 1)
     }
 }

@@ -17,12 +17,14 @@ enum MasterySourceType: String {
 protocol CatalogRepository {
     var syncPolicy: SyncPolicy { get }
     func prepareCatalog() async throws
+    func prepareCatalog(for profile: Profile) async throws
     func getMasteryCatalog() async throws -> MasteryCatalog
     func syncMasteryCatalog(with profileModel: Profile) async throws -> MasteryCatalog
     func getMasterySummary() async throws -> MasteryCatalogSummary
     func syncMasterySummary(with profileModel: Profile) async throws -> MasteryCatalogSummary
     func getCatalogContainer(for category: CatalogItemModel.Category) async throws -> CatalogContainer
     func getMasterySources(named source: MasterySourceType?) async throws -> MasteryCategoryModel
+    func getMasterySourceCategories() async throws -> [MasteryCategoryModel]
 }
 
 final class PersistentCatalogRepository: CatalogRepository {
@@ -34,6 +36,7 @@ final class PersistentCatalogRepository: CatalogRepository {
     private let persistencyService: PersistencyService
     private let catalogSyncService: CatalogSyncService
     private let accountIDStore: AccountIDStoring
+    private static let bundledContainer = Result { try loadContainer() }
 
     init(
         syncPolicy: SyncPolicy = .daily,
@@ -48,7 +51,11 @@ final class PersistentCatalogRepository: CatalogRepository {
     }
 
     func prepareCatalog() async throws {
-        _ = try await getMasterySummary()
+        try await readCatalog { _ in () }
+    }
+
+    func prepareCatalog(for profile: Profile) async throws {
+        try await readCatalog(profileID: profile.accountID.oid) { _ in () }
     }
 
     func getMasteryCatalog() async throws -> MasteryCatalog {
@@ -56,7 +63,7 @@ final class PersistentCatalogRepository: CatalogRepository {
     }
 
     func syncMasteryCatalog(with profileModel: Profile) async throws -> MasteryCatalog {
-        try await readCatalog(profileID: profileModel.accountID.oid) { $0.value }
+        try await readCatalog(profileID: profileModel.accountID.oid, synchronize: true) { $0.value }
     }
 
     func getMasterySummary() async throws -> MasteryCatalogSummary {
@@ -64,7 +71,7 @@ final class PersistentCatalogRepository: CatalogRepository {
     }
 
     func syncMasterySummary(with profileModel: Profile) async throws -> MasteryCatalogSummary {
-        try await readCatalog(profileID: profileModel.accountID.oid) { $0.summary }
+        try await readCatalog(profileID: profileModel.accountID.oid, synchronize: true) { $0.summary }
     }
 
     func getCatalogContainer(for category: CatalogItemModel.Category) async throws -> CatalogContainer {
@@ -87,20 +94,30 @@ final class PersistentCatalogRepository: CatalogRepository {
         }
     }
 
+    func getMasterySourceCategories() async throws -> [MasteryCategoryModel] {
+        try await readCatalog { $0.nonItemSources.map(\.value) }
+    }
+
     private func readCatalog<T: Sendable>(
         profileID: String? = nil,
+        synchronize: Bool = false,
         transform: @escaping @Sendable (MasteryCatalogDataModel) throws -> T
     ) async throws -> T {
-        let bundle = try Self.loadContainer()
+        let bundle = try Self.bundledContainer.get()
         let activeID = accountIDStore.currentAccountID
         let selectedID = profileID ?? activeID
         let syncService = catalogSyncService
         let result = try await persistencyService.perform { context in
             do {
                 let profile = try PersistentProfileRepository.resolveProfile(in: context, accountID: selectedID)
-                let catalog = try Self.prepareCatalog(for: profile, bundle: bundle, in: context)
-                Self.mergeProfile(profile, into: catalog, catalogSyncService: syncService)
-                try context.save()
+                let (catalog, wasCreated) = try Self.prepareCatalog(for: profile, bundle: bundle, in: context)
+                if synchronize || wasCreated || catalog.syncedProfileLastUpdated != profile.lastUpdated {
+                    Self.mergeProfile(profile, into: catalog, catalogSyncService: syncService)
+                    catalog.syncedProfileLastUpdated = profile.lastUpdated
+                }
+                if context.hasChanges {
+                    try context.save()
+                }
                 return (profile.accountID, try transform(catalog))
             } catch {
                 context.rollback()
@@ -126,23 +143,23 @@ final class PersistentCatalogRepository: CatalogRepository {
         for profile: ProfileDataModel,
         bundle: MasteryCatalogContainer,
         in context: ModelContext
-    ) throws -> MasteryCatalogDataModel {
+    ) throws -> (MasteryCatalogDataModel, Bool) {
+        if let existing = profile.masteryCatalog,
+           existing.schemaVersion == bundle.schemaVersion,
+           existing.generatedAt == bundle.generatedAt {
+            return (existing, false)
+        }
         let catalogs = try context.fetch(FetchDescriptor<MasteryCatalogDataModel>())
         let legacyCatalogs = catalogs.filter { $0.profile == nil }
         if !legacyCatalogs.isEmpty {
             for cached in try context.fetch(FetchDescriptor<ProfileDataModel>()) where !cached.isLocal {
                 cached.lastUpdated = .distantPast
             }
-            for legacy in legacyCatalogs { context.delete(legacy) }
-        }
-        if let existing = profile.masteryCatalog,
-           existing.schemaVersion == bundle.schemaVersion,
-           existing.generatedAt == bundle.generatedAt {
-            return existing
+            for legacy in legacyCatalogs { Self.deleteCatalog(legacy, in: context) }
         }
         if let old = profile.masteryCatalog {
             profile.masteryCatalog = nil
-            context.delete(old)
+            Self.deleteCatalog(old, in: context)
         }
         var definitions = Dictionary(
             try context.fetch(FetchDescriptor<CatalogItemDataModel>()).map { ($0.uniqueName, $0) },
@@ -180,7 +197,16 @@ final class PersistentCatalogRepository: CatalogRepository {
         catalog.nonItemSources = bundle.nonItemSources.map { name, sources in
             MasteryCategoryDataModel(name: name, sources: sources.map(\.model))
         }
-        return catalog
+        return (catalog, true)
+    }
+
+    private static func deleteCatalog(_ catalog: MasteryCatalogDataModel, in context: ModelContext) {
+        for container in catalog.items {
+            for item in container.masteryItems where item.profileItem != nil {
+                item.profileItem = nil
+            }
+        }
+        context.delete(catalog)
     }
 
     private static func mergeProfile(
@@ -204,8 +230,9 @@ final class PersistentCatalogRepository: CatalogRepository {
             container.fullyMasteredPoints = container.masteryItems.filter(\.isMastered).reduce(0) { $0 + $1.value.earnedMasteryPoints }
             container.partialPoints = container.masteryItems.filter { !$0.isMastered }.reduce(0) { $0 + $1.value.earnedMasteryPoints }
         }
+        let profileValue = profile.value
         for category in catalog.nonItemSources {
-            let merged = catalogSyncService.mergeProfile(profile.value, into: category.sources.map(\.value))
+            let merged = catalogSyncService.mergeProfile(profileValue, into: category.sources.map(\.value))
             for (source, value) in zip(category.sources, merged) {
                 source.isMastered = value.isMastered == true
             }
