@@ -47,3 +47,9 @@ struct FilterPills<Option: Hashable>: View {
         .contentShape(Rectangle())
     }
 }
+
+#Preview {
+    FilterPills(options: MasteryCategoryDetailViewModel.Filter.allCases,
+                title: \.title,
+                selection: .constant(.locked))
+}

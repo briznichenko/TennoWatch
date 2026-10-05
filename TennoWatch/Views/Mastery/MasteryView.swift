@@ -116,6 +116,7 @@ struct MasteryView: View {
             }
             .background(Color(.systemGroupedBackground))
             .listRowSeparator(.hidden)
+            .padding(.horizontal, -16)
         } header: {
             SectionHeaderLabel(Strings.Mastery.categoriesHeader)
         }.listRowBackground(Color.clear)
