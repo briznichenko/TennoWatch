@@ -16,6 +16,6 @@ struct CycleListView: View {
         }
         .listStyle(.plain)
         .navigationTitle(Strings.WorldState.cyclesHeader)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

@@ -11,14 +11,16 @@ import SwiftData
 @Model
 final class MasteryCatalogDataModel {
     // MARK: - Object Properties
-    @Attribute(.unique) var schemaVersion: Double
+    var schemaVersion: Double
+    var profile: ProfileDataModel?
     var gameVersion: String
     var generatedAt: Date
+    var syncedProfileLastUpdated: Date?
     var totalMasteryMax: Int
     var obtainableMasteryMax: Int
-    @Relationship(inverse: \CatalogContainerModel.catalog)
+    @Relationship(deleteRule: .cascade, inverse: \CatalogContainerModel.catalog)
     var items: [CatalogContainerModel]
-    @Relationship(inverse: \MasteryCategoryDataModel.catalog)
+    @Relationship(deleteRule: .cascade, inverse: \MasteryCategoryDataModel.catalog)
     var nonItemSources: [MasteryCategoryDataModel]
 
     // MARK: - Init
@@ -77,6 +79,7 @@ extension MasteryCatalogDataModel: ValueTypeConvertible {
 final class CatalogContainerModel {
     // MARK: - Object Properties
     var category: CatalogItemModel.Category
+    @Relationship(deleteRule: .cascade, inverse: \MasteryItemDataModel.container)
     var masteryItems: [MasteryItemDataModel]
     var catalog: MasteryCatalogDataModel?
 
@@ -123,6 +126,7 @@ extension CatalogContainerModel: ValueTypeConvertible {
 final class MasteryCategoryDataModel {
     // MARK: - Object Properties
     var name: String
+    @Relationship(deleteRule: .cascade, inverse: \MasterySourceDataModel.category)
     var sources: [MasterySourceDataModel]
     var catalog: MasteryCatalogDataModel?
 
@@ -158,7 +162,8 @@ extension MasteryCategoryDataModel: ValueTypeConvertible {
 @Model
 final class MasterySourceDataModel {
     // MARK: - Object Properties
-    @Attribute(.unique) var uniqueName: String
+    var uniqueName: String
+    var category: MasteryCategoryDataModel?
     var name: String
     var mastery: Int
     var isMastered: Bool

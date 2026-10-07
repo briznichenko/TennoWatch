@@ -26,7 +26,7 @@ struct DefaultCatalogSyncService: CatalogSyncService {
 
         return items.map {
             MasteryItem(
-                profileItemModel: profileItems[$0.catalogItemModel.uniqueName] ?? $0.profileItemModel,
+                profileItemModel: profileItems[$0.catalogItemModel.uniqueName],
                 catalogItemModel: $0.catalogItemModel
             )
         }

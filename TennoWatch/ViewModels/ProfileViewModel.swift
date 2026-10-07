@@ -13,14 +13,15 @@ final class ProfileViewModel {
     // MARK: - Object Properties
     private(set) var profile: Profile?
     private(set) var isLoading = false
-    var playerId: String
+    private(set) var savedProfiles: [Profile] = []
+    var playerId: String = ""
 
     private let profileRepository: ProfileRepository
     let errorManager: ErrorManager
 
     // MARK: - Computed Properties
     var displayName: String {
-        profile?.displayName ?? Strings.Profile.displayNameUnknown
+        profile.map { $0.isLocal ? Strings.Profile.manualProfile : $0.displayName } ?? Strings.Profile.displayNameUnknown
     }
     var accountId: String {
         profile?.accountID.oid ?? ""
@@ -57,25 +58,68 @@ final class ProfileViewModel {
     init(profileRepository: ProfileRepository, errorManager: ErrorManager) {
         self.profileRepository = profileRepository
         self.errorManager = errorManager
-        #if DEBUG
-        playerId = "523b73b91a4d806878000000"
-        #endif
     }
 
     // MARK: - Functions
-    func fetchProfile(forceRefresh: Bool = false) async {
-        guard playerId.isEmpty == false else {
-            errorManager.append(PersistentProfileRepository.ProfileError.noPlayerId)
-            return
+    func load() async {
+        await perform {
+            try await self.restoreSelection()
         }
-        defer {
-            isLoading = false
-        }
-        isLoading = true
+    }
 
+    func fetchProfile(forceRefresh: Bool = false) async {
+        let requestedID = playerId.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !requestedID.isEmpty else { return }
+        await perform {
+            self.profile = try await self.profileRepository.getProfile(withPlayerId: requestedID, forceRefresh: forceRefresh)
+            self.playerId = self.accountId
+        }
+    }
+
+    func selectProfile(_ saved: Profile) async {
+        await perform {
+            self.profile = try await self.profileRepository.selectProfile(accountID: saved.accountID.oid)
+            self.playerId = saved.isLocal ? "" : self.accountId
+        }
+    }
+
+    func createLocalProfile() async {
+        await perform {
+            self.profile = try await self.profileRepository.createLocalProfile()
+            self.playerId = ""
+        }
+    }
+
+    func deleteProfile(_ saved: Profile) async {
+        await perform {
+            try await self.profileRepository.deleteProfile(accountID: saved.accountID.oid)
+            try await self.restoreSelection()
+        }
+    }
+
+    func name(for profile: Profile) -> String {
+        profile.isLocal ? Strings.Profile.manualProfile : profile.displayName
+    }
+
+    private func restoreSelection() async throws {
+        savedProfiles = try await profileRepository.getSavedProfiles()
+        let selected = savedProfiles.first { $0.accountID.oid == profileRepository.currentAccountID } ?? savedProfiles.first
+        if let selected {
+            profile = try await profileRepository.selectProfile(accountID: selected.accountID.oid)
+        } else {
+            profile = try await profileRepository.getProfile()
+        }
+        playerId = profile?.isLocal == true ? "" : accountId
+    }
+
+    private func perform(_ action: () async throws -> Void) async {
+        guard !isLoading else { return }
+        isLoading = true
+        defer { isLoading = false }
         do {
-            profile = try await profileRepository.getProfile(withPlayerId: playerId, forceRefresh: forceRefresh)
-            isLoading = false
+            try await action()
+            savedProfiles = try await profileRepository.getSavedProfiles()
+        } catch is CancellationError {
         } catch {
             errorManager.append(error)
         }

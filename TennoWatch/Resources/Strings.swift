@@ -27,10 +27,17 @@ struct Strings {
 
     struct Main {
         private init() {}
+        static var refresh: String { Strings.string("main_refresh_key", "Refresh") }
         static var tabWorldState: String { Strings.string("main_tab_world_state_key", "World state") }
         static var tabMastery: String { Strings.string("main_tab_mastery_key", "Mastery") }
         static var tabOpenings: String { Strings.string("main_tab_openings_key", "Openings") }
         static var tabProfile: String { Strings.string("main_tab_profile_key", "Profile") }
+    }
+
+    struct MenuBar {
+        private init() {}
+        static var openApp: String { Strings.string("menu_bar_open_app_key", "Open TennoWatch") }
+        static var quit: String { Strings.string("menu_bar_quit_key", "Quit TennoWatch") }
     }
 
     struct WorldState {
@@ -120,6 +127,9 @@ struct Strings {
         static var title: String { Strings.string("settings_title_key", "Settings") }
         static var notificationsHeader: String { Strings.string("settings_notifications_header_key", "Notifications") }
         static var voidTraderNotificationsLabel: String { Strings.string("settings_void_trader_notifications_label_key", "Void Trader arrival") }
+        static var storageHeader: String { Strings.string("settings_storage_header_key", "Storage") }
+        static var clearCache: String { Strings.string("settings_clear_cache_key", "Clear cache") }
+        static var clearCacheConfirmation: String { Strings.string("settings_clear_cache_confirmation_key", "Delete all saved profiles, catalog data, and preferences from this device?") }
     }
 
     struct Notifications {
@@ -132,6 +142,8 @@ struct Strings {
 
     struct Mastery {
         private init() {}
+        static var baseStarChart: String { Strings.string("mastery_base_star_chart_key", "Base Star Chart") }
+        static var steelPath: String { Strings.string("mastery_steel_path_key", "Steel Path") }
         static var title: String { Strings.string("mastery_title_key", "Mastery") }
         static var categoriesHeader: String { Strings.string("mastery_categories_header_key", "Categories") }
         static var sortBy: String { Strings.string("mastery_sort_by_key", "Sort by") }
@@ -188,6 +200,14 @@ struct Strings {
 
     struct Profile {
         private init() {}
+        static var savedProfilesHeader: String { Strings.string("profile_saved_profiles_header_key", "Saved profiles") }
+        static var manualProfile: String { Strings.string("profile_manual_profile_key", "Manual tracking") }
+        static var manualProfileDescription: String { Strings.string("profile_manual_profile_description_key", "Local profile") }
+        static var deleteProfileTitle: String { Strings.string("profile_delete_profile_title_key", "Delete profile?") }
+        static var deleteProfileButton: String { Strings.string("profile_delete_profile_button_key", "Delete profile") }
+        static func deleteProfileMessage(_ name: String) -> String {
+            String(format: Strings.string("profile_delete_profile_message_key", "Remove %@ and its saved progress from this device?"), name)
+        }
         static var id: String { Strings.string("profile_id_key", "Player ID") }
         static var idPlaceholder: String { Strings.string("profile_id_placeholder_key", "Enter player ID") }
         static var syncButton: String { Strings.string("profile_sync_button_key", "Sync Profile") }
@@ -278,6 +298,10 @@ struct Strings {
 
     struct Common {
         private init() {}
+        static var search: String { Strings.string("common_search_key", "Search") }
+        static var searchItems: String { Strings.string("common_search_items_key", "Search items") }
+        static var searchNodes: String { Strings.string("common_search_nodes_key", "Search nodes") }
+        static var noSearchResults: String { Strings.string("common_no_search_results_key", "No matching items or nodes") }
         static var loading: String { Strings.string("common_loading_key", "Loading") }
     }
 }

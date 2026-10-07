@@ -14,11 +14,13 @@ final class MasterySourceViewModel: Identifiable {
 
     // MARK: - Object Properties
     private let source: MasterySourceModel
-    let id = UUID()
+
+    var id: String { source.uniqueName }
 
     // MARK: - Computed Properties
     var name: String { source.name }
     var uniqueName: String { source.uniqueName }
+    var starChartMode: StarChartMode { source.starChartMode }
 
     var iconName: String {
         switch state {

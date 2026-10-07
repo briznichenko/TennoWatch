@@ -21,8 +21,12 @@ struct AppDependencies {
     init(modelContainer: ModelContainer) {
         let persistencyService = DefaultPersistencyService(modelContainer: modelContainer)
         self.persistencyService = persistencyService
-        self.profileRepository = PersistentProfileRepository(persistencyService: persistencyService)
-        self.catalogRepository = PersistentCatalogRepository(persistencyService: persistencyService)
+        let accountIDStore = UserDefaultsAccountIDStore()
+        let catalogRepository = PersistentCatalogRepository(persistencyService: persistencyService, accountIDStore: accountIDStore)
+        self.catalogRepository = catalogRepository
+        self.profileRepository = PersistentProfileRepository(
+            persistencyService: persistencyService, accountIDStore: accountIDStore, catalogRepository: catalogRepository
+        )
         self.worldStateRepository = DefaultWorldStateRepository()
         self.errorManager = DefaultErrorManager()
         let notificationService = DefaultNotificationService()

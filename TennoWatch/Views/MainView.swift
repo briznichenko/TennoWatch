@@ -11,6 +11,8 @@ import SwiftData
 struct MainView: View {
     // MARK: - Object Properties
     let dependencies: AppDependencies
+    let onCacheCleared: () -> Void
+    @AppStorage(UserDefaultsAccountIDStore.storageKey) private var currentAccountID: String?
 
     // MARK: - Body
     var body: some View {
@@ -32,6 +34,7 @@ struct MainView: View {
                         errorManager: dependencies.errorManager
                     )
                 )
+                .id(currentAccountID)
             }
             Tab(Strings.Main.tabOpenings, systemImage: "target") {
                 OpeningsView(
@@ -42,30 +45,26 @@ struct MainView: View {
                         errorManager: dependencies.errorManager
                     )
                 )
+                .id(currentAccountID)
             }
-            Tab(Strings.Main.tabProfile, systemImage: "person", role: {
-                    if #available(anyAppleOS 27.0, *) {
-                        .prominent
-                    } else { nil }
-                }()
-            ) {
+            Tab(Strings.Main.tabProfile, systemImage: "person", role: AppPresentation.profileTabRole) {
                 ProfileView(
                     viewModel: .init(
                         profileRepository: dependencies.profileRepository,
                         errorManager: dependencies.errorManager
                     ),
-                    dependencies: dependencies
+                    dependencies: dependencies,
+                    onCacheCleared: onCacheCleared
                 )
             }
         }
-        .toolbarBackground(Color.surface, for: .navigationBar, .tabBar)
-        .toolbarBackground(.visible, for: .navigationBar, .tabBar)
+        .appTabStyle()
     }
 }
 
 #Preview {
     let container = try? ModelContainer(for: ProfileDataModel.self, MasteryCatalogDataModel.self, configurations: .init(isStoredInMemoryOnly: true))
     if let container {
-        MainView(dependencies: AppDependencies(modelContainer: container))
+        MainView(dependencies: AppDependencies(modelContainer: container), onCacheCleared: {})
     }
 }

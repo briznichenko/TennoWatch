@@ -13,13 +13,16 @@ struct SettingsView: View {
     @AppStorage(AppLanguage.storageKey) private var languagePreference: AppLanguage = .system
     @AppStorage(DefaultVoidTraderNotificationScheduler.preferenceKey) private var isVoidTraderNotificationsEnabled = false
     @State private var viewModel: SettingsViewModel
+    @State private var isShowingClearCacheConfirmation = false
 
     let displayName: String
+    let onCacheCleared: () -> Void
 
     // MARK: - Init
-    init(viewModel: SettingsViewModel, displayName: String) {
+    init(viewModel: SettingsViewModel, displayName: String, onCacheCleared: @escaping () -> Void) {
         self.viewModel = viewModel
         self.displayName = displayName
+        self.onCacheCleared = onCacheCleared
     }
 
     // MARK: - Body
@@ -93,10 +96,34 @@ struct SettingsView: View {
                 } header: {
                     SectionHeaderLabel(Strings.Settings.catalogHeader)
                 }
+
+                Section {
+                    Button(role: .destructive) {
+                        isShowingClearCacheConfirmation = true
+                    } label: {
+                        Label(Strings.Settings.clearCache, systemImage: "trash")
+                    }
+                    .disabled(viewModel.isClearingCache || viewModel.isRefreshing)
+                } header: {
+                    SectionHeaderLabel(Strings.Settings.storageHeader)
+                }
             }
             .themedList()
             .navigationTitle(Strings.Settings.title)
             .handleErrorAlert(with: viewModel.errorManager)
+            .confirmationDialog(
+                Strings.Settings.clearCacheConfirmation,
+                isPresented: $isShowingClearCacheConfirmation,
+                titleVisibility: .visible
+            ) {
+                Button(Strings.Settings.clearCache, role: .destructive) {
+                    Task {
+                        if await viewModel.clearCache() {
+                            onCacheCleared()
+                        }
+                    }
+                }
+            }
             .task {
                 await viewModel.loadCatalogInfo()
             }

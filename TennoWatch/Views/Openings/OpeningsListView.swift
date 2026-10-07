@@ -9,7 +9,7 @@ import SwiftUI
 
 struct OpeningsListView: View {
     // MARK: - Object Properties
-    let viewModel: OpeningsViewModel
+    @Bindable var viewModel: OpeningsViewModel
     @State private var isPermanentSectionExpanded: Bool = false
 
     // MARK: - Body
@@ -17,7 +17,9 @@ struct OpeningsListView: View {
         List {
             timeSensitiveSection
             permanentSection
-        }.listStyle(.sidebar)
+        }
+        .listStyle(.sidebar)
+        .searchable(text: $viewModel.searchText, prompt: Strings.Common.search)
     }
 
     // MARK: - Subviews
@@ -25,7 +27,7 @@ struct OpeningsListView: View {
     private var timeSensitiveSection: some View {
         Section {
             if viewModel.timeSensitiveOpenings.isEmpty {
-                Text(Strings.Openings.emptyTimeSensitive)
+                Text(viewModel.isSearching ? Strings.Common.noSearchResults : Strings.Openings.emptyTimeSensitive)
                     .foregroundStyle(Color.labelSecondary)
             } else {
                 ForEach(viewModel.timeSensitiveOpenings) { opening in
@@ -41,14 +43,17 @@ struct OpeningsListView: View {
     private var permanentSection: some View {
         Section(isExpanded: $isPermanentSectionExpanded) {
             if viewModel.permanentItemCategories.isEmpty && viewModel.permanentSourceCategories.isEmpty {
-                Text(Strings.Openings.emptyPermanent)
+                Text(viewModel.isSearching ? Strings.Common.noSearchResults : Strings.Openings.emptyPermanent)
                     .foregroundStyle(Color.labelSecondary)
             } else {
                 ForEach(viewModel.permanentItemCategories) { summary in
                     NavigationLink {
                         OpeningsItemCategoryDetailView(
-                            categoryTitle: summary.category.displayName.sentenceCased,
-                            items: viewModel.permanentItems(in: summary.category)
+                            viewModel: .init(
+                                categoryTitle: summary.category.displayName.sentenceCased,
+                                items: viewModel.permanentItems(in: summary.category),
+                                searchText: viewModel.searchText
+                            )
                         )
                     } label: {
                         OpeningsCategoryRowView(title: summary.category.displayName.sentenceCased, countText: summary.countText)
@@ -57,8 +62,11 @@ struct OpeningsListView: View {
                 ForEach(viewModel.permanentSourceCategories) { summary in
                     NavigationLink {
                         OpeningsSourceCategoryDetailView(
-                            categoryTitle: summary.name.sentenceCased,
-                            sources: viewModel.permanentSources(in: summary.name)
+                            viewModel: .init(
+                                categoryName: summary.name,
+                                sources: viewModel.permanentSources(in: summary.name),
+                                searchText: viewModel.searchText
+                            )
                         )
                     } label: {
                         OpeningsCategoryRowView(title: summary.name.sentenceCased, countText: summary.countText)

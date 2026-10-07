@@ -13,50 +13,20 @@ extension trick every repository protocol in this app uses, since protocol
 methods can't have default parameter values directly).
 
 ## `ProfileRepository`
-```swift
-func getProfile(withPlayerId: String?, forceRefresh: Bool) async throws -> Profile
-```
-Cache policy, inline in `getProfile`:
-1. Fetch whatever's persisted (`ProfileDataModel`, at most one row).
-2. If not `forceRefresh` and the stored profile's `lastUpdated` is *today*
-   (`Calendar.current.isDateInToday`) and `syncPolicy == .daily`, return the
-   cached value — no network call.
-3. Otherwise resolve a `playerId` (the passed-in one, or fall back to the
-   stored profile's own account ID — so `forceRefresh` can be called with no
-   ID and still know who to refresh), fetch from the network, persist, return.
-4. No `playerId` resolvable at all → `ProfileError.noPlayerId`.
 
-`syncPolicy: SyncPolicy` (currently just `.daily`, defined in
-`CatalogRepository.swift` and shared by both repositories) is a stored
-property, not a global constant — set at init, not currently overridden
-anywhere, but the seam exists for a "sync policy per repository instance"
-feature if that's ever needed (e.g. a settings toggle for refresh frequency).
+The profile repository resolves an explicit account ID or the persisted active account. A fresh remote profile uses the daily cache; `forceRefresh` fetches and explicitly updates the existing account row. A missing account creates a local profile with a persisted UUID, and local profiles bypass the network even when force refresh is requested.
+
+`getSavedProfiles()` lists saved accounts, `selectProfile(accountID:)` selects a cached profile, `createLocalProfile()` restores or creates the manual profile, and `deleteProfile(accountID:)` removes one account's graph. The active account is exposed through `currentAccountID` and persisted by the injected `AccountIDStoring` instance.
+
+Profile import builds or refreshes that account's mastery catalog before promoting the account to the active selection. A selection revision and account-ID check reject delayed requests after the selection changes. Cached selection and deletion are usable offline.
 
 ## `CatalogRepository`
-The most complex repository — six protocol methods, because "the catalog"
-is really three different shapes consumers need:
-- **Full catalog** (`getMasteryCatalog`/`syncMasteryCatalog`) — every item,
-  used by Openings (needs the full unmastered-item list to match against
-  world state).
-- **Summary** (`getMasterySummary`/`syncMasterySummary`) — per-category
-  counts/points only, used by the Mastery tab's root screen.
-- **Single category** (`getCatalogContainer(for:)`) / **single source
-  category** (`getMasterySources(named:)`) — used by Mastery's detail
-  screens, fetched lazily on push rather than upfront.
 
-Every `sync*` variant follows the same shape: `ensureCatalogSeeded()` (loads
-`masterycatalog.json` into SwiftData on first-ever call, no-ops after), then
-delegates the actual profile-merge to `CatalogSyncService` inside a single
-`persistencyService.perform` transaction (`mergeProfile` static helper) —
-the repository owns *when* to sync, the service owns *how* to merge. This
-split is deliberate: `CatalogSyncService` is a pure, stateless, easily-tested
-function (see [Services](Services.md)); the repository is where the SwiftData
-transaction, seeding, and cache-shape logic live.
+Consumers request a full catalog, category summary, single item category, or non-item category. Every read resolves a profile-owned graph, rebuilds it when the bundled catalog changes, and recalculates remote mastery from that profile's persisted records inside one `perform(_:)` operation.
 
-The `sync*` vs. plain `get*` distinction exists because callers sometimes
-have a fresh profile in hand already (Settings' explicit refresh) and
-sometimes don't (a cold Mastery-tab load with no profile fetched yet) — the
-`get*` variants just read what's persisted without attempting a merge.
+Plain `get*` methods use the active account. `sync*` methods use the supplied profile's account ID and read its latest persisted records; they do not change the active account or merge one account's snapshot into another account's graph.
+
+Static item definitions are shared by unique name. Mastery rows, source completion, and summary counters belong to individual profiles. See [Persistency](Persistency.md) for ownership, legacy-store repair, and the actor boundary.
 
 ## Conventions for adding a new repository
 1. Protocol first, with a default-argument extension for anything that
@@ -73,8 +43,5 @@ sometimes don't (a cold Mastery-tab load with no profile fetched yet) — the
    repository inline in a View or ViewModel.
 
 ## Test coverage
-`ProfileRepositoryTests` covers the cache/force-refresh branch logic in
-detail. No `CatalogRepositoryTests` or `WorldStateRepositoryTests` — given
-`CatalogRepository` is the most complex type in the app (six methods, a
-seeding path, a merge transaction), this is the single biggest coverage gap
-in the codebase.
+
+`ProfileRepositoryTests` covers cache and force-refresh behavior. `ProfileIsolationTests` exercises real SwiftData storage for multi-profile overlap, replacement refreshes, consistent category totals, local profile identity, deletion, legacy graph repair, and delayed requests. `MasteryItemPersistenceTests` covers AX-52 and reads from a new model context. `WorldStateRepository` still has no direct repository tests.

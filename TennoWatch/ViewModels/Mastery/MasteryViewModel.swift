@@ -24,10 +24,10 @@ struct MasteryRankProgress {
     var fraction: Double {
         let span = Double(xpForNextRank - xpForCurrentRank)
         guard span > 0 else { return 1 }
-        return Double(currentXP - xpForCurrentRank) / span
+        return min(1, max(0, Double(currentXP - xpForCurrentRank) / span))
     }
 
-    var xpToNextRank: Int { xpForNextRank - currentXP }
+    var xpToNextRank: Int { max(0, xpForNextRank - currentXP) }
 }
 
 @Observable
@@ -38,6 +38,7 @@ final class MasteryViewModel {
     let errorManager: ErrorManager
     
     private(set) var summary: MasteryCatalogSummary?
+    private(set) var playerRank: Int?
     private(set) var breakdownSections: [[MasteryBreakdownRow]] = []
 
     private(set) var isLoading: Bool = false
@@ -56,7 +57,7 @@ final class MasteryViewModel {
     }
 
     var rankProgress: MasteryRankProgress {
-        Self.rankProgress(forXP: earnedMasteryXP)
+        Self.rankProgress(forXP: earnedMasteryXP, playerRank: playerRank)
     }
 
     var obtainableItemsRemaining: Int {
@@ -82,22 +83,33 @@ final class MasteryViewModel {
         }
 
         do {
-            if let profile = try? await profileRepository.getProfile(forceRefresh: forceRefresh) {
-                summary = try await catalogRepository.syncMasterySummary(with: profile)
-            } else {
-                summary = try await catalogRepository.getMasterySummary()
+            let profile: Profile?
+            do {
+                profile = try await profileRepository.getProfile(forceRefresh: forceRefresh)
+            } catch PersistentProfileRepository.ProfileError.noPlayerId {
+                profile = nil
             }
+            let updatedSummary = try await catalogRepository.getMasterySummary()
+            guard !Task.isCancelled else { return }
+            summary = updatedSummary
+            playerRank = profile?.isLocal == true ? nil : profile?.playerLevel
+            breakdownSections = []
         } catch {
-            errorManager.append(error)
+            if !Task.isCancelled && !(error is CancellationError) {
+                errorManager.append(error)
+            }
         }
     }
 
     func loadBreakdown() async {
         guard breakdownSections.isEmpty else { return }
         do {
-            let nodes = try await catalogRepository.getMasterySources(named: .nodes)
-            let intrinsics = try await catalogRepository.getMasterySources(named: .intrinsics)
-            let junctions = try await catalogRepository.getMasterySources(named: .junctions)
+            let sources = try await catalogRepository.getMasterySourceCategories()
+            guard let nodes = sources.first(where: { $0.name == MasterySourceType.nodes.rawValue }),
+                  let intrinsics = sources.first(where: { $0.name == MasterySourceType.intrinsics.rawValue }),
+                  let junctions = sources.first(where: { $0.name == MasterySourceType.junctions.rawValue }) else {
+                throw PersistentCatalogRepository.CatalogError.wrongCategory
+            }
             breakdownSections = Self.makeBreakdownSections(
                 categories: categories,
                 nodes: nodes,
@@ -118,7 +130,7 @@ final class MasteryViewModel {
     }
     
     // MARK: - Helper Functions
-    private static func rankProgress(forXP xp: Int) -> MasteryRankProgress {
+    private static func rankProgress(forXP xp: Int, playerRank: Int?) -> MasteryRankProgress {
         let legendaryCapRank = 30
         let legendaryCapXP = 2500 * legendaryCapRank * legendaryCapRank
         let legendaryRankXP = 147_500
@@ -130,18 +142,16 @@ final class MasteryViewModel {
         while cumulativeXP(for: completedRanks + 1) <= xp {
             completedRanks += 1
         }
+        let rank = playerRank.map { max(0, $0) } ?? completedRanks
+        let currentXP = cumulativeXP(for: rank)
         return MasteryRankProgress(
-            rank: completedRanks,
+            rank: rank,
             currentXP: xp,
-            xpForCurrentRank: cumulativeXP(for: completedRanks),
-            xpForNextRank: cumulativeXP(for: completedRanks + 1)
+            xpForCurrentRank: currentXP,
+            xpForNextRank: cumulativeXP(for: rank + 1)
         )
     }
 
-    // Groups every `CatalogItemModel.Category` and non-item source into the same
-    // rows/order the in-game "Mastery Breakdown" panel uses, so the two can be
-    // compared line by line. Every case is placed somewhere (see the "Other" section)
-    // so the rows' total always equals `earnedMasteryXP` exactly.
     private static func makeBreakdownSections(
         categories: [CatalogContainerSummary],
         nodes: MasteryCategoryModel,
@@ -198,5 +208,4 @@ final class MasteryViewModel {
 
         return [weapons, missionsAndIntrinsics, companions, archAndModular, other]
     }
-
 }

@@ -16,7 +16,7 @@ final class ProfileItemDataModel {
     var assists: Int?
     var kills: Int?
     var xp: Int?
-    @Attribute(.unique) var type: String
+    var type: String
     var fired: Int?
     var profile: ProfileDataModel?
     var masteryItem: MasteryItemDataModel?
@@ -96,9 +96,10 @@ extension CatalogItemDataModel: ValueTypeConvertible {
 final class MasteryItemDataModel {
     // MARK: - Object Properties
     var catalogItem: CatalogItemDataModel
-    @Relationship(deleteRule: .cascade, inverse: \ProfileItemDataModel.masteryItem)
+    @Relationship(inverse: \ProfileItemDataModel.masteryItem)
     var profileItem: ProfileItemDataModel?
     var isMastered: Bool = false
+    var container: CatalogContainerModel?
 
     // MARK: - Init
     init(profileItemModel: ProfileItemModel?, catalogItemModel: CatalogItemModel) {
@@ -107,6 +108,12 @@ final class MasteryItemDataModel {
         }
         catalogItem = .init(catalogItem: catalogItemModel)
         isMastered = MasteryItem(profileItemModel: profileItemModel, catalogItemModel: catalogItemModel).isMastered
+    }
+
+    init(catalogItem: CatalogItemDataModel, profileItem: ProfileItemDataModel?) {
+        self.catalogItem = catalogItem
+        self.profileItem = profileItem
+        self.isMastered = MasteryItem(profileItemModel: profileItem?.value, catalogItemModel: catalogItem.value).isMastered
     }
 
     // MARK: - Functions

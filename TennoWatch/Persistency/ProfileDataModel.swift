@@ -24,13 +24,17 @@ final class ProfileDataModel: ValueTypeConvertible {
             },
             missions: missions.map(\.value),
             accountStats: accountStats.value,
-            lastUpdated: lastUpdated
+            lastUpdated: lastUpdated,
+            isLocal: isLocal
         )
     }
 
     // MARK: - Object Properties
     @Attribute(.unique) var accountID: String
-    @Attribute(.unique) var displayName: String
+    var displayName: String
+    var isLocal: Bool = false
+    @Relationship(deleteRule: .cascade, inverse: \MasteryCatalogDataModel.profile)
+    var masteryCatalog: MasteryCatalogDataModel?
     var playerLevel: Int = 0
     @Relationship(deleteRule: .cascade, inverse: \ProfileItemDataModel.profile)
     var items: [ProfileItemDataModel]
@@ -38,6 +42,7 @@ final class ProfileDataModel: ValueTypeConvertible {
     var playerSkills: [IntrinsicsDataModel]
     @Relationship(deleteRule: .cascade, inverse: \ResultMissionDataModel.profile)
     var missions: [ResultMissionDataModel]
+    @Relationship(deleteRule: .cascade)
     var accountStats: AccountStatsDataModel
     var lastUpdated: Date
 
@@ -50,7 +55,8 @@ final class ProfileDataModel: ValueTypeConvertible {
         playerSkills: [IntrinsicsDataModel],
         missions: [ResultMissionDataModel],
         accountStats: AccountStatsDataModel,
-        lastUpdated: Date
+        lastUpdated: Date,
+        isLocal: Bool = false
     ) {
         self.accountID = accountID
         self.displayName = displayName
@@ -60,6 +66,7 @@ final class ProfileDataModel: ValueTypeConvertible {
         self.missions = missions
         self.accountStats = accountStats
         self.lastUpdated = lastUpdated
+        self.isLocal = isLocal
     }
 }
 
@@ -76,7 +83,8 @@ struct Profile: PersistentModelConvertible {
             playerSkills: playerSkills.map { .init(name: $0.key, rank: $0.value) },
             missions: missions.map { .init(completes: $0.completes, tier: $0.tier, tag: $0.tag) },
             accountStats: accountStats.model,
-            lastUpdated: lastUpdated
+            lastUpdated: lastUpdated,
+            isLocal: isLocal
         )
     }
 
@@ -89,6 +97,7 @@ struct Profile: PersistentModelConvertible {
     let missions: [ResultMission]
     let accountStats: AccountStats
     let lastUpdated: Date
+    var isLocal: Bool = false
 }
 
 @Model
@@ -207,7 +216,7 @@ final class ResultMissionDataModel {
     // MARK: - Object Properties
     var completes: Int
     var tier: Int?
-    @Attribute(.unique) var tag: String
+    var tag: String
     var profile: ProfileDataModel?
 
     // MARK: - Init
@@ -233,7 +242,7 @@ extension ResultMissionDataModel: ValueTypeConvertible {
 @Model
 final class IntrinsicsDataModel {
     // MARK: - Object Properties
-    @Attribute(.unique) var name: String
+    var name: String
     var rank: Int
     var profile: ProfileDataModel?
 

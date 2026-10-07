@@ -8,9 +8,11 @@ import SwiftUI
 struct SteelPathDetailView: View {
     let steelPath: SteelPathOfferings
 
+    @State private var searchText = ""
+
     var body: some View {
         List {
-            if let currentReward = steelPath.currentReward {
+            if let currentReward = steelPath.currentReward, currentReward.name.matchesSearch(searchText) {
                 Section {
                     SteelPathRewardRowView(reward: currentReward)
                 } header: {
@@ -18,14 +20,14 @@ struct SteelPathDetailView: View {
                 }
             }
             Section {
-                ForEach(steelPath.rotation, id: \.name) { reward in
+                ForEach(steelPath.rotation.filter { $0.name.matchesSearch(searchText) }, id: \.name) { reward in
                     SteelPathRewardRowView(reward: reward)
                 }
             } header: {
                 SectionHeaderLabel(Strings.WorldState.rotationHeader)
             }
             Section {
-                ForEach(steelPath.evergreens, id: \.name) { reward in
+                ForEach(steelPath.evergreens.filter { $0.name.matchesSearch(searchText) }, id: \.name) { reward in
                     SteelPathRewardRowView(reward: reward)
                 }
             } header: {
@@ -38,8 +40,9 @@ struct SteelPathDetailView: View {
             }
         }
         .listStyle(.plain)
+        .searchable(text: $searchText, prompt: Strings.Common.search)
         .navigationTitle(Strings.WorldState.steelPathHeader)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 
     // MARK: - Subviews

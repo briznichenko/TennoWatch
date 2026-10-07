@@ -12,7 +12,8 @@ import Foundation
 final class TimeSensitiveOpeningViewModel: Identifiable {
     // MARK: - Object Properties
     private let opening: TimeSensitiveOpening
-    let id = UUID()
+
+    var id: String { opening.id }
 
     // MARK: - Computed Properties
     var name: String { opening.item.catalogItemModel.name }

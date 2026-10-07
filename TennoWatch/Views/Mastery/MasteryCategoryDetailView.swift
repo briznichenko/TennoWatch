@@ -27,6 +27,7 @@ struct MasteryCategoryDetailView: View {
             }
         }
         .listStyle(.plain)
+        .searchable(text: $viewModel.searchText, prompt: Strings.Common.searchItems)
         .overlay {
             if viewModel.isLoading {
                 LotusLoaderView()
@@ -35,13 +36,14 @@ struct MasteryCategoryDetailView: View {
         .safeAreaInset(edge: .top) {
             FilterPills(options: Filter.allCases, title: \.title, selection: $viewModel.filter)
                 .padding(.horizontal)
-                .padding(.vertical, 8)
                 .background(Color.bg)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .padding(.vertical, 8)
         }
         .navigationTitle(viewModel.category.displayName.sentenceCased)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .primaryAction) {
                 Menu {
                     Picker(Strings.Mastery.sortBy, selection: $viewModel.sortOption) {
                         ForEach(SortOption.allCases) { option in

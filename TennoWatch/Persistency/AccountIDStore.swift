@@ -5,7 +5,7 @@
 
 import Foundation
 
-protocol AccountIDStoring {
+protocol AccountIDStoring: AnyObject {
     var currentAccountID: String? { get set }
 }
 

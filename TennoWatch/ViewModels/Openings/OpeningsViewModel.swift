@@ -11,6 +11,7 @@ import Observation
 struct OpeningsItemCategorySummary: Identifiable, Hashable {
     let category: CatalogItemModel.Category
     let count: Int
+
     var id: CatalogItemModel.Category { category }
     var countText: String { "\(count)" }
 }
@@ -18,6 +19,7 @@ struct OpeningsItemCategorySummary: Identifiable, Hashable {
 struct OpeningsSourceCategorySummary: Identifiable, Hashable {
     let name: String
     let count: Int
+
     var id: String { name }
     var countText: String { "\(count)" }
 }
@@ -34,8 +36,11 @@ final class OpeningsViewModel {
     private(set) var catalog: MasteryCatalog?
     private(set) var worldState: WorldState?
     private(set) var isLoading = false
+    var searchText = ""
 
     // MARK: - Computed Properties
+    var isSearching: Bool { !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+
     private var unmasteredItems: [MasteryItem] {
         (catalog?.items.flatMap(\.masteryItems) ?? []).filter { $0.obtainable && !$0.isMastered }
     }
@@ -61,19 +66,25 @@ final class OpeningsViewModel {
 
     var timeSensitiveOpenings: [TimeSensitiveOpeningViewModel] {
         matchedOpenings
+            .filter { $0.item.catalogItemModel.name.matchesSearch(searchText) || $0.item.catalogItemModel.uniqueName.matchesSearch(searchText) }
             .sorted { $0.item.catalogItemModel.name < $1.item.catalogItemModel.name }
             .map { TimeSensitiveOpeningViewModel(opening: $0) }
     }
 
     var permanentItemCategories: [OpeningsItemCategorySummary] {
-        Dictionary(grouping: permanentMasteryItems, by: \.catalogItemModel.category)
+        Dictionary(grouping: permanentMasteryItems.filter {
+            $0.catalogItemModel.name.matchesSearch(searchText) || $0.catalogItemModel.uniqueName.matchesSearch(searchText)
+        }, by: \.catalogItemModel.category)
             .map { OpeningsItemCategorySummary(category: $0.key, count: $0.value.count) }
             .sorted { $0.category.displayName < $1.category.displayName }
     }
 
     var permanentSourceCategories: [OpeningsSourceCategorySummary] {
         permanentSourceGroups
-            .map { OpeningsSourceCategorySummary(name: $0.name, count: $0.sources.count) }
+            .compactMap { group in
+                let matching = group.sources.filter { $0.name.matchesSearch(searchText) || $0.uniqueName.matchesSearch(searchText) }
+                return matching.isEmpty ? nil : OpeningsSourceCategorySummary(name: group.name, count: matching.count)
+            }
             .sorted { $0.name < $1.name }
     }
 
@@ -99,8 +110,10 @@ final class OpeningsViewModel {
 
         async let fetchedCatalog = fetchCatalog()
         async let fetchedWorldState = fetchWorldState()
-        catalog = await fetchedCatalog
-        worldState = await fetchedWorldState
+        let result = await (fetchedCatalog, fetchedWorldState)
+        guard !Task.isCancelled else { return }
+        catalog = result.0
+        worldState = result.1
     }
 
     func permanentItems(in category: CatalogItemModel.Category) -> [MasteryItemViewModel] {
@@ -119,12 +132,12 @@ final class OpeningsViewModel {
     // MARK: - Helper Functions
     private func fetchCatalog() async -> MasteryCatalog? {
         do {
-            if let profile = try? await profileRepository.getProfile() {
-                return try await catalogRepository.syncMasteryCatalog(with: profile)
-            }
+            _ = try await profileRepository.getProfile()
             return try await catalogRepository.getMasteryCatalog()
         } catch {
-            errorManager.append(error)
+            if !Task.isCancelled && !(error is CancellationError) {
+                errorManager.append(error)
+            }
             return nil
         }
     }
@@ -133,7 +146,9 @@ final class OpeningsViewModel {
         do {
             return try await worldStateRepository.getWorldState()
         } catch {
-            errorManager.append(error)
+            if !Task.isCancelled && !(error is CancellationError) {
+                errorManager.append(error)
+            }
             return nil
         }
     }

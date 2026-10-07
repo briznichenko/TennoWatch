@@ -14,7 +14,8 @@ final class MasteryItemViewModel: Identifiable {
 
     // MARK: - Object Properties
     private let item: MasteryItem
-    let id = UUID()
+
+    var id: String { item.catalogItemModel.uniqueName }
 
     // MARK: - Computed Properties
     var name: String { item.catalogItemModel.name }

@@ -14,6 +14,7 @@ final class SettingsViewModel {
     private(set) var gameVersion: String?
     private(set) var catalogGeneratedAt: Date?
     private(set) var isRefreshing = false
+    private(set) var isClearingCache = false
 
     private let persistencyService: PersistencyService
     private let catalogRepository: CatalogRepository
@@ -58,8 +59,7 @@ final class SettingsViewModel {
         isRefreshing = true
 
         do {
-            let profile = try await profileRepository.getProfile(forceRefresh: true)
-            _ = try await catalogRepository.syncMasteryCatalog(with: profile)
+            _ = try await profileRepository.getProfile(forceRefresh: true)
             await loadCatalogInfo()
         } catch {
             errorManager.append(error)
@@ -81,4 +81,28 @@ final class SettingsViewModel {
             errorManager.append(error)
         }
     }
+
+    func clearCache() async -> Bool {
+        isClearingCache = true
+        defer { isClearingCache = false }
+
+        do {
+            guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
+                throw ClearCacheError.missingBundleIdentifier
+            }
+            try await persistencyService.clearAllData()
+            voidTraderNotificationScheduler.cancelArrivalNotification()
+            UserDefaults.standard.removePersistentDomain(forName: bundleIdentifier)
+            gameVersion = nil
+            catalogGeneratedAt = nil
+            return true
+        } catch {
+            errorManager.append(error)
+            return false
+        }
+    }
+}
+
+private enum ClearCacheError: Error {
+    case missingBundleIdentifier
 }

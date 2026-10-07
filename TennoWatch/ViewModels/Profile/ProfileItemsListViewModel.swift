@@ -31,7 +31,7 @@ final class ProfileItemsListViewModel {
 
     // MARK: - Computed Properties
     var sortedItems: [ProfileItemStat] {
-        let filtered = searchText.isEmpty ? items : items.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        let filtered = items.filter { $0.name.matchesSearch(searchText) || $0.type.matchesSearch(searchText) }
         switch sortOption {
         case .kills: return filtered.sorted { $0.kills > $1.kills }
         case .xp: return filtered.sorted { $0.xp > $1.xp }

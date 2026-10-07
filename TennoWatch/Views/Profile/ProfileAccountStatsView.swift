@@ -22,6 +22,6 @@ struct ProfileAccountStatsView: View {
         }
         .listStyle(.plain)
         .navigationTitle(Strings.Profile.statsTitle)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }
