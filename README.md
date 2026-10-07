@@ -6,7 +6,7 @@ An iOS and macOS app for tracking Warframe Mastery Rank progress, built for pers
 
 Warframe's Mastery system spans hundreds of weapons, warframes, and other rankable items, but there's no iOS app to track what's left to master or when a needed item is actually available. TennoWatch fills that gap: it matches your account's profile against the full item catalog, then cross-references the remaining items against live game state to tell you when and where you can actually get them.
 
-It's built on a shared Apple-platform stack — Swift 6 strict concurrency, SwiftUI, SwiftData, MVVM+C — against Warframe's real, constantly changing data feed rather than static sample data.
+It's built on a shared Apple-platform stack — Swift 6 compiler, SwiftUI, SwiftData, MVVM+C — against Warframe's real, constantly changing data feed rather than static sample data.
 
 ## Features
 
@@ -15,8 +15,8 @@ It's built on a shared Apple-platform stack — Swift 6 strict concurrency, Swif
 | **World State** | Live invasions, fissures, sorties, Nightwave challenges, the Void Trader, and open-world day/night cycles (Cetus, Vallis, Cambion, Zariman). |
 | **Mastery** | Tracks mastery rank progress against the full item catalog, broken down by category and source, including intrinsics and Steel Path variants. |
 | **Openings** | Cross-references your remaining mastery items against live world state to surface time-sensitive ways to get them — an invasion carrying the item as a reward, the Void Trader stocking it, etc. |
-| **Profile** | A player's public stats, missions, and inventory, pulled from the Warframe profile API. |
-| **Settings** | Theme (system/light/dark), language, and manual mastery-catalog refresh with version/generation-date info. |
+| **Profile** | Sync by account ID, switch saved profiles, or use an offline manual profile; view stats, missions, and inventory. |
+| **Settings** | Theme, language, local Void Trader arrival reminders, catalog refresh, and cache clearing. |
 
 Deeper specs for each tab and layer live in [Specs/](Specs/).
 
@@ -49,7 +49,7 @@ xcodebuild -project TennoWatch.xcodeproj -scheme TennoWatch \
   -destination 'platform=macOS' build CODE_SIGN_IDENTITY=-
 ```
 
-The Profile tab currently points at a hardcoded `playerId` rather than a search/lookup flow — see [Roadmap](#roadmap--work-in-progress).
+Add your account ID in Profile to sync, or create a manual profile for offline mastery tracking. Saved profiles keep their progress separately.
 
 The Mastery catalog itself is generated offline: [Scripts/generate_catalog](Scripts/generate_catalog) fetches Digital Extremes' live `PublicExport` feed and rebuilds [TennoWatch/Resources/masterycatalog.json](TennoWatch/Resources/masterycatalog.json) from scratch (`cd Scripts/generate_catalog && npm install && npm run generate`), and [Scripts/itemMapper.py](Scripts/itemMapper.py) separately maps game item paths to display names into [Generated/ExternalData.swift](Generated/ExternalData.swift). Both are checked into the repo; you only need to re-run them after a game update adds new items.
 
@@ -78,18 +78,18 @@ Cross-cutting:
 
 ## Testing
 
-Swift Testing, covering networking, repositories, sync/matching services, and one ViewModel so far (`TennoWatchTests/`). Coverage is intentionally partial while the app is still taking shape.
+Swift Testing covers networking, profile persistence and isolation, cache clearing, repositories, sync/matching services, and the World State ViewModel (`TennoWatchTests/`).
 
 ## Data Source
 
-- World state and the mastery catalog come from [`api.warframestat.us`](https://docs.warframestat.us/), a community-run API maintained by [Warframe Community Developers (WFCD)](https://github.com/WFCD). It wraps Digital Extremes' own public world-state feed — the same feed used by Digital Extremes' official companion app — rather than anything reverse-engineered from the game client.
+- World state comes from [`api.warframestat.us`](https://docs.warframestat.us/), a community-run API maintained by [Warframe Community Developers (WFCD)](https://github.com/WFCD). The mastery catalog is generated from Digital Extremes' public `PublicExport` feed.
 - Profile data comes from Digital Extremes' own public profile-viewer endpoint (`api.warframe.com`), the same one the in-game and web profile viewers use.
 
 ## Roadmap / Work in Progress
 
 - **Push notifications (APNs)** — surfacing time-sensitive openings (an invasion or Void Trader stock matching a needed item) as a push alert, so you don't have to have the app open. Not wired up yet.
 - **Combine** — the network/data layer is currently plain `async`/`await`; adopting Combine for live-updating state (e.g. streaming world-state changes) is on the roadmap, not yet implemented.
-- **Player search/lookup** — Profile currently reads from a hardcoded account ID; a real search flow is the next planned feature there.
+- **Player search/lookup** — sync currently requires an account ID; username lookup is not implemented.
 - **Platform selector** — World State is hardcoded to PC; PS/Xbox/Switch support is unimplemented.
 - **Coordinators for the remaining tabs** — World State, Openings, and Profile still navigate via inline `NavigationLink(destination:)`; they'll each get a `Coordinator` once their drill-down grows past single-level, following the pattern introduced in Mastery.
 
@@ -97,7 +97,7 @@ Swift Testing, covering networking, repositories, sync/matching services, and on
 
 This is an unofficial, non-commercial, fan-made project. It is **not affiliated with, endorsed by, or sponsored by Digital Extremes**. WARFRAME® and all related game data, names, and assets are the property of Digital Extremes Ltd.
 
-- All Warframe-related data displayed by this app is fetched live from a public API at runtime — no Warframe game data, images, or other assets are bundled with or committed to this repository.
+- World state and profiles are fetched from public APIs. A generated mastery catalog and item-name mappings are bundled for offline use; item artwork is loaded remotely.
 - This project is for personal, non-commercial use only, in line with Digital Extremes' [Content Policy](https://www.warframe.com/en/contentpolicy), [Terms of Use](https://www.warframe.com/en/terms), and [EULA](https://www.warframe.com/en/eula-us).
 - The MIT license below covers the original source code in this repository only. It does not grant any rights to Warframe's name, trademarks, artwork, or game data.
 
