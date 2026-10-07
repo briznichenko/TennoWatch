@@ -38,6 +38,6 @@ struct IntrinsicsView: View {
         .themedList()
         .searchable(text: $searchText, prompt: Strings.Common.search)
         .navigationTitle(Strings.Profile.intrinsicsTitle)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

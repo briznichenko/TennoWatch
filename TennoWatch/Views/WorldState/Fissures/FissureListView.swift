@@ -36,6 +36,6 @@ struct FissureListView: View {
         .listStyle(.plain)
         .searchable(text: $searchText, prompt: Strings.Common.searchNodes)
         .navigationTitle(Strings.WorldState.fissuresHeader)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

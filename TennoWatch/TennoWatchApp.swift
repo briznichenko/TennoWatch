@@ -14,6 +14,8 @@ struct TennoWatchApp: App {
     @AppStorage("themePreference") private var themePreference: ThemePreference = .system
     @AppStorage(AppLanguage.storageKey) private var languagePreference: AppLanguage = .system
 
+    @State private var cacheResetID = UUID()
+
     private let modelContainer: ModelContainer
     private let dependencies: AppDependencies
 
@@ -26,15 +28,42 @@ struct TennoWatchApp: App {
 
     // MARK: - Body
     var body: some Scene {
-        WindowGroup {
-            RootView(dependencies: dependencies)
-                .tint(.accent)
-                .foregroundStyle(Color.labelPrimary)
-                .preferredColorScheme(themePreference.colorScheme)
-                .environment(\.locale, languagePreference.locale ?? .current)
-                .id(languagePreference)
+        #if os(macOS)
+        Window("TennoWatch", id: "main") {
+            appContent
+                .frame(minWidth: 820, minHeight: 600)
+        }
+        .defaultSize(width: 1100, height: 760)
+        .modelContainer(modelContainer)
+
+        Settings {
+            MacSettingsView(dependencies: dependencies) {
+                cacheResetID = UUID()
+            }
+            .id(cacheResetID)
+            .tint(.accent)
+            .foregroundStyle(Color.labelPrimary)
+            .preferredColorScheme(themePreference.colorScheme)
+            .environment(\.locale, languagePreference.locale ?? .current)
+            .id(languagePreference)
         }
         .modelContainer(modelContainer)
+        #else
+        WindowGroup {
+            appContent
+        }
+        .modelContainer(modelContainer)
+        #endif
+    }
+
+    private var appContent: some View {
+        RootView(dependencies: dependencies)
+            .id(cacheResetID)
+            .tint(.accent)
+            .foregroundStyle(Color.labelPrimary)
+            .preferredColorScheme(themePreference.colorScheme)
+            .environment(\.locale, languagePreference.locale ?? .current)
+            .id(languagePreference)
     }
 
     // MARK: - Helper Functions

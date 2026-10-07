@@ -45,12 +45,18 @@ struct ProfileView: View {
                     }
                 }
                 .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
+                    ToolbarItem(placement: .primaryAction) {
+                        #if os(macOS)
+                        SettingsLink {
+                            Label(Strings.Settings.title, systemImage: "gearshape")
+                        }
+                        #else
                         Button {
                             isShowingSettings = true
                         } label: {
                             Image(systemName: "gearshape")
                         }
+                        #endif
                     }
                 }
                 .handleErrorAlert(with: viewModel.errorManager)
@@ -72,7 +78,7 @@ struct ProfileView: View {
                 .task {
                     await viewModel.load()
                 }
-                .refreshable {
+                .platformRefreshable(isDisabled: viewModel.isLoading || viewModel.profile?.isLocal == true) {
                     if viewModel.profile?.isLocal != true {
                         await viewModel.fetchProfile(forceRefresh: true)
                     }

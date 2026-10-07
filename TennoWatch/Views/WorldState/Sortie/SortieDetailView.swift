@@ -18,6 +18,6 @@ struct SortieDetailView: View {
         .listStyle(.plain)
         .searchable(text: $searchText, prompt: Strings.Common.searchNodes)
         .navigationTitle(title)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

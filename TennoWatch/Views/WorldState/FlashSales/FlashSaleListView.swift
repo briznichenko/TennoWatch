@@ -19,6 +19,6 @@ struct FlashSaleListView: View {
         .listStyle(.plain)
         .searchable(text: $searchText, prompt: Strings.Common.searchItems)
         .navigationTitle(Strings.WorldState.flashSalesHeader)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

@@ -67,6 +67,7 @@ struct PlayerIdHelpAlertView: View {
             }
             .padding(20)
             .background(.surface, in: .rect(cornerRadius: 16))
+            .frame(maxWidth: 480)
             .padding(.horizontal, 32)
         }
         .transition(.opacity)

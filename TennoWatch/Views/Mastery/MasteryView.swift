@@ -14,7 +14,11 @@ struct MasteryView: View {
     @State private var isCategoriesExpanded: Bool = true
     @AppStorage(UserDefaultsAccountIDStore.storageKey) private var currentAccountID: String?
     
+    #if os(macOS)
+    private static let categoryColumns = [GridItem(.adaptive(minimum: 220))]
+    #else
     private static let categoryColumns = [GridItem(.flexible()), GridItem(.flexible())]
+    #endif
 
     // MARK: - Init
     init(viewModel: MasteryViewModel) {
@@ -31,8 +35,13 @@ struct MasteryView: View {
                 categoryList
                 otherSourcesList
             }
+            #if os(macOS)
+            .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            #else
             .listStyle(.sidebar)
-            .background(Color(.systemGroupedBackground))
+            #endif
+            .background(Color.bg)
             .navigationTitle(Strings.Mastery.title)
             .overlay {
                 if viewModel.isLoading {
@@ -59,7 +68,7 @@ struct MasteryView: View {
             .task(id: currentAccountID) {
                 await viewModel.fetchCatalog()
             }
-            .refreshable {
+            .platformRefreshable(isDisabled: viewModel.isLoading) {
                 await viewModel.fetchCatalog()
             }
         }
@@ -103,20 +112,24 @@ struct MasteryView: View {
         Section(isExpanded: $isCategoriesExpanded) {
             LazyVGrid(columns: Self.categoryColumns, spacing: 12) {
                 ForEach(viewModel.categories) { summary in
-                    CardView(
-                        icon: summary.category.iconName,
-                        title: summary.category.displayName.sentenceCased
-                    ) {
-                        Text(summary.countText)
-                    }
-                    .onTapGesture {
+                    Button {
                         coordinator.showCategoryDetail(summary.category)
+                    } label: {
+                        CardView(
+                            icon: summary.category.iconName,
+                            title: summary.category.displayName.sentenceCased
+                        ) {
+                            Text(summary.countText)
+                        }
                     }
+                    .buttonStyle(.plain)
                 }
             }
-            .background(Color(.systemGroupedBackground))
+            .background(Color.bg)
             .listRowSeparator(.hidden)
+            #if os(iOS)
             .padding(.horizontal, -16)
+            #endif
         } header: {
             SectionHeaderLabel(Strings.Mastery.categoriesHeader)
         }.listRowBackground(Color.clear)

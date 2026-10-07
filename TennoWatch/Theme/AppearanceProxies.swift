@@ -9,6 +9,7 @@ import SwiftUI
 
 enum AppearanceProxies {
     static func configure() {
+        #if os(iOS)
         let navigationBarAppearance = UINavigationBar.appearance()
         navigationBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor(resource: .labelPrimary)]
 
@@ -18,5 +19,6 @@ enum AppearanceProxies {
             for: .normal
         )
         UITabBar.appearance().unselectedItemTintColor = UIColor(resource: .labelSecondary)
+        #endif
     }
 }

@@ -1,12 +1,12 @@
 # TennoWatch
 
-An iOS app for tracking Warframe Mastery Rank progress, built for pesonal use because no such tool exists on iOS.
+An iOS and macOS app for tracking Warframe Mastery Rank progress, built for personal use.
 
 ## About
 
 Warframe's Mastery system spans hundreds of weapons, warframes, and other rankable items, but there's no iOS app to track what's left to master or when a needed item is actually available. TennoWatch fills that gap: it matches your account's profile against the full item catalog, then cross-references the remaining items against live game state to tell you when and where you can actually get them.
 
-It's built on a modern iOS stack — Swift 6 strict concurrency, SwiftUI, SwiftData, MVVM+C — against Warframe's real, constantly changing data feed rather than static sample data.
+It's built on a shared Apple-platform stack — Swift 6 strict concurrency, SwiftUI, SwiftData, MVVM+C — against Warframe's real, constantly changing data feed rather than static sample data.
 
 ## Features
 
@@ -31,14 +31,23 @@ Deeper specs for each tab and layer live in [Specs/](Specs/).
 ## Requirements
 
 - Xcode 26 or later
-- iOS 26.5+ (iPhone/iPad)
-- Swift 6
+- iOS 26.5+ (iPhone/iPad) or macOS 26+
+- Swift 6 compiler (the project currently uses Swift 5 language mode with Approachable Concurrency)
 
 ## Getting Started
 
 1. Clone the repo.
 2. Open `TennoWatch.xcodeproj` in Xcode.
-3. Build and run — no API key or configuration needed, the app talks to public endpoints.
+3. Select the `TennoWatch` scheme and either **My Mac** or an iPhone/iPad destination, then build and run. No API key is needed.
+
+The native macOS build uses a resizable window with sidebar navigation, adaptive card grids, toolbar refresh (⌘R), and a Settings window available from the app menu (⌘,). It shares the repositories, SwiftData models, localization, and notification scheduler with iOS. Profiles and preferences are stored locally on each device; there is no cross-device sync.
+
+For a local Mac build without a distribution signing identity:
+
+```sh
+xcodebuild -project TennoWatch.xcodeproj -scheme TennoWatch \
+  -destination 'platform=macOS' build CODE_SIGN_IDENTITY=-
+```
 
 The Profile tab currently points at a hardcoded `playerId` rather than a search/lookup flow — see [Roadmap](#roadmap--work-in-progress).
 
@@ -61,7 +70,7 @@ The Mastery catalog itself is generated offline: [Scripts/generate_catalog](Scri
 Cross-cutting:
 
 - **MVVM+C.** View → `@Observable` ViewModel → Repository protocol → (Service +) Networking/Persistency. Navigation lives in per-tab `Coordinator` objects (`Coordinators/`) that own a `NavigationPath` and resolve a `Destination` enum via `.navigationDestination(for:)` — views push by value, not by building the next view inline. Introduced first for Mastery, the tab with real drill-down; other tabs will get their own coordinator once their navigation grows past single-level.
-- **Swift 6** strict concurrency, target-wide default `MainActor` isolation (Approachable Concurrency) — most types need no explicit `@MainActor`. `DefaultPersistencyService` is the one actor doing real off-main work (`@ModelActor`).
+- **Swift 6 compiler**, currently in Swift 5 language mode, with target-wide default `MainActor` isolation (Approachable Concurrency) — most types need no explicit `@MainActor`. `DefaultPersistencyService` is the one actor doing real off-main work (`@ModelActor`).
 - **Manual dependency injection** via [`AppDependencies`](TennoWatch/AppDependencies.swift), constructed once and threaded down through views to ViewModels. No DI container.
 - **SwiftUI** only, with UIKit interop limited to the one appearance-proxy bridge noted above.
 

@@ -22,6 +22,6 @@ struct AlertListView: View {
         .listStyle(.plain)
         .searchable(text: $searchText, prompt: Strings.Common.searchNodes)
         .navigationTitle(Strings.WorldState.alertsHeader)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

@@ -63,8 +63,12 @@ struct MainView: View {
                 )
             }
         }
+        #if os(macOS)
+        .tabViewStyle(.sidebarAdaptable)
+        #else
         .toolbarBackground(Color.surface, for: .navigationBar, .tabBar)
         .toolbarBackground(.visible, for: .navigationBar, .tabBar)
+        #endif
     }
 }
 

@@ -42,7 +42,7 @@ struct SteelPathDetailView: View {
         .listStyle(.plain)
         .searchable(text: $searchText, prompt: Strings.Common.search)
         .navigationTitle(Strings.WorldState.steelPathHeader)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 
     // MARK: - Subviews

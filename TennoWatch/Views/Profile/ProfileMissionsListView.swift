@@ -34,9 +34,9 @@ struct ProfileMissionsListView: View {
         .listStyle(.plain)
         .searchable(text: $viewModel.searchText, prompt: Strings.Profile.searchPlaceholder)
         .navigationTitle(Strings.Profile.missionsTitle)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .primaryAction) {
                 Menu {
                     Picker(Strings.Profile.sortBy, selection: $viewModel.sortOption) {
                         ForEach(SortOption.allCases) { option in

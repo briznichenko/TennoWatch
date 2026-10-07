@@ -27,6 +27,7 @@ struct Strings {
 
     struct Main {
         private init() {}
+        static var refresh: String { Strings.string("main_refresh_key", "Refresh") }
         static var tabWorldState: String { Strings.string("main_tab_world_state_key", "World state") }
         static var tabMastery: String { Strings.string("main_tab_mastery_key", "Mastery") }
         static var tabOpenings: String { Strings.string("main_tab_openings_key", "Openings") }
