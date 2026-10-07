@@ -63,9 +63,11 @@ The Mastery catalog itself is generated offline: [Scripts/generate_catalog](Scri
 | Coordinators | `Coordinators/` | Per-tab `@Observable` coordinator owning a `NavigationPath` + `Destination` enum; views push by value instead of building the next screen inline. |
 | Services | `Services/` | Stateless business logic — catalog↔profile merge, openings matching, error queue. |
 | Models | `Models/` | Network DTOs, SwiftData-adjacent value models, view-facing derived models. |
-| Theme & Shared UI | `Theme/` | Palette, reusable SwiftUI components, list styling, and a narrow UIKit-appearance bridge (`AppearanceProxies`) for nav-bar/tab-bar tinting SwiftUI can't do natively yet. |
+| Theme & Shared UI | `Theme/` | Palette, reusable SwiftUI components, list styling, and a narrow UIKit-appearance bridge (`AppearanceProxies`) in `Platform/` for iOS nav-bar/tab-bar tinting. |
 | Localization | `Resources/` | `Strings` namespace + `Localizable.xcstrings`, with runtime language switching. |
 | Testing | `TennoWatchTests/` | Swift Testing coverage, fixtures — see [Testing](#testing). |
+
+Platform differences live in `Platform/`: `AppScenes` chooses the window and Settings scenes, `AppPresentation` owns layout values and availability, and shared modifiers and `AppSettingsButton` adapt feature UI. Feature views contain no platform compilation checks.
 
 Cross-cutting:
 

@@ -46,17 +46,7 @@ struct ProfileView: View {
                 }
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
-                        #if os(macOS)
-                        SettingsLink {
-                            Label(Strings.Settings.title, systemImage: "gearshape")
-                        }
-                        #else
-                        Button {
-                            isShowingSettings = true
-                        } label: {
-                            Image(systemName: "gearshape")
-                        }
-                        #endif
+                        AppSettingsButton(isPresented: $isShowingSettings)
                     }
                 }
                 .handleErrorAlert(with: viewModel.errorManager)

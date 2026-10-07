@@ -11,16 +11,10 @@ struct WorldStateGridView: View {
     // MARK: - Object Properties
     let viewModel: WorldStateViewModel
 
-    #if os(macOS)
-    private static let columns = [GridItem(.adaptive(minimum: 260))]
-    #else
-    private static let columns = [GridItem(.flexible()), GridItem(.flexible())]
-    #endif
-
     // MARK: - Body
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: Self.columns, spacing: 12) {
+            LazyVGrid(columns: AppPresentation.worldStateColumns, spacing: 12) {
                 cyclesCard
                 invasionsCard
                 fissuresCard

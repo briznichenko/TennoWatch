@@ -1,7 +1,6 @@
-#if os(macOS)
 import SwiftUI
 
-struct MacSettingsView: View {
+struct SettingsSceneContent: View {
     @State private var profileViewModel: ProfileViewModel
     @AppStorage(UserDefaultsAccountIDStore.storageKey) private var currentAccountID: String?
 
@@ -37,4 +36,3 @@ struct MacSettingsView: View {
         }
     }
 }
-#endif

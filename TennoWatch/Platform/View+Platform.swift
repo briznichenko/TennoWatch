@@ -2,6 +2,26 @@ import SwiftUI
 
 extension View {
     @ViewBuilder
+    func appTabStyle() -> some View {
+        #if os(macOS)
+        tabViewStyle(.sidebarAdaptable)
+        #else
+        toolbarBackground(Color.surface, for: .navigationBar, .tabBar)
+            .toolbarBackground(.visible, for: .navigationBar, .tabBar)
+        #endif
+    }
+
+    @ViewBuilder
+    func masteryListStyle() -> some View {
+        #if os(macOS)
+        listStyle(.plain)
+            .scrollContentBackground(.hidden)
+        #else
+        listStyle(.sidebar)
+        #endif
+    }
+
+    @ViewBuilder
     func inlineNavigationTitle() -> some View {
         #if os(iOS)
         navigationBarTitleDisplayMode(.inline)

@@ -28,16 +28,10 @@ struct TennoWatchApp: App {
 
     // MARK: - Body
     var body: some Scene {
-        #if os(macOS)
-        Window("TennoWatch", id: "main") {
+        AppScenes {
             appContent
-                .frame(minWidth: 820, minHeight: 600)
-        }
-        .defaultSize(width: 1100, height: 760)
-        .modelContainer(modelContainer)
-
-        Settings {
-            MacSettingsView(dependencies: dependencies) {
+        } settings: {
+            SettingsSceneContent(dependencies: dependencies) {
                 cacheResetID = UUID()
             }
             .id(cacheResetID)
@@ -48,12 +42,6 @@ struct TennoWatchApp: App {
             .id(languagePreference)
         }
         .modelContainer(modelContainer)
-        #else
-        WindowGroup {
-            appContent
-        }
-        .modelContainer(modelContainer)
-        #endif
     }
 
     private var appContent: some View {
