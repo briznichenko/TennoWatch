@@ -85,6 +85,28 @@ struct WorldStateViewModelTests {
         #expect(errorManager.errorQueue.count == 1)
     }
 
+    @Test("Cancelled fetches clear loading without presenting an error")
+    func cancelledFetchDoesNotPresentError() async {
+        let cancellationErrors: [Error] = [CancellationError(), URLError(.cancelled)]
+        for error in cancellationErrors {
+            let repository = StubWorldStateRepository()
+            repository.result = .failure(error)
+            let errorManager = DefaultErrorManager()
+            let sut = WorldStateViewModel(
+                worldStateRepository: repository,
+                voidTraderNotificationScheduler: StubVoidTraderNotificationScheduler(),
+                errorManager: errorManager
+            )
+
+            await sut.fetchWorldState()
+
+            #expect(sut.worldState == nil)
+            #expect(sut.isLoading == false)
+            #expect(errorManager.currentError == nil)
+            #expect(errorManager.errorQueue.isEmpty)
+        }
+    }
+
     @Test("cycles maps each WorldState cycle to its expected title, state, and timeLeft")
     func cyclesMapsEachCycle() async throws {
         let vallisExpiry = Date.now.addingTimeInterval(3661)
