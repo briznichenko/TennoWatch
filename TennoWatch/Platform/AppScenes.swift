@@ -1,5 +1,9 @@
 import SwiftUI
 
+enum AppSceneID {
+    static let main = "main"
+}
+
 struct AppScenes<Content: View, SettingsContent: View>: Scene {
     private let content: () -> Content
     private let settings: () -> SettingsContent
@@ -11,7 +15,7 @@ struct AppScenes<Content: View, SettingsContent: View>: Scene {
 
     var body: some Scene {
         #if os(macOS)
-        Window("TennoWatch", id: "main") {
+        Window("TennoWatch", id: AppSceneID.main) {
             content()
                 .frame(minWidth: 820, minHeight: 600)
         }
@@ -20,6 +24,14 @@ struct AppScenes<Content: View, SettingsContent: View>: Scene {
         Settings {
             settings()
         }
+
+        MenuBarExtra {
+            MenuBarContent()
+        } label: {
+            Image(nsImage: MenuBarIcon.image)
+                .accessibilityLabel("TennoWatch")
+        }
+        .menuBarExtraStyle(.menu)
         #else
         WindowGroup {
             content()

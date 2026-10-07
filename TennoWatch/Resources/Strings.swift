@@ -34,6 +34,12 @@ struct Strings {
         static var tabProfile: String { Strings.string("main_tab_profile_key", "Profile") }
     }
 
+    struct MenuBar {
+        private init() {}
+        static var openApp: String { Strings.string("menu_bar_open_app_key", "Open TennoWatch") }
+        static var quit: String { Strings.string("menu_bar_quit_key", "Quit TennoWatch") }
+    }
+
     struct WorldState {
         private init() {}
         static var title: String { Strings.string("world_state_title_key", "World state") }

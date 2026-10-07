@@ -40,7 +40,7 @@ Deeper specs for each tab and layer live in [Specs/](Specs/).
 2. Open `TennoWatch.xcodeproj` in Xcode.
 3. Select the `TennoWatch` scheme and either **My Mac** or an iPhone/iPad destination, then build and run. No API key is needed.
 
-The native macOS build uses a resizable window with sidebar navigation, adaptive card grids, toolbar refresh (⌘R), and a Settings window available from the app menu (⌘,). It shares the repositories, SwiftData models, localization, and notification scheduler with iOS. Profiles and preferences are stored locally on each device; there is no cross-device sync.
+The native macOS build uses a resizable window with sidebar navigation, adaptive card grids, toolbar refresh (⌘R), and a Settings window available from the app menu (⌘,), and a Lotus menu bar item with Open, Settings, and Quit actions. It shares the repositories, SwiftData models, localization, and notification scheduler with iOS. Profiles and preferences are stored locally on each device; there is no cross-device sync.
 
 For a local Mac build without a distribution signing identity:
 

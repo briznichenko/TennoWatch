@@ -36,7 +36,8 @@ unless there's genuinely no SwiftUI equivalent" convention.
 
 ## Platform boundary (`Platform/`)
 `AppScenes` composes the main window and Settings scene for macOS or a
-`WindowGroup` for iOS. The app entry point retains ownership of theme,
+`WindowGroup` for iOS. On macOS it also provides a Lotus `MenuBarExtra` whose
+`MenuBarContent` opens the existing main window, opens Settings, or quits the app. The app entry point retains ownership of theme,
 language, and cache-reset state, and applies the shared model container.
 `SettingsSceneContent` supplies the current account to the Settings scene.
 
