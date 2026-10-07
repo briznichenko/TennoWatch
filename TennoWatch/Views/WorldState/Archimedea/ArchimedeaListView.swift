@@ -30,6 +30,6 @@ struct ArchimedeaListView: View {
         .listStyle(.plain)
         .searchable(text: $searchText, prompt: Strings.Common.search)
         .navigationTitle(Strings.WorldState.archimedeaHeader)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

@@ -14,6 +14,8 @@ struct TennoWatchApp: App {
     @AppStorage("themePreference") private var themePreference: ThemePreference = .system
     @AppStorage(AppLanguage.storageKey) private var languagePreference: AppLanguage = .system
 
+    @State private var cacheResetID = UUID()
+
     private let modelContainer: ModelContainer
     private let dependencies: AppDependencies
 
@@ -26,15 +28,30 @@ struct TennoWatchApp: App {
 
     // MARK: - Body
     var body: some Scene {
-        WindowGroup {
-            RootView(dependencies: dependencies)
-                .tint(.accent)
-                .foregroundStyle(Color.labelPrimary)
-                .preferredColorScheme(themePreference.colorScheme)
-                .environment(\.locale, languagePreference.locale ?? .current)
-                .id(languagePreference)
+        AppScenes {
+            appContent
+        } settings: {
+            SettingsSceneContent(dependencies: dependencies) {
+                cacheResetID = UUID()
+            }
+            .id(cacheResetID)
+            .tint(.accent)
+            .foregroundStyle(Color.labelPrimary)
+            .preferredColorScheme(themePreference.colorScheme)
+            .environment(\.locale, languagePreference.locale ?? .current)
+            .id(languagePreference)
         }
         .modelContainer(modelContainer)
+    }
+
+    private var appContent: some View {
+        RootView(dependencies: dependencies)
+            .id(cacheResetID)
+            .tint(.accent)
+            .foregroundStyle(Color.labelPrimary)
+            .preferredColorScheme(themePreference.colorScheme)
+            .environment(\.locale, languagePreference.locale ?? .current)
+            .id(languagePreference)
     }
 
     // MARK: - Helper Functions

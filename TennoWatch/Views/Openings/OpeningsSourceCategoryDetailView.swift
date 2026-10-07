@@ -35,6 +35,6 @@ struct OpeningsSourceCategoryDetailView: View {
         .listStyle(.plain)
         .searchable(text: $viewModel.searchText, prompt: viewModel.isStarChartCategory ? Strings.Common.searchNodes : Strings.Common.search)
         .navigationTitle(viewModel.categoryName.sentenceCased)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

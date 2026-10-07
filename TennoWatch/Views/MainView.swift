@@ -47,12 +47,7 @@ struct MainView: View {
                 )
                 .id(currentAccountID)
             }
-            Tab(Strings.Main.tabProfile, systemImage: "person", role: {
-                    if #available(anyAppleOS 27.0, *) {
-                        .prominent
-                    } else { nil }
-                }()
-            ) {
+            Tab(Strings.Main.tabProfile, systemImage: "person", role: AppPresentation.profileTabRole) {
                 ProfileView(
                     viewModel: .init(
                         profileRepository: dependencies.profileRepository,
@@ -63,8 +58,7 @@ struct MainView: View {
                 )
             }
         }
-        .toolbarBackground(Color.surface, for: .navigationBar, .tabBar)
-        .toolbarBackground(.visible, for: .navigationBar, .tabBar)
+        .appTabStyle()
     }
 }
 

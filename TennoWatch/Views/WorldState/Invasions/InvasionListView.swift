@@ -39,6 +39,6 @@ struct InvasionListView: View {
         .listStyle(.plain)
         .searchable(text: $searchText, prompt: Strings.Common.searchNodes)
         .navigationTitle(Strings.WorldState.invasionsHeader)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

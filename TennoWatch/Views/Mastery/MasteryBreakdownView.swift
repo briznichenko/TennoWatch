@@ -31,7 +31,7 @@ struct MasteryBreakdownView: View {
             }
         }
         .navigationTitle(Strings.Mastery.breakdownHeader)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
         .overlay {
             if viewModel.breakdownSections.isEmpty {
                 LotusLoaderView()

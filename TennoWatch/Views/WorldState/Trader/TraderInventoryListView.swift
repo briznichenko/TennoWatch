@@ -26,6 +26,6 @@ struct TraderInventoryListView: View {
         .listStyle(.plain)
         .searchable(text: $searchText, prompt: Strings.Common.searchItems)
         .navigationTitle(trader.character)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

@@ -34,6 +34,20 @@ API surface is still incomplete for this use case — one of the few
 UIKit-interop points allowed under this project's "SwiftUI only, no UIKit
 unless there's genuinely no SwiftUI equivalent" convention.
 
+## Platform boundary (`Platform/`)
+`AppScenes` composes the main window and Settings scene for macOS or a
+`WindowGroup` for iOS. On macOS it also provides a Lotus `MenuBarExtra` whose
+`MenuBarContent` opens the existing main window, opens Settings, or quits the app. The app entry point retains ownership of theme,
+language, and cache-reset state, and applies the shared model container.
+`SettingsSceneContent` supplies the current account to the Settings scene.
+
+`AppPresentation` owns platform-specific grid columns, category padding, and
+the available Profile tab role. `View+Platform` adapts tab and list styling,
+inline navigation titles, and refresh controls. `AppSettingsButton` opens the
+native Settings window on macOS or sets the sheet binding on iOS.
+`AppearanceProxies` lives here because its UIKit styling applies only to iOS.
+Feature views use these named APIs without compilation or availability checks.
+
 ## Shared components (`Theme/Components/`)
 - **`Surface`** — the card container (`Color.surface` background, 10pt
   corner radius, 12pt padding) used for every "summary card" across tabs

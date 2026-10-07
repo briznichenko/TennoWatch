@@ -30,7 +30,7 @@ struct OpeningsView: View {
                 .task {
                     await viewModel.fetchOpenings()
                 }
-                .refreshable {
+                .platformRefreshable(isDisabled: viewModel.isLoading) {
                     await viewModel.fetchOpenings()
                 }
         }

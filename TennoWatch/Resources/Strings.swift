@@ -27,10 +27,17 @@ struct Strings {
 
     struct Main {
         private init() {}
+        static var refresh: String { Strings.string("main_refresh_key", "Refresh") }
         static var tabWorldState: String { Strings.string("main_tab_world_state_key", "World state") }
         static var tabMastery: String { Strings.string("main_tab_mastery_key", "Mastery") }
         static var tabOpenings: String { Strings.string("main_tab_openings_key", "Openings") }
         static var tabProfile: String { Strings.string("main_tab_profile_key", "Profile") }
+    }
+
+    struct MenuBar {
+        private init() {}
+        static var openApp: String { Strings.string("menu_bar_open_app_key", "Open TennoWatch") }
+        static var quit: String { Strings.string("menu_bar_quit_key", "Quit TennoWatch") }
     }
 
     struct WorldState {

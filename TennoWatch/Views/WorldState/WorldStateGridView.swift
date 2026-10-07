@@ -11,12 +11,10 @@ struct WorldStateGridView: View {
     // MARK: - Object Properties
     let viewModel: WorldStateViewModel
 
-    private static let columns = [GridItem(.flexible()), GridItem(.flexible())]
-
     // MARK: - Body
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: Self.columns, spacing: 12) {
+            LazyVGrid(columns: AppPresentation.worldStateColumns, spacing: 12) {
                 cyclesCard
                 invasionsCard
                 fissuresCard
@@ -34,7 +32,7 @@ struct WorldStateGridView: View {
             .padding(12)
         }
         .buttonStyle(.plain)
-        .background(Color(.systemGroupedBackground))
+        .background(Color.bg)
     }
 
     // MARK: - Cards

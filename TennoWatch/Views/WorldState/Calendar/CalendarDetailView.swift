@@ -22,6 +22,6 @@ struct CalendarDetailView: View {
         }
         .listStyle(.plain)
         .navigationTitle(Strings.WorldState.calendarHeader)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

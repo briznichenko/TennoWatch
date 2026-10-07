@@ -17,6 +17,6 @@ struct NightwaveListView: View {
             }
         }
         .navigationTitle(nightwave.tag)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

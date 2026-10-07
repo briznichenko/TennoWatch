@@ -23,6 +23,6 @@ struct OpeningsItemCategoryDetailView: View {
         .listStyle(.plain)
         .searchable(text: $viewModel.searchText, prompt: Strings.Common.searchItems)
         .navigationTitle(viewModel.categoryTitle)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
     }
 }

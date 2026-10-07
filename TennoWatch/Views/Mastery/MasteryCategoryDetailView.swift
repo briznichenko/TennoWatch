@@ -41,9 +41,9 @@ struct MasteryCategoryDetailView: View {
                 .padding(.vertical, 8)
         }
         .navigationTitle(viewModel.category.displayName.sentenceCased)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationTitle()
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .primaryAction) {
                 Menu {
                     Picker(Strings.Mastery.sortBy, selection: $viewModel.sortOption) {
                         ForEach(SortOption.allCases) { option in
