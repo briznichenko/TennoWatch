@@ -13,6 +13,8 @@ struct MasteryView: View {
     @State private var coordinator = MasteryCoordinator()
     @State private var isCategoriesExpanded: Bool = true
     @AppStorage(UserDefaultsAccountIDStore.storageKey) private var currentAccountID: String?
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     // MARK: - Init
     init(viewModel: MasteryViewModel) {
@@ -22,14 +24,16 @@ struct MasteryView: View {
     // MARK: - Body
     var body: some View {
         NavigationStack(path: $coordinator.path) {
-            List {
-                summaryCard
-                    .listRowInsets(EdgeInsets())
-                    .listRowSeparator(.hidden)
-                categoryList
-                otherSourcesList
+            ScrollView {
+                VStack(alignment: .leading, spacing: 28) {
+                    summaryCard
+                    categoryList
+                    otherSourcesList
+                }
+                .frame(maxWidth: 1120)
+                .padding(20)
+                .frame(maxWidth: .infinity)
             }
-            .masteryListStyle()
             .background(Color.bg)
             .navigationTitle(Strings.Mastery.title)
             .overlay {
@@ -65,76 +69,77 @@ struct MasteryView: View {
 
     // MARK: - Subviews
     private var summaryCard: some View {
-        let progress = viewModel.rankProgress
-        return Button {
+        Button {
             coordinator.showBreakdown()
         } label: {
-            Surface {
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack(alignment: .firstTextBaseline) {
-                        Text(Strings.Mastery.rankBadge(progress.rank))
-                            .font(.system(size: 26, weight: .medium))
-                            .foregroundStyle(Color.labelPrimary)
-                        Spacer()
-                        Text("\(progress.currentXP.formatted()) / \(progress.xpForNextRank.formatted())")
-                            .font(.caption)
-                            .foregroundStyle(Color.labelSecondary)
-                        Image(systemName: "chevron.right")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Color.labelSecondary)
-                    }
-                    ProgressBar(value: progress.fraction)
-                        .padding(.vertical, 4)
-                    let xpLine = Strings.Mastery.xpToNextRank(progress.xpToNextRank.formatted(), nextRank: progress.rank + 1)
-                    let itemsLine = Strings.Mastery.itemsLeft(viewModel.obtainableItemsRemaining)
-                    Text("\(xpLine) · \(itemsLine)")
-                        .font(.caption)
-                        .foregroundStyle(Color.labelSecondary)
-                }
-            }
+            MasteryRankCard(
+                progress: viewModel.rankProgress,
+                itemsRemaining: viewModel.obtainableItemsRemaining
+            )
         }
         .buttonStyle(.plain)
-        .padding(.bottom, 8)
     }
 
     private var categoryList: some View {
-        Section(isExpanded: $isCategoriesExpanded) {
-            LazyVGrid(columns: AppPresentation.masteryCategoryColumns, spacing: 12) {
-                ForEach(viewModel.categories) { summary in
-                    Button {
-                        coordinator.showCategoryDetail(summary.category)
-                    } label: {
-                        CardView(
-                            icon: summary.category.iconName,
-                            title: summary.category.displayName.sentenceCased
-                        ) {
-                            Text(summary.countText)
+        VStack(alignment: .leading, spacing: 16) {
+            Button {
+                withAnimation(reduceMotion ? nil : .snappy(duration: 0.25)) {
+                    isCategoriesExpanded.toggle()
+                }
+            } label: {
+                HStack {
+                    Text(Strings.Mastery.categoriesHeader)
+                        .font(.title3.weight(.semibold))
+                    Spacer()
+                    Image(systemName: "chevron.down")
+                        .font(.caption.weight(.semibold))
+                        .rotationEffect(.degrees(isCategoriesExpanded ? 0 : -90))
+                }
+                .foregroundStyle(Color.labelPrimary)
+                .frame(minHeight: 44)
+                .contentShape(.rect)
+            }
+            .buttonStyle(.plain)
+
+            if isCategoriesExpanded {
+                LazyVGrid(columns: categoryColumns, spacing: 12) {
+                    ForEach(orderedCategories) { summary in
+                        Button {
+                            coordinator.showCategoryDetail(summary.category)
+                        } label: {
+                            MasteryCategoryCard(summary: summary)
                         }
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
                 }
             }
-            .background(Color.bg)
-            .listRowSeparator(.hidden)
-            .padding(.horizontal, AppPresentation.masteryCategoryHorizontalPadding)
-        } header: {
-            SectionHeaderLabel(Strings.Mastery.categoriesHeader)
-        }.listRowBackground(Color.clear)
+        }
+    }
+
+    private var categoryColumns: [GridItem] {
+        dynamicTypeSize.isAccessibilitySize
+            ? [GridItem(.flexible())]
+            : AppPresentation.masteryCategoryColumns
+    }
+
+    private var orderedCategories: [CatalogContainerSummary] {
+        let primary: [CatalogItemModel.Category] = [.suits, .longGuns, .pistols, .melee]
+        let order = primary + CatalogItemModel.Category.allCases.filter { !primary.contains($0) }
+        return order.compactMap { category in
+            viewModel.categories.first { $0.category == category }
+        }
     }
 
     @ViewBuilder
     private var otherSourcesList: some View {
         ForEach(viewModel.nonItemCategories) { summary in
-            Section {
-                NavigationLink(
-                    value: MasteryCoordinator.Destination
-                        .sourceDetail(name: summary.name)
-                ) {
-                    MasterySourceCategoryView(summary: summary)
-                }
-            } header: {
-                SectionHeaderLabel(summary.name.sentenceCased)
+            NavigationLink(
+                value: MasteryCoordinator.Destination
+                    .sourceDetail(name: summary.name)
+            ) {
+                MasterySourceCard(summary: summary)
             }
+            .buttonStyle(.plain)
         }
     }
 }
