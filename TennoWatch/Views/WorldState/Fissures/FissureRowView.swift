@@ -12,7 +12,7 @@ struct FissureRowView: View {
 
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: ListLayout.compactDetailSpacing) {
                 Text(fissure.node)
                 Text("\(fissure.enemy) · \(fissure.missionType)")
                     .font(.caption)

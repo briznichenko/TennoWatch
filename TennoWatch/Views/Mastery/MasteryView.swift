@@ -25,13 +25,13 @@ struct MasteryView: View {
     var body: some View {
         NavigationStack(path: $coordinator.path) {
             ScrollView {
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: DashboardLayout.sectionSpacing) {
                     summaryCard
                     categoryList
                     otherSourcesList
                 }
-                .frame(maxWidth: 1120)
-                .padding(16)
+                .frame(maxWidth: DashboardLayout.maximumContentWidth)
+                .padding(DashboardLayout.contentPadding)
                 .frame(maxWidth: .infinity)
             }
             .background(Color.bg)
@@ -81,9 +81,9 @@ struct MasteryView: View {
     }
 
     private var categoryList: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: DashboardLayout.sectionSpacing) {
             Button {
-                withAnimation(reduceMotion ? nil : .snappy(duration: 0.25)) {
+                withAnimation(reduceMotion ? nil : .snappy(duration: Layout.expansionDuration)) {
                     isCategoriesExpanded.toggle()
                 }
             } label: {
@@ -93,16 +93,16 @@ struct MasteryView: View {
                     Spacer()
                     Image(systemName: "chevron.down")
                         .font(.caption.weight(.semibold))
-                        .rotationEffect(.degrees(isCategoriesExpanded ? 0 : -90))
+                        .rotationEffect(.degrees(isCategoriesExpanded ? 0 : Layout.collapsedChevronAngle))
                 }
                 .foregroundStyle(Color.labelPrimary)
-                .frame(minHeight: 44)
+                .frame(minHeight: ListLayout.minimumRowHeight)
                 .contentShape(.rect)
             }
             .buttonStyle(.plain)
 
             if isCategoriesExpanded {
-                LazyVGrid(columns: categoryColumns, spacing: 10) {
+                LazyVGrid(columns: categoryColumns, spacing: DashboardLayout.gridSpacing) {
                     ForEach(orderedCategories) { summary in
                         Button {
                             coordinator.showCategoryDetail(summary.category)
@@ -142,4 +142,9 @@ struct MasteryView: View {
             .buttonStyle(.plain)
         }
     }
+}
+
+private struct Layout {
+    static let expansionDuration: TimeInterval = 0.25
+    static let collapsedChevronAngle: Double = -90
 }

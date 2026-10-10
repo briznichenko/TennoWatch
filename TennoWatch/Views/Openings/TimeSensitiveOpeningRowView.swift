@@ -15,13 +15,13 @@ struct TimeSensitiveOpeningRowView: View {
 
     // MARK: - Body
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
             let identityLayout = dynamicTypeSize.isAccessibilitySize
-                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
-                : AnyLayout(HStackLayout(alignment: .top, spacing: 12))
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: Layout.identitySpacing))
+                : AnyLayout(HStackLayout(alignment: .top, spacing: Layout.identitySpacing))
             identityLayout {
                 DashboardIcon(name: viewModel.iconName)
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: ListLayout.detailSpacing) {
                     Text(viewModel.name)
                         .font(.headline)
                         .foregroundStyle(Color.labelPrimary)
@@ -32,10 +32,10 @@ struct TimeSensitiveOpeningRowView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             let layout = dynamicTypeSize.isAccessibilitySize
-                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
-                : AnyLayout(HStackLayout(alignment: .bottom, spacing: 12))
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: Layout.sectionSpacing))
+                : AnyLayout(HStackLayout(alignment: .bottom, spacing: Layout.identitySpacing))
             layout {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: ListLayout.detailSpacing) {
                     Text(viewModel.sourceName)
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(DashboardPalette.accent(in: colorScheme))
@@ -45,27 +45,38 @@ struct TimeSensitiveOpeningRowView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 if let expiry = viewModel.expiry {
-                    HStack(spacing: 5) {
+                    HStack(spacing: Layout.countdownIconSpacing) {
                         Image(systemName: "clock")
                         LiveCountdownText(date: expiry, showsSeconds: false)
                             .fixedSize(horizontal: true, vertical: false)
                     }
                     .font(.caption)
                     .foregroundStyle(Color.labelSecondary)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 5)
+                    .padding(.horizontal, Layout.countdownHorizontalPadding)
+                    .padding(.vertical, Layout.countdownVerticalPadding)
                     .background(Color.bg, in: .capsule)
                     .fixedSize(horizontal: true, vertical: false)
                 } else if let completion = viewModel.completion {
-                    Text(completion, format: .percent.precision(.fractionLength(0)))
+                    Text(completion, format: .percent.precision(.fractionLength(Layout.percentageFractionDigits)))
                         .font(.caption.monospacedDigit())
                         .foregroundStyle(Color.labelSecondary)
                 }
             }
         }
         .fixedSize(horizontal: false, vertical: true)
-        .padding(12)
-        .background(DashboardCardBackground(cornerRadius: 20))
+        .padding(Layout.contentPadding)
+        .background(DashboardCardBackground(cornerRadius: Layout.cornerRadius))
         .accessibilityElement(children: .combine)
     }
+}
+
+private struct Layout {
+    static let sectionSpacing: CGFloat = 10
+    static let identitySpacing: CGFloat = 12
+    static let countdownIconSpacing: CGFloat = 5
+    static let countdownHorizontalPadding: CGFloat = 10
+    static let countdownVerticalPadding: CGFloat = 5
+    static let contentPadding: CGFloat = 12
+    static let cornerRadius: CGFloat = 20
+    static let percentageFractionDigits = 0
 }

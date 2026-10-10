@@ -19,7 +19,7 @@ struct LiveCountdownText: View {
     
     var body: some View {
         if let date {
-            TimelineView(.periodic(from: .now, by: showsSeconds ? 1 : 60)) { context in
+            TimelineView(.periodic(from: .now, by: showsSeconds ? CountdownRefreshInterval.second : CountdownRefreshInterval.minute)) { context in
                 let duration = max(0, date.timeIntervalSince(context.date))
                 Text(
                     Duration.seconds(duration),

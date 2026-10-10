@@ -23,10 +23,10 @@ struct ProfileIdentityCard: View {
             icon: isLocal ? "pencil.circle" : "person.crop.circle"
         ) {
             let layout = dynamicTypeSize.isAccessibilitySize
-                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
-                : AnyLayout(HStackLayout(alignment: .top, spacing: 16))
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: Layout.accessibilitySpacing))
+                : AnyLayout(HStackLayout(alignment: .top, spacing: Layout.contentSpacing))
             layout {
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: Layout.identitySpacing) {
                     Text(displayName)
                         .font(.title.weight(.semibold))
                         .foregroundStyle(Color.labelPrimary)
@@ -39,26 +39,35 @@ struct ProfileIdentityCard: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
-                HStack(spacing: 6) {
+                HStack(spacing: Layout.identitySpacing) {
                     Image(systemName: "trophy.fill")
                     Text(Strings.Mastery.rankBadge(rank))
                 }
                     .font(.headline)
                     .foregroundStyle(DashboardPalette.heroAccent)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(DashboardPalette.heroAccent.opacity(0.12), in: .capsule)
+                    .padding(.horizontal, Layout.badgeHorizontalPadding)
+                    .padding(.vertical, Layout.badgeVerticalPadding)
+                    .background(DashboardPalette.heroAccent.opacity(Layout.badgeOpacity), in: .capsule)
                     .fixedSize()
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel(Text(verbatim: "\(Strings.Profile.masteryRankLabel), \(Strings.Mastery.rankBadge(rank))"))
             }
             Rectangle()
                 .fill(Color.divider)
-                .frame(height: 1)
+                .frame(height: DashboardLayout.dividerThickness)
             layout {
                 DashboardMetric(value: missionsCompleted.formatted(), title: Strings.Profile.missionsCompletedLabel)
                 DashboardMetric(value: totalKills.formatted(), title: Strings.Profile.totalKillsLabel)
             }
         }
     }
+}
+
+private struct Layout {
+    static let accessibilitySpacing: CGFloat = 12
+    static let contentSpacing: CGFloat = 16
+    static let identitySpacing: CGFloat = 6
+    static let badgeHorizontalPadding: CGFloat = 12
+    static let badgeVerticalPadding: CGFloat = 8
+    static let badgeOpacity = 0.12
 }

@@ -17,7 +17,7 @@ struct ProfileAccountStatsView: View {
             ForEach(rows) { row in
                 LabeledContent(row.label, value: row.value)
                     .foregroundStyle(Color.labelPrimary)
-                    .frame(minHeight: 44)
+                    .frame(minHeight: ListLayout.minimumRowHeight)
             }
         }
         .listStyle(.plain)

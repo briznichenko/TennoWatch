@@ -24,16 +24,16 @@ struct PlayerIdHelpAlertView: View {
     // MARK: - Body
     var body: some View {
         ZStack {
-            Color.black.opacity(0.4)
+            Color.black.opacity(Layout.backdropOpacity)
                 .ignoresSafeArea()
                 .onTapGesture(perform: onCancel)
 
-            VStack(spacing: 16) {
+            VStack(spacing: Layout.contentSpacing) {
                 Text(Strings.Profile.idHelpTitle)
                     .font(.headline)
                     .foregroundStyle(Color.labelPrimary)
 
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: Layout.instructionSpacing) {
                     Text(Strings.Profile.idHelpIntro)
                     Link(Strings.Profile.idHelpLinkTitle, destination: URL("https://www.warframe.com/api/user-data"))
                     Text(Strings.Profile.idHelpCredit)
@@ -44,7 +44,7 @@ struct PlayerIdHelpAlertView: View {
                 Button {
                     dontShowAgain.toggle()
                 } label: {
-                    HStack(spacing: 8) {
+                    HStack(spacing: Layout.instructionSpacing) {
                         Image(systemName: dontShowAgain ? "checkmark.square.fill" : "square")
                             .foregroundStyle(dontShowAgain ? Color.accentColor : .secondary)
                         Text(Strings.Profile.idHelpDontShowAgain)
@@ -54,7 +54,7 @@ struct PlayerIdHelpAlertView: View {
                 }
                 .buttonStyle(.plain)
 
-                HStack(spacing: 12) {
+                HStack(spacing: Layout.buttonSpacing) {
                     Button(Strings.Profile.idHelpCancelButton, role: .cancel, action: onCancel)
                         .buttonStyle(.bordered)
                         .frame(maxWidth: .infinity)
@@ -65,13 +65,24 @@ struct PlayerIdHelpAlertView: View {
                     .frame(maxWidth: .infinity)
                 }
             }
-            .padding(20)
-            .background(.surface, in: .rect(cornerRadius: 16))
-            .frame(maxWidth: 480)
-            .padding(.horizontal, 32)
+            .padding(Layout.contentPadding)
+            .background(.surface, in: .rect(cornerRadius: Layout.cornerRadius))
+            .frame(maxWidth: Layout.maximumWidth)
+            .padding(.horizontal, Layout.horizontalMargin)
         }
         .transition(.opacity)
     }
+}
+
+private struct Layout {
+    static let backdropOpacity = 0.4
+    static let contentSpacing: CGFloat = 16
+    static let instructionSpacing: CGFloat = 8
+    static let buttonSpacing: CGFloat = 12
+    static let contentPadding: CGFloat = 20
+    static let cornerRadius: CGFloat = 16
+    static let maximumWidth: CGFloat = 480
+    static let horizontalMargin: CGFloat = 32
 }
 
 #Preview {

@@ -9,7 +9,7 @@ struct FlashSaleRowView: View {
     let flashSale: FlashSale
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: ListLayout.detailSpacing) {
             HStack {
                 Text(flashSale.item)
                     .font(.headline)
@@ -22,7 +22,7 @@ struct FlashSaleRowView: View {
                     .foregroundStyle(Color.labelSecondary)
             }
         }
-        .frame(minHeight: 44)
+        .frame(minHeight: ListLayout.minimumRowHeight)
     }
 }
 

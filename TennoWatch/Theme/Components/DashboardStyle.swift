@@ -18,25 +18,25 @@ enum DashboardPalette {
 
 struct DashboardHeroBackground: View {
     var body: some View {
-        RoundedRectangle(cornerRadius: 26)
+        RoundedRectangle(cornerRadius: HeroStyle.cornerRadius)
             .fill(Color.dashboardHero.gradient)
             .overlay(alignment: .topTrailing) {
                 LotusMark()
-                    .stroke(DashboardPalette.heroAccent.opacity(0.09), lineWidth: 1)
-                    .frame(width: 240, height: 180)
-                    .rotationEffect(.degrees(-18))
-                    .offset(x: 40, y: -20)
+                    .stroke(DashboardPalette.heroAccent.opacity(HeroStyle.watermarkOpacity), lineWidth: HeroStyle.borderWidth)
+                    .frame(width: HeroStyle.watermarkWidth, height: HeroStyle.watermarkHeight)
+                    .rotationEffect(.degrees(HeroStyle.watermarkAngle))
+                    .offset(x: HeroStyle.watermarkOffsetX, y: HeroStyle.watermarkOffsetY)
             }
             .overlay {
-                RoundedRectangle(cornerRadius: 26)
-                    .strokeBorder(DashboardPalette.heroAccent.opacity(0.24), lineWidth: 1)
+                RoundedRectangle(cornerRadius: HeroStyle.cornerRadius)
+                    .strokeBorder(DashboardPalette.heroAccent.opacity(HeroStyle.borderOpacity), lineWidth: HeroStyle.borderWidth)
             }
-            .clipShape(.rect(cornerRadius: 26))
+            .clipShape(.rect(cornerRadius: HeroStyle.cornerRadius))
     }
 }
 
 struct DashboardCardBackground: View {
-    var cornerRadius: CGFloat = 22
+    var cornerRadius: CGFloat = DashboardLayout.cardCornerRadius
 
     @Environment(\.colorScheme) private var colorScheme
 
@@ -47,14 +47,14 @@ struct DashboardCardBackground: View {
             .overlay {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .fill(LinearGradient(
-                        colors: [accent.opacity(0.06), .clear],
+                        colors: [accent.opacity(CardStyle.gradientOpacity), .clear],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     ))
             }
             .overlay {
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .strokeBorder(accent.opacity(0.12), lineWidth: 1)
+                    .strokeBorder(accent.opacity(CardStyle.borderOpacity), lineWidth: CardStyle.borderWidth)
             }
     }
 }
@@ -66,12 +66,12 @@ struct DashboardHero<Content: View>: View {
     @ViewBuilder var content: Content
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: HeroStyle.contentSpacing) {
             HStack {
                 Label(title, systemImage: icon)
                     .labelStyle(.titleAndIcon)
                     .font(.caption.weight(.semibold))
-                    .tracking(1)
+                    .tracking(DashboardLayout.headingTracking)
                 Spacer()
                 if showsDisclosure {
                     Image(systemName: "arrow.up.right")
@@ -83,14 +83,14 @@ struct DashboardHero<Content: View>: View {
             content
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
+        .padding(DashboardLayout.contentPadding)
         .background(DashboardHeroBackground())
     }
 }
 
 struct DashboardIcon: View {
     let name: String
-    var size: CGFloat = 36
+    var size: CGFloat = IconStyle.size
 
     @Environment(\.colorScheme) private var colorScheme
     @ScaledMetric(relativeTo: .title3) private var scale = 1.0
@@ -101,7 +101,7 @@ struct DashboardIcon: View {
             .font(.title3.weight(.medium))
             .foregroundStyle(accent)
             .frame(width: size * scale, height: size * scale)
-            .background(accent.opacity(0.1), in: .rect(cornerRadius: 13))
+            .background(accent.opacity(IconStyle.backgroundOpacity), in: .rect(cornerRadius: IconStyle.cornerRadius))
             .accessibilityHidden(true)
     }
 }
@@ -111,7 +111,7 @@ struct DashboardMetric: View {
     let title: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: MetricStyle.labelSpacing) {
             Text(value)
                 .font(.system(.title, design: .rounded, weight: .semibold))
                 .foregroundStyle(Color.labelPrimary)
@@ -131,7 +131,7 @@ struct DashboardSectionHeader: View {
     var icon: String?
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: SectionStyle.iconSpacing) {
             if let icon {
                 Image(systemName: icon)
                     .foregroundStyle(Color.accent)
@@ -144,4 +144,37 @@ struct DashboardSectionHeader: View {
         .textCase(nil)
         .accessibilityAddTraits(.isHeader)
     }
+}
+
+private struct HeroStyle {
+    static let cornerRadius: CGFloat = 26
+    static let watermarkOpacity = 0.09
+    static let borderWidth: CGFloat = 1
+    static let watermarkWidth: CGFloat = 240
+    static let watermarkHeight: CGFloat = 180
+    static let watermarkAngle: Double = -18
+    static let watermarkOffsetX: CGFloat = 40
+    static let watermarkOffsetY: CGFloat = -20
+    static let borderOpacity = 0.24
+    static let contentSpacing: CGFloat = 14
+}
+
+private struct CardStyle {
+    static let gradientOpacity = 0.06
+    static let borderOpacity = 0.12
+    static let borderWidth: CGFloat = 1
+}
+
+private struct IconStyle {
+    static let size: CGFloat = 36
+    static let backgroundOpacity = 0.1
+    static let cornerRadius: CGFloat = 13
+}
+
+private struct MetricStyle {
+    static let labelSpacing: CGFloat = 4
+}
+
+private struct SectionStyle {
+    static let iconSpacing: CGFloat = 8
 }

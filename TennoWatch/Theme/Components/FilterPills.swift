@@ -15,7 +15,7 @@ struct FilterPills<Option: Hashable>: View {
 
     // MARK: - Body
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: Layout.pillSpacing) {
             ForEach(options, id: \.self) { option in
                 pill(for: option)
             }
@@ -30,8 +30,8 @@ struct FilterPills<Option: Hashable>: View {
         } label: {
             Text(title(option))
                 .font(.footnote)
-                .padding(.horizontal, 11)
-                .padding(.vertical, 4)
+                .padding(.horizontal, Layout.horizontalPadding)
+                .padding(.vertical, Layout.verticalPadding)
                 .foregroundStyle(isSelected ? Color.bg : Color.labelSecondary)
                 .background {
                     Capsule().fill(isSelected ? Color.accent : Color.clear)
@@ -43,9 +43,15 @@ struct FilterPills<Option: Hashable>: View {
                 }
         }
         .buttonStyle(.plain)
-        .frame(minHeight: 44)
+        .frame(minHeight: ListLayout.minimumRowHeight)
         .contentShape(Rectangle())
     }
+}
+
+private struct Layout {
+    static let pillSpacing: CGFloat = 6
+    static let horizontalPadding: CGFloat = 11
+    static let verticalPadding: CGFloat = 4
 }
 
 #Preview {

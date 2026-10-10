@@ -17,7 +17,7 @@ struct SteelPathRewardRowView: View {
                 .font(.caption)
                 .foregroundStyle(Color.labelSecondary)
         }
-        .frame(minHeight: 44)
+        .frame(minHeight: ListLayout.minimumRowHeight)
     }
 }
 

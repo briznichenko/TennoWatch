@@ -35,7 +35,7 @@ struct ProfileView: View {
             NavigationStack {
                 List {
                     identityCard
-                        .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
+                        .listRowInsets(Layout.identityCardInsets)
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
                     savedProfilesSection
@@ -107,7 +107,7 @@ struct ProfileView: View {
                 )
             }
         }
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: isShowingIdHelp)
+        .animation(reduceMotion ? nil : .easeInOut(duration: Layout.helpTransitionDuration), value: isShowingIdHelp)
     }
 
     // MARK: - Subviews
@@ -128,8 +128,8 @@ struct ProfileView: View {
                 Button {
                     Task { await viewModel.selectProfile(profile) }
                 } label: {
-                    HStack(spacing: 12) {
-                        DashboardIcon(name: profile.isLocal ? "pencil.circle" : "person.crop.circle", size: 36)
+                    HStack(spacing: Layout.iconSpacing) {
+                        DashboardIcon(name: profile.isLocal ? "pencil.circle" : "person.crop.circle")
                         Text(viewModel.name(for: profile))
                             .font(.headline)
                             .foregroundStyle(Color.labelPrimary)
@@ -139,7 +139,7 @@ struct ProfileView: View {
                                 .foregroundStyle(DashboardPalette.accent(in: colorScheme))
                         }
                     }
-                    .padding(.vertical, 2)
+                    .padding(.vertical, Layout.rowVerticalPadding)
                 }
                 .swipeActions {
                     Button(role: .destructive) {
@@ -175,11 +175,11 @@ struct ProfileView: View {
 
     private var playerIdSection: some View {
         Section {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: Layout.formSpacing) {
                 Text(Strings.Profile.id)
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Color.labelSecondary)
-                HStack(spacing: 12) {
+                HStack(spacing: Layout.iconSpacing) {
                     TextField(Strings.Profile.idPlaceholder, text: $viewModel.playerId)
                         .focused($isIDInputFocused)
                         .font(.body.monospaced())
@@ -191,14 +191,14 @@ struct ProfileView: View {
                         .foregroundStyle(isIDInputFocused ? Color.accentColor : .secondary)
                         .accessibilityHidden(true)
                 }
-                .padding(10)
-                .background(Color.bg, in: .rect(cornerRadius: 14))
+                .padding(Layout.fieldPadding)
+                .background(Color.bg, in: .rect(cornerRadius: Layout.fieldCornerRadius))
                 .overlay {
-                    RoundedRectangle(cornerRadius: 14)
-                        .strokeBorder(isIDInputFocused ? Color.accentColor : Color.divider, lineWidth: 1)
+                    RoundedRectangle(cornerRadius: Layout.fieldCornerRadius)
+                        .strokeBorder(isIDInputFocused ? Color.accentColor : Color.divider, lineWidth: Layout.fieldBorderWidth)
                 }
             }
-            .padding(.vertical, 2)
+            .padding(.vertical, Layout.rowVerticalPadding)
             Button {
                 Task { await viewModel.fetchProfile(forceRefresh: true) }
             } label: {
@@ -207,7 +207,7 @@ struct ProfileView: View {
                         .font(.headline)
                     Spacer()
                     if viewModel.isLoading {
-                        LotusLoaderView(size: 20)
+                        LotusLoaderView(size: LoadingIndicatorSize.compact)
                     }
                 }
             }
@@ -272,4 +272,15 @@ struct ProfileView: View {
         .listRowBackground(Color.surface)
         .listRowSeparatorTint(Color.divider)
     }
+}
+
+private struct Layout {
+    static let identityCardInsets = EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0)
+    static let helpTransitionDuration: TimeInterval = 0.2
+    static let iconSpacing: CGFloat = 12
+    static let rowVerticalPadding: CGFloat = 2
+    static let formSpacing: CGFloat = 10
+    static let fieldPadding: CGFloat = 10
+    static let fieldCornerRadius: CGFloat = 14
+    static let fieldBorderWidth: CGFloat = 1
 }

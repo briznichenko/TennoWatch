@@ -37,8 +37,8 @@ struct MasteryCategoryDetailView: View {
             FilterPills(options: Filter.allCases, title: \.title, selection: $viewModel.filter)
                 .padding(.horizontal)
                 .background(Color.bg)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-                .padding(.vertical, 8)
+                .clipShape(RoundedRectangle(cornerRadius: Layout.filterCornerRadius))
+                .padding(.vertical, Layout.filterVerticalPadding)
         }
         .navigationTitle(viewModel.category.displayName.sentenceCased)
         .inlineNavigationTitle()
@@ -60,4 +60,9 @@ struct MasteryCategoryDetailView: View {
             await viewModel.load()
         }
     }
+}
+
+private struct Layout {
+    static let filterVerticalPadding: CGFloat = 8
+    static let filterCornerRadius: CGFloat = 16
 }

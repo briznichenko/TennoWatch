@@ -21,7 +21,7 @@ struct ProgressBar: View {
                     .frame(width: geometry.size.width * value.clamped(to: 0...1))
             }
         }
-        .frame(height: 4)
+        .frame(height: Layout.height)
     }
 }
 
@@ -29,6 +29,10 @@ private extension Double {
     func clamped(to range: ClosedRange<Double>) -> Double {
         min(max(self, range.lowerBound), range.upperBound)
     }
+}
+
+private struct Layout {
+    static let height: CGFloat = 4
 }
 
 #Preview {

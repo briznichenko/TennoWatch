@@ -14,7 +14,7 @@ struct ProfileMissionRowView: View {
     // MARK: - Body
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: ListLayout.compactDetailSpacing) {
                 Text(mission.name)
                     .foregroundStyle(Color.labelPrimary)
                 if let tier = mission.tier {
@@ -28,6 +28,6 @@ struct ProfileMissionRowView: View {
                 .font(.subheadline)
                 .foregroundStyle(Color.labelSecondary)
         }
-        .frame(minHeight: 44)
+        .frame(minHeight: ListLayout.minimumRowHeight)
     }
 }

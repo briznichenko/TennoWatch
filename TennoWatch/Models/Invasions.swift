@@ -8,6 +8,8 @@
 import Foundation
 
 struct Invasion: NetworkModel, Identifiable {
+    static let completePercentage = 100.0
+
     let id: String
     let activation: Date
     let node: String

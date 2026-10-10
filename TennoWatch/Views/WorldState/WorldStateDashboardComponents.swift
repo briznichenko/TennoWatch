@@ -11,10 +11,10 @@ struct WorldStateTraderCard: View {
     let trader: VoidTrader
 
     var body: some View {
-        TimelineView(.periodic(from: .now, by: 60)) { context in
+        TimelineView(.periodic(from: .now, by: CountdownRefreshInterval.minute)) { context in
             let hasArrived = trader.activation.map { $0 <= context.date } ?? true
             DashboardHero(title: Strings.WorldState.voidTraderHeader, icon: "person.fill.questionmark", showsDisclosure: true) {
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: Layout.contentSpacing) {
                     Text(trader.character)
                         .font(.title.weight(.semibold))
                         .foregroundStyle(Color.labelPrimary)
@@ -22,7 +22,7 @@ struct WorldStateTraderCard: View {
                         .font(.subheadline)
                         .foregroundStyle(Color.labelSecondary)
                 }
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: Layout.detailSpacing) {
                     Text(hasArrived ? Strings.WorldState.baroDepartsIn : Strings.WorldState.baroArrivesIn)
                         .font(.caption)
                         .foregroundStyle(DashboardPalette.heroAccent)
@@ -36,4 +36,9 @@ struct WorldStateTraderCard: View {
         }
         .accessibilityElement(children: .combine)
     }
+}
+
+private struct Layout {
+    static let contentSpacing: CGFloat = 8
+    static let detailSpacing: CGFloat = 6
 }

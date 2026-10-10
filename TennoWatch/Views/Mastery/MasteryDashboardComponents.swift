@@ -13,14 +13,14 @@ struct MasteryRankCard: View {
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @ScaledMetric(relativeTo: .largeTitle) private var ringSize = 88.0
+    @ScaledMetric(relativeTo: .largeTitle) private var ringSize = RankLayout.ringSize
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: RankLayout.contentSpacing) {
             HStack {
                 Label(Strings.Profile.masteryRankLabel, systemImage: "trophy.fill")
                     .font(.caption.weight(.semibold))
-                    .tracking(1)
+                    .tracking(DashboardLayout.headingTracking)
                 Spacer()
                 Image(systemName: "arrow.up.right")
                     .font(.subheadline.weight(.semibold))
@@ -28,12 +28,12 @@ struct MasteryRankCard: View {
             .foregroundStyle(DashboardPalette.heroAccent)
 
             let layout = dynamicTypeSize.isAccessibilitySize
-                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 16))
-                : AnyLayout(HStackLayout(alignment: .center, spacing: 16))
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: RankLayout.ringSpacing))
+                : AnyLayout(HStackLayout(alignment: .center, spacing: RankLayout.ringSpacing))
 
             layout {
                 rankRing
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: RankLayout.detailSpacing) {
                     Text(Strings.Mastery.xpToNextRank(
                         progress.xpToNextRank.formatted(),
                         nextRank: progress.rank + 1
@@ -50,13 +50,13 @@ struct MasteryRankCard: View {
 
             Rectangle()
                 .fill(Color.divider)
-                .frame(height: 1)
+                .frame(height: DashboardLayout.dividerThickness)
 
             Label(Strings.Mastery.itemsLeft(itemsRemaining), systemImage: "square.stack.3d.up")
                 .font(.subheadline)
                 .foregroundStyle(Color.labelSecondary)
         }
-        .padding(16)
+        .padding(DashboardLayout.contentPadding)
         .background(DashboardHeroBackground())
         .accessibilityElement(children: .combine)
     }
@@ -74,17 +74,17 @@ struct MasteryRankCard: View {
         .background {
             ZStack {
                 Circle()
-                    .stroke(DashboardPalette.heroAccent.opacity(0.18), lineWidth: 5)
+                    .stroke(DashboardPalette.heroAccent.opacity(RankLayout.trackOpacity), lineWidth: RankLayout.trackWidth)
                 Circle()
                     .trim(from: 0, to: progress.fraction)
                     .stroke(
                         DashboardPalette.heroAccent.gradient,
-                        style: StrokeStyle(lineWidth: 6, lineCap: .round)
+                        style: StrokeStyle(lineWidth: RankLayout.progressWidth, lineCap: .round)
                     )
-                    .rotationEffect(.degrees(-90))
-                    .animation(reduceMotion ? nil : .smooth(duration: 0.5), value: progress.fraction)
+                    .rotationEffect(.degrees(RankLayout.startAngle))
+                    .animation(reduceMotion ? nil : .smooth(duration: RankLayout.animationDuration), value: progress.fraction)
             }
-            .padding(-20)
+            .padding(RankLayout.ringInset)
         }
         .frame(width: ringSize, height: ringSize)
     }
@@ -105,15 +105,15 @@ struct MasteryCategoryCard: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: CategoryLayout.contentSpacing) {
             HStack {
                 Image(systemName: summary.category.iconName)
                     .font(.title3.weight(.medium))
                     .foregroundStyle(accent)
-                    .frame(width: 36, height: 36)
-                    .background(accent.opacity(0.1), in: .rect(cornerRadius: 13))
-                Spacer(minLength: 4)
-                Text(fraction, format: .percent.precision(.fractionLength(0)))
+                    .frame(width: CategoryLayout.iconSize, height: CategoryLayout.iconSize)
+                    .background(accent.opacity(CategoryLayout.iconBackgroundOpacity), in: .rect(cornerRadius: CategoryLayout.iconCornerRadius))
+                Spacer(minLength: CategoryLayout.minimumSpacerLength)
+                Text(fraction, format: .percent.precision(.fractionLength(CategoryLayout.percentageFractionDigits)))
                     .font(.caption.weight(.medium).monospacedDigit())
                     .foregroundStyle(Color.labelSecondary)
             }
@@ -121,10 +121,10 @@ struct MasteryCategoryCard: View {
             Text(summary.category.displayName.sentenceCased)
                 .font(.headline)
                 .foregroundStyle(Color.labelPrimary)
-                .frame(maxWidth: .infinity, minHeight: 24, alignment: .topLeading)
+                .frame(maxWidth: .infinity, minHeight: CategoryLayout.minimumTitleHeight, alignment: .topLeading)
                 .fixedSize(horizontal: false, vertical: true)
 
-            HStack(alignment: .firstTextBaseline, spacing: 4) {
+            HStack(alignment: .firstTextBaseline, spacing: CategoryLayout.countSpacing) {
                 Text(summary.masteredItemsCount, format: .number)
                     .font(.title3.weight(.semibold))
                     .foregroundStyle(Color.labelPrimary)
@@ -136,7 +136,7 @@ struct MasteryCategoryCard: View {
 
             MasteryCompletionBar(fraction: fraction, tint: accent)
         }
-        .padding(12)
+        .padding(CategoryLayout.contentPadding)
         .background(DashboardCardBackground())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(summary.category.displayName.sentenceCased)
@@ -161,9 +161,9 @@ struct MasterySourceCard: View {
 
     var body: some View {
         let accent = DashboardPalette.accent(in: colorScheme)
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: SourceLayout.contentSpacing) {
             if dynamicTypeSize.isAccessibilitySize {
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: SourceLayout.accessibilitySpacing) {
                     HStack {
                         sourceIcon
                         Spacer()
@@ -172,7 +172,7 @@ struct MasterySourceCard: View {
                     summaryText
                 }
             } else {
-                HStack(spacing: 10) {
+                HStack(spacing: SourceLayout.iconSpacing) {
                     sourceIcon
                     summaryText
                     Spacer()
@@ -186,8 +186,8 @@ struct MasterySourceCard: View {
                 tint: accent
             )
         }
-        .padding(14)
-        .background(Color.surface, in: .rect(cornerRadius: 22))
+        .padding(SourceLayout.contentPadding)
+        .background(Color.surface, in: .rect(cornerRadius: DashboardLayout.cardCornerRadius))
         .accessibilityElement(children: .combine)
     }
 
@@ -206,7 +206,7 @@ struct MasterySourceCard: View {
     }
 
     private var summaryText: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: SourceLayout.detailSpacing) {
             Text(summary.name.sentenceCased)
                 .font(.headline)
                 .foregroundStyle(Color.labelPrimary)
@@ -227,16 +227,55 @@ private struct MasteryCompletionBar: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
-                Capsule().fill(tint.opacity(0.12))
+                Capsule().fill(tint.opacity(CompletionStyle.trackOpacity))
                 Capsule()
                     .fill(tint.gradient)
                     .frame(width: geometry.size.width * min(1, max(0, fraction)))
             }
         }
-        .frame(height: 5)
-        .animation(reduceMotion ? nil : .smooth(duration: 0.4), value: fraction)
+        .frame(height: CompletionStyle.height)
+        .animation(reduceMotion ? nil : .smooth(duration: CompletionStyle.animationDuration), value: fraction)
         .accessibilityHidden(true)
     }
+}
+
+private struct RankLayout {
+    static let ringSize = 88.0
+    static let contentSpacing: CGFloat = 10
+    static let ringSpacing: CGFloat = 16
+    static let detailSpacing: CGFloat = 8
+    static let trackOpacity = 0.18
+    static let trackWidth: CGFloat = 5
+    static let progressWidth: CGFloat = 6
+    static let startAngle: Double = -90
+    static let animationDuration: TimeInterval = 0.5
+    static let ringInset: CGFloat = -20
+}
+
+private struct CategoryLayout {
+    static let contentSpacing: CGFloat = 10
+    static let iconSize: CGFloat = 36
+    static let iconBackgroundOpacity = 0.1
+    static let iconCornerRadius: CGFloat = 13
+    static let minimumSpacerLength: CGFloat = 4
+    static let percentageFractionDigits = 0
+    static let minimumTitleHeight: CGFloat = 24
+    static let countSpacing: CGFloat = 4
+    static let contentPadding: CGFloat = 12
+}
+
+private struct SourceLayout {
+    static let contentSpacing: CGFloat = 16
+    static let accessibilitySpacing: CGFloat = 12
+    static let iconSpacing: CGFloat = 10
+    static let contentPadding: CGFloat = 14
+    static let detailSpacing: CGFloat = 4
+}
+
+private struct CompletionStyle {
+    static let trackOpacity = 0.12
+    static let height: CGFloat = 5
+    static let animationDuration: TimeInterval = 0.4
 }
 
 #Preview("Mastery dashboard") {

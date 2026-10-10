@@ -44,7 +44,7 @@ final class TimeSensitiveOpeningViewModel: Identifiable {
 
     var completion: Double? {
         guard case .invasion(_, _, let completion) = opening.source else { return nil }
-        return completion / 100
+        return completion / Invasion.completePercentage
     }
 
     var sourceText: String {

@@ -13,8 +13,8 @@ struct OpeningsCategoryRowView: View {
     var icon: String = "square.stack.3d.up"
 
     var body: some View {
-        HStack(spacing: 12) {
-            DashboardIcon(name: icon, size: 36)
+        HStack(spacing: Layout.iconSpacing) {
+            DashboardIcon(name: icon)
             Text(title)
                 .font(.headline)
                 .foregroundStyle(Color.labelPrimary)
@@ -23,9 +23,14 @@ struct OpeningsCategoryRowView: View {
                 .font(.subheadline.weight(.semibold).monospacedDigit())
                 .foregroundStyle(Color.labelSecondary)
         }
-        .frame(minHeight: 44)
-        .padding(.vertical, 2)
+        .frame(minHeight: ListLayout.minimumRowHeight)
+        .padding(.vertical, Layout.verticalPadding)
     }
+}
+
+private struct Layout {
+    static let iconSpacing: CGFloat = 12
+    static let verticalPadding: CGFloat = 2
 }
 
 #Preview {

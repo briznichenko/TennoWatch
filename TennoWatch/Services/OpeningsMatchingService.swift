@@ -24,7 +24,7 @@ struct DefaultOpeningsMatchingService: OpeningsMatchingService {
         invasions.filter { !$0.completed }.flatMap { invasion in
             [invasion.attacker, invasion.defender].flatMap { faction -> [TimeSensitiveOpening] in
                 guard let reward = faction.reward else { return [] }
-                let completion = min(100, max(0, invasion.completion))
+                let completion = min(Invasion.completePercentage, max(0, invasion.completion))
                 return matchingItems(in: reward, from: items).map {
                     TimeSensitiveOpening(
                         item: $0,

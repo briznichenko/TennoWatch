@@ -25,7 +25,7 @@ struct MasteryBreakdownView: View {
                                 .font(.subheadline)
                                 .foregroundStyle(Color.labelSecondary)
                         }
-                        .frame(minHeight: 32)
+                        .frame(minHeight: Layout.minimumRowHeight)
                     }
                 }
             }
@@ -41,4 +41,8 @@ struct MasteryBreakdownView: View {
             await viewModel.loadBreakdown()
         }
     }
+}
+
+private struct Layout {
+    static let minimumRowHeight: CGFloat = 32
 }

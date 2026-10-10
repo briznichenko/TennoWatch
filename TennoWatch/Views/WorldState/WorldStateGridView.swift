@@ -15,9 +15,9 @@ struct WorldStateGridView: View {
     // MARK: - Body
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: DashboardLayout.sectionSpacing) {
                 voidTraderCard
-                LazyVGrid(columns: columns, spacing: 10) {
+                LazyVGrid(columns: columns, spacing: DashboardLayout.gridSpacing) {
                     invasionsCard
                     fissuresCard
                     sortieCard
@@ -32,8 +32,8 @@ struct WorldStateGridView: View {
                     cyclesCard
                 }
             }
-            .frame(maxWidth: 1120)
-            .padding(16)
+            .frame(maxWidth: DashboardLayout.maximumContentWidth)
+            .padding(DashboardLayout.contentPadding)
             .frame(maxWidth: .infinity)
         }
         .buttonStyle(.plain)
@@ -53,7 +53,7 @@ struct WorldStateGridView: View {
             } label: {
                 CardView(icon: "clock.arrow.2.circlepath", title: Strings.WorldState.cyclesHeader) {
                     Text(viewModel.cycles.map(\.title).joined(separator: ", "))
-                        .lineLimit(2)
+                        .lineLimit(Layout.cycleSummaryLineLimit)
                 }
             }
         }
@@ -212,4 +212,8 @@ struct WorldStateGridView: View {
             }
         }
     }
+}
+
+private struct Layout {
+    static let cycleSummaryLineLimit = 2
 }

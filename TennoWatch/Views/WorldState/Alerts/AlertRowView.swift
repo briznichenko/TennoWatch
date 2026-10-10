@@ -9,7 +9,7 @@ struct AlertRowView: View {
     let alert: Alert
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: ListLayout.detailSpacing) {
             HStack {
                 Text(alert.mission.node)
                     .font(.headline)
@@ -25,7 +25,7 @@ struct AlertRowView: View {
                     .foregroundStyle(Color.labelSecondary)
             }
         }
-        .frame(minHeight: 44)
+        .frame(minHeight: ListLayout.minimumRowHeight)
     }
 }
 

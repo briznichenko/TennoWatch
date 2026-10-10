@@ -17,7 +17,7 @@ struct NightwaveRowView: View {
 
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: ListLayout.compactDetailSpacing) {
                 Text(nightwave.tag)
                     .font(.headline)
                 Text(Strings.WorldState.nightwaveChallengesCount(nightwave.activeChallenges.count))
@@ -29,7 +29,7 @@ struct NightwaveRowView: View {
                 .font(.caption)
                 .foregroundStyle(Color.labelSecondary)
         }
-        .frame(minHeight: 44)
+        .frame(minHeight: ListLayout.minimumRowHeight)
     }
 }
 

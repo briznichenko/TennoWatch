@@ -16,7 +16,7 @@ struct InvasionView: View {
 
     // MARK: - Body
     var body: some View {
-        VStack(alignment: .leading, spacing: 3) {
+        VStack(alignment: .leading, spacing: Layout.contentSpacing) {
             Text(nodeName)
                 .font(.subheadline.weight(.medium))
             HStack {
@@ -28,12 +28,12 @@ struct InvasionView: View {
             let current = Double(abs(invasion.count)) * requiredRuns
             ProgressView(value: current > 1 ? 1 : current)
         }
-        .padding(.vertical, 2)
+        .padding(.vertical, Layout.verticalPadding)
     }
 
     // MARK: - Helper Functions
     private func factionView(_ faction: Faction, isAttacker: Bool) -> some View {
-        VStack(alignment: isAttacker ? .leading : .trailing, spacing: 1) {
+        VStack(alignment: isAttacker ? .leading : .trailing, spacing: Layout.factionSpacing) {
             Text(faction.faction)
                 .font(.caption)
                 .foregroundStyle(isAttacker ? .red : .green)
@@ -49,6 +49,12 @@ struct InvasionView: View {
             }
         }
     }
+}
+
+private struct Layout {
+    static let contentSpacing: CGFloat = 3
+    static let factionSpacing: CGFloat = 1
+    static let verticalPadding: CGFloat = 2
 }
 
 #Preview {

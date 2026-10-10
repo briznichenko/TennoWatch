@@ -28,10 +28,14 @@ struct StarChartSection<Item>: Identifiable {
 
 extension MasterySourceModel {
     var starChartMode: StarChartMode {
-        uniqueName.hasSuffix("#steelPath") ? .steelPath : .base
+        uniqueName.hasSuffix(StarChartRules.steelPathSuffix) ? .steelPath : .base
     }
 }
 
 extension MissionStat {
-    var starChartMode: StarChartMode { tier == 1 ? .steelPath : .base }
+    var starChartMode: StarChartMode { tier == StarChartRules.steelPathTier ? .steelPath : .base }
+}
+struct StarChartRules {
+    static let steelPathTier = 1
+    static let steelPathSuffix = "#steelPath"
 }

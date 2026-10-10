@@ -12,7 +12,7 @@ struct NightwaveChallengeRowView: View {
 
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: ListLayout.compactDetailSpacing) {
                 Text(challenge.title)
                 Text(challenge.desc)
                     .font(.caption)

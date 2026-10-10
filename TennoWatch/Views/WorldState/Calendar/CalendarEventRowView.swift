@@ -9,7 +9,7 @@ struct CalendarEventRowView: View {
     let event: CalendarEvent
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: ListLayout.detailSpacing) {
             Text(event.type)
                 .font(.subheadline)
                 .foregroundStyle(Color.labelPrimary)
@@ -33,7 +33,7 @@ struct CalendarEventRowView: View {
                     .foregroundStyle(Color.labelSecondary)
             }
         }
-        .frame(minHeight: 44)
+        .frame(minHeight: ListLayout.minimumRowHeight)
     }
 }
 

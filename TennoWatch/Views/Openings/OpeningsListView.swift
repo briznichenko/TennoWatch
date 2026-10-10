@@ -25,7 +25,7 @@ struct OpeningsListView: View {
                     permanentCount: itemCategories.reduce(0) { $0 + $1.count }
                         + sourceCategories.reduce(0) { $0 + $1.count }
                 )
-                .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
+                .listRowInsets(Layout.heroInsets)
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
             }
@@ -46,7 +46,7 @@ struct OpeningsListView: View {
             if openings.isEmpty {
                 Text(viewModel.isSearching ? Strings.Common.noSearchResults : Strings.Openings.emptyTimeSensitive)
                     .foregroundStyle(Color.labelSecondary)
-                    .padding(.vertical, 12)
+                    .padding(.vertical, Layout.emptyStatePadding)
             } else {
                 ForEach(openings) { opening in
                     TimeSensitiveOpeningRowView(viewModel: opening)
@@ -55,7 +55,7 @@ struct OpeningsListView: View {
         } header: {
             DashboardSectionHeader(title: Strings.Openings.timeSensitiveHeader, icon: "bolt.fill")
         }
-        .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
+        .listRowInsets(Layout.heroInsets)
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
     }
@@ -111,12 +111,19 @@ struct OpeningsListView: View {
     private func summaryCard(timeSensitiveCount: Int, permanentCount: Int) -> some View {
         DashboardHero(title: Strings.Openings.title, icon: "target") {
             let layout = dynamicTypeSize.isAccessibilitySize
-                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
-                : AnyLayout(HStackLayout(alignment: .top, spacing: 16))
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: Layout.accessibilityMetricSpacing))
+                : AnyLayout(HStackLayout(alignment: .top, spacing: Layout.metricSpacing))
             layout {
                 DashboardMetric(value: timeSensitiveCount.formatted(), title: Strings.Openings.timeSensitiveHeader)
                 DashboardMetric(value: permanentCount.formatted(), title: Strings.Openings.permanentHeader)
             }
         }
     }
+}
+
+private struct Layout {
+    static let heroInsets = EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0)
+    static let emptyStatePadding: CGFloat = 12
+    static let accessibilityMetricSpacing: CGFloat = 12
+    static let metricSpacing: CGFloat = 16
 }
