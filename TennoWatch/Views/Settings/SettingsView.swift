@@ -14,6 +14,7 @@ struct SettingsView: View {
     @AppStorage(DefaultVoidTraderNotificationScheduler.preferenceKey) private var isVoidTraderNotificationsEnabled = false
     @State private var viewModel: SettingsViewModel
     @State private var isShowingClearCacheConfirmation = false
+    @Environment(\.colorScheme) private var colorScheme
 
     let displayName: String
     let onCacheCleared: () -> Void
@@ -36,7 +37,7 @@ struct SettingsView: View {
                         }
                     }
                 } header: {
-                    SectionHeaderLabel(Strings.Settings.appearanceHeader)
+                    DashboardSectionHeader(title: Strings.Settings.appearanceHeader, icon: "circle.lefthalf.filled")
                 }
 
                 Section {
@@ -46,13 +47,13 @@ struct SettingsView: View {
                         }
                     }
                 } header: {
-                    SectionHeaderLabel(Strings.Settings.languageHeader)
+                    DashboardSectionHeader(title: Strings.Settings.languageHeader, icon: "globe")
                 }
 
                 Section {
                     Toggle(Strings.Settings.voidTraderNotificationsLabel, isOn: $isVoidTraderNotificationsEnabled)
                 } header: {
-                    SectionHeaderLabel(Strings.Settings.notificationsHeader)
+                    DashboardSectionHeader(title: Strings.Settings.notificationsHeader, icon: "bell")
                 }
 
                 Section {
@@ -63,7 +64,7 @@ struct SettingsView: View {
                             .foregroundStyle(Color.labelSecondary)
                     }
                 } header: {
-                    SectionHeaderLabel(Strings.Settings.accountHeader)
+                    DashboardSectionHeader(title: Strings.Settings.accountHeader, icon: "person.crop.circle")
                 }
 
                 Section {
@@ -94,7 +95,7 @@ struct SettingsView: View {
                     }
                     .disabled(viewModel.isRefreshing)
                 } header: {
-                    SectionHeaderLabel(Strings.Settings.catalogHeader)
+                    DashboardSectionHeader(title: Strings.Settings.catalogHeader, icon: "square.stack.3d.up")
                 }
 
                 Section {
@@ -105,10 +106,12 @@ struct SettingsView: View {
                     }
                     .disabled(viewModel.isClearingCache || viewModel.isRefreshing)
                 } header: {
-                    SectionHeaderLabel(Strings.Settings.storageHeader)
+                    DashboardSectionHeader(title: Strings.Settings.storageHeader, icon: "externaldrive")
                 }
             }
             .themedList()
+            .listStyle(.sidebar)
+            .tint(DashboardPalette.accent(in: colorScheme))
             .navigationTitle(Strings.Settings.title)
             .handleErrorAlert(with: viewModel.errorManager)
             .confirmationDialog(

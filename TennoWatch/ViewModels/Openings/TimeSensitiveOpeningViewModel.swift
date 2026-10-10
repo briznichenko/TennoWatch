@@ -18,7 +18,34 @@ final class TimeSensitiveOpeningViewModel: Identifiable {
     // MARK: - Computed Properties
     var name: String { opening.item.catalogItemModel.name }
     var type: String { opening.item.catalogItemModel.category.displayName }
-    var iconName: String { "bolt.circle.fill" }
+    var iconName: String { opening.item.catalogItemModel.category.iconName }
+
+    var sourceName: String {
+        switch opening.source {
+        case .invasion: Strings.WorldState.invasionsHeader
+        case .voidTrader: Strings.WorldState.voidTraderHeader
+        case .vaultTrader: Strings.WorldState.vaultTraderHeader
+        }
+    }
+
+    var location: String {
+        switch opening.source {
+        case .invasion(let node, let faction, _): "\(node) · \(faction)"
+        case .voidTrader(let location, _), .vaultTrader(let location, _): location
+        }
+    }
+
+    var expiry: Date? {
+        switch opening.source {
+        case .invasion: nil
+        case .voidTrader(_, let expiry), .vaultTrader(_, let expiry): expiry
+        }
+    }
+
+    var completion: Double? {
+        guard case .invasion(_, _, let completion) = opening.source else { return nil }
+        return completion / 100
+    }
 
     var sourceText: String {
         switch opening.source {

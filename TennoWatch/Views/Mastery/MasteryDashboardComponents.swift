@@ -1,13 +1,11 @@
+//
+//  WorldStateGridView.swift
+//  TennoWatch
+//
+//  Created by Andrii Bryzhnychenko on 10/09/26.
+//
+
 import SwiftUI
-
-private enum MasteryDashboardPalette {
-    static let gold = Color(red: 0.89, green: 0.74, blue: 0.43)
-    static let midnight = Color(red: 0.07, green: 0.10, blue: 0.14)
-
-    static func accent(in scheme: ColorScheme) -> Color {
-        scheme == .dark ? gold : .accent
-    }
-}
 
 struct MasteryRankCard: View {
     let progress: MasteryRankProgress
@@ -27,7 +25,7 @@ struct MasteryRankCard: View {
                 Image(systemName: "arrow.up.right")
                     .font(.subheadline.weight(.semibold))
             }
-            .foregroundStyle(MasteryDashboardPalette.gold)
+            .foregroundStyle(DashboardPalette.heroAccent)
 
             let layout = dynamicTypeSize.isAccessibilitySize
                 ? AnyLayout(VStackLayout(alignment: .leading, spacing: 20))
@@ -41,51 +39,36 @@ struct MasteryRankCard: View {
                         nextRank: progress.rank + 1
                     ))
                     .font(.title2.weight(.semibold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.labelPrimary)
                     .fixedSize(horizontal: false, vertical: true)
                     Text("\(progress.currentXP.formatted()) / \(progress.xpForNextRank.formatted())")
                         .font(.caption.monospacedDigit())
-                        .foregroundStyle(.white.opacity(0.72))
+                        .foregroundStyle(Color.labelSecondary)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
 
             Rectangle()
-                .fill(.white.opacity(0.12))
+                .fill(Color.divider)
                 .frame(height: 1)
 
             Label(Strings.Mastery.itemsLeft(itemsRemaining), systemImage: "square.stack.3d.up")
                 .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.82))
+                .foregroundStyle(Color.labelSecondary)
         }
         .padding(24)
-        .background {
-            RoundedRectangle(cornerRadius: 26)
-                .fill(MasteryDashboardPalette.midnight.gradient)
-                .overlay(alignment: .topTrailing) {
-                    LotusMark()
-                        .stroke(MasteryDashboardPalette.gold.opacity(0.09), lineWidth: 1)
-                        .frame(width: 240, height: 180)
-                        .rotationEffect(.degrees(-18))
-                        .offset(x: 40, y: -20)
-                }
-                .overlay {
-                    RoundedRectangle(cornerRadius: 26)
-                        .strokeBorder(MasteryDashboardPalette.gold.opacity(0.24), lineWidth: 1)
-                }
-                .clipShape(.rect(cornerRadius: 26))
-        }
+        .background(DashboardHeroBackground())
         .accessibilityElement(children: .combine)
     }
 
     private var rankRing: some View {
         ZStack {
             Circle()
-                .stroke(MasteryDashboardPalette.gold.opacity(0.18), lineWidth: 6)
+                .stroke(DashboardPalette.heroAccent.opacity(0.18), lineWidth: 6)
             Circle()
                 .trim(from: 0, to: progress.fraction)
                 .stroke(
-                    MasteryDashboardPalette.gold.gradient,
+                    DashboardPalette.heroAccent.gradient,
                     style: StrokeStyle(lineWidth: 6, lineCap: .round)
                 )
                 .rotationEffect(.degrees(-90))
@@ -93,10 +76,10 @@ struct MasteryRankCard: View {
             VStack(spacing: 5) {
                 Image(systemName: "trophy")
                     .font(.title3)
-                    .foregroundStyle(MasteryDashboardPalette.gold)
+                    .foregroundStyle(DashboardPalette.heroAccent)
                 Text(Strings.Mastery.rankBadge(progress.rank))
                     .font(.system(.title2, design: .rounded, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.labelPrimary)
                     .monospacedDigit()
             }
             .padding(12)
@@ -116,7 +99,7 @@ struct MasteryCategoryCard: View {
     }
 
     private var accent: Color {
-        MasteryDashboardPalette.accent(in: colorScheme)
+        DashboardPalette.accent(in: colorScheme)
     }
 
     var body: some View {
@@ -152,22 +135,7 @@ struct MasteryCategoryCard: View {
             MasteryCompletionBar(fraction: fraction, tint: accent)
         }
         .padding(16)
-        .background {
-            RoundedRectangle(cornerRadius: 22)
-                .fill(Color.surface)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 22)
-                        .fill(LinearGradient(
-                            colors: [accent.opacity(0.06), .clear],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ))
-                }
-                .overlay {
-                    RoundedRectangle(cornerRadius: 22)
-                        .strokeBorder(accent.opacity(0.12), lineWidth: 1)
-                }
-        }
+        .background(DashboardCardBackground())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(summary.category.displayName.sentenceCased)
         .accessibilityValue(summary.countText)
@@ -190,7 +158,7 @@ struct MasterySourceCard: View {
     }
 
     var body: some View {
-        let accent = MasteryDashboardPalette.accent(in: colorScheme)
+        let accent = DashboardPalette.accent(in: colorScheme)
         VStack(alignment: .leading, spacing: 16) {
             if dynamicTypeSize.isAccessibilitySize {
                 VStack(alignment: .leading, spacing: 12) {
@@ -224,7 +192,7 @@ struct MasterySourceCard: View {
     private var sourceIcon: some View {
         Image(systemName: icon)
             .font(.title2)
-            .foregroundStyle(MasteryDashboardPalette.accent(in: colorScheme))
+            .foregroundStyle(DashboardPalette.accent(in: colorScheme))
             .accessibilityHidden(true)
     }
 

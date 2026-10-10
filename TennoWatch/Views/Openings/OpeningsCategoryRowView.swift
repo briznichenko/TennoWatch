@@ -10,17 +10,21 @@ import SwiftUI
 struct OpeningsCategoryRowView: View {
     let title: String
     let countText: String
+    var icon: String = "square.stack.3d.up"
 
     var body: some View {
-        HStack {
+        HStack(spacing: 12) {
+            DashboardIcon(name: icon, size: 36)
             Text(title)
+                .font(.headline)
                 .foregroundStyle(Color.labelPrimary)
             Spacer()
             Text(countText)
-                .font(.subheadline)
+                .font(.subheadline.weight(.semibold).monospacedDigit())
                 .foregroundStyle(Color.labelSecondary)
         }
         .frame(minHeight: 44)
+        .padding(.vertical, 6)
     }
 }
 

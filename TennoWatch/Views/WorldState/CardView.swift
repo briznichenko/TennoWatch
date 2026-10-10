@@ -13,21 +13,30 @@ struct CardView<Summary: View>: View {
 
     // MARK: - Body
     var body: some View {
-        Surface {
-            VStack(alignment: .leading, spacing: 8) {
-                Image(systemName: icon)
-                    .font(.title2)
-                    .foregroundStyle(.accent)
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                DashboardIcon(name: icon)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Color.labelSecondary.opacity(0.7))
+                    .accessibilityHidden(true)
+            }
+            VStack(alignment: .leading, spacing: 6) {
                 Text(title)
                     .font(.headline)
                     .foregroundStyle(Color.labelPrimary)
                 summary
-                    .font(.caption)
+                    .font(.subheadline.monospacedDigit())
                     .foregroundStyle(Color.labelSecondary)
             }
-            .frame(maxWidth: .infinity, minHeight: 84, alignment: .topLeading)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, minHeight: 58, alignment: .topLeading)
         }
+        .padding(16)
+        .background(DashboardCardBackground())
         .contentShape(.rect)
+        .accessibilityElement(children: .combine)
     }
 }
 

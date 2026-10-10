@@ -11,42 +11,65 @@ struct OpeningsListView: View {
     // MARK: - Object Properties
     @Bindable var viewModel: OpeningsViewModel
     @State private var isPermanentSectionExpanded: Bool = false
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     // MARK: - Body
     var body: some View {
+        let openings = viewModel.timeSensitiveOpenings
+        let itemCategories = viewModel.permanentItemCategories
+        let sourceCategories = viewModel.permanentSourceCategories
         List {
-            timeSensitiveSection
-            permanentSection
+            if viewModel.catalog != nil {
+                summaryCard(
+                    timeSensitiveCount: openings.count,
+                    permanentCount: itemCategories.reduce(0) { $0 + $1.count }
+                        + sourceCategories.reduce(0) { $0 + $1.count }
+                )
+                .listRowInsets(EdgeInsets(top: 12, leading: 0, bottom: 16, trailing: 0))
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+            }
+            timeSensitiveSection(openings: openings)
+            permanentSection(itemCategories: itemCategories, sourceCategories: sourceCategories)
         }
         .listStyle(.sidebar)
+        .scrollContentBackground(.hidden)
+        .background(Color.bg)
         .searchable(text: $viewModel.searchText, prompt: Strings.Common.search)
     }
 
     // MARK: - Subviews
     @ViewBuilder
-    private var timeSensitiveSection: some View {
+    private func timeSensitiveSection(openings: [TimeSensitiveOpeningViewModel]) -> some View {
         Section {
-            if viewModel.timeSensitiveOpenings.isEmpty {
+            if openings.isEmpty {
                 Text(viewModel.isSearching ? Strings.Common.noSearchResults : Strings.Openings.emptyTimeSensitive)
                     .foregroundStyle(Color.labelSecondary)
+                    .padding(.vertical, 12)
             } else {
-                ForEach(viewModel.timeSensitiveOpenings) { opening in
+                ForEach(openings) { opening in
                     TimeSensitiveOpeningRowView(viewModel: opening)
                 }
             }
         } header: {
-            SectionHeaderLabel(Strings.Openings.timeSensitiveHeader)
+            DashboardSectionHeader(title: Strings.Openings.timeSensitiveHeader, icon: "bolt.fill")
         }
+        .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
     }
 
     @ViewBuilder
-    private var permanentSection: some View {
+    private func permanentSection(
+        itemCategories: [OpeningsItemCategorySummary],
+        sourceCategories: [OpeningsSourceCategorySummary]
+    ) -> some View {
         Section(isExpanded: $isPermanentSectionExpanded) {
-            if viewModel.permanentItemCategories.isEmpty && viewModel.permanentSourceCategories.isEmpty {
+            if itemCategories.isEmpty && sourceCategories.isEmpty {
                 Text(viewModel.isSearching ? Strings.Common.noSearchResults : Strings.Openings.emptyPermanent)
                     .foregroundStyle(Color.labelSecondary)
             } else {
-                ForEach(viewModel.permanentItemCategories) { summary in
+                ForEach(itemCategories) { summary in
                     NavigationLink {
                         OpeningsItemCategoryDetailView(
                             viewModel: .init(
@@ -56,10 +79,14 @@ struct OpeningsListView: View {
                             )
                         )
                     } label: {
-                        OpeningsCategoryRowView(title: summary.category.displayName.sentenceCased, countText: summary.countText)
+                        OpeningsCategoryRowView(
+                            title: summary.category.displayName.sentenceCased,
+                            countText: summary.countText,
+                            icon: summary.category.iconName
+                        )
                     }
                 }
-                ForEach(viewModel.permanentSourceCategories) { summary in
+                ForEach(sourceCategories) { summary in
                     NavigationLink {
                         OpeningsSourceCategoryDetailView(
                             viewModel: .init(
@@ -74,7 +101,21 @@ struct OpeningsListView: View {
                 }
             }
         } header: {
-            SectionHeaderLabel(Strings.Openings.permanentHeader)
+            DashboardSectionHeader(title: Strings.Openings.permanentHeader, icon: "square.stack.3d.up")
+        }
+        .listRowBackground(Color.surface)
+        .listRowSeparatorTint(Color.divider)
+    }
+
+    private func summaryCard(timeSensitiveCount: Int, permanentCount: Int) -> some View {
+        DashboardHero(title: Strings.Openings.title, icon: "target") {
+            let layout = dynamicTypeSize.isAccessibilitySize
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 20))
+                : AnyLayout(HStackLayout(alignment: .top, spacing: 24))
+            layout {
+                DashboardMetric(value: timeSensitiveCount.formatted(), title: Strings.Openings.timeSensitiveHeader)
+                DashboardMetric(value: permanentCount.formatted(), title: Strings.Openings.permanentHeader)
+            }
         }
     }
 }

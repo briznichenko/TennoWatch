@@ -10,41 +10,58 @@ import SwiftUI
 struct WorldStateGridView: View {
     // MARK: - Object Properties
     let viewModel: WorldStateViewModel
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     // MARK: - Body
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: AppPresentation.worldStateColumns, spacing: 12) {
-                cyclesCard
-                invasionsCard
-                fissuresCard
-                sortieCard
-                archonHuntCard
-                nightwaveCard
+            VStack(alignment: .leading, spacing: 24) {
                 voidTraderCard
-                vaultTraderCard
-                steelPathCard
-                alertsCard
-                archimedeaCard
-                calendarCard
-                flashSalesCard
+                cyclesCard
+                LazyVGrid(columns: columns, spacing: 12) {
+                    invasionsCard
+                    fissuresCard
+                    sortieCard
+                    archonHuntCard
+                    nightwaveCard
+                    vaultTraderCard
+                    steelPathCard
+                    alertsCard
+                    archimedeaCard
+                    calendarCard
+                    flashSalesCard
+                }
             }
-            .padding(12)
+            .frame(maxWidth: 1120)
+            .padding(20)
+            .frame(maxWidth: .infinity)
         }
         .buttonStyle(.plain)
         .background(Color.bg)
+    }
+
+    private var columns: [GridItem] {
+        dynamicTypeSize.isAccessibilitySize ? [GridItem(.flexible())] : AppPresentation.worldStateColumns
     }
 
     // MARK: - Cards
     @ViewBuilder
     private var cyclesCard: some View {
         if !viewModel.cycles.isEmpty {
-            NavigationLink {
-                CycleListView(cycles: viewModel.cycles)
-            } label: {
-                CardView(icon: "clock.arrow.2.circlepath", title: Strings.WorldState.cyclesHeader) {
-                    Text("\(viewModel.cycles.count)")
+            VStack(alignment: .leading, spacing: 12) {
+                DashboardSectionHeader(title: Strings.WorldState.cyclesHeader, icon: "clock.arrow.2.circlepath")
+                ScrollView(.horizontal) {
+                    HStack(spacing: 12) {
+                        ForEach(viewModel.cycles) { cycle in
+                            NavigationLink {
+                                CycleListView(cycles: viewModel.cycles)
+                            } label: {
+                                WorldStateCycleCard(cycle: cycle)
+                            }
+                        }
+                    }
                 }
+                .scrollIndicators(.hidden)
             }
         }
     }
@@ -120,16 +137,7 @@ struct WorldStateGridView: View {
             NavigationLink {
                 TraderInventoryListView(trader: voidTrader)
             } label: {
-                CardView(icon: "person.fill.questionmark", title: Strings.WorldState.voidTraderHeader) {
-                    if let activation = voidTrader.activation, let expiry = voidTrader.expiry {
-                        let hasArrived = activation > Date.now
-                        VStack(alignment: .leading) {
-                            Text(hasArrived ? Strings.WorldState.voidTraderArrival : Strings.WorldState.voidTraderDeparture)
-                            LiveCountdownText(date: hasArrived ? activation : expiry)
-                        }
-                    }
-                    
-                }
+                WorldStateTraderCard(trader: voidTrader)
             }
         }
     }
