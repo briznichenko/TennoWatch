@@ -25,13 +25,13 @@ struct MasteryView: View {
     var body: some View {
         NavigationStack(path: $coordinator.path) {
             ScrollView {
-                VStack(alignment: .leading, spacing: 28) {
+                VStack(alignment: .leading, spacing: 12) {
                     summaryCard
                     categoryList
                     otherSourcesList
                 }
                 .frame(maxWidth: 1120)
-                .padding(20)
+                .padding(16)
                 .frame(maxWidth: .infinity)
             }
             .background(Color.bg)
@@ -81,7 +81,7 @@ struct MasteryView: View {
     }
 
     private var categoryList: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 12) {
             Button {
                 withAnimation(reduceMotion ? nil : .snappy(duration: 0.25)) {
                     isCategoriesExpanded.toggle()
@@ -102,7 +102,7 @@ struct MasteryView: View {
             .buttonStyle(.plain)
 
             if isCategoriesExpanded {
-                LazyVGrid(columns: categoryColumns, spacing: 12) {
+                LazyVGrid(columns: categoryColumns, spacing: 10) {
                     ForEach(orderedCategories) { summary in
                         Button {
                             coordinator.showCategoryDetail(summary.category)

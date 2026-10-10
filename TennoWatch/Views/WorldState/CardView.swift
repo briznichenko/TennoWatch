@@ -13,7 +13,7 @@ struct CardView<Summary: View>: View {
 
     // MARK: - Body
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 10) {
             HStack {
                 DashboardIcon(name: icon)
                 Spacer()
@@ -22,7 +22,7 @@ struct CardView<Summary: View>: View {
                     .foregroundStyle(Color.labelSecondary.opacity(0.7))
                     .accessibilityHidden(true)
             }
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(title)
                     .font(.headline)
                     .foregroundStyle(Color.labelPrimary)
@@ -31,9 +31,9 @@ struct CardView<Summary: View>: View {
                     .foregroundStyle(Color.labelSecondary)
             }
             .fixedSize(horizontal: false, vertical: true)
-            .frame(maxWidth: .infinity, minHeight: 58, alignment: .topLeading)
+            .frame(maxWidth: .infinity, minHeight: 44, alignment: .topLeading)
         }
-        .padding(16)
+        .padding(12)
         .background(DashboardCardBackground())
         .contentShape(.rect)
         .accessibilityElement(children: .combine)

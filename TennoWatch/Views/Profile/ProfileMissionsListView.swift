@@ -20,7 +20,7 @@ struct ProfileMissionsListView: View {
 
     // MARK: - Body
     var body: some View {
-        List {
+        ThemedList {
             ForEach(viewModel.starChartSections) { section in
                 Section {
                     ForEach(section.items) { mission in

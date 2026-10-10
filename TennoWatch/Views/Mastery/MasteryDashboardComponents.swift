@@ -13,10 +13,10 @@ struct MasteryRankCard: View {
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @ScaledMetric(relativeTo: .largeTitle) private var ringSize = 112.0
+    @ScaledMetric(relativeTo: .largeTitle) private var ringSize = 88.0
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 22) {
+        VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Label(Strings.Profile.masteryRankLabel, systemImage: "trophy.fill")
                     .font(.caption.weight(.semibold))
@@ -28,8 +28,8 @@ struct MasteryRankCard: View {
             .foregroundStyle(DashboardPalette.heroAccent)
 
             let layout = dynamicTypeSize.isAccessibilitySize
-                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 20))
-                : AnyLayout(HStackLayout(alignment: .center, spacing: 20))
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 16))
+                : AnyLayout(HStackLayout(alignment: .center, spacing: 16))
 
             layout {
                 rankRing
@@ -56,33 +56,35 @@ struct MasteryRankCard: View {
                 .font(.subheadline)
                 .foregroundStyle(Color.labelSecondary)
         }
-        .padding(24)
+        .padding(16)
         .background(DashboardHeroBackground())
         .accessibilityElement(children: .combine)
     }
 
     private var rankRing: some View {
-        ZStack {
-            Circle()
-                .stroke(DashboardPalette.heroAccent.opacity(0.18), lineWidth: 6)
-            Circle()
-                .trim(from: 0, to: progress.fraction)
-                .stroke(
-                    DashboardPalette.heroAccent.gradient,
-                    style: StrokeStyle(lineWidth: 6, lineCap: .round)
-                )
-                .rotationEffect(.degrees(-90))
-                .animation(reduceMotion ? nil : .smooth(duration: 0.5), value: progress.fraction)
-            VStack(spacing: 5) {
-                Image(systemName: "trophy")
-                    .font(.title3)
-                    .foregroundStyle(DashboardPalette.heroAccent)
-                Text(Strings.Mastery.rankBadge(progress.rank))
-                    .font(.system(.title2, design: .rounded, weight: .bold))
-                    .foregroundStyle(Color.labelPrimary)
-                    .monospacedDigit()
+        VStack {
+            Image(systemName: "trophy")
+                .font(.title3)
+                .foregroundStyle(DashboardPalette.heroAccent)
+            Text(Strings.Mastery.rankBadge(progress.rank))
+                .font(.system(.title2, design: .rounded, weight: .bold))
+                .foregroundStyle(Color.labelPrimary)
+                .monospacedDigit()
+        }
+        .background {
+            ZStack {
+                Circle()
+                    .stroke(DashboardPalette.heroAccent.opacity(0.18), lineWidth: 5)
+                Circle()
+                    .trim(from: 0, to: progress.fraction)
+                    .stroke(
+                        DashboardPalette.heroAccent.gradient,
+                        style: StrokeStyle(lineWidth: 6, lineCap: .round)
+                    )
+                    .rotationEffect(.degrees(-90))
+                    .animation(reduceMotion ? nil : .smooth(duration: 0.5), value: progress.fraction)
             }
-            .padding(12)
+            .padding(-20)
         }
         .frame(width: ringSize, height: ringSize)
     }
@@ -103,12 +105,12 @@ struct MasteryCategoryCard: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Image(systemName: summary.category.iconName)
                     .font(.title3.weight(.medium))
                     .foregroundStyle(accent)
-                    .frame(width: 42, height: 42)
+                    .frame(width: 36, height: 36)
                     .background(accent.opacity(0.1), in: .rect(cornerRadius: 13))
                 Spacer(minLength: 4)
                 Text(fraction, format: .percent.precision(.fractionLength(0)))
@@ -119,7 +121,7 @@ struct MasteryCategoryCard: View {
             Text(summary.category.displayName.sentenceCased)
                 .font(.headline)
                 .foregroundStyle(Color.labelPrimary)
-                .frame(maxWidth: .infinity, minHeight: 44, alignment: .topLeading)
+                .frame(maxWidth: .infinity, minHeight: 24, alignment: .topLeading)
                 .fixedSize(horizontal: false, vertical: true)
 
             HStack(alignment: .firstTextBaseline, spacing: 4) {
@@ -134,7 +136,7 @@ struct MasteryCategoryCard: View {
 
             MasteryCompletionBar(fraction: fraction, tint: accent)
         }
-        .padding(16)
+        .padding(12)
         .background(DashboardCardBackground())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(summary.category.displayName.sentenceCased)
@@ -170,7 +172,7 @@ struct MasterySourceCard: View {
                     summaryText
                 }
             } else {
-                HStack(spacing: 14) {
+                HStack(spacing: 10) {
                     sourceIcon
                     summaryText
                     Spacer()
@@ -184,7 +186,7 @@ struct MasterySourceCard: View {
                 tint: accent
             )
         }
-        .padding(20)
+        .padding(14)
         .background(Color.surface, in: .rect(cornerRadius: 22))
         .accessibilityElement(children: .combine)
     }
@@ -239,7 +241,7 @@ private struct MasteryCompletionBar: View {
 
 #Preview("Mastery dashboard") {
     ScrollView {
-        VStack(spacing: 20) {
+        VStack(spacing: 16) {
             MasteryRankCard(
                 progress: .init(rank: 18, currentXP: 842_500, xpForCurrentRank: 810_000, xpForNextRank: 902_500),
                 itemsRemaining: 286
@@ -255,7 +257,7 @@ private struct MasteryCompletionBar: View {
                 ))
             }
         }
-        .padding(20)
+        .padding(14)
     }
     .background(Color.bg)
 }

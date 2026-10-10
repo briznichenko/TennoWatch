@@ -24,7 +24,7 @@ struct OpeningsCategoryRowView: View {
                 .foregroundStyle(Color.labelSecondary)
         }
         .frame(minHeight: 44)
-        .padding(.vertical, 6)
+        .padding(.vertical, 2)
     }
 }
 

@@ -11,7 +11,7 @@ struct NightwaveListView: View {
     let nightwave: Nightwave
 
     var body: some View {
-        List {
+        ThemedList {
             ForEach(Array(nightwave.activeChallenges.enumerated()), id: \.offset) { _, challenge in
                 NightwaveChallengeRowView(challenge: challenge)
             }

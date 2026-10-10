@@ -21,7 +21,7 @@ struct MasteryCategoryDetailView: View {
 
     // MARK: - Body
     var body: some View {
-        List {
+        ThemedList {
             ForEach(viewModel.sortedItems, id: \.self) { item in
                 MasteryItemView(viewModel: .init(item: item))
             }

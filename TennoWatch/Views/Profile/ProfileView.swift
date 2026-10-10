@@ -35,7 +35,7 @@ struct ProfileView: View {
             NavigationStack {
                 List {
                     identityCard
-                        .listRowInsets(EdgeInsets(top: 12, leading: 0, bottom: 12, trailing: 0))
+                        .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
                     savedProfilesSection
@@ -43,6 +43,7 @@ struct ProfileView: View {
                     statsSection
                 }
                 .listStyle(.sidebar)
+                .compactListSections()
                 .scrollContentBackground(.hidden)
                 .background(Color.bg)
                 .tint(DashboardPalette.accent(in: colorScheme))
@@ -138,7 +139,7 @@ struct ProfileView: View {
                                 .foregroundStyle(DashboardPalette.accent(in: colorScheme))
                         }
                     }
-                    .padding(.vertical, 6)
+                    .padding(.vertical, 2)
                 }
                 .swipeActions {
                     Button(role: .destructive) {
@@ -190,14 +191,14 @@ struct ProfileView: View {
                         .foregroundStyle(isIDInputFocused ? Color.accentColor : .secondary)
                         .accessibilityHidden(true)
                 }
-                .padding(14)
+                .padding(10)
                 .background(Color.bg, in: .rect(cornerRadius: 14))
                 .overlay {
                     RoundedRectangle(cornerRadius: 14)
                         .strokeBorder(isIDInputFocused ? Color.accentColor : Color.divider, lineWidth: 1)
                 }
             }
-            .padding(.vertical, 6)
+            .padding(.vertical, 2)
             Button {
                 Task { await viewModel.fetchProfile(forceRefresh: true) }
             } label: {

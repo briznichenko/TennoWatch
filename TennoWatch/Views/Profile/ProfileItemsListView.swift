@@ -20,7 +20,7 @@ struct ProfileItemsListView: View {
 
     // MARK: - Body
     var body: some View {
-        List {
+        ThemedList {
             ForEach(viewModel.sortedItems) { item in
                 ProfileItemStatRowView(item: item)
             }

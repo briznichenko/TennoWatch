@@ -22,7 +22,7 @@ struct FissureListView: View {
     }
 
     var body: some View {
-        List {
+        ThemedList {
             ForEach(filteredGroups) { group in
                 Section {
                     ForEach(group.fissures, id: \.nodeKey) { fissure in

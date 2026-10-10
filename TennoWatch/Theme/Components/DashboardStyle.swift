@@ -66,7 +66,7 @@ struct DashboardHero<Content: View>: View {
     @ViewBuilder var content: Content
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 22) {
+        VStack(alignment: .leading, spacing: 14) {
             HStack {
                 Label(title, systemImage: icon)
                     .labelStyle(.titleAndIcon)
@@ -83,14 +83,14 @@ struct DashboardHero<Content: View>: View {
             content
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(24)
+        .padding(16)
         .background(DashboardHeroBackground())
     }
 }
 
 struct DashboardIcon: View {
     let name: String
-    var size: CGFloat = 42
+    var size: CGFloat = 36
 
     @Environment(\.colorScheme) private var colorScheme
     @ScaledMetric(relativeTo: .title3) private var scale = 1.0
@@ -111,7 +111,7 @@ struct DashboardMetric: View {
     let title: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 4) {
             Text(value)
                 .font(.system(.title, design: .rounded, weight: .semibold))
                 .foregroundStyle(Color.labelPrimary)

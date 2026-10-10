@@ -110,6 +110,7 @@ struct SettingsView: View {
                 }
             }
             .themedList()
+            .compactListSections()
             .listStyle(.sidebar)
             .tint(DashboardPalette.accent(in: colorScheme))
             .navigationTitle(Strings.Settings.title)

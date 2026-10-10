@@ -15,10 +15,9 @@ struct WorldStateGridView: View {
     // MARK: - Body
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 12) {
                 voidTraderCard
-                cyclesCard
-                LazyVGrid(columns: columns, spacing: 12) {
+                LazyVGrid(columns: columns, spacing: 10) {
                     invasionsCard
                     fissuresCard
                     sortieCard
@@ -30,10 +29,11 @@ struct WorldStateGridView: View {
                     archimedeaCard
                     calendarCard
                     flashSalesCard
+                    cyclesCard
                 }
             }
             .frame(maxWidth: 1120)
-            .padding(20)
+            .padding(16)
             .frame(maxWidth: .infinity)
         }
         .buttonStyle(.plain)
@@ -48,20 +48,13 @@ struct WorldStateGridView: View {
     @ViewBuilder
     private var cyclesCard: some View {
         if !viewModel.cycles.isEmpty {
-            VStack(alignment: .leading, spacing: 12) {
-                DashboardSectionHeader(title: Strings.WorldState.cyclesHeader, icon: "clock.arrow.2.circlepath")
-                ScrollView(.horizontal) {
-                    HStack(spacing: 12) {
-                        ForEach(viewModel.cycles) { cycle in
-                            NavigationLink {
-                                CycleListView(cycles: viewModel.cycles)
-                            } label: {
-                                WorldStateCycleCard(cycle: cycle)
-                            }
-                        }
-                    }
+            NavigationLink {
+                CycleListView(cycles: viewModel.cycles)
+            } label: {
+                CardView(icon: "clock.arrow.2.circlepath", title: Strings.WorldState.cyclesHeader) {
+                    Text(viewModel.cycles.map(\.title).joined(separator: ", "))
+                        .lineLimit(2)
                 }
-                .scrollIndicators(.hidden)
             }
         }
     }

@@ -13,7 +13,7 @@ struct MasteryBreakdownView: View {
 
     // MARK: - Body
     var body: some View {
-        List {
+        ThemedList {
             ForEach(Array(viewModel.breakdownSections.enumerated()), id: \.offset) { _, rows in
                 Section {
                     ForEach(rows) { row in

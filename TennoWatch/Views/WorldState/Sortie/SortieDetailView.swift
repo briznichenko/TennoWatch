@@ -12,7 +12,7 @@ struct SortieDetailView: View {
     @State private var searchText = ""
 
     var body: some View {
-        List {
+        ThemedList {
             SortieRowView(sortie: sortie, searchText: searchText)
         }
         .listStyle(.plain)

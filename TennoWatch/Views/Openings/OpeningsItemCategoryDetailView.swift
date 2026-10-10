@@ -15,7 +15,7 @@ struct OpeningsItemCategoryDetailView: View {
     }
 
     var body: some View {
-        List {
+        ThemedList {
             ForEach(viewModel.filteredItems) { item in
                 MasteryItemView(viewModel: item)
             }

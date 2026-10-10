@@ -15,7 +15,7 @@ struct TimeSensitiveOpeningRowView: View {
 
     // MARK: - Body
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 10) {
             let identityLayout = dynamicTypeSize.isAccessibilitySize
                 ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
                 : AnyLayout(HStackLayout(alignment: .top, spacing: 12))
@@ -53,7 +53,7 @@ struct TimeSensitiveOpeningRowView: View {
                     .font(.caption)
                     .foregroundStyle(Color.labelSecondary)
                     .padding(.horizontal, 10)
-                    .padding(.vertical, 7)
+                    .padding(.vertical, 5)
                     .background(Color.bg, in: .capsule)
                     .fixedSize(horizontal: true, vertical: false)
                 } else if let completion = viewModel.completion {
@@ -64,7 +64,7 @@ struct TimeSensitiveOpeningRowView: View {
             }
         }
         .fixedSize(horizontal: false, vertical: true)
-        .padding(16)
+        .padding(12)
         .background(DashboardCardBackground(cornerRadius: 20))
         .accessibilityElement(children: .combine)
     }

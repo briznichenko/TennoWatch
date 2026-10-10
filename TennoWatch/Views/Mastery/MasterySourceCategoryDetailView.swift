@@ -21,7 +21,7 @@ struct MasterySourceCategoryDetailView: View {
 
     // MARK: - Body
     var body: some View {
-        List {
+        ThemedList {
             if viewModel.isStarChartCategory {
                 ForEach(viewModel.starChartSections) { section in
                     Section {

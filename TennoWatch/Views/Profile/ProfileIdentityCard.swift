@@ -23,10 +23,10 @@ struct ProfileIdentityCard: View {
             icon: isLocal ? "pencil.circle" : "person.crop.circle"
         ) {
             let layout = dynamicTypeSize.isAccessibilitySize
-                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 20))
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
                 : AnyLayout(HStackLayout(alignment: .top, spacing: 16))
             layout {
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 6) {
                     Text(displayName)
                         .font(.title.weight(.semibold))
                         .foregroundStyle(Color.labelPrimary)
@@ -46,7 +46,7 @@ struct ProfileIdentityCard: View {
                     .font(.headline)
                     .foregroundStyle(DashboardPalette.heroAccent)
                     .padding(.horizontal, 12)
-                    .padding(.vertical, 10)
+                    .padding(.vertical, 8)
                     .background(DashboardPalette.heroAccent.opacity(0.12), in: .capsule)
                     .fixedSize()
                     .accessibilityElement(children: .ignore)

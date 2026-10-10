@@ -13,7 +13,7 @@ struct ProfileAccountStatsView: View {
 
     // MARK: - Body
     var body: some View {
-        List {
+        ThemedList {
             ForEach(rows) { row in
                 LabeledContent(row.label, value: row.value)
                     .foregroundStyle(Color.labelPrimary)
