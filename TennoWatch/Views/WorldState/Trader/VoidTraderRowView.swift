@@ -17,13 +17,13 @@ struct VoidTraderRowView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: ListLayout.detailSpacing) {
             Text(voidTrader.character)
                 .font(.headline)
             Text(voidTrader.location)
                 .font(.caption)
                 .foregroundStyle(Color.labelSecondary)
-            HStack(spacing: 4) {
+            HStack(spacing: ListLayout.detailSpacing) {
                 Text(hasArrived ? Strings.WorldState.baroDepartsIn : Strings.WorldState.baroArrivesIn)
                     .font(.caption)
                     .foregroundStyle(Color.labelSecondary)

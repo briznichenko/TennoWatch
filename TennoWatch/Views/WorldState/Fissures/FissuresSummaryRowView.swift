@@ -19,7 +19,7 @@ struct FissuresSummaryRowView: View {
                 .font(.subheadline)
                 .foregroundStyle(Color.labelSecondary)
         }
-        .frame(minHeight: 44)
+        .frame(minHeight: ListLayout.minimumRowHeight)
     }
 }
 

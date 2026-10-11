@@ -24,7 +24,7 @@ struct IntrinsicsView: View {
 
     // MARK: - Body
     var body: some View {
-        List {
+        ThemedList {
             ForEach(filteredGroups) { group in
                 Section {
                     ForEach(group.intrinsics) { intrinsic in
@@ -35,7 +35,6 @@ struct IntrinsicsView: View {
                 }
             }
         }
-        .themedList()
         .searchable(text: $searchText, prompt: Strings.Common.search)
         .navigationTitle(Strings.Profile.intrinsicsTitle)
         .inlineNavigationTitle()

@@ -9,7 +9,7 @@ struct ArchimedeaMissionRowView: View {
     let mission: ArchimedeaMission
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: ListLayout.detailSpacing) {
             HStack {
                 Text(mission.missionType)
                     .font(.headline)
@@ -27,7 +27,7 @@ struct ArchimedeaMissionRowView: View {
                     .foregroundStyle(Color.labelSecondary)
             }
         }
-        .frame(minHeight: 44)
+        .frame(minHeight: ListLayout.minimumRowHeight)
     }
 }
 

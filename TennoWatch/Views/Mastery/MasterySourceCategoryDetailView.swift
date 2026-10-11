@@ -21,7 +21,7 @@ struct MasterySourceCategoryDetailView: View {
 
     // MARK: - Body
     var body: some View {
-        List {
+        ThemedList {
             if viewModel.isStarChartCategory {
                 ForEach(viewModel.starChartSections) { section in
                     Section {
@@ -48,7 +48,7 @@ struct MasterySourceCategoryDetailView: View {
         .safeAreaInset(edge: .top) {
             FilterPills(options: Filter.allCases, title: \.title, selection: $viewModel.filter)
                 .padding(.horizontal)
-                .padding(.vertical, 8)
+                .padding(.vertical, Layout.filterVerticalPadding)
                 .background(Color.bg)
         }
         .navigationTitle(viewModel.categoryName.sentenceCased)
@@ -71,4 +71,8 @@ struct MasterySourceCategoryDetailView: View {
             await viewModel.load()
         }
     }
+}
+
+private struct Layout {
+    static let filterVerticalPadding: CGFloat = 8
 }

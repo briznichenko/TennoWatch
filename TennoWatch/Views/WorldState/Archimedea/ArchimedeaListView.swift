@@ -11,7 +11,7 @@ struct ArchimedeaListView: View {
     @State private var searchText = ""
 
     var body: some View {
-        List {
+        ThemedList {
             ForEach(Array(archimedeas.enumerated()), id: \.offset) { _, archimedea in
                 let missions = archimedea.missions.filter {
                     [$0.missionType, $0.faction, archimedea.type].joined(separator: " ").matchesSearch(searchText)

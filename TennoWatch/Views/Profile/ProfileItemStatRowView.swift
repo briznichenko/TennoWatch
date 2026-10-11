@@ -13,13 +13,13 @@ struct ProfileItemStatRowView: View {
 
     // MARK: - Body
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: ListLayout.compactDetailSpacing) {
             Text(item.name)
                 .foregroundStyle(Color.labelPrimary)
             Text(Strings.Profile.itemDetailText(kills: item.kills, headshots: item.headshots, assists: item.assists))
                 .font(.caption)
                 .foregroundStyle(Color.labelSecondary)
         }
-        .frame(minHeight: 44)
+        .frame(minHeight: ListLayout.minimumRowHeight)
     }
 }

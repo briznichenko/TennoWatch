@@ -31,11 +31,15 @@ struct RootView: View {
         }
         .task {
             try? await dependencies.catalogRepository.prepareCatalog()
-            withAnimation(.easeInOut(duration: 0.35)) {
+            withAnimation(.easeInOut(duration: AnimationTiming.splashTransition)) {
                 isShowingSplash = false
             }
         }
     }
+}
+
+private struct AnimationTiming {
+    static let splashTransition: TimeInterval = 0.35
 }
 
 #Preview {

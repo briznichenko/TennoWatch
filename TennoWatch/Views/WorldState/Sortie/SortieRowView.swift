@@ -12,11 +12,11 @@ struct SortieRowView: View {
     var searchText = ""
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: Layout.missionSpacing) {
             Text(sortie.boss)
                 .font(.headline)
             if let reward = sortie.archonHuntReward {
-                HStack(spacing: 4) {
+                HStack(spacing: ListLayout.detailSpacing) {
                     Image(systemName: "suit.diamond.fill")
                         .foregroundStyle(reward.tint)
                     Text(reward.displayName)
@@ -61,7 +61,7 @@ private struct SortieVariantRowView: View {
     let variant: SortieVariant
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: ListLayout.compactDetailSpacing) {
             HStack {
                 Text(variant.node)
                 Spacer()
@@ -77,4 +77,8 @@ private struct SortieVariantRowView: View {
                 .foregroundStyle(Color.labelSecondary)
         }
     }
+}
+
+private struct Layout {
+    static let missionSpacing: CGFloat = 6
 }

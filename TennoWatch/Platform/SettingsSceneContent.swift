@@ -30,9 +30,14 @@ struct SettingsSceneContent: View {
             displayName: profileViewModel.displayName,
             onCacheCleared: onCacheCleared
         )
-        .frame(width: 520, height: 640)
+        .frame(width: WindowLayout.width, height: WindowLayout.height)
         .task(id: currentAccountID) {
             await profileViewModel.load()
         }
     }
+}
+
+private struct WindowLayout {
+    static let width: CGFloat = 520
+    static let height: CGFloat = 640
 }
