@@ -6,13 +6,13 @@ enum MenuBarIcon {
     static let image: NSImage = {
         let renderer = ImageRenderer(content:
             LotusMark()
-                .stroke(.black, style: StrokeStyle(lineWidth: 1.5, lineCap: .round, lineJoin: .round))
-                .frame(width: 22, height: 18)
+                .stroke(.black, style: StrokeStyle(lineWidth: IconLayout.strokeWidth, lineCap: .round, lineJoin: .round))
+                .frame(width: IconLayout.width, height: IconLayout.height)
         )
-        renderer.scale = 2
+        renderer.scale = IconLayout.renderScale
         let image = renderer.nsImage
             ?? NSImage(systemSymbolName: "leaf", accessibilityDescription: "TennoWatch")
-            ?? NSImage(size: NSSize(width: 22, height: 18))
+            ?? NSImage(size: NSSize(width: IconLayout.width, height: IconLayout.height))
         image.isTemplate = true
         return image
     }()
@@ -37,5 +37,11 @@ struct MenuBarContent: View {
             NSApplication.shared.terminate(nil)
         }
     }
+}
+private struct IconLayout {
+    static let strokeWidth: CGFloat = 1.5
+    static let width: CGFloat = 22
+    static let height: CGFloat = 18
+    static let renderScale: CGFloat = 2
 }
 #endif

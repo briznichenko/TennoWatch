@@ -13,7 +13,7 @@ struct SplashView: View {
         Color.bg
             .ignoresSafeArea()
             .overlay {
-                LotusLoaderView(size: 96)
+                LotusLoaderView(size: LoadingIndicatorSize.splash)
             }
     }
 }

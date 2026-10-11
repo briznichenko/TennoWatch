@@ -11,7 +11,7 @@ struct TraderInventoryListView: View {
     @State private var searchText = ""
 
     var body: some View {
-        List {
+        ThemedList {
             Section {
                 VoidTraderRowView(voidTrader: trader)
             }

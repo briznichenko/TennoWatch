@@ -11,7 +11,7 @@ struct SteelPathDetailView: View {
     @State private var searchText = ""
 
     var body: some View {
-        List {
+        ThemedList {
             if let currentReward = steelPath.currentReward, currentReward.name.matchesSearch(searchText) {
                 Section {
                     SteelPathRewardRowView(reward: currentReward)

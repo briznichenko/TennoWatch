@@ -99,12 +99,12 @@ final class WorldStateViewModel {
     }
 
     var flashSales: [FlashSale] {
-        let weekFromNow = Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now
+        let weekFromNow = Calendar.current.date(byAdding: .day, value: CalendarPreview.lookaheadDays, to: .now) ?? .now
         let withinWeek = (worldState?.flashSales ?? []).filter { sale in
             guard let activation = sale.activation, let expiry = sale.expiry else { return false }
             return activation <= weekFromNow && expiry <= weekFromNow
         }
-        return Array(withinWeek.suffix(5))
+        return Array(withinWeek.suffix(CalendarPreview.maximumEventCount))
     }
 
     var vaultTrader: VoidTrader? {
@@ -165,4 +165,9 @@ final class WorldStateViewModel {
     private static func timeLeft(until date: Date?) -> String {
         date?.timeLeftDescription ?? ""
     }
+}
+
+private struct CalendarPreview {
+    static let lookaheadDays = 7
+    static let maximumEventCount = 5
 }

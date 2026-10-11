@@ -14,8 +14,8 @@ struct Surface<Content: View>: View {
     // MARK: - Body
     var body: some View {
         content
-            .padding(12)
-            .background(.surface, in: .rect(cornerRadius: 10))
+            .padding(Layout.contentPadding)
+            .background(.surface, in: .rect(cornerRadius: Layout.cornerRadius))
     }
 }
 
@@ -23,4 +23,9 @@ extension View {
     func screenBackground() -> some View {
         self.scrollContentBackground(.hidden).background(.bg)
     }
+}
+
+private struct Layout {
+    static let contentPadding: CGFloat = 12
+    static let cornerRadius: CGFloat = 10
 }

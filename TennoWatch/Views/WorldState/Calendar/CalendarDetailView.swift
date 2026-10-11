@@ -9,7 +9,7 @@ struct CalendarDetailView: View {
     let calendar: GameCalendar
 
     var body: some View {
-        List {
+        ThemedList {
             ForEach(Array(calendar.days.enumerated()), id: \.offset) { _, day in
                 Section {
                     ForEach(Array(day.events.enumerated()), id: \.offset) { _, event in

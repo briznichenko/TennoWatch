@@ -18,15 +18,20 @@ struct CycleRowView: View {
                 .foregroundStyle(Color.labelSecondary)
             if cycle.expiry != nil {
                 LiveCountdownText(date: cycle.expiry)
-                    .frame(minWidth: 56, alignment: .trailing)
+                    .frame(minWidth: Layout.stateMinimumWidth, alignment: .trailing)
             } else if !cycle.timeLeft.isEmpty {
                 Text(cycle.timeLeft)
                     .font(.caption)
                     .foregroundStyle(Color.labelSecondary)
-                    .frame(minWidth: 44, alignment: .trailing)
+                    .frame(minWidth: Layout.countdownMinimumWidth, alignment: .trailing)
             }
         }
     }
+}
+
+private struct Layout {
+    static let stateMinimumWidth: CGFloat = 56
+    static let countdownMinimumWidth: CGFloat = 44
 }
 
 #Preview {

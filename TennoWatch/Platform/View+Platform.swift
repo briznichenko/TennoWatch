@@ -2,6 +2,15 @@ import SwiftUI
 
 extension View {
     @ViewBuilder
+    func compactListSections() -> some View {
+        #if os(iOS)
+        listSectionSpacing(.compact)
+        #else
+        self
+        #endif
+    }
+
+    @ViewBuilder
     func appTabStyle() -> some View {
         #if os(macOS)
         tabViewStyle(.sidebarAdaptable)

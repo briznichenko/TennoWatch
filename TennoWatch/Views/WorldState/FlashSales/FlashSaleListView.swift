@@ -11,7 +11,7 @@ struct FlashSaleListView: View {
     @State private var searchText = ""
 
     var body: some View {
-        List {
+        ThemedList {
             ForEach(Array(flashSales.enumerated().filter { $0.element.item.matchesSearch(searchText) }), id: \.offset) { _, flashSale in
                 FlashSaleRowView(flashSale: flashSale)
             }

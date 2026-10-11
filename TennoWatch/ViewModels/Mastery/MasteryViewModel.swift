@@ -131,12 +131,10 @@ final class MasteryViewModel {
     
     // MARK: - Helper Functions
     private static func rankProgress(forXP xp: Int, playerRank: Int?) -> MasteryRankProgress {
-        let legendaryCapRank = 30
-        let legendaryCapXP = 2500 * legendaryCapRank * legendaryCapRank
-        let legendaryRankXP = 147_500
+        let legendaryCapXP = RankRequirements.rankXPMultiplier * RankRequirements.legendaryCapRank * RankRequirements.legendaryCapRank
         func cumulativeXP(for rank: Int) -> Int {
-            guard rank > legendaryCapRank else { return 2500 * rank * rank }
-            return legendaryCapXP + (rank - legendaryCapRank) * legendaryRankXP
+            guard rank > RankRequirements.legendaryCapRank else { return RankRequirements.rankXPMultiplier * rank * rank }
+            return legendaryCapXP + (rank - RankRequirements.legendaryCapRank) * RankRequirements.legendaryRankXP
         }
         var completedRanks = 0
         while cumulativeXP(for: completedRanks + 1) <= xp {
@@ -208,4 +206,10 @@ final class MasteryViewModel {
 
         return [weapons, missionsAndIntrinsics, companions, archAndModular, other]
     }
+}
+
+private struct RankRequirements {
+    static let legendaryCapRank = 30
+    static let rankXPMultiplier = 2500
+    static let legendaryRankXP = 147_500
 }
