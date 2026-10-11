@@ -4,21 +4,25 @@ An iOS and macOS app for tracking Warframe Mastery Rank progress, built for pers
 
 ## About
 
-Warframe's Mastery system spans hundreds of weapons, warframes, and other rankable items, but there's no iOS app to track what's left to master or when a needed item is actually available. TennoWatch fills that gap: it matches your account's profile against the full item catalog, then cross-references the remaining items against live game state to tell you when and where you can actually get them.
+TennoWatch matches your account's profile against the mastery catalog, then cross-references unmastered items with live world state to highlight available rewards and acquisition sources. It's a personal learning project for modern Swift and app architecture.
 
 It's built on a shared Apple-platform stack — Swift 6 compiler, SwiftUI, SwiftData, MVVM+C — against Warframe's real, constantly changing data feed rather than static sample data.
 
 ## Features
 
-| Tab | What it does |
+| Screen | What it does |
 |---|---|
-| **World State** | Live invasions, fissures, sorties, Nightwave challenges, the Void Trader, and open-world day/night cycles (Cetus, Vallis, Cambion, Zariman). |
+| **World State** | Live invasions, fissures, sorties, Archon Hunts, Nightwave, traders, alerts, Steel Path rewards, Archimedea, the calendar, flash sales, and world cycles. |
 | **Mastery** | Tracks mastery rank progress against the full item catalog, broken down by category and source, including intrinsics and Steel Path variants. |
 | **Openings** | Cross-references your remaining mastery items against live world state to surface time-sensitive ways to get them — an invasion carrying the item as a reward, the Void Trader stocking it, etc. |
 | **Profile** | Sync by account ID, switch saved profiles, or use an offline manual profile; view stats, missions, and inventory. |
 | **Settings** | Theme, language, local Void Trader arrival reminders, catalog refresh, and cache clearing. |
 
 Deeper specs for each tab and layer live in [Specs/](Specs/).
+
+## Screenshots
+
+iPhone — World State, Mastery, Openings, Profile, and Settings. Settings opens from Profile's toolbar on iOS and the app menu on macOS.
 
 <p>
   <img src="Screenshots/world_state.png" width="180" alt="World State tab" />
@@ -60,7 +64,7 @@ The Mastery catalog itself is generated offline: [Scripts/generate_catalog](Scri
 | Networking | `Networking/` | `APIManager` + `Endpoint` — plain `async`/`await` over `URLSession`, talking to `api.warframestat.us` and `api.warframe.com`. |
 | Persistency | `Persistency/` | SwiftData, via a `@ModelActor` service and a `ValueTypeConvertible`/`PersistentModelConvertible` pair that keeps plain value types at the repository/ViewModel boundary instead of leaking `@Model` classes upward. |
 | Repositories | `Repositories/` | One repository per data domain; owns cache policy, fronts networking + persistency. |
-| Coordinators | `Coordinators/` | Per-tab `@Observable` coordinator owning a `NavigationPath` + `Destination` enum; views push by value instead of building the next screen inline. |
+| Coordinators | `Coordinators/` | Mastery's `@Observable` coordinator owns a `NavigationPath` + `Destination` enum; views push by value. Other tabs currently use inline navigation. |
 | Services | `Services/` | Stateless business logic — catalog↔profile merge, openings matching, error queue. |
 | Models | `Models/` | Network DTOs, SwiftData-adjacent value models, view-facing derived models. |
 | Theme & Shared UI | `Theme/` | Palette, reusable SwiftUI components, list styling, and a narrow UIKit-appearance bridge (`AppearanceProxies`) in `Platform/` for iOS nav-bar/tab-bar tinting. |
@@ -71,7 +75,7 @@ Platform differences live in `Platform/`: `AppScenes` chooses the window and Set
 
 Cross-cutting:
 
-- **MVVM+C.** View → `@Observable` ViewModel → Repository protocol → (Service +) Networking/Persistency. Navigation lives in per-tab `Coordinator` objects (`Coordinators/`) that own a `NavigationPath` and resolve a `Destination` enum via `.navigationDestination(for:)` — views push by value, not by building the next view inline. Introduced first for Mastery, the tab with real drill-down; other tabs will get their own coordinator once their navigation grows past single-level.
+- **MVVM+C.** View → `@Observable` ViewModel → Repository protocol → (Service +) Networking/Persistency. Mastery uses a coordinator with a `NavigationPath` and typed destinations resolved via `.navigationDestination(for:)`. Other tabs currently use inline `NavigationLink` destinations.
 - **Swift 6 compiler**, currently in Swift 5 language mode, with target-wide default `MainActor` isolation (Approachable Concurrency) — most types need no explicit `@MainActor`. `DefaultPersistencyService` is the one actor doing real off-main work (`@ModelActor`).
 - **Manual dependency injection** via [`AppDependencies`](TennoWatch/AppDependencies.swift), constructed once and threaded down through views to ViewModels. No DI container.
 - **SwiftUI** only, with UIKit interop limited to the one appearance-proxy bridge noted above.
