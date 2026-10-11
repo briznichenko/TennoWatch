@@ -30,6 +30,7 @@ struct TimeSensitiveOpeningRowView: View {
                         .foregroundStyle(Color.labelSecondary)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+                ItemWikiLink(itemName: viewModel.name)
             }
             let layout = dynamicTypeSize.isAccessibilitySize
                 ? AnyLayout(VStackLayout(alignment: .leading, spacing: Layout.sectionSpacing))
@@ -66,7 +67,7 @@ struct TimeSensitiveOpeningRowView: View {
         .fixedSize(horizontal: false, vertical: true)
         .padding(Layout.contentPadding)
         .background(DashboardCardBackground(cornerRadius: Layout.cornerRadius))
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .contain)
     }
 }
 

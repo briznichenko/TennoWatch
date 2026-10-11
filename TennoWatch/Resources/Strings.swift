@@ -298,6 +298,15 @@ struct Strings {
 
     struct Common {
         private init() {}
+        static var lookOnWiki: String { Strings.string("common_look_on_wiki_key", "look on wiki") }
+        static var close: String { Strings.string("common_close_key", "Close") }
+        static var back: String { Strings.string("common_back_key", "Back") }
+        static var forward: String { Strings.string("common_forward_key", "Forward") }
+        static var wikiLoadFailed: String { Strings.string("common_wiki_load_failed_key", "Couldn't load wiki") }
+        static func openItemWiki(_ name: String) -> String {
+            String(format: Strings.string("common_open_item_wiki_format_key", "Open %@ on Warframe Wiki"), name)
+        }
+
         static var search: String { Strings.string("common_search_key", "Search") }
         static var searchItems: String { Strings.string("common_search_items_key", "Search items") }
         static var searchNodes: String { Strings.string("common_search_nodes_key", "Search nodes") }
