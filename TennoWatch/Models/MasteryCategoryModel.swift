@@ -14,10 +14,10 @@ struct MasteryCategoryModel: Hashable, Identifiable {
     let id = UUID()
 
     // MARK: - Computed Properties
-    var itemsCount: Int { sources.count }
+    var itemsCount: Int { sources.filter { $0.mastery > 0 }.count }
     var masteredItemsCount: Int {
         sources.filter {
-            $0.isMastered == true
+            $0.mastery > 0 && $0.isMastered == true
         }.count
     }
 

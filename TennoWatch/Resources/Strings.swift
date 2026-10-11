@@ -46,6 +46,8 @@ struct Strings {
         static var cyclesHeader: String { Strings.string("world_state_cycles_header_key", "Cycles") }
         static var invasionsHeader: String { Strings.string("world_state_invasions_header_key", "Invasions") }
         static var fissuresHeader: String { Strings.string("world_state_fissures_header_key", "Fissures") }
+        static var normalStarChart: String { Strings.string("world_state_normal_star_chart_key", "Normal") }
+        static var railjackStarChart: String { Strings.string("world_state_railjack_star_chart_key", "Railjack") }
         static var sortieHeader: String { Strings.string("world_state_sortie_header_key", "Sortie") }
         static var archonHuntHeader: String { Strings.string("world_state_archon_hunt_header_key", "Archon hunt") }
         static var archonHuntRewardCrimson: String { Strings.string("world_state_archon_hunt_reward_crimson_key", "Crimson Archon Shard") }
@@ -174,6 +176,10 @@ struct Strings {
             )
         }
 
+        static func sourcePointsRemaining(_ pointsRemaining: Int) -> String {
+            String(format: Strings.string("mastery_source_points_remaining_format_key", "+%lld left"), pointsRemaining)
+        }
+
         static var breakdownHeader: String { Strings.string("mastery_breakdown_header_key", "Mastery Breakdown") }
     }
 
@@ -298,7 +304,7 @@ struct Strings {
 
     struct Common {
         private init() {}
-        static var lookOnWiki: String { Strings.string("common_look_on_wiki_key", "look on wiki") }
+        static var lookOnWiki: String { Strings.string("common_look_on_wiki_key", "Wiki page") }
         static var close: String { Strings.string("common_close_key", "Close") }
         static var back: String { Strings.string("common_back_key", "Back") }
         static var forward: String { Strings.string("common_forward_key", "Forward") }

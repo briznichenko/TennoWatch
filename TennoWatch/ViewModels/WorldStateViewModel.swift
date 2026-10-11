@@ -28,6 +28,12 @@ struct FissureTierGroup: Identifiable {
     var id: String { tier }
 }
 
+struct FissureStarChartGroup: Identifiable {
+    let chart: FissureStarChart
+    let tiers: [FissureTierGroup]
+    var id: FissureStarChart { chart }
+}
+
 @Observable
 final class WorldStateViewModel {
     // MARK: - Object Properties
@@ -133,6 +139,17 @@ final class WorldStateViewModel {
                 let rhsOrder = Self.fissureTierOrder.firstIndex(of: rhs.tier) ?? Self.fissureTierOrder.count
                 return lhsOrder == rhsOrder ? lhs.tier < rhs.tier : lhsOrder < rhsOrder
             }
+    }
+
+    var fissuresByStarChart: [FissureStarChartGroup] {
+        let tiers = fissuresByTier
+        return FissureStarChart.allCases.compactMap { chart in
+            let matchingTiers = tiers.compactMap { tier -> FissureTierGroup? in
+                let matches = tier.fissures.filter { $0.starChart == chart }
+                return matches.isEmpty ? nil : FissureTierGroup(tier: tier.tier, fissures: matches)
+            }
+            return matchingTiers.isEmpty ? nil : FissureStarChartGroup(chart: chart, tiers: matchingTiers)
+        }
     }
 
     // MARK: - Init
