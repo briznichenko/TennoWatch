@@ -13,6 +13,7 @@ struct MainView: View {
     let dependencies: AppDependencies
     let onCacheCleared: () -> Void
     @AppStorage(UserDefaultsAccountIDStore.storageKey) private var currentAccountID: String?
+    @Environment(\.colorScheme) private var colorScheme
 
     // MARK: - Body
     var body: some View {
@@ -59,6 +60,7 @@ struct MainView: View {
             }
         }
         .appTabStyle()
+        .tint(DashboardPalette.accent(in: colorScheme))
     }
 }
 

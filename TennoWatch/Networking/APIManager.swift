@@ -30,7 +30,7 @@ final class APIManager: ServiceProtocol {
             if let date = dateFormatter.date(from: string) {
                 return date
             }
-            if string.hasPrefix("+275760-09-13") {
+            if string.hasPrefix(ResponseConstants.unboundedDatePrefix) {
                 return .distantFuture
             }
             throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid date: \(string)")
@@ -47,10 +47,15 @@ final class APIManager: ServiceProtocol {
     func fetch<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
         let (data, response) = try await session.data(from: endpoint.url)
         
-        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == ResponseConstants.successStatusCode else {
             throw APIError.invalidResponse
         }
         
         return try decoder.decode(T.self, from: data)
     }
+}
+
+private struct ResponseConstants {
+    static let successStatusCode = 200
+    static let unboundedDatePrefix = "+275760-09-13"
 }

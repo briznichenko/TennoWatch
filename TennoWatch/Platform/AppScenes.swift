@@ -17,9 +17,9 @@ struct AppScenes<Content: View, SettingsContent: View>: Scene {
         #if os(macOS)
         Window("TennoWatch", id: AppSceneID.main) {
             content()
-                .frame(minWidth: 820, minHeight: 600)
+                .frame(minWidth: WindowLayout.minimumWidth, minHeight: WindowLayout.minimumHeight)
         }
-        .defaultSize(width: 1100, height: 760)
+        .defaultSize(width: WindowLayout.defaultWidth, height: WindowLayout.defaultHeight)
 
         Settings {
             settings()
@@ -38,4 +38,11 @@ struct AppScenes<Content: View, SettingsContent: View>: Scene {
         }
         #endif
     }
+}
+
+private struct WindowLayout {
+    static let minimumWidth: CGFloat = 820
+    static let minimumHeight: CGFloat = 600
+    static let defaultWidth: CGFloat = 1100
+    static let defaultHeight: CGFloat = 760
 }

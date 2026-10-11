@@ -13,7 +13,7 @@ struct IntrinsicRowView: View {
 
     // MARK: - Body
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: ListLayout.detailSpacing) {
             HStack {
                 Text(intrinsic.name)
                     .foregroundStyle(Color.labelPrimary)
@@ -24,7 +24,11 @@ struct IntrinsicRowView: View {
             }
             ProgressBar(value: intrinsic.fraction)
         }
-        .padding(.vertical, 4)
-        .frame(minHeight: 44)
+        .padding(.vertical, Layout.verticalPadding)
+        .frame(minHeight: ListLayout.minimumRowHeight)
     }
+}
+
+private struct Layout {
+    static let verticalPadding: CGFloat = 4
 }

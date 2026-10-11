@@ -16,6 +16,8 @@ struct ProfileView: View {
     @State private var isShowingIdHelp = false
     @AppStorage("profileIdHelpDontShowAgain") private var dontShowIdHelpAgain = false
     @FocusState private var isIDInputFocused
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private let dependencies: AppDependencies
     private let onCacheCleared: () -> Void
@@ -33,11 +35,18 @@ struct ProfileView: View {
             NavigationStack {
                 List {
                     identityCard
+                        .listRowInsets(Layout.identityCardInsets)
                         .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
                     savedProfilesSection
                     playerIdSection
                     statsSection
                 }
+                .listStyle(.sidebar)
+                .compactListSections()
+                .scrollContentBackground(.hidden)
+                .background(Color.bg)
+                .tint(DashboardPalette.accent(in: colorScheme))
                 .navigationTitle(Strings.Profile.title)
                 .overlay {
                     if viewModel.isLoading {
@@ -98,28 +107,19 @@ struct ProfileView: View {
                 )
             }
         }
-        .animation(.easeInOut(duration: 0.2), value: isShowingIdHelp)
+        .animation(reduceMotion ? nil : .easeInOut(duration: Layout.helpTransitionDuration), value: isShowingIdHelp)
     }
 
     // MARK: - Subviews
     private var identityCard: some View {
-        Surface {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(viewModel.displayName)
-                    .font(.system(size: 22, weight: .medium))
-                    .foregroundStyle(Color.labelPrimary)
-                Text(viewModel.profile?.isLocal == true ? Strings.Profile.manualProfileDescription : viewModel.accountId)
-                    .font(.system(size: 15, weight: .light))
-                    .foregroundStyle(Color.secondary)
-                HStack(spacing: 20) {
-                    statPair(value: viewModel.playerLevel, label: Strings.Profile.masteryRankLabel)
-                    statPair(value: viewModel.totalMissionsCompleted, label: Strings.Profile.missionsCompletedLabel)
-                    statPair(value: viewModel.totalKills, label: Strings.Profile.totalKillsLabel)
-                }
-                .padding(.top, 4)
-            }
-        }
-        .padding(.bottom, 8)
+        ProfileIdentityCard(
+            displayName: viewModel.displayName,
+            accountID: viewModel.accountId,
+            isLocal: viewModel.profile?.isLocal == true,
+            rank: viewModel.playerLevel,
+            missionsCompleted: viewModel.totalMissionsCompleted,
+            totalKills: viewModel.totalKills
+        )
     }
     
     private var savedProfilesSection: some View {
@@ -128,13 +128,18 @@ struct ProfileView: View {
                 Button {
                     Task { await viewModel.selectProfile(profile) }
                 } label: {
-                    HStack {
-                        Label(viewModel.name(for: profile), systemImage: profile.isLocal ? "pencil.circle" : "person.crop.circle")
+                    HStack(spacing: Layout.iconSpacing) {
+                        DashboardIcon(name: profile.isLocal ? "pencil.circle" : "person.crop.circle")
+                        Text(viewModel.name(for: profile))
+                            .font(.headline)
+                            .foregroundStyle(Color.labelPrimary)
                         Spacer()
                         if profile.accountID.oid == viewModel.accountId {
-                            Image(systemName: "checkmark")
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(DashboardPalette.accent(in: colorScheme))
                         }
                     }
+                    .padding(.vertical, Layout.rowVerticalPadding)
                 }
                 .swipeActions {
                     Button(role: .destructive) {
@@ -161,39 +166,48 @@ struct ProfileView: View {
                 }
             }
         } header: {
-            SectionHeaderLabel(Strings.Profile.savedProfilesHeader)
+            DashboardSectionHeader(title: Strings.Profile.savedProfilesHeader, icon: "person.2")
         }
+        .listRowBackground(Color.surface)
+        .listRowSeparatorTint(Color.divider)
         .disabled(viewModel.isLoading)
     }
 
     private var playerIdSection: some View {
         Section {
-            LabeledContent(Strings.Profile.id) {
-                HStack {
+            VStack(alignment: .leading, spacing: Layout.formSpacing) {
+                Text(Strings.Profile.id)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Color.labelSecondary)
+                HStack(spacing: Layout.iconSpacing) {
                     TextField(Strings.Profile.idPlaceholder, text: $viewModel.playerId)
                         .focused($isIDInputFocused)
-                        .font(.caption)
-                        .foregroundStyle(Color.labelSecondary)
+                        .font(.body.monospaced())
+                        .foregroundStyle(Color.labelPrimary)
                         .onSubmit {
                             Task { await viewModel.fetchProfile() }
                         }
                     Image(systemName: "pencil")
                         .foregroundStyle(isIDInputFocused ? Color.accentColor : .secondary)
+                        .accessibilityHidden(true)
                 }
-                .padding(10)
-                .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(isIDInputFocused ? Color.accentColor : Color.gray.opacity(0.4), lineWidth: 1)
-                )
+                .padding(Layout.fieldPadding)
+                .background(Color.bg, in: .rect(cornerRadius: Layout.fieldCornerRadius))
+                .overlay {
+                    RoundedRectangle(cornerRadius: Layout.fieldCornerRadius)
+                        .strokeBorder(isIDInputFocused ? Color.accentColor : Color.divider, lineWidth: Layout.fieldBorderWidth)
+                }
             }
+            .padding(.vertical, Layout.rowVerticalPadding)
             Button {
                 Task { await viewModel.fetchProfile(forceRefresh: true) }
             } label: {
                 HStack {
                     Label(Strings.Profile.syncButton, systemImage: "arrow.triangle.2.circlepath")
+                        .font(.headline)
                     Spacer()
                     if viewModel.isLoading {
-                        LotusLoaderView(size: 20)
+                        LotusLoaderView(size: LoadingIndicatorSize.compact)
                     }
                 }
             }
@@ -206,17 +220,8 @@ struct ProfileView: View {
             }
             .font(.caption)
         }
-    }
-
-    private func statPair(value: Int, label: String) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(value.formatted())
-                .font(.system(size: 17, weight: .semibold))
-                .foregroundStyle(Color.labelPrimary)
-            Text(label)
-                .font(.caption2)
-                .foregroundStyle(Color.labelSecondary)
-        }
+        .listRowBackground(Color.surface)
+        .listRowSeparatorTint(Color.divider)
     }
 
     private var statsSection: some View {
@@ -225,32 +230,57 @@ struct ProfileView: View {
                 NavigationLink {
                     IntrinsicsView(groups: viewModel.intrinsicGroups)
                 } label: {
-                    LabeledContent(Strings.Profile.intrinsicsRow, value: viewModel.intrinsicsSummaryText)
+                    Label {
+                        LabeledContent(Strings.Profile.intrinsicsRow, value: viewModel.intrinsicsSummaryText)
+                    } icon: {
+                        Image(systemName: "sparkles")
+                    }
                 }
             }
             if !viewModel.itemStats.isEmpty {
                 NavigationLink {
                     ProfileItemsListView(viewModel: .init(items: viewModel.itemStats))
                 } label: {
-                    LabeledContent(Strings.Profile.itemsRow, value: "\(viewModel.itemStats.count)")
+                    Label {
+                        LabeledContent(Strings.Profile.itemsRow, value: "\(viewModel.itemStats.count)")
+                    } icon: {
+                        Image(systemName: "square.stack.3d.up")
+                    }
                 }
             }
             if !viewModel.missionStats.isEmpty {
                 NavigationLink {
                     ProfileMissionsListView(viewModel: .init(missions: viewModel.missionStats))
                 } label: {
-                    LabeledContent(Strings.Profile.missionsRow, value: "\(viewModel.missionStats.count)")
+                    Label {
+                        LabeledContent(Strings.Profile.missionsRow, value: "\(viewModel.missionStats.count)")
+                    } icon: {
+                        Image(systemName: "map")
+                    }
                 }
             }
             if !viewModel.accountStatRows.isEmpty {
                 NavigationLink {
                     ProfileAccountStatsView(rows: viewModel.accountStatRows)
                 } label: {
-                    Text(Strings.Profile.statsRow)
+                    Label(Strings.Profile.statsRow, systemImage: "chart.bar.xaxis")
                 }
             }
         } header: {
-            SectionHeaderLabel(Strings.Profile.statsHeader)
+            DashboardSectionHeader(title: Strings.Profile.statsHeader, icon: "chart.bar")
         }
+        .listRowBackground(Color.surface)
+        .listRowSeparatorTint(Color.divider)
     }
+}
+
+private struct Layout {
+    static let identityCardInsets = EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0)
+    static let helpTransitionDuration: TimeInterval = 0.2
+    static let iconSpacing: CGFloat = 12
+    static let rowVerticalPadding: CGFloat = 2
+    static let formSpacing: CGFloat = 10
+    static let fieldPadding: CGFloat = 10
+    static let fieldCornerRadius: CGFloat = 14
+    static let fieldBorderWidth: CGFloat = 1
 }

@@ -17,9 +17,13 @@ struct SectionHeaderLabel: View {
     var body: some View {
         Text(title)
             .font(.title2)
-            .tracking(0.44)
+            .tracking(Layout.letterSpacing)
             .foregroundStyle(Color.labelSecondary)
     }
+}
+
+private struct Layout {
+    static let letterSpacing: CGFloat = 0.44
 }
 
 #Preview {

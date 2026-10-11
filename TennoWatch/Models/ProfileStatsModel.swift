@@ -63,7 +63,6 @@ struct AccountStatRow: Identifiable, Hashable {
 
 extension Profile {
     // MARK: - Object Properties
-    private static let intrinsicMaxRank = 10
     private static let drifterKeyPrefix = "LPS_DRIFT_"
     private static let railjackKeyPrefix = "LPS_"
 
@@ -75,10 +74,10 @@ extension Profile {
         for (key, rank) in playerSkills {
             if key.hasPrefix(Self.drifterKeyPrefix) {
                 let name = String(key.dropFirst(Self.drifterKeyPrefix.count)).replacingOccurrences(of: "_", with: " ").capitalized
-                drifter.append(.init(key: key, name: name, rank: rank, maxRank: Self.intrinsicMaxRank))
+                drifter.append(.init(key: key, name: name, rank: rank, maxRank: MasteryRules.maximumIntrinsicRank))
             } else if key.hasPrefix(Self.railjackKeyPrefix) {
                 let name = String(key.dropFirst(Self.railjackKeyPrefix.count)).replacingOccurrences(of: "_", with: " ").capitalized
-                railjack.append(.init(key: key, name: name, rank: rank, maxRank: Self.intrinsicMaxRank))
+                railjack.append(.init(key: key, name: name, rank: rank, maxRank: MasteryRules.maximumIntrinsicRank))
             }
         }
 
@@ -133,7 +132,11 @@ extension Profile {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.day, .hour, .minute]
         formatter.unitsStyle = .abbreviated
-        formatter.maximumUnitCount = 2
+        formatter.maximumUnitCount = Formatting.maximumDurationUnits
         return formatter
     }()
+}
+
+private struct Formatting {
+    static let maximumDurationUnits = 2
 }

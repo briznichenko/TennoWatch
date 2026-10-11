@@ -12,7 +12,11 @@ extension Date {
         let formatter = DateComponentsFormatter()
         formatter.unitsStyle = .abbreviated
         formatter.allowedUnits = [.day, .hour, .minute]
-        formatter.maximumUnitCount = 2
+        formatter.maximumUnitCount = Formatting.maximumCountdownUnits
         return formatter.string(from: Date.now, to: self) ?? ""
     }
+}
+
+private struct Formatting {
+    static let maximumCountdownUnits = 2
 }

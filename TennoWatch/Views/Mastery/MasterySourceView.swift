@@ -22,17 +22,17 @@ struct MasterySourceView: View {
 
     // MARK: - Body
     var body: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: ListLayout.iconSpacing) {
             Image(systemName: viewModel.iconName)
                 .symbolRenderingMode(.hierarchical)
                 .foregroundStyle(iconStyle)
                 .imageScale(.large)
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: ListLayout.compactDetailSpacing) {
                 Text(viewModel.name)
                     .foregroundStyle(textColor)
             }
             Spacer()
         }
-        .frame(minHeight: 44)
+        .frame(minHeight: ListLayout.minimumRowHeight)
     }
 }

@@ -13,10 +13,6 @@ protocol CatalogSyncService: Sendable {
 }
 
 struct DefaultCatalogSyncService: CatalogSyncService {
-    // MARK: - Object Properties
-    private let steelPathSuffix = "#steelPath"
-    private let maxIntrinsicLevel = 10
-
     // MARK: - Functions
     func mergeProfile(_ profile: Profile, into items: [MasteryItem]) -> [MasteryItem] {
         let profileItems = Dictionary(
@@ -59,15 +55,15 @@ struct DefaultCatalogSyncService: CatalogSyncService {
         missions: [String: ResultMission],
         playerSkills: [String: Int]
     ) -> Bool {
-        if uniqueName.hasSuffix(steelPathSuffix) {
-            let tag = String(uniqueName.dropLast(steelPathSuffix.count))
-            return missions[tag]?.tier == 1
+        if uniqueName.hasSuffix(StarChartRules.steelPathSuffix) {
+            let tag = String(uniqueName.dropLast(StarChartRules.steelPathSuffix.count))
+            return missions[tag]?.tier == StarChartRules.steelPathTier
         }
         if let mission = missions[uniqueName] {
             return mission.completes > 0
         }
         if let level = playerSkills[uniqueName] {
-            return level >= maxIntrinsicLevel
+            return level >= MasteryRules.maximumIntrinsicRank
         }
         return false
     }

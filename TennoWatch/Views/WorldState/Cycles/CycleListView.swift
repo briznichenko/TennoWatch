@@ -9,7 +9,7 @@ struct CycleListView: View {
     let cycles: [WorldCycleDisplay]
 
     var body: some View {
-        List {
+        ThemedList {
             ForEach(cycles) { cycle in
                 CycleRowView(cycle: cycle)
             }
