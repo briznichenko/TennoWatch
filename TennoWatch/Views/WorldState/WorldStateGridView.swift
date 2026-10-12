@@ -76,7 +76,7 @@ struct WorldStateGridView: View {
     private var fissuresCard: some View {
         if !viewModel.fissures.isEmpty {
             NavigationLink {
-                FissureListView(groups: viewModel.fissuresByTier)
+                FissureListView(groups: viewModel.fissuresByStarChart)
             } label: {
                 CardView(icon: "tornado", title: Strings.WorldState.fissuresHeader) {
                     Text("\(viewModel.fissures.count)")

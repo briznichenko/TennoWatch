@@ -20,7 +20,14 @@ final class MasterySourceViewModel: Identifiable {
     // MARK: - Computed Properties
     var name: String { source.name }
     var uniqueName: String { source.uniqueName }
+    var planet: String? { StarChartNode.node(for: uniqueName)?.planet }
+    var nodeDetails: String? { source.nodeDetails }
+    var searchableText: String { source.searchableText }
     var starChartMode: StarChartMode { source.starChartMode }
+    var pointsRemaining: Int { source.isMastered == true ? 0 : source.mastery }
+    var detailText: String {
+        state == .mastered ? Strings.Mastery.itemStateMastered : Strings.Mastery.sourcePointsRemaining(pointsRemaining)
+    }
 
     var iconName: String {
         switch state {

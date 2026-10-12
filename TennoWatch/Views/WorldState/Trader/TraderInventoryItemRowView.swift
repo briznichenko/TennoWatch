@@ -23,6 +23,7 @@ struct TraderInventoryItemRowView: View {
                     .font(.caption)
                     .foregroundStyle(Color.labelSecondary)
             }
+            ItemWikiLink(itemName: item.item)
         }
         .frame(minHeight: ListLayout.minimumRowHeight)
     }

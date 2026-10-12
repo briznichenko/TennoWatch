@@ -150,10 +150,11 @@ extension MasteryCategoryDataModel: ValueTypeConvertible {
     }
 
     var summary: MasteryCategorySummary {
-        .init(
+        let masterySources = sources.filter { $0.mastery > 0 }
+        return .init(
             name: name,
-            itemsCount: itemsCount,
-            masteredItemsCount: masteredItemsCount,
+            itemsCount: masterySources.count,
+            masteredItemsCount: masterySources.filter(\.isMastered).count,
             earnedMasteryPoints: masteredPoints
         )
     }

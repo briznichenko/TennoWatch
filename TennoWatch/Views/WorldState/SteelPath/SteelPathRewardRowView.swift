@@ -16,6 +16,7 @@ struct SteelPathRewardRowView: View {
             Text(Strings.WorldState.steelEssence(Int(reward.cost)))
                 .font(.caption)
                 .foregroundStyle(Color.labelSecondary)
+            ItemWikiLink(itemName: reward.name)
         }
         .frame(minHeight: ListLayout.minimumRowHeight)
     }

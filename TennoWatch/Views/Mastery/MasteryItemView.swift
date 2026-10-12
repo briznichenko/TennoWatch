@@ -39,6 +39,7 @@ struct MasteryItemView: View {
                     .foregroundStyle(Color.labelSecondary)
             }
             Spacer()
+            ItemWikiLink(itemName: viewModel.name)
         }
         .frame(minHeight: ListLayout.minimumRowHeight)
     }

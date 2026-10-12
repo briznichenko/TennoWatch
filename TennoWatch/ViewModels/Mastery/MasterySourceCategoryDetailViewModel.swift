@@ -28,11 +28,16 @@ final class MasterySourceCategoryDetailViewModel {
     // MARK: - Computed Properties
     var sortedItems: [MasterySourceModel] {
         let filtered = (category?.sources ?? []).filter {
-            filter.matches($0.masteryState) && ($0.name.matchesSearch(searchText) || $0.uniqueName.matchesSearch(searchText))
+            $0.mastery > 0 && filter.matches($0.masteryState) && ($0.name.matchesSearch(searchText) || $0.uniqueName.matchesSearch(searchText))
         }
         switch sortOption {
         case .name: return filtered.sorted { $0.name < $1.name }
-        case .pointsRemaining: return filtered.sorted { $0.mastery < $1.mastery }
+        case .pointsRemaining:
+            return filtered.sorted {
+                let lhs = $0.isMastered == true ? 0 : $0.mastery
+                let rhs = $1.isMastered == true ? 0 : $1.mastery
+                return lhs == rhs ? $0.name < $1.name : lhs > rhs
+            }
         }
     }
 
