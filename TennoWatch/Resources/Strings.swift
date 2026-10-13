@@ -206,6 +206,7 @@ struct Strings {
 
     struct Profile {
         private init() {}
+        static var addProfile: String { Strings.string("profile_add_profile_key", "Add profile") }
         static var savedProfilesHeader: String { Strings.string("profile_saved_profiles_header_key", "Saved profiles") }
         static var manualProfile: String { Strings.string("profile_manual_profile_key", "Manual tracking") }
         static var manualProfileDescription: String { Strings.string("profile_manual_profile_description_key", "Local profile") }

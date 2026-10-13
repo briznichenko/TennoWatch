@@ -760,6 +760,18 @@
         }
       }
     },
+    "profile_add_profile_key" : {
+      "comment" : "Action to import a remote player profile from its ID.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add profile"
+          }
+        }
+      }
+    },
     "profile_delete_profile_button_key" : {
       "extractionState" : "stale",
       "localizations" : {

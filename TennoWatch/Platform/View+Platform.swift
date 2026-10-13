@@ -11,6 +11,15 @@ extension View {
     }
 
     @ViewBuilder
+    func profileListStyle() -> some View {
+        #if os(iOS)
+        listStyle(.insetGrouped)
+        #else
+        listStyle(.inset)
+        #endif
+    }
+
+    @ViewBuilder
     func appTabStyle() -> some View {
         #if os(macOS)
         tabViewStyle(.sidebarAdaptable)

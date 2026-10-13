@@ -14,7 +14,6 @@ final class ProfileViewModel {
     private(set) var profile: Profile?
     private(set) var isLoading = false
     private(set) var savedProfiles: [Profile] = []
-    var playerId: String = ""
 
     private let profileRepository: ProfileRepository
     let errorManager: ErrorManager
@@ -67,26 +66,31 @@ final class ProfileViewModel {
         }
     }
 
-    func fetchProfile(forceRefresh: Bool = false) async {
-        let requestedID = playerId.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !requestedID.isEmpty else { return }
+    func addProfile(playerID: String) async -> Bool {
+        let requestedID = playerID.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !requestedID.isEmpty else { return false }
+        return await perform {
+            self.profile = try await self.profileRepository.getProfile(withPlayerId: requestedID, forceRefresh: false)
+        }
+    }
+
+    func syncProfile() async {
+        guard let profile, !profile.isLocal else { return }
+        let selectedID = profile.accountID.oid
         await perform {
-            self.profile = try await self.profileRepository.getProfile(withPlayerId: requestedID, forceRefresh: forceRefresh)
-            self.playerId = self.accountId
+            self.profile = try await self.profileRepository.getProfile(withPlayerId: selectedID, forceRefresh: true)
         }
     }
 
     func selectProfile(_ saved: Profile) async {
         await perform {
             self.profile = try await self.profileRepository.selectProfile(accountID: saved.accountID.oid)
-            self.playerId = saved.isLocal ? "" : self.accountId
         }
     }
 
     func createLocalProfile() async {
         await perform {
             self.profile = try await self.profileRepository.createLocalProfile()
-            self.playerId = ""
         }
     }
 
@@ -109,19 +113,26 @@ final class ProfileViewModel {
         } else {
             profile = try await profileRepository.getProfile()
         }
-        playerId = profile?.isLocal == true ? "" : accountId
     }
 
-    private func perform(_ action: () async throws -> Void) async {
-        guard !isLoading else { return }
+    @discardableResult
+    private func perform(_ action: () async throws -> Void) async -> Bool {
+        guard !isLoading else { return false }
         isLoading = true
         defer { isLoading = false }
         do {
+            try Task.checkCancellation()
             try await action()
             savedProfiles = try await profileRepository.getSavedProfiles()
+            return true
         } catch is CancellationError {
+            return false
+        } catch let error as URLError where error.code == .cancelled {
+            return false
         } catch {
+            guard !Task.isCancelled else { return false }
             errorManager.append(error)
+            return false
         }
     }
 }
