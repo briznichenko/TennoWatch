@@ -60,6 +60,8 @@ struct Strings {
         static var vaultTraderHeader: String { Strings.string("world_state_vault_trader_header_key", "Prime vault") }
         static var steelPathHeader: String { Strings.string("world_state_steel_path_header_key", "Steel path") }
         static var alertsHeader: String { Strings.string("world_state_alerts_header_key", "Alerts") }
+        static var eventsHeader: String { Strings.string("world_state_events_header_key", "Events") }
+        static var communityProgress: String { Strings.string("world_state_community_progress_key", "Community progress") }
         static var archimedeaHeader: String { Strings.string("world_state_archimedea_header_key", "Archimedea") }
         static var flashSalesHeader: String { Strings.string("world_state_flash_sales_header_key", "Flash sales") }
         static var calendarHeader: String { Strings.string("world_state_calendar_header_key", "Calendar") }

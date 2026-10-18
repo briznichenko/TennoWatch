@@ -92,6 +92,16 @@ final class WorldStateViewModel {
         (worldState?.invasions ?? []).sorted { $0.node < $1.node }
     }
 
+    func activeEvents(at date: Date) -> [WorldEvent] {
+        (worldState?.events ?? [])
+            .filter { ($0.activation ?? .distantPast) <= date && ($0.expiry ?? .distantFuture) > date }
+            .sorted {
+                let lhsExpiry = $0.expiry ?? .distantFuture
+                let rhsExpiry = $1.expiry ?? .distantFuture
+                return lhsExpiry == rhsExpiry ? $0.description < $1.description : lhsExpiry < rhsExpiry
+            }
+    }
+
     var fissures: [Fissure] {
         (worldState?.fissures ?? []).sorted { ($0.expiry ?? .distantFuture) < ($1.expiry ?? .distantFuture) }
     }
