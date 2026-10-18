@@ -17,6 +17,7 @@ struct WorldStateGridView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: DashboardLayout.sectionSpacing) {
                 voidTraderCard
+                eventsCard
                 LazyVGrid(columns: columns, spacing: DashboardLayout.gridSpacing) {
                     invasionsCard
                     fissuresCard
@@ -45,6 +46,15 @@ struct WorldStateGridView: View {
     }
 
     // MARK: - Cards
+    private var eventsCard: some View {
+        TimelineView(.periodic(from: .now, by: CountdownRefreshInterval.minute)) { context in
+            let events = viewModel.activeEvents(at: context.date)
+            if !events.isEmpty {
+                WorldStateEventsCard(events: events)
+            }
+        }
+    }
+
     @ViewBuilder
     private var cyclesCard: some View {
         if !viewModel.cycles.isEmpty {
