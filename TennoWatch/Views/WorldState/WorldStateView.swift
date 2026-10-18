@@ -31,7 +31,7 @@ struct WorldStateView: View {
                     await viewModel.fetchWorldState()
                 }
                 .platformRefreshable(isDisabled: viewModel.isLoading) {
-                    await viewModel.fetchWorldState()
+                    await viewModel.fetchWorldState(forceRefresh: true)
                 }
         }
     }

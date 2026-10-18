@@ -17,16 +17,33 @@
   community API's URL path segments verbatim.
 
 ## `APIManager.swift`
-- `ServiceProtocol` — one method: `fetch<T: Decodable>(_:) async throws -> T`.
+- `ServiceProtocol` exposes `fetch<T: Decodable>(_:) async throws -> T` and
+  `clearCache()` (a default no-op for services without a cache).
   This is the seam every repository depends on instead of `APIManager`
   directly, so tests can substitute a stub (see
   [Testing](Testing.md)/`APIManagerTests`).
-- `APIManager` — plain `async`/`await` over `URLSession` (`.shared` by
-  default, injectable). Success is `httpResponse.statusCode == 200` exactly
-  — no retry, no handling for redirects, 304s, or anything else in the 2xx
-  range; anything else throws `APIError.invalidResponse` with no status code
-  or body attached, so failures are opaque to the caller/`ErrorManager`
-  beyond "the request failed."
+- `APIManager` uses `async`/`await` over an injectable `URLSession`. Its default
+  ephemeral session waits for connectivity, with a 15-second request timeout and
+  a 30-second resource timeout per attempt. It disables URLCache so the explicit
+  TTL is the only client cache policy. Injected sessions keep their own configuration.
+- Successful 2xx responses are decoded. Other HTTP responses throw
+  `APIError.httpStatus(Int)`; non-HTTP responses throw `.invalidResponse`.
+- GET requests retry at most twice for timeouts, connection loss, selected
+  connection/DNS errors, and HTTP 408/429/500/502/503/504. Backoff is 1 then 2
+  seconds plus up to 250ms jitter. `Retry-After` seconds and HTTP dates are honored;
+  waits above 30 seconds return the HTTP error instead of retrying early.
+  Offline errors, cancellation, permanent HTTP errors, and decoding errors do not retry.
+- Successfully decoded response bytes are cached in memory per full URL and
+  APIManager instance: world state for 30 seconds, catalog for one hour, profiles
+  for zero seconds. Profile persistence remains in `PersistentProfileRepository`,
+  so its force-refresh behavior still reaches the server. `no-store`/`no-cache`
+  responses are excluded, and expired values are never returned on failure.
+- `clearCache()` invalidates stored responses and prevents requests already in
+  flight from repopulating the cache. World State and Openings manual refresh
+  clear this cache before loading; Settings cache reset also invalidates it.
+- An injected clock and async sleep closure make expiry/backoff deterministic
+  in tests. Cancellation is checked before cache reads and after network awaits;
+  cancellation of the normal `Task.sleep` stops backoff immediately.
 - Custom `JSONDecoder.dateDecodingStrategy`: ISO8601 with fractional seconds,
   plus one hand-rolled escape hatch — strings prefixed `+275760-09-13`
   (the .NET/MongoDB "max date" sentinel some fields use for "never expires")
@@ -34,8 +51,6 @@
   knowledge worth knowing about before touching any `Date?` field that comes
   from `warframestat.us` — a naive re-implementation would throw on that
   sentinel value.
-- Imports `Combine` but doesn't use it — see the discrepancy note in
-  [Specs/README.md](../README.md). Safe to drop the import.
 
 ## Conventions for adding a new endpoint
 1. Add a case to `Endpoint`, wire `path`/`queryItems`/`baseURL` if it's a new
@@ -46,6 +61,6 @@
    shared `decoder` in `APIManager`, don't hand-roll per-model decoding.
 
 ## Test coverage
-`APIManagerTests` — covers the fetch/decode path and (per file size, 142
-lines) likely the date-sentinel edge case and non-200 failure. This is the
-one layer with reasonably proportionate test coverage relative to its size.
+`APIManagerTests` covers date decoding, HTTP and transport retry classification,
+retry limits and Retry-After, cancellation during backoff, TTL expiry, URL-key
+isolation, profile bypass, no-store, and invalidation during an in-flight request.

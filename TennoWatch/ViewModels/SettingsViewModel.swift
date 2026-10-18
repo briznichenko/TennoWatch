@@ -91,6 +91,7 @@ final class SettingsViewModel {
                 throw ClearCacheError.missingBundleIdentifier
             }
             try await persistencyService.clearAllData()
+            worldStateRepository.clearCache()
             voidTraderNotificationScheduler.cancelArrivalNotification()
             UserDefaults.standard.removePersistentDomain(forName: bundleIdentifier)
             gameVersion = nil

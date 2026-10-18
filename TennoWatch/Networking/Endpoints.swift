@@ -28,6 +28,16 @@ enum Endpoint {
     case profile(playerId: String)
 }
 
+extension Endpoint {
+    var cacheTTL: TimeInterval {
+        switch self {
+        case .worldState: 30
+        case .catalog: 3_600
+        case .profile: 0
+        }
+    }
+}
+
 extension Endpoint: EndpointProtocol {
     // MARK: - Computed Properties
     var baseURL: URL {

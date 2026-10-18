@@ -104,7 +104,8 @@ final class OpeningsViewModel {
     }
 
     // MARK: - Functions
-    func fetchOpenings() async {
+    func fetchOpenings(forceRefresh: Bool = false) async {
+        if forceRefresh { worldStateRepository.clearCache() }
         isLoading = true
         defer { isLoading = false }
 

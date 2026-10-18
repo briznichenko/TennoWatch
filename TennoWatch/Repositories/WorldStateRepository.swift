@@ -9,9 +9,12 @@ import Foundation
 
 protocol WorldStateRepository {
     func getWorldState(platform: Platform) async throws -> WorldState
+    func clearCache()
 }
 
 extension WorldStateRepository {
+    func clearCache() {}
+
     func getWorldState(platform: Platform = .pc) async throws -> WorldState {
         try await getWorldState(platform: platform)
     }
@@ -24,6 +27,10 @@ final class DefaultWorldStateRepository: WorldStateRepository {
     // MARK: - Init
     init(worldStateService: ServiceProtocol = APIManager()) {
         self.worldStateService = worldStateService
+    }
+
+    func clearCache() {
+        worldStateService.clearCache()
     }
 
     // MARK: - Functions
