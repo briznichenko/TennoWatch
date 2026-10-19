@@ -2,6 +2,8 @@
 //  APIManagerTests.swift
 //  TennoWatchTests
 //
+//  Created by Andrii Bryzhnychenko on 9/15/26.
+//
 
 import Testing
 import Foundation

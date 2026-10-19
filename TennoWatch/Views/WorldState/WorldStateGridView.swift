@@ -31,6 +31,7 @@ struct WorldStateGridView: View {
                     calendarCard
                     flashSalesCard
                     cyclesCard
+                    primeReleasesCard
                 }
             }
             .frame(maxWidth: DashboardLayout.maximumContentWidth)
@@ -46,6 +47,20 @@ struct WorldStateGridView: View {
     }
 
     // MARK: - Cards
+    @ViewBuilder
+    private var primeReleasesCard: some View {
+        if let updatedAt = viewModel.primeReleaseDataUpdatedAt, !viewModel.primeReleaseCandidates.isEmpty {
+            NavigationLink {
+                PrimeReleaseListView(candidates: viewModel.primeReleaseCandidates, updatedAt: updatedAt)
+            } label: {
+                CardView(icon: "sparkles", title: Strings.WorldState.primeReleasesHeader) {
+                    Text(viewModel.primeReleaseCandidates.map { $0.name + " Prime" }.joined(separator: ", "))
+                        .lineLimit(Layout.cycleSummaryLineLimit)
+                }
+            }
+        }
+    }
+
     private var eventsCard: some View {
         TimelineView(.periodic(from: .now, by: CountdownRefreshInterval.minute)) { context in
             let events = viewModel.activeEvents(at: context.date)

@@ -1,5 +1,5 @@
 //
-//  PersistentModel.swift
+//  ValueTypeConvertible.swift
 //  TennoWatch
 //
 //  Created by Andrii Bryzhnychenko on 9/3/26.

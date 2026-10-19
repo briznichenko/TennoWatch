@@ -1,3 +1,10 @@
+//
+//  CacheClearingTests.swift
+//  TennoWatchTests
+//
+//  Created by Andrii Bryzhnychenko on 9/26/26.
+//
+
 import Foundation
 import SwiftData
 import Testing

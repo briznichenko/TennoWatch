@@ -47,6 +47,12 @@ final class WorldStateViewModel {
     private(set) var isLoading = false
 
     // MARK: - Computed Properties
+    var primeReleaseDataUpdatedAt: Date? { PrimeReleaseOrder.bundled?.updatedAt }
+
+    var primeReleaseCandidates: [PrimeReleaseOrder.Frame] {
+        Array((PrimeReleaseOrder.bundled?.candidates(at: .now) ?? []).prefix(6))
+    }
+
     var cycles: [WorldCycleDisplay] {
         guard let worldState else { return [] }
         return [

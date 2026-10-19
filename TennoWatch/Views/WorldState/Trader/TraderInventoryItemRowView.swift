@@ -2,6 +2,8 @@
 //  TraderInventoryItemRowView.swift
 //  TennoWatch
 //
+//  Created by Andrii Bryzhnychenko on 9/17/26.
+//
 
 import SwiftUI
 

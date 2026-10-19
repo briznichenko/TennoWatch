@@ -1,3 +1,10 @@
+//
+//  OpeningsSourceCategoryDetailViewModel.swift
+//  TennoWatch
+//
+//  Created by Andrii Bryzhnychenko on 10/4/26.
+//
+
 import Observation
 import Foundation
 

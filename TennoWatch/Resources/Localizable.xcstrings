@@ -2015,6 +2015,46 @@
           }
         }
       }
+    },
+    "world_state_prime_releases_header_key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Potential Prime releases"
+          }
+        }
+      }
+    },
+    "world_state_prime_releases_explanation_key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oldest frames without a Prime, ordered by original release. Predictions only; release order can change. No dates confirmed."
+          }
+        }
+      }
+    },
+    "world_state_original_frame_release_format_key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Original frame released %@"
+          }
+        }
+      }
+    },
+    "world_state_prime_release_data_updated_format_key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WFCD release data · Updated %@"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

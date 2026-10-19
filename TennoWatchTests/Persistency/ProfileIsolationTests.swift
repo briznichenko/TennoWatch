@@ -1,3 +1,10 @@
+//
+//  ProfileIsolationTests.swift
+//  TennoWatchTests
+//
+//  Created by Andrii Bryzhnychenko on 10/4/26.
+//
+
 import Foundation
 import SwiftData
 import Testing

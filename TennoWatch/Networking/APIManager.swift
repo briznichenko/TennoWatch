@@ -1,5 +1,5 @@
 //
-//  ApiManager.swift
+//  APIManager.swift
 //  TennoWatch
 //
 //  Created by Andrii Bryzhnychenko on 8/24/26.

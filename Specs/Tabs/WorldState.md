@@ -73,3 +73,18 @@ from Settings or a per-tab picker; not built.
 — the only ViewModel under test in the whole app. Covers the fetch/error path
 and (presumably, given the file exists) the grouping/sorting logic. No view
 tests (expected — this is a SwiftUI app, no snapshot/UI test target yet).
+
+## Potential Prime releases
+The last dashboard grid card opens `PrimeReleaseListView`, listing the six
+oldest released base Warframes without a released Prime variant, sorted by
+original release date. The detail list shows original frame dates and explicitly
+labels the order as a prediction; it does not invent Prime release dates or enforce gender rotation.
+Umbra and non-Warframe entries are excluded from the source snapshot.
+
+`WorldStateViewModel` derives the list from `PrimeReleaseOrder`, independently
+of world-state networking and profile persistence. The small bundled
+`Resources/primeReleaseOrder.json` snapshot includes its update date, displayed
+in the detail list. It does not refresh over the network at runtime. Refresh it after
+new frame/Prime releases by downloading WFCD's `Warframes.json` from
+<https://raw.githubusercontent.com/WFCD/warframe-items/master/data/json/Warframes.json>
+and running `python3 Scripts/generate_prime_release_order.py /path/to/Warframes.json`.

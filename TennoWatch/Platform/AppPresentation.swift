@@ -1,3 +1,10 @@
+//
+//  AppPresentation.swift
+//  TennoWatch
+//
+//  Created by Andrii Bryzhnychenko on 10/7/26.
+//
+
 import SwiftUI
 
 enum AppPresentation {

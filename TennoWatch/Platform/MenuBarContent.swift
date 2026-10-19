@@ -1,3 +1,10 @@
+//
+//  MenuBarContent.swift
+//  TennoWatch
+//
+//  Created by Andrii Bryzhnychenko on 10/7/26.
+//
+
 #if os(macOS)
 import AppKit
 import SwiftUI

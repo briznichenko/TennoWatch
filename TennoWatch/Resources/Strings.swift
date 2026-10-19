@@ -43,6 +43,19 @@ struct Strings {
     struct WorldState {
         private init() {}
         static var title: String { Strings.string("world_state_title_key", "World state") }
+        static var primeReleasesHeader: String { Strings.string("world_state_prime_releases_header_key", "Potential Prime releases") }
+        static var primeReleasesExplanation: String {
+            Strings.string("world_state_prime_releases_explanation_key", "Oldest frames without a Prime, ordered by original release. Predictions only; release order can change. No dates confirmed.")
+        }
+
+        static func originalFrameRelease(_ date: String) -> String {
+            String(format: Strings.string("world_state_original_frame_release_format_key", "Original frame released %@"), date)
+        }
+
+        static func primeReleaseDataUpdated(_ date: String) -> String {
+            String(format: Strings.string("world_state_prime_release_data_updated_format_key", "WFCD release data · Updated %@"), date)
+        }
+
         static var cyclesHeader: String { Strings.string("world_state_cycles_header_key", "Cycles") }
         static var invasionsHeader: String { Strings.string("world_state_invasions_header_key", "Invasions") }
         static var fissuresHeader: String { Strings.string("world_state_fissures_header_key", "Fissures") }
