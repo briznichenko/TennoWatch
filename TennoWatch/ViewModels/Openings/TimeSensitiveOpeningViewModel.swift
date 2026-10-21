@@ -20,8 +20,22 @@ final class TimeSensitiveOpeningViewModel: Identifiable {
     var type: String { opening.item.catalogItemModel.category.displayName }
     var iconName: String { opening.item.catalogItemModel.category.iconName }
 
+    var sources: [TimeSensitiveOpeningSourceViewModel] {
+        opening.sources.map { TimeSensitiveOpeningSourceViewModel(source: $0) }
+    }
+
+    init(opening: TimeSensitiveOpening) {
+        self.opening = opening
+    }
+}
+
+struct TimeSensitiveOpeningSourceViewModel: Identifiable {
+    let source: TimeSensitiveOpening.Source
+
+    var id: TimeSensitiveOpening.Source { source }
+
     var sourceName: String {
-        switch opening.source {
+        switch source {
         case .invasion: Strings.WorldState.invasionsHeader
         case .voidTrader: Strings.WorldState.voidTraderHeader
         case .vaultTrader: Strings.WorldState.vaultTraderHeader
@@ -29,26 +43,26 @@ final class TimeSensitiveOpeningViewModel: Identifiable {
     }
 
     var location: String {
-        switch opening.source {
+        switch source {
         case .invasion(let node, let faction, _): "\(node) · \(faction)"
         case .voidTrader(let location, _), .vaultTrader(let location, _): location
         }
     }
 
     var expiry: Date? {
-        switch opening.source {
+        switch source {
         case .invasion: nil
         case .voidTrader(_, let expiry), .vaultTrader(_, let expiry): expiry
         }
     }
 
     var completion: Double? {
-        guard case .invasion(_, _, let completion) = opening.source else { return nil }
+        guard case .invasion(_, _, let completion) = source else { return nil }
         return completion / Invasion.completePercentage
     }
 
     var sourceText: String {
-        switch opening.source {
+        switch source {
         case .invasion(let node, let faction, let completion):
             Strings.Openings.invasionSource(node: node, faction: faction, percent: Int(completion.rounded()))
         case .voidTrader(let location, let expiry):
@@ -58,8 +72,4 @@ final class TimeSensitiveOpeningViewModel: Identifiable {
         }
     }
 
-    // MARK: - Init
-    init(opening: TimeSensitiveOpening) {
-        self.opening = opening
-    }
 }

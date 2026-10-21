@@ -31,7 +31,7 @@ struct OpeningsMatchingServiceTests {
 
         #expect(openings.count == 1)
         #expect(openings.first?.item == item)
-        #expect(openings.first?.source == .voidTrader(location: "Larunda Relay", expiry: nil))
+        #expect(openings.first?.sources.first == .voidTrader(location: "Larunda Relay", expiry: nil))
     }
 
     @Test("A completed invasion contributes no openings")
@@ -71,7 +71,7 @@ struct OpeningsMatchingServiceTests {
 
         let openings = sut.timeSensitiveOpenings(for: [item], in: worldState)
 
-        guard case .invasion(_, _, let completion) = openings.first?.source else {
+        guard case .invasion(_, _, let completion) = openings.first?.sources.first else {
             Issue.record("Expected an .invasion source")
             return
         }
@@ -121,5 +121,60 @@ struct OpeningsMatchingServiceTests {
         #expect(openings.count == 2)
         #expect(openings.contains { $0.item == invasionItem })
         #expect(openings.contains { $0.item == voidTraderItem })
+    }
+
+    @Test("Repeated trader components produce one item with one source")
+    func repeatedTraderComponentsAreDeduplicated() {
+        let item = MasteryItem(profileItemModel: nil, catalogItemModel: .stub(name: "Braton Prime"))
+        let trader = VoidTrader.stub(inventory: [
+            .init(credits: 0, ducats: nil, item: "Braton Prime Barrel", uniqueName: "/Barrel"),
+            .init(credits: 0, ducats: nil, item: "Braton Prime Receiver", uniqueName: "/Receiver")
+        ])
+
+        let openings = sut.timeSensitiveOpenings(for: [item], in: .stub(voidTrader: trader))
+
+        #expect(openings.count == 1)
+        #expect(openings.first?.sources.count == 1)
+    }
+
+    @Test("One item retains each distinct invasion and trader source")
+    func multipleSourcesAreGroupedWithoutLosingLocations() {
+        let item = MasteryItem(profileItemModel: nil, catalogItemModel: .stub(uniqueName: "/Item", name: "Braton Prime"))
+        let reward = Reward.stub(items: ["Braton Prime"])
+        let invasions = [
+            Invasion.stub(node: "Mars", attacker: .stub(reward: reward, faction: "Corpus")),
+            Invasion.stub(node: "Venus", attacker: .stub(reward: reward, faction: "Grineer"))
+        ]
+        let trader = VoidTrader.stub(inventory: [
+            .init(credits: 0, ducats: nil, item: "Braton Prime", uniqueName: "/Item")
+        ])
+
+        let openings = sut.timeSensitiveOpenings(for: [item], in: .stub(invasions: invasions, voidTrader: trader))
+
+        #expect(openings.count == 1)
+        #expect(openings.first?.sources == [
+            .invasion(node: "Mars", faction: "Corpus", completion: 0),
+            .invasion(node: "Venus", faction: "Grineer", completion: 0),
+            .voidTrader(location: "", expiry: nil)
+        ])
+    }
+
+    @Test("Prime rewards do not also match the base weapon")
+    func primeRewardDoesNotMatchBaseWeapon() {
+        let base = MasteryItem(profileItemModel: nil, catalogItemModel: .stub(uniqueName: "/Base", name: "Braton"))
+        let prime = MasteryItem(profileItemModel: nil, catalogItemModel: .stub(uniqueName: "/Prime", name: "Braton Prime"))
+        let invasion = Invasion.stub(attacker: .stub(reward: .stub(items: ["Braton Prime Barrel"])))
+
+        let openings = sut.timeSensitiveOpenings(for: [base, prime], in: .stub(invasions: [invasion]))
+
+        #expect(openings.map(\.id) == ["/Prime"])
+    }
+
+    @Test("An unrelated item containing a short catalog name is not matched")
+    func substringIsNotEnoughToMatch() {
+        let item = MasteryItem(profileItemModel: nil, catalogItemModel: .stub(name: "Bo"))
+        let invasion = Invasion.stub(attacker: .stub(reward: .stub(items: ["Boltor Prime Blueprint"])))
+
+        #expect(sut.timeSensitiveOpenings(for: [item], in: .stub(invasions: [invasion])).isEmpty)
     }
 }

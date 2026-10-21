@@ -14,9 +14,17 @@ protocol OpeningsMatchingService {
 struct DefaultOpeningsMatchingService: OpeningsMatchingService {
     // MARK: - Functions
     func timeSensitiveOpenings(for items: [MasteryItem], in worldState: WorldState) -> [TimeSensitiveOpening] {
-        invasionOpenings(for: items, invasions: worldState.invasions)
+        let openings = invasionOpenings(for: items, invasions: worldState.invasions)
             + voidTraderOpenings(for: items, voidTrader: worldState.voidTrader)
             + vaultTraderOpenings(for: items, vaultTrader: worldState.vaultTrader)
+        return Dictionary(grouping: openings, by: \.id)
+            .sorted { $0.key < $1.key }
+            .compactMap { _, matches in
+                guard let first = matches.first else { return nil }
+                var seen = Set<TimeSensitiveOpening.Source>()
+                let sources = matches.flatMap(\.sources).filter { seen.insert($0).inserted }
+                return TimeSensitiveOpening(item: first.item, sources: sources)
+            }
     }
 
     // MARK: - Helper Functions
@@ -77,6 +85,14 @@ struct DefaultOpeningsMatchingService: OpeningsMatchingService {
             return [exact]
         }
         guard !displayName.isEmpty else { return [] }
-        return items.filter { displayName.localizedCaseInsensitiveContains($0.catalogItemModel.name) }
+        let name = displayName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let exact = items.filter { $0.catalogItemModel.name.caseInsensitiveCompare(name) == .orderedSame }
+        if !exact.isEmpty { return exact }
+        let componentSuffixes = [" Blueprint", " Barrel", " Receiver", " Stock", " Blade", " Handle", " Link", " Neuroptics", " Chassis", " Systems"]
+        return items.filter { item in
+            componentSuffixes.contains { suffix in
+                (item.catalogItemModel.name + suffix).caseInsensitiveCompare(name) == .orderedSame
+            }
+        }
     }
 }

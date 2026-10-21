@@ -13,8 +13,8 @@ enum AppPresentation {
     static let masteryCategoryColumns = [GridItem(.adaptive(minimum: Layout.masteryMinimumColumnWidth))]
     static let masteryCategoryHorizontalPadding: CGFloat = 0
     #else
-    static let worldStateColumns = [GridItem(.flexible()), GridItem(.flexible())]
-    static let masteryCategoryColumns = [GridItem(.flexible()), GridItem(.flexible())]
+    static let worldStateColumns = [GridItem(.adaptive(minimum: Layout.worldStateCompactMinimumColumnWidth), spacing: DashboardLayout.gridSpacing)]
+    static let masteryCategoryColumns = [GridItem(.adaptive(minimum: Layout.masteryCompactMinimumColumnWidth), spacing: DashboardLayout.gridSpacing)]
     static let masteryCategoryHorizontalPadding: CGFloat = -DashboardLayout.contentPadding
     #endif
 
@@ -29,4 +29,6 @@ enum AppPresentation {
 private struct Layout {
     static let worldStateMinimumColumnWidth: CGFloat = 260
     static let masteryMinimumColumnWidth: CGFloat = 220
+    static let worldStateCompactMinimumColumnWidth: CGFloat = 160
+    static let masteryCompactMinimumColumnWidth: CGFloat = 150
 }

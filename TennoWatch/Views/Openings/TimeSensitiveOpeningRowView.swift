@@ -32,35 +32,37 @@ struct TimeSensitiveOpeningRowView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 ItemWikiLink(itemName: viewModel.name)
             }
-            let layout = dynamicTypeSize.isAccessibilitySize
-                ? AnyLayout(VStackLayout(alignment: .leading, spacing: Layout.sectionSpacing))
-                : AnyLayout(HStackLayout(alignment: .bottom, spacing: Layout.identitySpacing))
-            layout {
-                VStack(alignment: .leading, spacing: ListLayout.detailSpacing) {
-                    Text(viewModel.sourceName)
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(DashboardPalette.accent(in: colorScheme))
-                    Text(viewModel.location)
+            ForEach(viewModel.sources) { source in
+                let layout = dynamicTypeSize.isAccessibilitySize
+                    ? AnyLayout(VStackLayout(alignment: .leading, spacing: Layout.sectionSpacing))
+                    : AnyLayout(HStackLayout(alignment: .bottom, spacing: Layout.identitySpacing))
+                layout {
+                    VStack(alignment: .leading, spacing: ListLayout.detailSpacing) {
+                        Text(source.sourceName)
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(DashboardPalette.accent(in: colorScheme))
+                        Text(source.location)
+                            .font(.caption)
+                            .foregroundStyle(Color.labelSecondary)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    if let expiry = source.expiry {
+                        HStack(spacing: Layout.countdownIconSpacing) {
+                            Image(systemName: "clock")
+                            LiveCountdownText(date: expiry, showsSeconds: false)
+                                .fixedSize(horizontal: true, vertical: false)
+                        }
                         .font(.caption)
                         .foregroundStyle(Color.labelSecondary)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                if let expiry = viewModel.expiry {
-                    HStack(spacing: Layout.countdownIconSpacing) {
-                        Image(systemName: "clock")
-                        LiveCountdownText(date: expiry, showsSeconds: false)
-                            .fixedSize(horizontal: true, vertical: false)
+                        .padding(.horizontal, Layout.countdownHorizontalPadding)
+                        .padding(.vertical, Layout.countdownVerticalPadding)
+                        .background(Color.bg, in: .capsule)
+                        .fixedSize(horizontal: true, vertical: false)
+                    } else if let completion = source.completion {
+                        Text(completion, format: .percent.precision(.fractionLength(Layout.percentageFractionDigits)))
+                            .font(.caption.monospacedDigit())
+                            .foregroundStyle(Color.labelSecondary)
                     }
-                    .font(.caption)
-                    .foregroundStyle(Color.labelSecondary)
-                    .padding(.horizontal, Layout.countdownHorizontalPadding)
-                    .padding(.vertical, Layout.countdownVerticalPadding)
-                    .background(Color.bg, in: .capsule)
-                    .fixedSize(horizontal: true, vertical: false)
-                } else if let completion = viewModel.completion {
-                    Text(completion, format: .percent.precision(.fractionLength(Layout.percentageFractionDigits)))
-                        .font(.caption.monospacedDigit())
-                        .foregroundStyle(Color.labelSecondary)
                 }
             }
         }
