@@ -124,8 +124,6 @@ struct ProfileView: View {
                         icon: profile.isLocal ? "pencil.circle" : "person.crop.circle",
                         isSelected: profile.accountID.oid == viewModel.accountId
                     )
-                    .padding(Layout.rowInsets)
-                    .background(DashboardCardBackground())
                 }
                 .accessibilityAddTraits(profile.accountID.oid == viewModel.accountId ? .isSelected : [])
                 .swipeActions {
@@ -149,16 +147,12 @@ struct ProfileView: View {
                 isShowingAddProfile = true
             } label: {
                 ProfileRow(title: Strings.Profile.addProfile, icon: "plus.circle")
-                    .padding(Layout.rowInsets)
-                    .background(DashboardCardBackground())
             }
             if !viewModel.savedProfiles.contains(where: \.isLocal) {
                 Button {
                     Task { await viewModel.createLocalProfile() }
                 } label: {
                     ProfileRow(title: Strings.Profile.manualProfile, icon: "pencil.circle")
-                        .padding(Layout.rowInsets)
-                        .background(DashboardCardBackground())
                 }
             }
         } header: {
@@ -177,42 +171,35 @@ struct ProfileView: View {
                 NavigationLink {
                     IntrinsicsView(groups: viewModel.intrinsicGroups)
                 } label: {
-                    ProfileRow(title: Strings.Profile.intrinsicsRow, icon: "sparkles", value: viewModel.intrinsicsSummaryText)
-                        .padding(Layout.rowInsets)
-                        .background(DashboardCardBackground())
+                    ProfileRow(title: Strings.Profile.intrinsicsRow, icon: "sparkles", value: viewModel.intrinsicsSummaryText, showsDisclosure: true)
                 }
             }
             if !viewModel.itemStats.isEmpty {
                 NavigationLink {
                     ProfileItemsListView(viewModel: .init(items: viewModel.itemStats))
                 } label: {
-                    ProfileRow(title: Strings.Profile.itemsRow, icon: "square.stack.3d.up", value: viewModel.itemStats.count.formatted())
-                        .padding(Layout.rowInsets)
-                        .background(DashboardCardBackground())
+                    ProfileRow(title: Strings.Profile.itemsRow, icon: "square.stack.3d.up", value: viewModel.itemStats.count.formatted(), showsDisclosure: true)
                 }
             }
             if !viewModel.missionStats.isEmpty {
                 NavigationLink {
                     ProfileMissionsListView(viewModel: .init(missions: viewModel.missionStats))
                 } label: {
-                    ProfileRow(title: Strings.Profile.missionsRow, icon: "map", value: viewModel.missionStats.count.formatted())
-                        .padding(Layout.rowInsets)
-                        .background(DashboardCardBackground())
+                    ProfileRow(title: Strings.Profile.missionsRow, icon: "map", value: viewModel.missionStats.count.formatted(), showsDisclosure: true)
                 }
             }
             if !viewModel.accountStatRows.isEmpty {
                 NavigationLink {
                     ProfileAccountStatsView(rows: viewModel.accountStatRows)
                 } label: {
-                    ProfileRow(title: Strings.Profile.statsRow, icon: "chart.bar.xaxis")
-                        .padding(Layout.rowInsets)
-                        .background(DashboardCardBackground())
+                    ProfileRow(title: Strings.Profile.statsRow, icon: "chart.bar.xaxis", showsDisclosure: true)
                 }
             }
         } header: {
             DashboardSectionHeader(title: Strings.Profile.statsHeader, icon: "chart.bar")
                 .padding(.vertical, Layout.sectionHeaderPadding)
         }
+        .navigationLinkIndicatorVisibility(.hidden)
         .listRowInsets(Layout.identityCardInsets)
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
@@ -224,6 +211,7 @@ private struct ProfileRow: View {
     let icon: String
     var value: String?
     var isSelected = false
+    var showsDisclosure = false
 
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -241,7 +229,7 @@ private struct ProfileRow: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 if let value {
                     Text(value)
-                        .font(.subheadline)
+                        .font(.body)
                         .foregroundStyle(Color.labelSecondary)
                         .monospacedDigit()
                 }
@@ -250,11 +238,21 @@ private struct ProfileRow: View {
             if isSelected {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundStyle(DashboardPalette.accent(in: colorScheme))
+                    .frame(width: Layout.accessoryWidth)
+                    .accessibilityHidden(true)
+            } else if showsDisclosure {
+                Image(systemName: "chevron.right")
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(Color.labelSecondary)
+                    .frame(width: Layout.accessoryWidth)
                     .accessibilityHidden(true)
             }
         }
+        .font(.body)
         .frame(maxWidth: .infinity, minHeight: ListLayout.minimumRowHeight, alignment: .leading)
-        .contentShape(.rect)
+        .padding(Layout.rowInsets)
+        .background(DashboardCardBackground())
+        .contentShape(.rect(cornerRadius: DashboardLayout.cardCornerRadius))
         .accessibilityElement(children: .combine)
     }
 }
@@ -263,4 +261,5 @@ private struct Layout {
     static let identityCardInsets = EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0)
     static let rowInsets = EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
     static let sectionHeaderPadding: CGFloat = 8
+    static let accessoryWidth: CGFloat = 20
 }

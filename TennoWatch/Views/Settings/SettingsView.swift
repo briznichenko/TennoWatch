@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     // MARK: - Object Properties
+    @AppStorage(LiquidGlassPreference.storageKey) private var isLiquidGlassEnabled = true
     @AppStorage("themePreference") private var themePreference: ThemePreference = .system
     @AppStorage(AppLanguage.storageKey) private var languagePreference: AppLanguage = .system
     @AppStorage(DefaultVoidTraderNotificationScheduler.preferenceKey) private var isVoidTraderNotificationsEnabled = false
@@ -36,8 +37,11 @@ struct SettingsView: View {
                             Text(preference.label).tag(preference)
                         }
                     }
+                    Toggle(Strings.Settings.liquidGlassLabel, isOn: $isLiquidGlassEnabled)
                 } header: {
                     DashboardSectionHeader(title: Strings.Settings.appearanceHeader, icon: "circle.lefthalf.filled")
+                } footer: {
+                    Text(Strings.Settings.liquidGlassDescription)
                 }
 
                 Section {

@@ -1362,6 +1362,28 @@
         }
       }
     },
+    "settings_liquid_glass_label_key": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liquid Glass"
+          }
+        }
+      }
+    },
+    "settings_liquid_glass_description_key": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use glass effects for cards and buttons. System bars and sheets follow your device settings."
+          }
+        }
+      }
+    },
     "settings_appearance_header_key" : {
       "comment" : "Section header above the theme picker.",
       "extractionState" : "manual",

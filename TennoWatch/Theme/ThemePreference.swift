@@ -29,3 +29,7 @@ enum ThemePreference: String, CaseIterable, Identifiable, Hashable {
         }
     }
 }
+
+enum LiquidGlassPreference {
+    static let storageKey = "isLiquidGlassEnabled"
+}

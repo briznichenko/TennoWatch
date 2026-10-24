@@ -56,12 +56,12 @@ struct PlayerIdHelpAlertView: View {
 
                 HStack(spacing: Layout.buttonSpacing) {
                     Button(Strings.Profile.idHelpCancelButton, role: .cancel, action: onCancel)
-                        .buttonStyle(.glass)
+                        .buttonStyle(AppGlassButtonStyle())
                         .frame(maxWidth: .infinity)
                     Button(Strings.Profile.idHelpOkButton) {
                         onConfirm(dontShowAgain)
                     }
-                    .buttonStyle(.glassProminent)
+                    .buttonStyle(AppGlassButtonStyle(isProminent: true))
                     .frame(maxWidth: .infinity)
                 }
             }

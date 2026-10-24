@@ -30,7 +30,7 @@ struct ProfileIdentityCard: View {
             layout {
                 VStack(alignment: .leading, spacing: Layout.identitySpacing) {
                     Text(displayName)
-                        .font(.title.weight(.semibold))
+                        .font(.title2.weight(.semibold))
                         .foregroundStyle(Color.labelPrimary)
                     if !isLocal && !accountID.isEmpty {
                         Text(accountID)
@@ -46,7 +46,7 @@ struct ProfileIdentityCard: View {
                         Image(systemName: "trophy.fill")
                         Text(Strings.Mastery.rankBadge(rank))
                     }
-                        .font(.headline)
+                        .font(.subheadline.weight(.medium))
                         .foregroundStyle(DashboardPalette.heroAccent)
                         .padding(.horizontal, Layout.badgeHorizontalPadding)
                         .padding(.vertical, Layout.badgeVerticalPadding)
@@ -61,8 +61,8 @@ struct ProfileIdentityCard: View {
                     .fill(Color.divider)
                     .frame(height: DashboardLayout.dividerThickness)
                 layout {
-                    DashboardMetric(value: missionsCompleted.formatted(), title: Strings.Profile.missionsCompletedLabel)
-                    DashboardMetric(value: totalKills.formatted(), title: Strings.Profile.totalKillsLabel)
+                    DashboardMetric(value: missionsCompleted.formatted(), title: Strings.Profile.missionsCompletedLabel, valueFont: .title2.weight(.semibold))
+                    DashboardMetric(value: totalKills.formatted(), title: Strings.Profile.totalKillsLabel, valueFont: .title2.weight(.semibold))
                 }
                 Button(action: onSync) {
                     Group {
@@ -72,13 +72,13 @@ struct ProfileIdentityCard: View {
                             Label(Strings.Profile.syncButton, systemImage: "arrow.triangle.2.circlepath")
                         }
                     }
-                    .font(.headline)
+                    .font(.subheadline.weight(.medium))
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: dynamicTypeSize.isAccessibilitySize ? .infinity : nil)
-                    .frame(minHeight: ListLayout.minimumRowHeight)
                 }
-                .buttonStyle(.glassProminent)
+                .buttonStyle(AppGlassButtonStyle())
+                .controlSize(.small)
                 .tint(DashboardPalette.heroAccent)
                 .disabled(isSyncing)
             }

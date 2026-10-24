@@ -163,6 +163,8 @@ struct Strings {
     struct Settings {
         private init() {}
         static var themeLabel: String { Strings.string("settings_theme_label_key", "Theme") }
+        static var liquidGlassLabel: String { Strings.string("settings_liquid_glass_label_key", "Liquid Glass") }
+        static var liquidGlassDescription: String { Strings.string("settings_liquid_glass_description_key", "Use glass effects for cards and buttons. System bars and sheets follow your device settings.") }
         static var appearanceHeader: String { Strings.string("settings_appearance_header_key", "Appearance") }
         static var languageHeader: String { Strings.string("settings_language_header_key", "Language") }
         static var languageLabel: String { Strings.string("settings_language_label_key", "Language") }

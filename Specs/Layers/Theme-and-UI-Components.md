@@ -98,3 +98,28 @@ names, never a raw `Color(.systemGray)`/hex literal in a tab-level View.
 None — SwiftUI view code isn't unit-tested in this app (expected; no
 snapshot-test target exists yet). Verification is manual, via Xcode previews
 and the simulator.
+
+## Liquid Glass preference
+
+Settings → Appearance exposes a Liquid Glass toggle, enabled by default.
+`LiquidGlassPreference.storageKey` identifies the persisted `@AppStorage` value
+read by Settings, `AppGlassBackground`, and `AppGlassButtonStyle`. Existing views
+update directly when the preference changes, including the separate macOS
+Settings window, without resetting navigation or view identity.
+
+When disabled, shared card backgrounds use their opaque fallback color and
+custom glass buttons use opaque capsule fills, explicit semantic text colors,
+and visible outlines. Selected controls use the adaptive hero accent with
+contrasting text; other controls use primary text on the surface color. Reduce
+Transparency independently forces opaque card backgrounds. System bars and
+sheets keep their platform appearance; the Settings footer explains this scope.
+The new setting strings include English catalog entries; Ukrainian translation
+is pending.
+
+Profile saved-account and stats rows share `ProfileRow` for card padding,
+background, typography, and accessory width. Stats links hide the native List
+indicator and place their disclosure chevron inside the shared card. Profile
+uses title2 for its display name and metrics, body for rows and values,
+subheadline for the rank badge and compact Sync action, and caption for metadata.
+Filter pills use small native controls without extra label padding or a minimum
+height inside the material. Their surrounding layout retains 44pt vertical space.

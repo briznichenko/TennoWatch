@@ -32,31 +32,17 @@ struct FilterPills<Option: Hashable>: View {
         } label: {
             Text(title(option))
                 .font(.footnote.weight(isSelected ? .semibold : .regular))
-                .padding(.horizontal, Layout.horizontalPadding)
-                .frame(minHeight: ListLayout.minimumRowHeight)
                 .contentShape(.capsule)
         }
-        .buttonStyle(FilterPillStyle(isSelected: isSelected))
+        .buttonStyle(AppGlassButtonStyle(isProminent: isSelected))
+        .controlSize(.small)
+        .frame(minHeight: ListLayout.minimumRowHeight)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
-    }
-}
-
-private struct FilterPillStyle: PrimitiveButtonStyle {
-    let isSelected: Bool
-
-    @ViewBuilder
-    func makeBody(configuration: Configuration) -> some View {
-        if isSelected {
-            GlassProminentButtonStyle().makeBody(configuration: configuration)
-        } else {
-            GlassButtonStyle().makeBody(configuration: configuration)
-        }
     }
 }
 
 private struct Layout {
     static let pillSpacing: CGFloat = 6
-    static let horizontalPadding: CGFloat = 11
 }
 
 #Preview {

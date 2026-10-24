@@ -95,11 +95,12 @@ struct DashboardIcon: View {
 struct DashboardMetric: View {
     let value: String
     let title: String
+    var valueFont: Font = .system(.title, design: .rounded, weight: .semibold)
 
     var body: some View {
         VStack(alignment: .leading, spacing: MetricStyle.labelSpacing) {
             Text(value)
-                .font(.system(.title, design: .rounded, weight: .semibold))
+                .font(valueFont)
                 .foregroundStyle(Color.labelPrimary)
                 .monospacedDigit()
             Text(title)
