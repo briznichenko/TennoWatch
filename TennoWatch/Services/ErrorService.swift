@@ -30,7 +30,7 @@ final class DefaultErrorManager: ErrorManager {
 
     // MARK: - Functions
     func append(_ error: Error) {
-        guard !(error is CancellationError), (error as? URLError)?.code != .cancelled else { return }
+        guard !AppErrors.isCancellation(error) else { return }
         #if DEBUG
         print(error)
         #endif

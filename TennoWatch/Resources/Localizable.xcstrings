@@ -235,6 +235,314 @@
         }
       }
     },
+    "error_bad_request_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The service could not process this request. Please try again later."
+          }
+        }
+      }
+    },
+    "error_unauthorized_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The service could not authorize this request. Please try again later."
+          }
+        }
+      }
+    },
+    "error_forbidden_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The service is not allowing access to this data. Please try again later."
+          }
+        }
+      }
+    },
+    "error_not_found_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The requested data could not be found. Please refresh and try again."
+          }
+        }
+      }
+    },
+    "error_conflict_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The data has changed. Please refresh and try again."
+          }
+        }
+      }
+    },
+    "error_request_timeout_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The request took too long. Please try again."
+          }
+        }
+      }
+    },
+    "error_rate_limited_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Too many requests. Please wait a moment and try again."
+          }
+        }
+      }
+    },
+    "error_service_unavailable_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The service is temporarily unavailable. Please try again later."
+          }
+        }
+      }
+    },
+    "error_http_failure_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The service could not complete this request. Please try again later."
+          }
+        }
+      }
+    },
+    "error_offline_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You appear to be offline. Check your internet connection and try again."
+          }
+        }
+      }
+    },
+    "error_connection_lost_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The connection was interrupted. Check your internet connection and try again."
+          }
+        }
+      }
+    },
+    "error_unreachable_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not connect to the service. Check your internet connection and try again later."
+          }
+        }
+      }
+    },
+    "error_secure_connection_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A secure connection could not be established. Please try again later."
+          }
+        }
+      }
+    },
+    "error_database_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not read or save your local data. Please restart TennoWatch and try again."
+          }
+        }
+      }
+    },
+    "error_invalid_url_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This link could not be opened. Please check it and try again."
+          }
+        }
+      }
+    },
+    "error_invalid_response_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The service returned an unexpected response. Please try again later."
+          }
+        }
+      }
+    },
+    "error_decoding_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The received data could not be read. Please try again later."
+          }
+        }
+      }
+    },
+    "error_profile_not_found_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This saved profile could not be found. Please select another profile or add it again."
+          }
+        }
+      }
+    },
+    "error_player_not_found_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No profile was found for this player ID. Check the ID and try again."
+          }
+        }
+      }
+    },
+    "error_catalog_file_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The bundled catalog could not be found. Please update or reinstall TennoWatch."
+          }
+        }
+      }
+    },
+    "error_catalog_unavailable_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The catalog is not available yet. Please refresh the catalog in Settings and try again."
+          }
+        }
+      }
+    },
+    "error_catalog_category_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This catalog category is unavailable. Please refresh the catalog in Settings and try again."
+          }
+        }
+      }
+    },
+    "error_notification_permission_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications are disabled for TennoWatch. Allow notifications in system Settings to enable reminders."
+          }
+        }
+      }
+    },
+    "error_notification_authorization_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not request notification permission. Please try again or check notification settings for TennoWatch."
+          }
+        }
+      }
+    },
+    "error_notification_scheduling_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not schedule the reminder. Please check notification settings for TennoWatch and try again."
+          }
+        }
+      }
+    },
+    "error_cache_configuration_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not clear the cache because the app configuration is incomplete. Please restart or update TennoWatch."
+          }
+        }
+      }
+    },
+    "error_database_startup_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TennoWatch could not open your local data. Please restart the app and try again."
+          }
+        }
+      }
+    },
+    "error_startup_title_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not open TennoWatch"
+          }
+        }
+      }
+    },
     "error_alert_ok_button_key" : {
       "comment" : "Dismiss button on the generic error alert.",
       "extractionState" : "manual",

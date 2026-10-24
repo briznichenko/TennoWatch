@@ -73,10 +73,9 @@ final class WikiBrowserViewModel: NSObject, WKNavigationDelegate {
     }
 
     private func handleFailure(_ error: any Error) {
-        let nsError = error as NSError
-        guard nsError.domain != NSURLErrorDomain || nsError.code != NSURLErrorCancelled else { return }
+        guard !AppErrors.isCancellation(error) else { return }
         isLoading = false
-        errorMessage = error.localizedDescription
+        errorMessage = AppErrors.message(for: error)
         updateNavigationState()
     }
 

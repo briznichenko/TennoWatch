@@ -7,11 +7,6 @@
 
 import Foundation
 
-enum APIError: Error {
-    case invalidResponse
-    case httpStatus(Int)
-}
-
 protocol ServiceProtocol {
     func fetch<T: Decodable>(_ endpoint: Endpoint) async throws -> T
     func clearCache()

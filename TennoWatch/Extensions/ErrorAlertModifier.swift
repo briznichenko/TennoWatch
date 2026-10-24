@@ -29,7 +29,7 @@ struct ErrorAlertModifier: ViewModifier {
                 Button(Strings.ErrorAlert.okButton) { }
             } message: {
                 if let error = errorManager.currentError {
-                    Text(error.localizedDescription)
+                    Text(AppErrors.message(for: error))
                 }
             }
     }

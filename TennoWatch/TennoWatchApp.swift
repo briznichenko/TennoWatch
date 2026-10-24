@@ -16,13 +16,11 @@ struct TennoWatchApp: App {
 
     @State private var cacheResetID = UUID()
 
-    private let modelContainer: ModelContainer
-    private let dependencies: AppDependencies
+    private let startupState: AppStartupState
 
     // MARK: - Init
     init() {
-        modelContainer = Self.makeModelContainer()
-        dependencies = AppDependencies(modelContainer: modelContainer)
+        startupState = AppStartupState()
         AppearanceProxies.configure()
     }
 
@@ -30,39 +28,52 @@ struct TennoWatchApp: App {
     var body: some Scene {
         AppScenes {
             appContent
+                .tint(.accent)
+                .foregroundStyle(Color.labelPrimary)
+                .preferredColorScheme(themePreference.colorScheme)
+                .environment(\.locale, languagePreference.locale ?? .current)
+                .id(languagePreference)
         } settings: {
+            settingsContent
+                .tint(.accent)
+                .foregroundStyle(Color.labelPrimary)
+                .preferredColorScheme(themePreference.colorScheme)
+                .environment(\.locale, languagePreference.locale ?? .current)
+                .id(languagePreference)
+        }
+    }
+
+    @ViewBuilder
+    private var appContent: some View {
+        switch startupState {
+        case .ready(let container, let dependencies):
+            RootView(dependencies: dependencies)
+                .id(cacheResetID)
+                .modelContainer(container)
+        case .failed:
+            startupErrorView
+        }
+    }
+
+    @ViewBuilder
+    private var settingsContent: some View {
+        switch startupState {
+        case .ready(let container, let dependencies):
             SettingsSceneContent(dependencies: dependencies) {
                 cacheResetID = UUID()
             }
             .id(cacheResetID)
-            .tint(.accent)
-            .foregroundStyle(Color.labelPrimary)
-            .preferredColorScheme(themePreference.colorScheme)
-            .environment(\.locale, languagePreference.locale ?? .current)
-            .id(languagePreference)
+            .modelContainer(container)
+        case .failed:
+            startupErrorView
         }
-        .modelContainer(modelContainer)
     }
 
-    private var appContent: some View {
-        RootView(dependencies: dependencies)
-            .id(cacheResetID)
-            .tint(.accent)
-            .foregroundStyle(Color.labelPrimary)
-            .preferredColorScheme(themePreference.colorScheme)
-            .environment(\.locale, languagePreference.locale ?? .current)
-            .id(languagePreference)
-    }
-
-    // MARK: - Helper Functions
-    private static func makeModelContainer() -> ModelContainer {
-        do {
-            return try ModelContainer(
-                for: ProfileDataModel.self,
-                MasteryCatalogDataModel.self
-            )
-        } catch {
-            fatalError("Failed to create ModelContainer: \(error)")
-        }
+    private var startupErrorView: some View {
+        ContentUnavailableView(
+            Strings.Errors.startupTitle,
+            systemImage: "externaldrive.badge.exclamationmark",
+            description: Text(Strings.Errors.databaseStartup)
+        )
     }
 }

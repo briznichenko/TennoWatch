@@ -74,7 +74,7 @@ final class SettingsViewModel {
 
         do {
             let isGranted = try await notificationService.requestAuthorization()
-            guard isGranted else { return }
+            guard isGranted else { throw NotificationError.notAllowed }
             let voidTrader = try await worldStateRepository.getWorldState().voidTrader
             try await voidTraderNotificationScheduler.syncArrivalNotification(for: voidTrader)
         } catch {
@@ -102,8 +102,4 @@ final class SettingsViewModel {
             return false
         }
     }
-}
-
-private enum ClearCacheError: Error {
-    case missingBundleIdentifier
 }

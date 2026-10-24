@@ -28,10 +28,6 @@ protocol CatalogRepository {
 }
 
 final class PersistentCatalogRepository: CatalogRepository {
-    enum CatalogError: Error {
-        case wrongFilename, noCatalogAvailable, wrongCategory
-    }
-
     let syncPolicy: SyncPolicy
     private let persistencyService: PersistencyService
     private let catalogSyncService: CatalogSyncService

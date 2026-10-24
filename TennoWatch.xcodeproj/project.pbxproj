@@ -12,6 +12,7 @@
 		8BC0E8D4C35247CC9A7DC98A /* CacheClearingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B1D0BBA0DC4C54904848D1 /* CacheClearingTests.swift */; };
 		A1640026CAFE000000000002 /* MasteryItemPersistenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1640026CAFE000000000001 /* MasteryItemPersistenceTests.swift */; };
 		A1640026CAFE000000000004 /* ProfileIsolationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1640026CAFE000000000003 /* ProfileIsolationTests.swift */; };
+		A1640026CAFE000000000006 /* AppErrorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1640026CAFE000000000005 /* AppErrorsTests.swift */; };
 		A355E4D4AFFDB970D7307A52 /* CatalogSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8B2E2702DEA0BAB9EDCABA /* CatalogSyncServiceTests.swift */; };
 		CF7672013DA9CDD3100EAA15 /* APIManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72B3A29E3C671BD71B667B76 /* APIManagerTests.swift */; };
 		E90F8ECD65AF273EC6241195 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D706BD5EF860A92F6CDEB58 /* Fixtures.swift */; };
@@ -39,6 +40,7 @@
 		9D706BD5EF860A92F6CDEB58 /* Fixtures.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
 		A1640026CAFE000000000001 /* MasteryItemPersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasteryItemPersistenceTests.swift; sourceTree = "<group>"; };
 		A1640026CAFE000000000003 /* ProfileIsolationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileIsolationTests.swift; sourceTree = "<group>"; };
+		A1640026CAFE000000000005 /* AppErrorsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppErrorsTests.swift; sourceTree = "<group>"; };
 		B9D574040649ACABC712C602 /* TennoWatchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TennoWatchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB16E810A8E0361B8D9EBC7B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		CF8B2E2702DEA0BAB9EDCABA /* CatalogSyncServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CatalogSyncServiceTests.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 			children = (
 				CF8B2E2702DEA0BAB9EDCABA /* CatalogSyncServiceTests.swift */,
 				40FA22E075B158294C23EA41 /* OpeningsMatchingServiceTests.swift */,
+				A1640026CAFE000000000005 /* AppErrorsTests.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -317,6 +320,7 @@
 				A1640026CAFE000000000004 /* ProfileIsolationTests.swift in Sources */,
 				A1640026CAFE000000000002 /* MasteryItemPersistenceTests.swift in Sources */,
 				CF7672013DA9CDD3100EAA15 /* APIManagerTests.swift in Sources */,
+				A1640026CAFE000000000006 /* AppErrorsTests.swift in Sources */,
 				862DD48AFD6E61BB50EBD8BA /* ProfileRepositoryTests.swift in Sources */,
 				A355E4D4AFFDB970D7307A52 /* CatalogSyncServiceTests.swift in Sources */,
 				7BDE3824B27519709EEA16DE /* OpeningsMatchingServiceTests.swift in Sources */,

@@ -25,6 +25,38 @@ struct Strings {
         currentBundle.localizedString(forKey: key, value: defaultValue, table: "Localizable")
     }
 
+    struct Errors {
+        private init() {}
+        static var invalidURL: String { Strings.string("error_invalid_url_key", "This link could not be opened. Please check it and try again.") }
+        static var invalidResponse: String { Strings.string("error_invalid_response_key", "The service returned an unexpected response. Please try again later.") }
+        static var decoding: String { Strings.string("error_decoding_key", "The received data could not be read. Please try again later.") }
+        static var profileNotFound: String { Strings.string("error_profile_not_found_key", "This saved profile could not be found. Please select another profile or add it again.") }
+        static var playerNotFound: String { Strings.string("error_player_not_found_key", "No profile was found for this player ID. Check the ID and try again.") }
+        static var catalogFile: String { Strings.string("error_catalog_file_key", "The bundled catalog could not be found. Please update or reinstall TennoWatch.") }
+        static var catalogUnavailable: String { Strings.string("error_catalog_unavailable_key", "The catalog is not available yet. Please refresh the catalog in Settings and try again.") }
+        static var catalogCategory: String { Strings.string("error_catalog_category_key", "This catalog category is unavailable. Please refresh the catalog in Settings and try again.") }
+        static var notificationPermission: String { Strings.string("error_notification_permission_key", "Notifications are disabled for TennoWatch. Allow notifications in system Settings to enable reminders.") }
+        static var notificationAuthorization: String { Strings.string("error_notification_authorization_key", "Could not request notification permission. Please try again or check notification settings for TennoWatch.") }
+        static var notificationScheduling: String { Strings.string("error_notification_scheduling_key", "Could not schedule the reminder. Please check notification settings for TennoWatch and try again.") }
+        static var cacheConfiguration: String { Strings.string("error_cache_configuration_key", "Could not clear the cache because the app configuration is incomplete. Please restart or update TennoWatch.") }
+        static var databaseStartup: String { Strings.string("error_database_startup_key", "TennoWatch could not open your local data. Please restart the app and try again.") }
+        static var startupTitle: String { Strings.string("error_startup_title_key", "Could not open TennoWatch") }
+        static var badRequest: String { Strings.string("error_bad_request_key", "The service could not process this request. Please try again later.") }
+        static var unauthorized: String { Strings.string("error_unauthorized_key", "The service could not authorize this request. Please try again later.") }
+        static var forbidden: String { Strings.string("error_forbidden_key", "The service is not allowing access to this data. Please try again later.") }
+        static var notFound: String { Strings.string("error_not_found_key", "The requested data could not be found. Please refresh and try again.") }
+        static var conflict: String { Strings.string("error_conflict_key", "The data has changed. Please refresh and try again.") }
+        static var requestTimeout: String { Strings.string("error_request_timeout_key", "The request took too long. Please try again.") }
+        static var rateLimited: String { Strings.string("error_rate_limited_key", "Too many requests. Please wait a moment and try again.") }
+        static var serviceUnavailable: String { Strings.string("error_service_unavailable_key", "The service is temporarily unavailable. Please try again later.") }
+        static var httpFailure: String { Strings.string("error_http_failure_key", "The service could not complete this request. Please try again later.") }
+        static var offline: String { Strings.string("error_offline_key", "You appear to be offline. Check your internet connection and try again.") }
+        static var connectionLost: String { Strings.string("error_connection_lost_key", "The connection was interrupted. Check your internet connection and try again.") }
+        static var unreachable: String { Strings.string("error_unreachable_key", "Could not connect to the service. Check your internet connection and try again later.") }
+        static var secureConnection: String { Strings.string("error_secure_connection_key", "A secure connection could not be established. Please try again later.") }
+        static var database: String { Strings.string("error_database_key", "Could not read or save your local data. Please restart TennoWatch and try again.") }
+    }
+
     struct Main {
         private init() {}
         static var refresh: String { Strings.string("main_refresh_key", "Refresh") }

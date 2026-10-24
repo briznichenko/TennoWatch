@@ -25,10 +25,6 @@ extension ProfileRepository {
 }
 
 final class PersistentProfileRepository: ProfileRepository {
-    enum ProfileError: Error {
-        case noData, noPlayerId
-    }
-
     var currentAccountID: String? { accountIDStore.currentAccountID }
     let syncPolicy: SyncPolicy = .daily
     private let profileService: ServiceProtocol
