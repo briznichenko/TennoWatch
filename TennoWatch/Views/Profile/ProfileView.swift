@@ -124,6 +124,8 @@ struct ProfileView: View {
                         icon: profile.isLocal ? "pencil.circle" : "person.crop.circle",
                         isSelected: profile.accountID.oid == viewModel.accountId
                     )
+                    .padding(Layout.rowInsets)
+                    .background(DashboardCardBackground())
                 }
                 .accessibilityAddTraits(profile.accountID.oid == viewModel.accountId ? .isSelected : [])
                 .swipeActions {
@@ -147,21 +149,25 @@ struct ProfileView: View {
                 isShowingAddProfile = true
             } label: {
                 ProfileRow(title: Strings.Profile.addProfile, icon: "plus.circle")
+                    .padding(Layout.rowInsets)
+                    .background(DashboardCardBackground())
             }
             if !viewModel.savedProfiles.contains(where: \.isLocal) {
                 Button {
                     Task { await viewModel.createLocalProfile() }
                 } label: {
                     ProfileRow(title: Strings.Profile.manualProfile, icon: "pencil.circle")
+                        .padding(Layout.rowInsets)
+                        .background(DashboardCardBackground())
                 }
             }
         } header: {
             DashboardSectionHeader(title: Strings.Profile.savedProfilesHeader, icon: "person.2")
                 .padding(.vertical, Layout.sectionHeaderPadding)
         }
-        .listRowInsets(Layout.rowInsets)
-        .listRowBackground(Color.surface)
-        .listRowSeparatorTint(Color.divider)
+        .listRowInsets(Layout.identityCardInsets)
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
         .disabled(viewModel.isLoading)
     }
 
@@ -172,6 +178,8 @@ struct ProfileView: View {
                     IntrinsicsView(groups: viewModel.intrinsicGroups)
                 } label: {
                     ProfileRow(title: Strings.Profile.intrinsicsRow, icon: "sparkles", value: viewModel.intrinsicsSummaryText)
+                        .padding(Layout.rowInsets)
+                        .background(DashboardCardBackground())
                 }
             }
             if !viewModel.itemStats.isEmpty {
@@ -179,6 +187,8 @@ struct ProfileView: View {
                     ProfileItemsListView(viewModel: .init(items: viewModel.itemStats))
                 } label: {
                     ProfileRow(title: Strings.Profile.itemsRow, icon: "square.stack.3d.up", value: viewModel.itemStats.count.formatted())
+                        .padding(Layout.rowInsets)
+                        .background(DashboardCardBackground())
                 }
             }
             if !viewModel.missionStats.isEmpty {
@@ -186,6 +196,8 @@ struct ProfileView: View {
                     ProfileMissionsListView(viewModel: .init(missions: viewModel.missionStats))
                 } label: {
                     ProfileRow(title: Strings.Profile.missionsRow, icon: "map", value: viewModel.missionStats.count.formatted())
+                        .padding(Layout.rowInsets)
+                        .background(DashboardCardBackground())
                 }
             }
             if !viewModel.accountStatRows.isEmpty {
@@ -193,15 +205,17 @@ struct ProfileView: View {
                     ProfileAccountStatsView(rows: viewModel.accountStatRows)
                 } label: {
                     ProfileRow(title: Strings.Profile.statsRow, icon: "chart.bar.xaxis")
+                        .padding(Layout.rowInsets)
+                        .background(DashboardCardBackground())
                 }
             }
         } header: {
             DashboardSectionHeader(title: Strings.Profile.statsHeader, icon: "chart.bar")
                 .padding(.vertical, Layout.sectionHeaderPadding)
         }
-        .listRowInsets(Layout.rowInsets)
-        .listRowBackground(Color.surface)
-        .listRowSeparatorTint(Color.divider)
+        .listRowInsets(Layout.identityCardInsets)
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
     }
 }
 

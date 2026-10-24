@@ -28,13 +28,7 @@ extension View {
 
     @ViewBuilder
     func appTabStyle() -> some View {
-        #if os(macOS)
         tabViewStyle(.sidebarAdaptable)
-        #else
-        tabViewStyle(.sidebarAdaptable)
-            .toolbarBackground(Color.surface, for: .navigationBar, .tabBar)
-            .toolbarBackground(.visible, for: .navigationBar, .tabBar)
-        #endif
     }
 
     @ViewBuilder
