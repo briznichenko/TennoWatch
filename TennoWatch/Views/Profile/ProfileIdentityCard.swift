@@ -73,13 +73,16 @@ struct ProfileIdentityCard: View {
                         }
                     }
                     .font(.headline)
+                    .foregroundStyle(Color.dashboardHero)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: dynamicTypeSize.isAccessibilitySize ? .infinity : nil)
+                    .padding(.horizontal, DashboardLayout.contentPadding)
+                    .padding(.vertical, Layout.buttonVerticalPadding)
                     .frame(minHeight: ListLayout.minimumRowHeight)
+                    .background(DashboardPalette.heroAccent, in: .rect(cornerRadius: Layout.buttonCornerRadius))
                 }
-                .buttonStyle(.glassProminent)
-                .tint(DashboardPalette.heroAccent)
+                .buttonStyle(.plain)
                 .disabled(isSyncing)
             }
         }
@@ -93,4 +96,6 @@ private struct Layout {
     static let badgeHorizontalPadding: CGFloat = 12
     static let badgeVerticalPadding: CGFloat = 8
     static let badgeOpacity = 0.12
+    static let buttonVerticalPadding: CGFloat = 8
+    static let buttonCornerRadius: CGFloat = 12
 }

@@ -56,17 +56,17 @@ struct PlayerIdHelpAlertView: View {
 
                 HStack(spacing: Layout.buttonSpacing) {
                     Button(Strings.Profile.idHelpCancelButton, role: .cancel, action: onCancel)
-                        .buttonStyle(.glass)
+                        .buttonStyle(.bordered)
                         .frame(maxWidth: .infinity)
                     Button(Strings.Profile.idHelpOkButton) {
                         onConfirm(dontShowAgain)
                     }
-                    .buttonStyle(.glassProminent)
+                    .buttonStyle(.borderedProminent)
                     .frame(maxWidth: .infinity)
                 }
             }
             .padding(Layout.contentPadding)
-            .appGlassSurface(cornerRadius: Layout.cornerRadius)
+            .background(.surface, in: .rect(cornerRadius: Layout.cornerRadius))
             .frame(maxWidth: Layout.maximumWidth)
             .padding(.horizontal, Layout.horizontalMargin)
         }

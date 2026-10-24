@@ -18,17 +18,18 @@ enum DashboardPalette {
 
 struct DashboardHeroBackground: View {
     var body: some View {
-        AppGlassBackground(
-            cornerRadius: HeroStyle.cornerRadius,
-            tint: Color.dashboardHero.opacity(HeroStyle.tintOpacity),
-            fallbackColor: .dashboardHero
-        )
+        RoundedRectangle(cornerRadius: HeroStyle.cornerRadius)
+            .fill(Color.dashboardHero.gradient)
             .overlay(alignment: .topTrailing) {
                 LotusMark()
                     .stroke(DashboardPalette.heroAccent.opacity(HeroStyle.watermarkOpacity), lineWidth: HeroStyle.borderWidth)
                     .frame(width: HeroStyle.watermarkWidth, height: HeroStyle.watermarkHeight)
                     .rotationEffect(.degrees(HeroStyle.watermarkAngle))
                     .offset(x: HeroStyle.watermarkOffsetX, y: HeroStyle.watermarkOffsetY)
+            }
+            .overlay {
+                RoundedRectangle(cornerRadius: HeroStyle.cornerRadius)
+                    .strokeBorder(DashboardPalette.heroAccent.opacity(HeroStyle.borderOpacity), lineWidth: HeroStyle.borderWidth)
             }
             .clipShape(.rect(cornerRadius: HeroStyle.cornerRadius))
     }
@@ -41,7 +42,20 @@ struct DashboardCardBackground: View {
 
     var body: some View {
         let accent = DashboardPalette.accent(in: colorScheme)
-        AppGlassBackground(cornerRadius: cornerRadius, tint: accent.opacity(CardStyle.tintOpacity))
+        RoundedRectangle(cornerRadius: cornerRadius)
+            .fill(Color.surface)
+            .overlay {
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .fill(LinearGradient(
+                        colors: [accent.opacity(CardStyle.gradientOpacity), .clear],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ))
+            }
+            .overlay {
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .strokeBorder(accent.opacity(CardStyle.borderOpacity), lineWidth: CardStyle.borderWidth)
+            }
     }
 }
 
@@ -141,12 +155,14 @@ private struct HeroStyle {
     static let watermarkAngle: Double = -18
     static let watermarkOffsetX: CGFloat = 40
     static let watermarkOffsetY: CGFloat = -20
-    static let tintOpacity = 0.65
+    static let borderOpacity = 0.24
     static let contentSpacing: CGFloat = 14
 }
 
 private struct CardStyle {
-    static let tintOpacity = 0.04
+    static let gradientOpacity = 0.06
+    static let borderOpacity = 0.12
+    static let borderWidth: CGFloat = 1
 }
 
 private struct IconStyle {

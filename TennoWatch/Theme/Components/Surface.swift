@@ -15,17 +15,11 @@ struct Surface<Content: View>: View {
     var body: some View {
         content
             .padding(Layout.contentPadding)
-            .appGlassSurface(cornerRadius: Layout.cornerRadius)
+            .background(.surface, in: .rect(cornerRadius: Layout.cornerRadius))
     }
 }
 
 extension View {
-    func appGlassSurface(cornerRadius: CGFloat, tint: Color = .clear) -> some View {
-        background {
-            AppGlassBackground(cornerRadius: cornerRadius, tint: tint)
-        }
-    }
-
     func screenBackground() -> some View {
         self.scrollContentBackground(.hidden).background(.bg)
     }
@@ -34,22 +28,4 @@ extension View {
 private struct Layout {
     static let contentPadding: CGFloat = 12
     static let cornerRadius: CGFloat = 10
-}
-
-struct AppGlassBackground: View {
-    var cornerRadius: CGFloat
-    var tint: Color = .clear
-    var fallbackColor: Color = .surface
-
-    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
-
-    var body: some View {
-        if reduceTransparency {
-            RoundedRectangle(cornerRadius: cornerRadius)
-                .fill(fallbackColor)
-        } else {
-            Color.clear
-                .glassEffect(.regular.tint(tint), in: .rect(cornerRadius: cornerRadius))
-        }
-    }
 }

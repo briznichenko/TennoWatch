@@ -26,7 +26,6 @@ struct WikiBrowserView: View {
                         .font(.headline)
                     Spacer()
                     Button(Strings.Common.close, action: onClose)
-                        .buttonStyle(.glass)
                 }
                 HStack {
                     navigationButton(Strings.Common.back, symbol: "chevron.left", action: viewModel.goBack)
@@ -37,7 +36,7 @@ struct WikiBrowserView: View {
                     Spacer()
                 }
                 .labelStyle(.iconOnly)
-                .buttonStyle(.glass)
+                .buttonStyle(.borderless)
                 .frame(minHeight: ListLayout.minimumRowHeight)
             }
             .padding(.horizontal)
@@ -57,7 +56,7 @@ struct WikiBrowserView: View {
                     } else if viewModel.isLoading {
                         ProgressView()
                             .padding()
-                            .appGlassSurface(cornerRadius: ListLayout.minimumRowHeight / 2)
+                            .background(.regularMaterial, in: .capsule)
                     }
                 }
                 .task {

@@ -15,11 +15,9 @@ struct FilterPills<Option: Hashable>: View {
 
     // MARK: - Body
     var body: some View {
-        GlassEffectContainer(spacing: Layout.pillSpacing) {
-            HStack(spacing: Layout.pillSpacing) {
-                ForEach(options, id: \.self) { option in
-                    pill(for: option)
-                }
+        HStack(spacing: Layout.pillSpacing) {
+            ForEach(options, id: \.self) { option in
+                pill(for: option)
             }
         }
     }
@@ -31,32 +29,29 @@ struct FilterPills<Option: Hashable>: View {
             selection = option
         } label: {
             Text(title(option))
-                .font(.footnote.weight(isSelected ? .semibold : .regular))
+                .font(.footnote)
                 .padding(.horizontal, Layout.horizontalPadding)
-                .frame(minHeight: ListLayout.minimumRowHeight)
-                .contentShape(.capsule)
+                .padding(.vertical, Layout.verticalPadding)
+                .foregroundStyle(isSelected ? Color.bg : Color.labelSecondary)
+                .background {
+                    Capsule().fill(isSelected ? Color.accent : Color.clear)
+                }
+                .overlay {
+                    if !isSelected {
+                        Capsule().strokeBorder(Color.divider)
+                    }
+                }
         }
-        .buttonStyle(FilterPillStyle(isSelected: isSelected))
-        .accessibilityAddTraits(isSelected ? .isSelected : [])
-    }
-}
-
-private struct FilterPillStyle: PrimitiveButtonStyle {
-    let isSelected: Bool
-
-    @ViewBuilder
-    func makeBody(configuration: Configuration) -> some View {
-        if isSelected {
-            GlassProminentButtonStyle().makeBody(configuration: configuration)
-        } else {
-            GlassButtonStyle().makeBody(configuration: configuration)
-        }
+        .buttonStyle(.plain)
+        .frame(minHeight: ListLayout.minimumRowHeight)
+        .contentShape(Rectangle())
     }
 }
 
 private struct Layout {
     static let pillSpacing: CGFloat = 6
     static let horizontalPadding: CGFloat = 11
+    static let verticalPadding: CGFloat = 4
 }
 
 #Preview {

@@ -49,17 +49,9 @@ native Settings window on macOS or sets the sheet binding on iOS.
 Feature views use these named APIs without compilation or availability checks.
 
 ## Shared components (`Theme/Components/`)
-- **`AppGlassBackground` / `appGlassSurface`** — shared regular Liquid Glass
-  surface with a rounded rectangle shape and optional tint. Reduce Transparency
-  replaces the effect with an opaque semantic color. Hero cards use the adaptive
-  hero tint and hero-color fallback; compact dashboard cards use a subtle accent
-  tint. Dense list rows retain their solid backgrounds for readability.
-- **`Surface`** — card container with 10pt corners, 12pt padding, and the shared
-  glass surface.
-- **`DashboardHeroBackground` / `DashboardCardBackground`** — shared glass
-  backgrounds used by the World State, Mastery, Openings, and Profile dashboards.
-  Hero cards retain their Lotus watermark. Native navigation and tab bars use
-  their system appearance without an opaque toolbar-background override.
+- **`Surface`** — the card container (`Color.surface` background, 10pt
+  corner radius, 12pt padding) used for every "summary card" across tabs
+  (Mastery's rank card, Profile's identity card).
 - **`ThemedList`** — `.themedList()` view modifier: hides the default list
   background, applies `Color.bg`/`Color.surface`/`Color.divider` to
   scroll/row/separator. Applied inconsistently today — `SettingsView` calls
@@ -72,8 +64,6 @@ Feature views use these named APIs without compilation or availability checks.
   Mastery's two detail screens for the missing/mastered/locked filter — the
   one genuinely reusable, generically-typed component in the app (works for
   any `Hashable` option type with a `title` closure, not hardcoded to one enum).
-  Uses native glass/glass-prominent button styles through `PrimitiveButtonStyle`,
-  grouped in a `GlassEffectContainer`; selection is also exposed to accessibility.
 - **`ProgressBar`** — the XP/mastery progress bar (Mastery's rank card).
 - **`SectionHeader`** — `SectionHeaderLabel`, the consistent section-header
   text styling used in every tab's `List`.

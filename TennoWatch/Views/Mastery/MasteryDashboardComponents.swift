@@ -187,7 +187,7 @@ struct MasterySourceCard: View {
             )
         }
         .padding(SourceLayout.contentPadding)
-        .background(DashboardCardBackground())
+        .background(Color.surface, in: .rect(cornerRadius: DashboardLayout.cardCornerRadius))
         .accessibilityElement(children: .combine)
     }
 
