@@ -27,6 +27,12 @@ struct MasteryView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: DashboardLayout.sectionSpacing) {
                     summaryCard
+                    NavigationLink(value: MasteryCoordinator.Destination.guide) {
+                        Label(Strings.Guide.title, systemImage: "sparkles")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding()
+                            .background(Color.bg, in: RoundedRectangle(cornerRadius: 12))
+                    }
                     categoryList
                     otherSourcesList
                 }
@@ -54,6 +60,8 @@ struct MasteryView: View {
                     let detailViewModel = viewModel
                         .makeSourceDetailViewModel(for: name)
                     MasterySourceCategoryDetailView(viewModel: detailViewModel)
+                case .guide:
+                    MasteryGuideView(viewModel: viewModel.makeGuideViewModel())
                 case .breakdown:
                     MasteryBreakdownView(viewModel: viewModel)
                 }

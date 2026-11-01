@@ -122,6 +122,10 @@ final class MasteryViewModel {
         }
     }
 
+    func makeGuideViewModel() -> MasteryGuideViewModel {
+        .init(catalogRepository: catalogRepository, profileRepository: profileRepository, service: MLXLocalGuideService())
+    }
+
     func makeCategoryDetailViewModel(for category: CatalogItemModel.Category) -> MasteryCategoryDetailViewModel {
         .init(category: category, catalogRepository: catalogRepository, errorManager: errorManager)
     }

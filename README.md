@@ -20,6 +20,8 @@ It's built on a shared Apple-platform stack — Swift 6 compiler, SwiftUI, Swift
 
 Deeper specs for each tab and layer live in [Specs/](Specs/).
 
+Mastery also includes an experimental [local mastery guide](Specs/Tabs/MasteryGuide.md) with sourced acquisition facts and optional Qwen3 explanations.
+
 ## Screenshots
 
 iPhone — World State, Mastery, Openings, Profile, and Settings. Settings opens from Profile's toolbar on iOS and the app menu on macOS.

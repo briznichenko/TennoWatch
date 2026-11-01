@@ -13,6 +13,7 @@ final class MasteryCoordinator {
     enum Destination: Hashable {
         case categoryDetail(CatalogItemModel.Category)
         case sourceDetail(name: String)
+        case guide
         case breakdown
     }
 

@@ -57,6 +57,43 @@ struct Strings {
         static var database: String { Strings.string("error_database_key", "Could not read or save your local data. Please restart TennoWatch and try again.") }
     }
 
+    struct Guide {
+        static var components: String { Strings.string("guide_components_key", "Components and recorded sources") }
+        static var title: String { Strings.string("guide_title_key", "Mastery guide") }
+        static var intro: String { Strings.string("guide_intro_key", "Find unfinished items and explore how to obtain them. Acquisition data is a bundled snapshot, not live availability.") }
+        static var localProfile: String { Strings.string("guide_localProfile_key", "No synced profile: completed items and mastery rank requirements cannot be checked against your account.") }
+        static var category: String { Strings.string("guide_category_key", "Category") }
+        static var allCategories: String { Strings.string("guide_allCategories_key", "All categories") }
+        static var marketOnly: String { Strings.string("guide_marketOnly_key", "Known blueprint price only") }
+        static var search: String { Strings.string("guide_search_key", "Find an item by name") }
+        static var shortlist: String { Strings.string("guide_shortlist_key", "Your next five items") }
+        static var ranking: String { Strings.string("guide_ranking_key", "Started items first, then remaining mastery XP. Quest access, resources, and farming time are not checked.") }
+        static var noResults: String { Strings.string("guide_noResults_key", "No matching unfinished items. Try changing the filters.") }
+        static var assistant: String { Strings.string("guide_assistant_key", "On-device explanation") }
+        static var modelDetails: String { Strings.string("guide_modelDetails_key", "Qwen3-1.7B · 4-bit · approximately 1 GB download. Download requires internet; generation runs on your device. Model files stay cached for reuse.") }
+        static var unsupported: String { Strings.string("guide_unsupported_key", "Local generation requires a physical Apple silicon device. The shortlist and acquisition facts still work here.") }
+        static var downloading: String { Strings.string("guide_downloading_key", "Downloading and loading model…") }
+        static var generating: String { Strings.string("guide_generating_key", "Writing explanation…") }
+        static var cancel: String { Strings.string("guide_cancel_key", "Stop") }
+        static var download: String { Strings.string("guide_download_key", "Download / load local model") }
+        static var explainPlan: String { Strings.string("guide_explainPlan_key", "Explain this shortlist") }
+        static var generatedWarning: String { Strings.string("guide_generatedWarning_key", "AI-generated explanation may contain mistakes. Check the sourced facts and wiki before spending resources.") }
+        static var sources: String { Strings.string("guide_sources_key", "Sources") }
+        static var sourceLink: String { Strings.string("guide_sourceLink_key", "WFCD item data · pinned revision") }
+        static var sourceWarning: String { Strings.string("guide_sourceWarning_key", "Recorded drops may refer to vaulted relics or past events. A recorded source does not confirm that it is currently available. Missing facts are unknown.") }
+        static var unknownAcquisition: String { Strings.string("guide_unknownAcquisition_key", "Acquisition route is incomplete. Check the wiki for prerequisites and current sources.") }
+        static var explainItem: String { Strings.string("guide_explainItem_key", "Explain this item") }
+        static var catalogError: String { Strings.string("guide_catalogError_key", "Could not load your catalog or acquisition data. Reopen the guide to retry.") }
+        static var busy: String { Strings.string("guide_busy_key", "The previous operation is still stopping. Please try again shortly.") }
+        static var downloadError: String { Strings.string("guide_downloadError_key", "Could not load the model. Check your connection and available storage, then retry. Cached files are reused.") }
+        static var generationError: String { Strings.string("guide_generationError_key", "Could not finish the explanation. Try again with fewer items.") }
+        static func snapshot(_ date: String) -> String { String(format: Strings.string("guide_snapshot_key", "Acquisition snapshot: %@"), date) }
+        static func progress(_ rank: Int, _ maxRank: Int, _ xp: Int) -> String { String(format: Strings.string("guide_progress_key", "Rank %d / %d · %d mastery XP remaining"), rank, maxRank, xp) }
+        static func requiredRank(_ rank: Int) -> String { String(format: Strings.string("guide_required_rank_key", "Required mastery rank: %d"), rank) }
+        static func blueprintCost(_ credits: Int) -> String { String(format: Strings.string("guide_blueprint_cost_key", "Blueprint price: %d credits"), credits) }
+        static func buildCost(_ credits: Int) -> String { String(format: Strings.string("guide_build_cost_key", "Build cost: %d credits"), credits) }
+    }
+
     struct Main {
         private init() {}
         static var refresh: String { Strings.string("main_refresh_key", "Refresh") }
