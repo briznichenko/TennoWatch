@@ -2,7 +2,7 @@
 
 ## Workflows
 
-`build-and-test.yml` runs on every pull request, pushes to `master` or `develop`, and manual requests. Independent macOS and iOS jobs run the shared TennoWatch scheme's Debug tests and build Release. Both use the `macos-26` runner with Xcode 26.6; iOS uses the iPhone 17 Pro simulator on iOS 26.5. Test result bundles are retained for seven days. A newer commit cancels an obsolete run.
+`build-and-test.yml` runs on every pull request, pushes to `master` or `develop`, and manual requests. Independent macOS and iOS jobs run the shared TennoWatch scheme's Debug tests and build Release. Both use the `xcode-27` preview runner with Xcode 27.2; iOS uses the iPhone 18 Pro simulator on iOS 27.0. The runner currently supplies Xcode 27.2 as a release candidate; its build number may differ from the local release. Xcode 27.2 is required for the current SDK APIs and availability syntax, even though deployment targets remain iOS 26.5 and macOS 26. Test result bundles are retained for seven days. A newer commit cancels an obsolete run.
 
 `swiftlint.yml` runs on the same events using the official SwiftLint 0.65.1 container, pinned by image digest, on Ubuntu. It uses `.swiftlint.yml` and GitHub annotations. Errors fail the job; warnings do not. The existing Xcode lint phase remains useful locally, but the dedicated job enforces linting even when SwiftLint is absent from a build runner.
 
@@ -31,3 +31,5 @@ Run `python3 Scripts/refresh_game_data.py --validate-only` to validate the check
 ## Updating tools
 
 Update the pinned action commits and SwiftLint image digest deliberately. Update the runner, Xcode path, and simulator destination together when moving to another toolchain; do not rely on a changing `macos-latest` default. Local validation cannot verify GitHub permissions or the hosted runner environment; inspect the first GitHub run after pushing these workflows.
+
+`.github/actionlint.yaml` adds GitHub's new hosted `xcode-27` label to the runner allowlist in older actionlint releases. This validator setting does not make the workflow self-hosted.

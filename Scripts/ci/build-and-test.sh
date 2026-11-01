@@ -8,7 +8,7 @@ case "$platform" in
     signing=(CODE_SIGN_IDENTITY=-)
     ;;
   ios)
-    destination="${IOS_SIMULATOR_DESTINATION:-platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5}"
+    destination="${IOS_SIMULATOR_DESTINATION:-platform=iOS Simulator,name=iPhone 18 Pro,OS=27.0}"
     signing=(CODE_SIGNING_ALLOWED=NO)
     ;;
   *)

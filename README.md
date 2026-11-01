@@ -34,7 +34,7 @@ iPhone — World State, Mastery, Openings, Profile, and Settings. Settings opens
 
 ## Requirements
 
-- Xcode 26 or later
+- Xcode 27.2 or later
 - iOS 26.5+ (iPhone/iPad) or macOS 26+
 - Swift 6 language mode with Approachable Concurrency
 
