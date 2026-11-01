@@ -104,7 +104,7 @@ struct ProfileInfoModel: Decodable {
 }
 
 // MARK: - ID
-struct OID: Codable, Hashable {
+struct OID: Codable, Hashable, Sendable {
     let oid: String
 
     enum CodingKeys: String, CodingKey {
@@ -281,7 +281,7 @@ struct LoadOutPreset: Decodable {
 }
 
 // MARK: - ResultMission
-struct ResultMission: Codable, Hashable, Equatable {
+struct ResultMission: Codable, Hashable, Equatable, Sendable {
     let completes: Int
     let tier: Int?
     let tag: String

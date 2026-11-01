@@ -10,6 +10,7 @@ import SwiftData
 import Testing
 @testable import TennoWatch
 
+@MainActor
 @Suite("Mastery item persistence")
 struct MasteryItemPersistenceTests {
     @Test("AX-52 appears mastered in the category after syncing the bundled profile")

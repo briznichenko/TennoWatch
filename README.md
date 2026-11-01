@@ -34,9 +34,9 @@ iPhone — World State, Mastery, Openings, Profile, and Settings. Settings opens
 
 ## Requirements
 
-- Xcode 26 or later
+- Xcode 27.2 or later
 - iOS 26.5+ (iPhone/iPad) or macOS 26+
-- Swift 6 compiler (the project currently uses Swift 5 language mode with Approachable Concurrency)
+- Swift 6 language mode with Approachable Concurrency
 
 ## Getting Started
 
@@ -76,13 +76,17 @@ Platform differences live in `Platform/`: `AppScenes` chooses the window and Set
 Cross-cutting:
 
 - **MVVM+C.** View → `@Observable` ViewModel → Repository protocol → (Service +) Networking/Persistency. Mastery uses a coordinator with a `NavigationPath` and typed destinations resolved via `.navigationDestination(for:)`. Other tabs currently use inline `NavigationLink` destinations.
-- **Swift 6 compiler**, currently in Swift 5 language mode, with target-wide default `MainActor` isolation (Approachable Concurrency) — most types need no explicit `@MainActor`. `DefaultPersistencyService` is the one actor doing real off-main work (`@ModelActor`).
+- **Swift 6 language mode**, with default `nonisolated` isolation and Approachable Concurrency. ViewModels, coordinators, app setup, and presentation errors explicitly use `@MainActor`. Profile/Catalog repositories and the network cache use actors; stateless services and repository contracts are `Sendable`. The shared account-selection store uses locked, conditional updates. Plain data types and pure logic remain nonisolated. `DefaultPersistencyService` owns its SwiftData context (`@ModelActor`); model access and conversion stay inside that actor, while `Sendable` value types cross the boundary.
 - **Manual dependency injection** via [`AppDependencies`](TennoWatch/AppDependencies.swift), constructed once and threaded down through views to ViewModels. No DI container.
 - **SwiftUI** only, with UIKit interop limited to the one appearance-proxy bridge noted above.
 
 ## Testing
 
 Swift Testing covers networking, profile persistence and isolation, cache clearing, repositories, sync/matching services, and the World State ViewModel (`TennoWatchTests/`).
+
+## Continuous Integration
+
+GitHub Actions builds and tests macOS and iOS, runs SwiftLint on pull requests, and refreshes bundled mastery and Prime release data weekly or on demand through a reviewable pull request. See [.github/README.md](.github/README.md) for repository permissions, required checks, schedules, and local validation commands.
 
 ## Data Source
 

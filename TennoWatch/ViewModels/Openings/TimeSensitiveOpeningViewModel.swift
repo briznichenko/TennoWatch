@@ -9,6 +9,7 @@ import Observation
 import Foundation
 
 @Observable
+@MainActor
 final class TimeSensitiveOpeningViewModel: Identifiable {
     // MARK: - Object Properties
     private let opening: TimeSensitiveOpening

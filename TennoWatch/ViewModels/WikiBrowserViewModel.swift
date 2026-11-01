@@ -10,6 +10,7 @@ import Observation
 import WebKit
 
 @Observable
+@MainActor
 final class WikiBrowserViewModel: NSObject, WKNavigationDelegate {
     let webView = WKWebView()
     private let initialURL: URL

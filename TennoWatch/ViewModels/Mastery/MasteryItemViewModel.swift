@@ -9,6 +9,7 @@ import Observation
 import Foundation
 
 @Observable
+@MainActor
 final class MasteryItemViewModel: Identifiable {
     typealias State = MasteryItem.MasteryState
 

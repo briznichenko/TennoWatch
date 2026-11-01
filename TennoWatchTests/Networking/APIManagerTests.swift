@@ -13,7 +13,12 @@ import Synchronization
 // MARK: - Assemble
 
 private final class StubURLProtocol: URLProtocol {
-    nonisolated(unsafe) static var handler: (@Sendable (URLRequest) throws -> (HTTPURLResponse, Data))?
+    private static let storedHandler = Mutex<(@Sendable (URLRequest) throws -> (HTTPURLResponse, Data))?>(nil)
+
+    static var handler: (@Sendable (URLRequest) throws -> (HTTPURLResponse, Data))? {
+        get { storedHandler.withLock { $0 } }
+        set { storedHandler.withLock { $0 = newValue } }
+    }
 
     override static func canInit(with request: URLRequest) -> Bool { true }
     override static func canonicalRequest(for request: URLRequest) -> URLRequest { request }
@@ -41,10 +46,11 @@ private func makeStubbedSession() -> URLSession {
     return URLSession(configuration: configuration)
 }
 
-private struct StubModel: Decodable {
+private struct StubModel: Decodable, Sendable {
     let date: Date
 }
 
+@MainActor
 @Suite("APIManager", .serialized)
 struct APIManagerTests {
     // MARK: - Teardown
@@ -150,14 +156,14 @@ struct APIManagerTests {
             let attempt = attempts.withLock { $0 += 1; return $0 }
             return try makeResponse(request, status: attempt < 3 ? 503 : 200)
         }
-        var delays: [TimeInterval] = []
-        let sut = APIManager(session: makeStubbedSession(), sleep: { delays.append($0) })
+        let recordedDelays = Mutex<[TimeInterval]>([])
+        let sut = APIManager(session: makeStubbedSession(), sleep: { delay in recordedDelays.withLock { $0.append(delay) } })
         let value: [String: Int] = try await sut.fetch(.worldState(platform: .pc))
         #expect(value["value"] == 1)
         #expect(attempts.withLock { $0 } == 3)
-        #expect(delays.count == 2)
-        #expect((1...1.25).contains(delays[0]))
-        #expect((2...2.25).contains(delays[1]))
+        #expect(recordedDelays.withLock { $0 }.count == 2)
+        #expect((1...1.25).contains(recordedDelays.withLock { $0 }[0]))
+        #expect((2...2.25).contains(recordedDelays.withLock { $0 }[1]))
     }
 
     @Test("A lost connection retries, while offline and cancellation errors fail immediately")
@@ -232,17 +238,17 @@ struct APIManagerTests {
                 let attempt = attempts.withLock { $0 += 1; return $0 }
                 return try makeResponse(request, status: attempt == 1 ? 429 : 200, headers: ["Retry-After": header])
             }
-            var delays: [TimeInterval] = []
-            let sut = APIManager(session: makeStubbedSession(), now: { Date(timeIntervalSince1970: 0) }, sleep: { delays.append($0) })
+            let recordedDelays = Mutex<[TimeInterval]>([])
+            let sut = APIManager(session: makeStubbedSession(), now: { Date(timeIntervalSince1970: 0) }, sleep: { delay in recordedDelays.withLock { $0.append(delay) } })
             if header == "120" {
                 await #expect(throws: APIError.self) {
                     let _: [String: Int] = try await sut.fetch(.worldState(platform: .pc))
                 }
-                #expect(delays.isEmpty)
+                #expect(recordedDelays.withLock { $0 }.isEmpty)
                 #expect(attempts.withLock { $0 } == 1)
             } else {
                 let _: [String: Int] = try await sut.fetch(.worldState(platform: .pc))
-                #expect(delays == [5])
+                #expect(recordedDelays.withLock { $0 } == [5])
             }
         }
     }
@@ -278,15 +284,15 @@ struct APIManagerTests {
             attempts.withLock { $0 += 1 }
             return try makeResponse(request)
         }
-        var now = Date(timeIntervalSince1970: 0)
-        let sut = APIManager(session: makeStubbedSession(), now: { now })
+        let clock = Mutex(Date(timeIntervalSince1970: 0))
+        let sut = APIManager(session: makeStubbedSession(), now: { clock.withLock { $0 } })
         let _: [String: Int] = try await sut.fetch(.worldState(platform: .pc))
-        now = now.addingTimeInterval(29)
+        clock.withLock { $0 = $0.addingTimeInterval(29) }
         let _: [String: Int] = try await sut.fetch(.worldState(platform: .pc))
         #expect(attempts.withLock { $0 } == 1)
         let _: [String: Int] = try await sut.fetch(.worldState(platform: .ps4))
         #expect(attempts.withLock { $0 } == 2)
-        now = now.addingTimeInterval(1)
+        clock.withLock { $0 = $0.addingTimeInterval(1) }
         let _: [String: Int] = try await sut.fetch(.worldState(platform: .pc))
         #expect(attempts.withLock { $0 } == 3)
     }
@@ -298,16 +304,16 @@ struct APIManagerTests {
             attempts.withLock { $0 += 1 }
             return try makeResponse(request)
         }
-        var now = Date(timeIntervalSince1970: 0)
-        let sut = APIManager(session: makeStubbedSession(), now: { now })
+        let clock = Mutex(Date(timeIntervalSince1970: 0))
+        let sut = APIManager(session: makeStubbedSession(), now: { clock.withLock { $0 } })
         let _: [String: Int] = try await sut.fetch(.catalog(.items))
-        now = now.addingTimeInterval(3_599)
+        clock.withLock { $0 = $0.addingTimeInterval(3_599) }
         let _: [String: Int] = try await sut.fetch(.catalog(.items))
         #expect(attempts.withLock { $0 } == 1)
-        now = now.addingTimeInterval(1)
+        clock.withLock { $0 = $0.addingTimeInterval(1) }
         let _: [String: Int] = try await sut.fetch(.catalog(.items))
         #expect(attempts.withLock { $0 } == 2)
-        sut.clearCache()
+        await sut.clearCache()
         let _: [String: Int] = try await sut.fetch(.catalog(.items))
         #expect(attempts.withLock { $0 } == 3)
     }
@@ -334,9 +340,10 @@ struct APIManagerTests {
             let attempt = attempts.withLock { $0 += 1; return $0 }
             return try makeResponse(request, status: attempt == 1 ? 503 : 200)
         }
-        var clearCache: () -> Void = {}
-        let sut = APIManager(session: makeStubbedSession(), sleep: { _ in clearCache() })
-        clearCache = { sut.clearCache() }
+        let invalidate = Mutex<(@Sendable () async -> Void)?>(nil)
+        let sut = APIManager(session: makeStubbedSession(), sleep: { _ in await invalidate.withLock { $0 }?() })
+        invalidate.withLock { $0 = { await sut.clearCache() } }
+        defer { invalidate.withLock { $0 = nil } }
         let _: [String: Int] = try await sut.fetch(.worldState(platform: .pc))
         let _: [String: Int] = try await sut.fetch(.worldState(platform: .pc))
         #expect(attempts.withLock { $0 } == 3)
@@ -344,7 +351,7 @@ struct APIManagerTests {
 
 }
 
-nonisolated private func makeResponse(
+private func makeResponse(
     _ request: URLRequest,
     status: Int = 200,
     body: String = "{\"value\":1}",

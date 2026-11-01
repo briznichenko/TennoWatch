@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct CatalogContainer: Identifiable, Hashable {
+struct CatalogContainer: Identifiable, Hashable, Sendable {
     // MARK: - Object Properties
     let category: CatalogItemModel.Category
     private(set) var masteryItems: [MasteryItem]

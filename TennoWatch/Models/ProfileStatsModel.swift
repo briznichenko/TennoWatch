@@ -61,6 +61,7 @@ struct AccountStatRow: Identifiable, Hashable {
     var id: String { label }
 }
 
+@MainActor
 extension Profile {
     // MARK: - Object Properties
     private static let drifterKeyPrefix = "LPS_DRIFT_"

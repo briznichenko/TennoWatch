@@ -35,6 +35,7 @@ struct FissureStarChartGroup: Identifiable {
 }
 
 @Observable
+@MainActor
 final class WorldStateViewModel {
     // MARK: - Object Properties
     private let worldStateRepository: WorldStateRepository
@@ -181,7 +182,7 @@ final class WorldStateViewModel {
 
     // MARK: - Functions
     func fetchWorldState(forceRefresh: Bool = false) async {
-        if forceRefresh { worldStateRepository.clearCache() }
+        if forceRefresh { await worldStateRepository.clearCache() }
         defer {
             isLoading = false
         }

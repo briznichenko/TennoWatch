@@ -25,6 +25,7 @@ struct OpeningsSourceCategorySummary: Identifiable, Hashable {
 }
 
 @Observable
+@MainActor
 final class OpeningsViewModel {
     // MARK: - Object Properties
     private let profileRepository: ProfileRepository
@@ -105,7 +106,7 @@ final class OpeningsViewModel {
 
     // MARK: - Functions
     func fetchOpenings(forceRefresh: Bool = false) async {
-        if forceRefresh { worldStateRepository.clearCache() }
+        if forceRefresh { await worldStateRepository.clearCache() }
         isLoading = true
         defer { isLoading = false }
 

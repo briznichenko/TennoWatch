@@ -12,7 +12,7 @@ protocol ValueTypeConvertible: PersistentModel {
     var value: Value { get }
 }
 
-protocol PersistentModelConvertible {
+protocol PersistentModelConvertible: Sendable {
     associatedtype Model: PersistentModel
     var model: Model { get }
 }

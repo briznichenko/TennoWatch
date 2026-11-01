@@ -1,0 +1,55 @@
+name: Refresh game data
+
+on:
+  schedule:
+    - cron: '17 7 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: refresh-game-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    name: Refresh bundled game data
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: Scripts/generate_catalog/package-lock.json
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - name: Install catalog generator dependencies
+        working-directory: Scripts/generate_catalog
+        run: npm ci --ignore-scripts
+      - name: Refresh and validate snapshots
+        run: python3 Scripts/refresh_game_data.py
+      - name: Open or update refresh pull request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1
+        with:
+          branch: maintenance/game-data-refresh
+          delete-branch: true
+          add-paths: |
+            TennoWatch/Resources/masterycatalog.json
+            TennoWatch/Resources/primeReleaseOrder.json
+          commit-message: '-Refresh bundled game data;'
+          title: Refresh bundled game data
+          body: |
+            Updates the mastery catalog from Digital Extremes PublicExport and the Prime release list from WFCD.
+
+            Both snapshots were validated before writing. Timestamp-only changes are discarded; manually maintained non-item mastery sources are preserved.
+
+            Review the changed items and approve workflows to run if GitHub requests it. Merge after the build, test, and SwiftLint checks pass.

@@ -7,11 +7,13 @@
 
 import Testing
 import Foundation
+import Synchronization
 import SwiftData
 @testable import TennoWatch
 
 // MARK: - Assemble
 
+@MainActor
 private final class StubAPIService: ServiceProtocol {
     enum StubError: Error, Equatable { case sentinel }
 
@@ -19,7 +21,8 @@ private final class StubAPIService: ServiceProtocol {
     private(set) var lastEndpoint: Endpoint?
     var result: Result<Any, Error> = .failure(StubError.sentinel)
 
-    func fetch<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
+    @MainActor
+    func fetch<T: Decodable & Sendable>(_ endpoint: Endpoint) async throws -> T {
         fetchCount += 1
         lastEndpoint = endpoint
         switch result {
@@ -34,10 +37,12 @@ private final class StubAPIService: ServiceProtocol {
     }
 }
 
+@MainActor
 private final class StubPersistencyService: PersistencyService {
     var storedProfiles: [Profile] = []
     private(set) var savedProfiles: [Profile] = []
 
+    @MainActor
     func fetchModel<T: ValueTypeConvertible>(by type: T.Type, with descriptor: FetchDescriptor<T>) async throws -> [T.Value] {
         guard let result = storedProfiles as? [T.Value] else {
             fatalError("StubPersistencyService only supports fetching Profile")
@@ -45,8 +50,10 @@ private final class StubPersistencyService: PersistencyService {
         return result
     }
 
+    @MainActor
     func saveValues<T: PersistentModelConvertible>(_ values: [T]) async throws {}
 
+    @MainActor
     func saveValue<T: PersistentModelConvertible>(_ value: T) async throws {
         if let profile = value as? Profile {
             savedProfiles.append(profile)
@@ -56,6 +63,7 @@ private final class StubPersistencyService: PersistencyService {
     private var container: ModelContainer?
     private var context: ModelContext?
 
+    @MainActor
     func perform<T: Sendable>(_ operation: @Sendable (ModelContext) throws -> T) async throws -> T {
         if context == nil {
             let container = try ModelContainer(
@@ -77,9 +85,23 @@ private final class StubPersistencyService: PersistencyService {
 }
 
 private final class StubAccountIDStore: AccountIDStoring {
-    var currentAccountID: String?
+    private let accountID = Mutex<String?>(nil)
+
+    var currentAccountID: String? {
+        get { accountID.withLock { $0 } }
+        set { accountID.withLock { $0 = newValue } }
+    }
+
+    func replaceCurrentAccountID(with accountID: String?, ifMatching expectedID: String?) -> Bool {
+        self.accountID.withLock { current in
+            guard current == expectedID else { return false }
+            current = accountID
+            return true
+        }
+    }
 }
 
+@MainActor
 @Suite("PersistentProfileRepository")
 struct ProfileRepositoryTests {
     // MARK: - Teardown

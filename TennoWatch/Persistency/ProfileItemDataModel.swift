@@ -132,7 +132,7 @@ extension MasteryItemDataModel: ValueTypeConvertible {
     }
 }
 
-struct MasteryItem: Equatable, Hashable {
+struct MasteryItem: Equatable, Hashable, Sendable {
     // MARK: - Object Properties
     let profileItemModel: ProfileItemModel?
     let catalogItemModel: CatalogItemModel

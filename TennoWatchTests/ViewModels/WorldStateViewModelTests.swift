@@ -11,21 +11,25 @@ import Testing
 
 // MARK: - Assemble
 
+@MainActor
 private final class StubWorldStateRepository: WorldStateRepository {
     enum StubError: Error, Equatable { case sentinel }
 
     var result: Result<WorldState, Error> = .failure(StubError.sentinel)
 
+    @MainActor
     func getWorldState(platform: Platform) async throws -> WorldState {
         try result.get()
     }
 }
 
+@MainActor
 private final class ControlledWorldStateRepository: WorldStateRepository {
     private var hasStartedRequest = false
     private var requestStartedContinuation: CheckedContinuation<Void, Never>?
     private var pendingContinuation: CheckedContinuation<WorldState, Error>?
 
+    @MainActor
     func getWorldState(platform: Platform) async throws -> WorldState {
         hasStartedRequest = true
         requestStartedContinuation?.resume()
@@ -53,6 +57,7 @@ private struct StubVoidTraderNotificationScheduler: VoidTraderNotificationSchedu
     func cancelArrivalNotification() {}
 }
 
+@MainActor
 @Suite("WorldStateViewModel")
 struct WorldStateViewModelTests {
     // MARK: - Teardown

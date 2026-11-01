@@ -8,9 +8,9 @@
 import Foundation
 import SwiftData
 
-protocol ProfileRepository {
+protocol ProfileRepository: Sendable {
     var syncPolicy: SyncPolicy { get }
-    var currentAccountID: String? { get }
+    var currentAccountID: String? { get async }
     func getProfile(withPlayerId playerId: String?, forceRefresh: Bool) async throws -> Profile
     func getSavedProfiles() async throws -> [Profile]
     func selectProfile(accountID: String) async throws -> Profile
@@ -24,7 +24,7 @@ extension ProfileRepository {
     }
 }
 
-final class PersistentProfileRepository: ProfileRepository {
+actor PersistentProfileRepository: ProfileRepository {
     var currentAccountID: String? { accountIDStore.currentAccountID }
     let syncPolicy: SyncPolicy = .daily
     private let profileService: ServiceProtocol
@@ -95,10 +95,10 @@ final class PersistentProfileRepository: ProfileRepository {
             try await catalogRepository.prepareCatalog(for: profile)
         }
         try Task.checkCancellation()
-        guard revision == selectionRevision, accountIDStore.currentAccountID == initialID else {
+        guard revision == selectionRevision,
+              accountIDStore.replaceCurrentAccountID(with: profile.accountID.oid, ifMatching: initialID) else {
             throw CancellationError()
         }
-        accountIDStore.currentAccountID = profile.accountID.oid
         return profile
     }
 
@@ -153,12 +153,12 @@ final class PersistentProfileRepository: ProfileRepository {
                 throw error
             }
         }
-        if initialID == accountID, accountIDStore.currentAccountID == initialID {
-            accountIDStore.currentAccountID = fallbackID
+        if initialID == accountID {
+            _ = accountIDStore.replaceCurrentAccountID(with: fallbackID, ifMatching: initialID)
         }
     }
 
-    static func resolveProfile(in context: ModelContext, accountID: String?) throws -> ProfileDataModel {
+    nonisolated static func resolveProfile(in context: ModelContext, accountID: String?) throws -> ProfileDataModel {
         if let accountID {
             let descriptor = FetchDescriptor<ProfileDataModel>(predicate: #Predicate { $0.accountID == accountID })
             guard let profile = try context.fetch(descriptor).first else { throw ProfileError.noData }
@@ -171,7 +171,7 @@ final class PersistentProfileRepository: ProfileRepository {
         return try profiles.first(where: { $0.isLocal }) ?? makeLocalProfile(in: context)
     }
 
-    private static func makeLocalProfile(in context: ModelContext) throws -> ProfileDataModel {
+    private nonisolated static func makeLocalProfile(in context: ModelContext) throws -> ProfileDataModel {
         let profile = Profile(
             accountID: .init(oid: UUID().uuidString), displayName: "", playerLevel: 0,
             items: [], playerSkills: [:], missions: [], accountStats: .empty,
@@ -181,7 +181,7 @@ final class PersistentProfileRepository: ProfileRepository {
         return profile
     }
 
-    private static func upsert(_ value: Profile, in context: ModelContext) throws {
+    private nonisolated static func upsert(_ value: Profile, in context: ModelContext) throws {
         let accountID = value.accountID.oid
         let descriptor = FetchDescriptor<ProfileDataModel>(predicate: #Predicate { $0.accountID == accountID })
         let profile: ProfileDataModel
@@ -209,7 +209,7 @@ final class PersistentProfileRepository: ProfileRepository {
         profile.playerSkills = value.playerSkills.map { IntrinsicsDataModel(name: $0.key, rank: $0.value) }
         profile.missions = value.missions.map { ResultMissionDataModel(from: $0) }
     }
-    private static func apply(_ stats: AccountStats, to model: AccountStatsDataModel) {
+    private nonisolated static func apply(_ stats: AccountStats, to model: AccountStatsDataModel) {
         model.deaths = stats.deaths
         model.reviveCount = stats.reviveCount
         model.meleeKills = stats.meleeKills
