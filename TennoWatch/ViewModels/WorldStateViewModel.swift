@@ -182,7 +182,7 @@ final class WorldStateViewModel {
 
     // MARK: - Functions
     func fetchWorldState(forceRefresh: Bool = false) async {
-        if forceRefresh { worldStateRepository.clearCache() }
+        if forceRefresh { await worldStateRepository.clearCache() }
         defer {
             isLoading = false
         }

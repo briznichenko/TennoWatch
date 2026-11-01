@@ -7,13 +7,12 @@
 
 import Foundation
 
-@MainActor
-protocol VoidTraderNotificationScheduler {
+protocol VoidTraderNotificationScheduler: Sendable {
     func syncArrivalNotification(for voidTrader: VoidTrader?) async throws
-    func cancelArrivalNotification()
+    func cancelArrivalNotification() async
 }
 
-struct DefaultVoidTraderNotificationScheduler: VoidTraderNotificationScheduler {
+actor DefaultVoidTraderNotificationScheduler: VoidTraderNotificationScheduler {
     // MARK: - Object Properties
     static let preferenceKey = "voidTraderNotificationsEnabled"
     private static let notificationID = "voidTraderArrival"
@@ -41,7 +40,7 @@ struct DefaultVoidTraderNotificationScheduler: VoidTraderNotificationScheduler {
         try await notificationService.schedule(notification)
     }
 
-    func cancelArrivalNotification() {
+    func cancelArrivalNotification() async {
         notificationService.cancelNotification(id: Self.notificationID)
     }
 }

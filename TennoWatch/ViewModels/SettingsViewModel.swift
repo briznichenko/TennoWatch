@@ -69,7 +69,7 @@ final class SettingsViewModel {
 
     func setVoidTraderNotificationsEnabled(_ isEnabled: Bool) async {
         guard isEnabled else {
-            voidTraderNotificationScheduler.cancelArrivalNotification()
+            await voidTraderNotificationScheduler.cancelArrivalNotification()
             return
         }
 
@@ -92,8 +92,8 @@ final class SettingsViewModel {
                 throw ClearCacheError.missingBundleIdentifier
             }
             try await persistencyService.clearAllData()
-            worldStateRepository.clearCache()
-            voidTraderNotificationScheduler.cancelArrivalNotification()
+            await worldStateRepository.clearCache()
+            await voidTraderNotificationScheduler.cancelArrivalNotification()
             UserDefaults.standard.removePersistentDomain(forName: bundleIdentifier)
             gameVersion = nil
             catalogGeneratedAt = nil

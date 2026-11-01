@@ -11,18 +11,33 @@ import Synchronization
 import Testing
 @testable import TennoWatch
 
+@MainActor
 private final class ProfileIsolationAPI: ServiceProtocol {
     var response = ProfileModel.stub()
     private(set) var fetchCount = 0
 
-    func fetch<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
+    @MainActor
+    func fetch<T: Decodable & Sendable>(_ endpoint: Endpoint) async throws -> T {
         fetchCount += 1
         return try #require(response as? T)
     }
 }
 
 private final class ProfileIsolationAccountStore: AccountIDStoring {
-    var currentAccountID: String?
+    private let accountID = Mutex<String?>(nil)
+
+    var currentAccountID: String? {
+        get { accountID.withLock { $0 } }
+        set { accountID.withLock { $0 = newValue } }
+    }
+
+    func replaceCurrentAccountID(with accountID: String?, ifMatching expectedID: String?) -> Bool {
+        self.accountID.withLock { current in
+            guard current == expectedID else { return false }
+            current = accountID
+            return true
+        }
+    }
 }
 
 private final class CountingCatalogSyncService: CatalogSyncService {
@@ -40,11 +55,13 @@ private final class CountingCatalogSyncService: CatalogSyncService {
     }
 }
 
+@MainActor
 private final class DelayedProfileAPI: ServiceProtocol {
     private var request: CheckedContinuation<ProfileModel, Error>?
     private var started: CheckedContinuation<Void, Never>?
 
-    func fetch<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
+    @MainActor
+    func fetch<T: Decodable & Sendable>(_ endpoint: Endpoint) async throws -> T {
         let response = try await withCheckedThrowingContinuation { continuation in
             request = continuation
             started?.resume()

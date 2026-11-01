@@ -8,10 +8,9 @@
 import Foundation
 import SwiftData
 
-@MainActor
-protocol ProfileRepository {
+protocol ProfileRepository: Sendable {
     var syncPolicy: SyncPolicy { get }
-    var currentAccountID: String? { get }
+    var currentAccountID: String? { get async }
     func getProfile(withPlayerId playerId: String?, forceRefresh: Bool) async throws -> Profile
     func getSavedProfiles() async throws -> [Profile]
     func selectProfile(accountID: String) async throws -> Profile
@@ -25,7 +24,7 @@ extension ProfileRepository {
     }
 }
 
-final class PersistentProfileRepository: ProfileRepository {
+actor PersistentProfileRepository: ProfileRepository {
     var currentAccountID: String? { accountIDStore.currentAccountID }
     let syncPolicy: SyncPolicy = .daily
     private let profileService: ServiceProtocol
@@ -96,10 +95,10 @@ final class PersistentProfileRepository: ProfileRepository {
             try await catalogRepository.prepareCatalog(for: profile)
         }
         try Task.checkCancellation()
-        guard revision == selectionRevision, accountIDStore.currentAccountID == initialID else {
+        guard revision == selectionRevision,
+              accountIDStore.replaceCurrentAccountID(with: profile.accountID.oid, ifMatching: initialID) else {
             throw CancellationError()
         }
-        accountIDStore.currentAccountID = profile.accountID.oid
         return profile
     }
 
@@ -154,8 +153,8 @@ final class PersistentProfileRepository: ProfileRepository {
                 throw error
             }
         }
-        if initialID == accountID, accountIDStore.currentAccountID == initialID {
-            accountIDStore.currentAccountID = fallbackID
+        if initialID == accountID {
+            _ = accountIDStore.replaceCurrentAccountID(with: fallbackID, ifMatching: initialID)
         }
     }
 

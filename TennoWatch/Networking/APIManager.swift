@@ -8,21 +8,20 @@
 import Foundation
 import Synchronization
 
-@MainActor
-protocol ServiceProtocol {
-    func fetch<T: Decodable>(_ endpoint: Endpoint) async throws -> T
-    func clearCache()
+protocol ServiceProtocol: Sendable {
+    func fetch<T: Decodable & Sendable>(_ endpoint: Endpoint) async throws -> T
+    func clearCache() async
 }
 
 extension ServiceProtocol {
-    func clearCache() {}
+    func clearCache() async {}
 }
 
-final class APIManager: ServiceProtocol {
+actor APIManager: ServiceProtocol {
     // MARK: - Object Properties
     private let session: URLSession
-    private let now: () -> Date
-    private let sleep: (TimeInterval) async throws -> Void
+    private let now: @Sendable () -> Date
+    private let sleep: @Sendable (TimeInterval) async throws -> Void
     private var cache: [URL: CachedResponse] = [:]
     private var cacheRevision = 0
 
@@ -65,8 +64,8 @@ final class APIManager: ServiceProtocol {
     // MARK: - Init
     init(
         session: URLSession = APIManager.makeSession(),
-        now: @escaping () -> Date = Date.init,
-        sleep: @escaping (TimeInterval) async throws -> Void = { seconds in
+        now: @escaping @Sendable () -> Date = Date.init,
+        sleep: @escaping @Sendable (TimeInterval) async throws -> Void = { seconds in
             try await Task.sleep(for: .seconds(seconds))
         }
     ) {
@@ -76,7 +75,7 @@ final class APIManager: ServiceProtocol {
     }
 
     // MARK: - Functions
-    func fetch<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
+    func fetch<T: Decodable & Sendable>(_ endpoint: Endpoint) async throws -> T {
         try Task.checkCancellation()
         let url = try endpoint.url
         if let cached = cache[url], cached.expiresAt > now() {
@@ -122,7 +121,7 @@ final class APIManager: ServiceProtocol {
         }
     }
 
-    func clearCache() {
+    func clearCache() async {
         cacheRevision += 1
         cache.removeAll()
     }

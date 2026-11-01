@@ -8,14 +8,13 @@
 import Foundation
 import SwiftData
 
-enum SyncPolicy { case daily }
+enum SyncPolicy: Sendable { case daily }
 
-enum MasterySourceType: String {
+enum MasterySourceType: String, Sendable {
     case nodes, intrinsics, junctions
 }
 
-@MainActor
-protocol CatalogRepository {
+protocol CatalogRepository: Sendable {
     var syncPolicy: SyncPolicy { get }
     func prepareCatalog() async throws
     func prepareCatalog(for profile: Profile) async throws
@@ -28,7 +27,7 @@ protocol CatalogRepository {
     func getMasterySourceCategories() async throws -> [MasteryCategoryModel]
 }
 
-final class PersistentCatalogRepository: CatalogRepository {
+actor PersistentCatalogRepository: CatalogRepository {
     let syncPolicy: SyncPolicy
     private let persistencyService: PersistencyService
     private let catalogSyncService: CatalogSyncService
@@ -121,13 +120,13 @@ final class PersistentCatalogRepository: CatalogRepository {
                 throw error
             }
         }
-        if profileID == nil, accountIDStore.currentAccountID == activeID {
-            accountIDStore.currentAccountID = result.0
+        if profileID == nil {
+            _ = accountIDStore.replaceCurrentAccountID(with: result.0, ifMatching: activeID)
         }
         return result.1
     }
 
-    private static func loadContainer() throws -> MasteryCatalogContainer {
+    private nonisolated static func loadContainer() throws -> MasteryCatalogContainer {
         guard let url = Bundle.main.url(forResource: "masterycatalog", withExtension: "json") else {
             throw CatalogError.wrongFilename
         }

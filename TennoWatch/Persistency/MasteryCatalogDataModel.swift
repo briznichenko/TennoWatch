@@ -241,7 +241,7 @@ extension MasteryCatalog: PersistentModelConvertible {
     }
 }
 
-struct MasteryCatalogSummary {
+struct MasteryCatalogSummary: Sendable {
     // MARK: - Object Properties
     let totalMasteryMax: Int
     let obtainableMasteryMax: Int
@@ -249,7 +249,7 @@ struct MasteryCatalogSummary {
     let nonItemCategories: [MasteryCategorySummary]
 }
 
-struct CatalogContainerSummary: Identifiable, Hashable {
+struct CatalogContainerSummary: Identifiable, Hashable, Sendable {
     // MARK: - Object Properties
     let category: CatalogItemModel.Category
     let itemsCount: Int
@@ -263,7 +263,7 @@ struct CatalogContainerSummary: Identifiable, Hashable {
     var countText: String { "\(masteredItemsCount) / \(itemsCount)" }
 }
 
-struct MasteryCategorySummary: Identifiable, Hashable {
+struct MasteryCategorySummary: Identifiable, Hashable, Sendable {
     // MARK: - Object Properties
     let name: String
     let itemsCount: Int

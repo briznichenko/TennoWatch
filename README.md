@@ -76,7 +76,7 @@ Platform differences live in `Platform/`: `AppScenes` chooses the window and Set
 Cross-cutting:
 
 - **MVVM+C.** View → `@Observable` ViewModel → Repository protocol → (Service +) Networking/Persistency. Mastery uses a coordinator with a `NavigationPath` and typed destinations resolved via `.navigationDestination(for:)`. Other tabs currently use inline `NavigationLink` destinations.
-- **Swift 6 language mode**, with default `nonisolated` isolation and Approachable Concurrency. ViewModels, coordinators, app setup, and stateful service/repository protocols explicitly use `@MainActor`; plain data types and pure logic remain nonisolated. `DefaultPersistencyService` owns its SwiftData context (`@ModelActor`); model access and conversion stay inside that actor, while `Sendable` value types cross the boundary.
+- **Swift 6 language mode**, with default `nonisolated` isolation and Approachable Concurrency. ViewModels, coordinators, app setup, and presentation errors explicitly use `@MainActor`. Profile/Catalog repositories and the network cache use actors; stateless services and repository contracts are `Sendable`. The shared account-selection store uses locked, conditional updates. Plain data types and pure logic remain nonisolated. `DefaultPersistencyService` owns its SwiftData context (`@ModelActor`); model access and conversion stay inside that actor, while `Sendable` value types cross the boundary.
 - **Manual dependency injection** via [`AppDependencies`](TennoWatch/AppDependencies.swift), constructed once and threaded down through views to ViewModels. No DI container.
 - **SwiftUI** only, with UIKit interop limited to the one appearance-proxy bridge noted above.
 

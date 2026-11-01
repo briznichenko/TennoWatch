@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol OpeningsMatchingService {
+protocol OpeningsMatchingService: Sendable {
     func timeSensitiveOpenings(for items: [MasteryItem], in worldState: WorldState) -> [TimeSensitiveOpening]
 }
 

@@ -8,15 +8,14 @@
 import Foundation
 import UserNotifications
 
-struct ScheduledNotification {
+struct ScheduledNotification: Sendable {
     let id: String
     let title: String
     let body: String
     let fireDate: Date
 }
 
-@MainActor
-protocol NotificationService {
+protocol NotificationService: Sendable {
     func requestAuthorization() async throws -> Bool
     func schedule(_ notification: ScheduledNotification) async throws
     func cancelNotification(id: String)
@@ -24,7 +23,7 @@ protocol NotificationService {
 
 final class DefaultNotificationService: NSObject, NotificationService {
     // MARK: - Object Properties
-    private let center = UNUserNotificationCenter.current()
+    private var center: UNUserNotificationCenter { .current() }
 
     // MARK: - Init
     override init() {

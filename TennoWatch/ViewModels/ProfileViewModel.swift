@@ -108,7 +108,8 @@ final class ProfileViewModel {
 
     private func restoreSelection() async throws {
         savedProfiles = try await profileRepository.getSavedProfiles()
-        let selected = savedProfiles.first { $0.accountID.oid == profileRepository.currentAccountID } ?? savedProfiles.first
+        let currentAccountID = await profileRepository.currentAccountID
+        let selected = savedProfiles.first { $0.accountID.oid == currentAccountID } ?? savedProfiles.first
         if let selected {
             profile = try await profileRepository.selectProfile(accountID: selected.accountID.oid)
         } else {

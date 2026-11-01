@@ -7,11 +7,13 @@
 
 import Testing
 import Foundation
+import Synchronization
 import SwiftData
 @testable import TennoWatch
 
 // MARK: - Assemble
 
+@MainActor
 private final class StubAPIService: ServiceProtocol {
     enum StubError: Error, Equatable { case sentinel }
 
@@ -19,7 +21,8 @@ private final class StubAPIService: ServiceProtocol {
     private(set) var lastEndpoint: Endpoint?
     var result: Result<Any, Error> = .failure(StubError.sentinel)
 
-    func fetch<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
+    @MainActor
+    func fetch<T: Decodable & Sendable>(_ endpoint: Endpoint) async throws -> T {
         fetchCount += 1
         lastEndpoint = endpoint
         switch result {
@@ -82,7 +85,20 @@ private final class StubPersistencyService: PersistencyService {
 }
 
 private final class StubAccountIDStore: AccountIDStoring {
-    var currentAccountID: String?
+    private let accountID = Mutex<String?>(nil)
+
+    var currentAccountID: String? {
+        get { accountID.withLock { $0 } }
+        set { accountID.withLock { $0 = newValue } }
+    }
+
+    func replaceCurrentAccountID(with accountID: String?, ifMatching expectedID: String?) -> Bool {
+        self.accountID.withLock { current in
+            guard current == expectedID else { return false }
+            current = accountID
+            return true
+        }
+    }
 }
 
 @MainActor
