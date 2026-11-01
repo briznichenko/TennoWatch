@@ -1,90 +1,64 @@
 # Layer: Theme & Shared UI
 
-`TennoWatch/Theme/` — palette, reusable SwiftUI components, and the
-one bit of UIKit-appearance bridging the app still needs.
+`TennoWatch/Theme/` contains semantic colors, layout metrics, and reusable SwiftUI
+components. Platform interop lives in `Platform/`.
 
-## Palette
-Colors are asset-catalog-backed (`Color.bg`, `.surface`, `.labelPrimary`,
-`.labelSecondary`, `.divider`, `.accent` — referenced as `Color.x`
-throughout, implying named color sets in the asset catalog that adapt to
-light/dark automatically). `Theme/Palette.swift` layers semantic aliases on
-top for state-specific meaning (`masteredIcon`, `unmasteredIcon`,
-`lockedIcon`) rather than views picking `.labelSecondary`/`.accent` directly
-— the icon color vocabulary is centralized in one place even though it
-currently just forwards to two existing colors.
-`PalettePreview.swift` (104 lines) is a SwiftUI preview-only swatch sheet for
-eyeballing the palette in both color schemes — not shipped UI.
+## Palette and layout
 
-## Theme application (`TennoWatchApp.swift`)
-`ThemePreference` (`system/light/dark`) drives `.preferredColorScheme(_:)` at
-the `WindowGroup` root; `AppLanguage` drives `.environment(\.locale:)` **plus**
-`.id(languagePreference)` on `MainView` — the `.id()` is what forces SwiftUI
-to fully rebuild the view tree on a language change rather than leaving stale
-localized strings cached in already-rendered views. Both preferences are read
-via `@AppStorage` at the App level and again independently at the Settings
-sheet level (two separate `@AppStorage` bindings to the same keys) — this
-works because `@AppStorage` is backed by `UserDefaults`, a single source of
-truth both call sites observe, not two independent copies of state.
+Asset-backed colors include `Color.bg`, `.surface`, `.labelPrimary`,
+`.labelSecondary`, `.divider`, and `.accent`. `Palette.swift` adds mastery-state
+aliases and Archon colors. `DashboardStyle.swift` supplies dashboard palette and
+shared hero/card/metric/header styles. `LayoutMetrics.swift` centralizes spacing,
+row dimensions, and other shared layout values; feature-specific values can stay
+near their views. `PalettePreview` provides a preview swatch sheet.
 
-`AppearanceProxies.configure()` — one-time UIKit appearance-proxy setup
-(`UINavigationBar.appearance()`, `UITabBarItem.appearance()`) for large-title
-and tab-bar label tinting, called once from `TennoWatchApp.init()`.
-This exists because SwiftUI's own tab bar / large-title text color styling
-API surface is still incomplete for this use case — one of the few
-UIKit-interop points allowed under this project's "SwiftUI only, no UIKit
-unless there's genuinely no SwiftUI equivalent" convention.
+## Theme and language application
 
-## Platform boundary (`Platform/`)
-`AppScenes` composes the main window and Settings scene for macOS or a
-`WindowGroup` for iOS. On macOS it also provides a Lotus `MenuBarExtra` whose
-`MenuBarContent` opens the existing main window, opens Settings, or quits the app. The app entry point retains ownership of theme,
-language, and cache-reset state, and applies the shared model container.
-`SettingsSceneContent` supplies the current account to the Settings scene.
+`TennoWatchApp` reads theme and language through `@AppStorage` and applies
+`.preferredColorScheme` and `.environment(\.locale)` to main and Settings content.
+Changing language also changes view identity through `.id(languagePreference)`,
+recreating content so existing presentation state does not retain old strings.
+Settings binds to the same UserDefaults keys. A separate cache-reset identity
+recreates app content after a successful storage reset.
 
-`AppPresentation` owns platform-specific grid columns, category padding, and
-the available Profile tab role. `View+Platform` adapts tab and list styling,
-inline navigation titles, and refresh controls. `AppSettingsButton` opens the
-native Settings window on macOS or sets the sheet binding on iOS.
-`AppearanceProxies` lives here because its UIKit styling applies only to iOS.
-Feature views use these named APIs without compilation or availability checks.
+## Platform boundary
 
-## Shared components (`Theme/Components/`)
-- **`Surface`** — the card container (`Color.surface` background, 10pt
-  corner radius, 12pt padding) used for every "summary card" across tabs
-  (Mastery's rank card, Profile's identity card).
-- **`ThemedList`** — `.themedList()` view modifier: hides the default list
-  background, applies `Color.bg`/`Color.surface`/`Color.divider` to
-  scroll/row/separator. Applied inconsistently today — `SettingsView` calls
-  it, `MasteryView`/`ProfileView`/`WorldStateView` don't appear to (they use
-  plain `List` styling). Worth a pass to decide if every list should use it,
-  or if the difference is intentional (e.g. `.plain` list style used
-  elsewhere for the drill-down screens' denser rows).
-- **`FilterPills`** — generic `Hashable` option picker rendered as a
-  horizontal row of capsule buttons, `@Binding var selection`. Used by
-  Mastery's two detail screens for the missing/mastered/locked filter — the
-  one genuinely reusable, generically-typed component in the app (works for
-  any `Hashable` option type with a `title` closure, not hardcoded to one enum).
-- **`ProgressBar`** — the XP/mastery progress bar (Mastery's rank card).
-- **`SectionHeader`** — `SectionHeaderLabel`, the consistent section-header
-  text styling used in every tab's `List`.
-- **`LiveCountdownText`** — self-updating "time left" text, used in
-  `CycleRowView` and `VoidTraderRowView` (picking activation vs. expiry
-  depending on whether the trader has arrived yet). Notably *not* used by
-  `FissureRowView` or the invasion rows — those render `WorldStateViewModel`'s
-  static `timeLeft`/`expiry` strings computed once per fetch, so a fissure's
-  countdown goes stale until the next pull-to-refresh while a cycle's ticks
-  live. Worth a conscious call on whether that inconsistency matters (relic
-  fissures are short-lived enough that a stale countdown is more noticeable
-  than a stale day/night cycle).
+- `AppScenes` composes the main window, macOS Settings scene, and Lotus
+  `MenuBarExtra`. `MenuBarContent` opens the main window or Settings, or quits.
+- `AppPresentation` provides platform-specific grid columns, padding, and tab role.
+- `View+Platform` adapts tab/list styles, navigation titles, and refresh controls.
+- `AppSettingsButton` opens the macOS Settings window or presents the iOS sheet;
+  `SettingsSceneContent` supplies the selected account in the macOS window.
+- `AppearanceProxies.configure()` sets iOS navigation/tab appearance at startup.
+- `EmbeddedWikiWebView` wraps `WKWebView` through `UIViewRepresentable` on iOS
+  and `NSViewRepresentable` on macOS. `WikiCoordinator` presents the shared browser.
 
-## Conventions for adding a new shared component
-Generic over `Content: View` (`Surface`) or a `Hashable` option type
-(`FilterPills`) when the component's shape is reusable; a `View` extension
-modifier (`themedList()`, `screenBackground()`) when it's really just a
-bundle of standard modifiers applied together. Reach for `Color.x` semantic
-names, never a raw `Color(.systemGray)`/hex literal in a tab-level View.
+Feature views use these platform APIs without platform compilation checks.
 
-## Test coverage
-None — SwiftUI view code isn't unit-tested in this app (expected; no
-snapshot-test target exists yet). Verification is manual, via Xcode previews
-and the simulator.
+## Shared components
+
+- `DashboardHero`, dashboard metrics/headers, and feature cards provide the current
+  dashboard layout. Grids adapt to platform and accessibility text size.
+- `Surface` is a generic content container with 12-point padding and a 10-point
+  corner radius. It remains available alongside the dashboard components.
+- `ThemedList` and `.themedList()` apply shared background/row/separator styling;
+  scroll-view dashboards apply their own background and layout.
+- `FilterPills` binds a generic Hashable option to capsule buttons; Mastery detail
+  screens use it for mastery-state filtering.
+- `ProgressBar` renders progress. `SectionHeaderLabel` and `DashboardSectionHeader`
+  provide section headings for their respective layouts.
+- `LiveCountdownText` uses a periodic `TimelineView`, updating every second or
+  minute and clamping elapsed countdowns to zero. A ticking label does not reload
+  its underlying API data. `FissureRowView` currently shows node/mission/enemy and
+  storm state, without an expiry countdown.
+- `LotusMark` and `LotusLoaderView` provide shared branding/loading presentation.
+- `ItemWikiLink` connects item actions to the environment's `WikiCoordinator`.
+
+## Conventions and verification
+
+Use semantic palette and shared layout values in feature views. Make components
+generic when their content or selection genuinely varies, and use view modifiers
+for shared bundles of styling. Keep UIKit/AppKit/WebKit integration in `Platform/`.
+
+There is no UI/snapshot test target. Verify layout through previews and on macOS
+and an iOS simulator, including accessibility text sizes and both color schemes.

@@ -1,6 +1,14 @@
+//
+//  OpeningsItemCategoryDetailViewModel.swift
+//  TennoWatch
+//
+//  Created by Andrii Bryzhnychenko on 10/4/26.
+//
+
 import Observation
 
 @Observable
+@MainActor
 final class OpeningsItemCategoryDetailViewModel {
     let categoryTitle: String
     let items: [MasteryItemViewModel]

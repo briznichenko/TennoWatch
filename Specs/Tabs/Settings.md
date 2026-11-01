@@ -1,66 +1,59 @@
-# Tab: Settings
+# Feature: Settings
 
-Not a `Tab` — presented as a `.sheet` from [Profile](Profile.md)'s toolbar
-gear icon. Documented separately because it's a distinct feature surface
-with its own ViewModel, not because it has its own tab bar entry.
+## Purpose and entry points
 
-## Purpose
-App-level preferences (theme, language) plus manual control over the
-mastery-catalog sync that the Mastery/Openings tabs otherwise trigger
-implicitly on every fetch.
+Settings provides theme/language preferences, local Void Trader arrival reminders,
+account information, catalog metadata/refresh, and storage reset. It is a sheet
+from Profile on iOS and a native Settings window on macOS, also accessible through
+the app menu and menu bar item.
 
-## Entry point
-`ProfileView` → `isShowingSettings` sheet → [`SettingsView`](../../TennoWatch/Views/Settings/SettingsView.swift),
-constructed with `persistencyService`, `catalogRepository`, `profileRepository`,
-`errorManager` — the only screen that touches `PersistencyService` directly
-rather than going through a repository, because it needs raw access to
-`MasteryCatalogDataModel` metadata (game version, generated-at date) that no
-repository method currently exposes.
+`SettingsView` receives a `SettingsViewModel`, a display name, and an `onCacheCleared`
+callback. `ProfileView` supplies the iOS presentation; `SettingsSceneContent` loads
+the selected profile for the macOS window.
 
-## Screen — `SettingsView`
-Single `List`, four sections:
-- **Appearance** — `Picker` bound directly to `@AppStorage("themePreference")`
-  (`ThemePreference: system/light/dark`). No ViewModel involvement — this is
-  the one piece of UI state in the app that's pure `@AppStorage`, not routed
-  through an `@Observable` ViewModel.
-- **Language** — same pattern, `@AppStorage(AppLanguage.storageKey)`. Setting
-  this triggers `Strings`' bundle lookup to switch (see
-  [Localization](../Layers/Localization.md)) — takes effect live, no restart.
-- **Account** — read-only, shows `displayName` passed in from `ProfileView`
-  (not re-fetched here).
-- **Catalog** — `gameVersion` + `catalogGeneratedAt` (both `nil`-coalesced to
-  a placeholder until `loadCatalogInfo()` resolves), a refresh button
-  disabled while `isRefreshing`, and a `statusText` line that's declared but
-  — worth checking — appears to never actually get set anywhere in
-  `SettingsViewModel`; likely a stub for a "refreshed N items" message that
-  wasn't wired up yet.
+## Screen
 
-## ViewModel — `SettingsViewModel`
-- `loadCatalogInfo()` — reads the *first* `MasteryCatalogDataModel` row via
-  `persistencyService.fetchModel(by:)` directly (bypassing `CatalogRepository`
-  entirely) for `gameVersion`/`catalogGeneratedAt`. There's exactly one
-  catalog row ever persisted (see [Persistency](../Layers/Persistency.md)),
-  so `.first` is safe today but is an implicit assumption this ViewModel
-  relies on without enforcing it.
-- `refreshCatalog()` — force-refreshes the profile, then
-  `catalogRepository.syncMasteryCatalog(with:)`, then reloads catalog info.
-  This is the *only* place in the app that triggers a full mastery-catalog
-  resync outside of the Mastery/Openings tabs' own implicit sync-on-fetch.
+The list has six sections:
 
-## Known gaps / TODOs
-- `statusText` is declared, read by the view, but never assigned in
-  `SettingsViewModel` — either dead state or an unfinished "last refresh
-  result" message.
-- No way to reset/clear local persistence (useful for a learning-project
-  debug menu, arguably out of scope for a real settings screen).
-- Theme/language use `@AppStorage` directly rather than being surfaced on
-  `SettingsViewModel` — inconsistent with the rest of the app's "ViewModel
-  owns all state" convention, though arguably correct here since
-  `@AppStorage` is exactly the right tool for simple persisted UI prefs and
-  routing it through a ViewModel would add a layer for no benefit.
+- **Appearance** — system/light/dark via `@AppStorage("themePreference")`.
+- **Language** — system/English/Ukrainian via `@AppStorage(AppLanguage.storageKey)`;
+  changes apply live. See [Localization](../Layers/Localization.md).
+- **Notifications** — an `@AppStorage` toggle for local Void Trader arrival reminders.
+- **Account** — the display name supplied by the parent.
+- **Catalog** — version, optional generation date, and refresh with loading state.
+- **Storage** — destructive cache clearing behind a confirmation dialog.
+
+## ViewModel behavior
+
+- `loadCatalogInfo()` reads the first `MasteryCatalogDataModel` value through
+  `PersistencyService.fetchModel(by:)` for metadata. Catalogs are profile-owned;
+  this read does not select the active profile's catalog.
+- `refreshCatalog()` force-refreshes the active profile, then reloads metadata.
+  Profile refresh prepares its catalog through the repository. It does not
+  download a new bundled catalog or call `syncMasteryCatalog(with:)` directly.
+- Enabling reminders requests notification permission, fetches world state, and
+  asks `VoidTraderNotificationScheduler` to schedule a future arrival. Disabling
+  reminders cancels the pending arrival notification. These are local notifications;
+  APNs is not implemented.
+- `clearCache()` deletes all persisted models, invalidates the world-state service's
+  network cache, cancels the arrival reminder, and removes the app's UserDefaults
+  domain, including profile selection and preferences. On success the view calls
+  `onCacheCleared` so app content is recreated. Failures go to `ErrorManager`.
+
+The ViewModel receives persistence, catalog/profile/world-state repositories,
+notification service/scheduler, and the shared error manager. Theme and language
+remain direct `@AppStorage` bindings, appropriate for persisted UI preferences.
+
+## Known limitations
+
+- Catalog metadata uses `.first` without filtering by active account. Multiple
+  profile-owned catalogs can exist; this is not a guaranteed active-catalog lookup.
+- The notification toggle stores intent before authorization/scheduling completes;
+  a failure is presented but does not automatically turn the toggle off.
+- Cache clearing spans several operations rather than one atomic transaction.
 
 ## Test coverage
-None. No repository/service layer of its own to test independently — its
-only non-trivial logic (`refreshCatalog`'s three-step sequence) is really
-exercising `ProfileRepository`/`CatalogRepository`, which have their own
-tests.
+
+No direct `SettingsViewModelTests`. `CacheClearingTests` verifies persisted-model
+removal; profile and isolation suites cover repository behavior. The complete reset
+sequence and notification-toggle flow have no dedicated tests.

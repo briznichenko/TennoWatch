@@ -1,5 +1,5 @@
 //
-//  PersistentModel.swift
+//  ValueTypeConvertible.swift
 //  TennoWatch
 //
 //  Created by Andrii Bryzhnychenko on 9/3/26.
@@ -12,7 +12,7 @@ protocol ValueTypeConvertible: PersistentModel {
     var value: Value { get }
 }
 
-protocol PersistentModelConvertible {
+protocol PersistentModelConvertible: Sendable {
     associatedtype Model: PersistentModel
     var model: Model { get }
 }

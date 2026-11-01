@@ -7,17 +7,17 @@
 
 import Foundation
 
-struct MasteryCategoryModel: Hashable, Identifiable {
+struct MasteryCategoryModel: Hashable, Identifiable, Sendable {
     // MARK: - Object Properties
     let name: String
     var sources: [MasterySourceModel]
     let id = UUID()
 
     // MARK: - Computed Properties
-    var itemsCount: Int { sources.count }
+    var itemsCount: Int { sources.filter { $0.mastery > 0 }.count }
     var masteredItemsCount: Int {
         sources.filter {
-            $0.isMastered == true
+            $0.mastery > 0 && $0.isMastered == true
         }.count
     }
 

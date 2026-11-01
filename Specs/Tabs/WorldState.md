@@ -1,75 +1,65 @@
 # Tab: World State
 
-## Purpose
-Live snapshot of the game's shared world state — the "what's happening right
-now" board. First tab, and the simplest vertical slice in the app: no
-persistence, no profile dependency, single repository.
+## Purpose and entry point
 
-## Entry point
-`MainView` → `Tab("World state")` → [`WorldStateView`](../../TennoWatch/Views/WorldState/WorldStateView.swift),
-constructed with `worldStateRepository` and `errorManager` from `AppDependencies`.
+The first tab displays the shared PC world-state snapshot. It has no profile
+or SwiftData dependency. `MainView` constructs `WorldStateViewModel` with
+`WorldStateRepository`, `VoidTraderNotificationScheduler`, and `ErrorManager`,
+then passes it to [`WorldStateView`](../../TennoWatch/Views/WorldState/WorldStateView.swift).
 
-## Screens
-- **`WorldStateView`** — root. Wraps `WorldStateListView` in a `NavigationStack`,
-  owns the `.task`/`.refreshable` fetch lifecycle and the loading overlay
-  (shown only while `worldState == nil`, so pull-to-refresh doesn't blank the
-  screen).
-- **`WorldStateListView`** — the actual `List`, seven independently-hidden
-  sections in this order: Void Trader, Nightwave, invasions (summary +
-  drill-down), cycles, fissures (summary + drill-down), sortie, Archon Hunt.
-  Every section is `@ViewBuilder`-gated on its data being present (e.g. no
-  Void Trader row when he's not around) — nothing renders an empty state.
-- **`InvasionListView`** / **`FissureListView`** — pushed detail lists,
-  reached by tapping the summary rows (`InvasionsSummaryRowView`,
-  `FissuresSummaryRowView`). Grouped by planet / by relic tier respectively
-  (`viewModel.invasionsByPlanet` / `.fissuresByTier`).
-- **`NightwaveListView`** — pushed from `NightwaveRowView`, lists challenges
-  via `NightwaveChallengeRowView`.
-- **`InvasionView`** — per-invasion detail (attacker/defender factions,
-  rewards, completion).
-- Sortie and Archon Hunt reuse the same `SortieRowView` for both — Archon
-  Hunt is modeled as a sortie variant, not a separate type.
-- Remaining row views: `CycleRowView`, `FissureRowView`, `VoidTraderRowView`.
+## Dashboard and navigation
 
-## ViewModel — `WorldStateViewModel`
-- State: `worldState: WorldState?`, `isLoading: Bool`.
-- `fetchWorldState()` — the only mutating entry point. Always a full refresh;
-  no force/normal distinction (unlike Profile/Mastery) since there's nothing
-  to cache against.
-- Derives four view-facing shapes from the raw model, none of which exist on
-  `WorldState` itself:
-  - `cycles: [WorldCycleDisplay]` — flattens the five open-world cycles
-    (Cetus, Vallis, Cambion, Zariman, Earth) into one displayable list, each
-    with a manually-picked title/state string pair (day/night, warm/cold,
-    Corpus/Grineer, or the raw Cambion state capitalized).
-  - `invasions: [Invasion]` — sorted by node.
-  - `fissures: [Fissure]` — sorted by soonest expiry (`.distantFuture` for
-    fissures with no expiry, so they sort last).
-  - `invasionsByPlanet` / `fissuresByTier` — grouped + sorted, the latter
-    against a hardcoded tier order (`Lith, Meso, Neo, Axi, Requiem, Omnia`)
-    rather than alphabetical, since that's the game's actual difficulty order.
+`WorldStateView` wraps `WorldStateGridView` in a `NavigationStack`. The dashboard
+uses a scroll view with a wide Void Trader card, active events, and an adaptive
+card grid. Accessibility text sizes use a single column. Cards appear only when
+their corresponding data is available.
 
-## Data dependency
-Only `WorldStateRepository.getWorldState(platform:)`, defaulted to `.pc` via
-a protocol extension. No platform picker in the UI yet — every call uses PC
-data. Cross-platform support would mean threading a platform selection down
-from Settings or a per-tab picker; not built.
+The grid covers invasions, fissures, sortie, Archon Hunt, Nightwave, Vault Trader,
+Steel Path offerings, alerts, Archimedea, the calendar, flash sales, cycles, and
+potential Prime releases. Inline `NavigationLink` destinations open their detail
+lists/screens. Sortie and Archon Hunt share `SortieDetailView`; both traders share
+`TraderInventoryListView`.
 
-## Known gaps / TODOs
-- No platform selector — hardcoded to `.pc`.
-- No local caching of world state (every tab visit refetches); this is
-  probably correct given the data is live and short-lived, but worth a
-  conscious call if a "last known state while offline" feature ever comes up.
-- Sortie, Archon Hunt, Nightwave, and Void Trader are read straight off
-  `viewModel.worldState?.x` in the view rather than through a ViewModel
-  computed property — inconsistent with cycles/invasions/fissures, which get
-  dedicated `WorldCycleDisplay`/grouping types. Fine today since none of them
-  need derived display logic yet; would need to follow the existing pattern
-  (computed property on the ViewModel, not raw model access from the view) if
-  that changes.
+Invasions group by planet. Fissures group by star chart, then relic tier; the tier
+order is Lith, Meso, Neo, Axi, Requiem, Omnia, with unknown tiers sorted afterward.
+Cycles open `CycleListView`. Item/wiki actions use the shared `WikiCoordinator`.
 
-## Test coverage
-[`WorldStateViewModelTests`](../../TennoWatchTests/ViewModels/WorldStateViewModelTests.swift)
-— the only ViewModel under test in the whole app. Covers the fetch/error path
-and (presumably, given the file exists) the grouping/sorting logic. No view
-tests (expected — this is a SwiftUI app, no snapshot/UI test target yet).
+## Fetch lifecycle and derived data
+
+`fetchWorldState(forceRefresh: Bool = false)` loads through the repository and
+then synchronizes the local Void Trader arrival reminder. Initial loading shows an
+overlay only when no snapshot is present. Manual refresh passes `forceRefresh: true`
+and clears the network cache first. Errors go to `ErrorManager`; cancellation is silent.
+
+The repository delegates to `APIManager`, whose world-state cache has a 30-second
+in-memory TTL. There is no persisted offline world-state snapshot or background
+polling. See [Networking](../Layers/Networking.md) for retries and cache policy.
+
+The ViewModel derives cycle displays, sorted invasions/fissures/alerts, grouped
+navigation data, active events, and a bounded flash-sale preview. Active events
+filter by activation/expiry and are reevaluated by a minute-based `TimelineView`.
+Countdown components update locally; they do not fetch new world state.
+
+## Potential Prime releases
+
+The final grid card opens `PrimeReleaseListView`, listing up to six oldest released
+base Warframes without a released Prime variant. The list labels the order as a
+prediction; it does not invent release dates or enforce gender rotation. Umbra
+and non-Warframe entries are excluded from the source snapshot.
+
+`PrimeReleaseOrder` reads `Resources/primeReleaseOrder.json` independently of the
+network and profile. The detail list displays the snapshot's update date. Refresh
+it together with the mastery catalog through the
+[game-data refresh workflow](../../.github/README.md#local-validation). For a standalone
+update, download WFCD's `Warframes.json` and run
+`python3 Scripts/generate_prime_release_order.py /path/to/Warframes.json`.
+
+## Known limitations and tests
+
+World-state requests default to `.pc`; there is no platform picker. A snapshot
+can become stale while the app remains open, and countdown expiry does not itself
+refresh inventory or remove expired API entries.
+
+`WorldStateViewModelTests` covers fetch success/failure/cancellation, loading state,
+cycle mapping, and invasion/fissure sorting. The newer dashboard derivations and
+notification integration have no dedicated coverage. There are no UI/snapshot tests.

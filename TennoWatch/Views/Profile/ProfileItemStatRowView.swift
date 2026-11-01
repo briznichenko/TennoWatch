@@ -13,12 +13,16 @@ struct ProfileItemStatRowView: View {
 
     // MARK: - Body
     var body: some View {
-        VStack(alignment: .leading, spacing: ListLayout.compactDetailSpacing) {
-            Text(item.name)
-                .foregroundStyle(Color.labelPrimary)
-            Text(Strings.Profile.itemDetailText(kills: item.kills, headshots: item.headshots, assists: item.assists))
-                .font(.caption)
-                .foregroundStyle(Color.labelSecondary)
+        HStack {
+            VStack(alignment: .leading, spacing: ListLayout.compactDetailSpacing) {
+                Text(item.name)
+                    .foregroundStyle(Color.labelPrimary)
+                Text(Strings.Profile.itemDetailText(kills: item.kills, headshots: item.headshots, assists: item.assists))
+                    .font(.caption)
+                    .foregroundStyle(Color.labelSecondary)
+            }
+            Spacer()
+            ItemWikiLink(itemName: item.name)
         }
         .frame(minHeight: ListLayout.minimumRowHeight)
     }

@@ -1,3 +1,10 @@
+//
+//  StarChartMode.swift
+//  TennoWatch
+//
+//  Created by Andrii Bryzhnychenko on 10/4/26.
+//
+
 import Foundation
 
 enum StarChartMode: String, CaseIterable, Identifiable {

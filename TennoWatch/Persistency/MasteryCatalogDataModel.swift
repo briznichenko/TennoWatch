@@ -150,10 +150,11 @@ extension MasteryCategoryDataModel: ValueTypeConvertible {
     }
 
     var summary: MasteryCategorySummary {
-        .init(
+        let masterySources = sources.filter { $0.mastery > 0 }
+        return .init(
             name: name,
-            itemsCount: itemsCount,
-            masteredItemsCount: masteredItemsCount,
+            itemsCount: masterySources.count,
+            masteredItemsCount: masterySources.filter(\.isMastered).count,
             earnedMasteryPoints: masteredPoints
         )
     }
@@ -195,7 +196,7 @@ extension MasterySourceDataModel: ValueTypeConvertible {
     }
 }
 
-struct MasteryCatalog {
+struct MasteryCatalog: Sendable {
     // MARK: - Object Properties
     let schemaVersion: Double
     let gameVersion: String
@@ -240,7 +241,7 @@ extension MasteryCatalog: PersistentModelConvertible {
     }
 }
 
-struct MasteryCatalogSummary {
+struct MasteryCatalogSummary: Sendable {
     // MARK: - Object Properties
     let totalMasteryMax: Int
     let obtainableMasteryMax: Int
@@ -248,7 +249,7 @@ struct MasteryCatalogSummary {
     let nonItemCategories: [MasteryCategorySummary]
 }
 
-struct CatalogContainerSummary: Identifiable, Hashable {
+struct CatalogContainerSummary: Identifiable, Hashable, Sendable {
     // MARK: - Object Properties
     let category: CatalogItemModel.Category
     let itemsCount: Int
@@ -262,7 +263,7 @@ struct CatalogContainerSummary: Identifiable, Hashable {
     var countText: String { "\(masteredItemsCount) / \(itemsCount)" }
 }
 
-struct MasteryCategorySummary: Identifiable, Hashable {
+struct MasteryCategorySummary: Identifiable, Hashable, Sendable {
     // MARK: - Object Properties
     let name: String
     let itemsCount: Int

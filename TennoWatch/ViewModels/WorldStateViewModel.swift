@@ -28,7 +28,14 @@ struct FissureTierGroup: Identifiable {
     var id: String { tier }
 }
 
+struct FissureStarChartGroup: Identifiable {
+    let chart: FissureStarChart
+    let tiers: [FissureTierGroup]
+    var id: FissureStarChart { chart }
+}
+
 @Observable
+@MainActor
 final class WorldStateViewModel {
     // MARK: - Object Properties
     private let worldStateRepository: WorldStateRepository
@@ -41,6 +48,12 @@ final class WorldStateViewModel {
     private(set) var isLoading = false
 
     // MARK: - Computed Properties
+    var primeReleaseDataUpdatedAt: Date? { PrimeReleaseOrder.bundled?.updatedAt }
+
+    var primeReleaseCandidates: [PrimeReleaseOrder.Frame] {
+        Array((PrimeReleaseOrder.bundled?.candidates(at: .now) ?? []).prefix(6))
+    }
+
     var cycles: [WorldCycleDisplay] {
         guard let worldState else { return [] }
         return [
@@ -84,6 +97,16 @@ final class WorldStateViewModel {
 
     var invasions: [Invasion] {
         (worldState?.invasions ?? []).sorted { $0.node < $1.node }
+    }
+
+    func activeEvents(at date: Date) -> [WorldEvent] {
+        (worldState?.events ?? [])
+            .filter { ($0.activation ?? .distantPast) <= date && ($0.expiry ?? .distantFuture) > date }
+            .sorted {
+                let lhsExpiry = $0.expiry ?? .distantFuture
+                let rhsExpiry = $1.expiry ?? .distantFuture
+                return lhsExpiry == rhsExpiry ? $0.description < $1.description : lhsExpiry < rhsExpiry
+            }
     }
 
     var fissures: [Fissure] {
@@ -135,6 +158,17 @@ final class WorldStateViewModel {
             }
     }
 
+    var fissuresByStarChart: [FissureStarChartGroup] {
+        let tiers = fissuresByTier
+        return FissureStarChart.allCases.compactMap { chart in
+            let matchingTiers = tiers.compactMap { tier -> FissureTierGroup? in
+                let matches = tier.fissures.filter { $0.starChart == chart }
+                return matches.isEmpty ? nil : FissureTierGroup(tier: tier.tier, fissures: matches)
+            }
+            return matchingTiers.isEmpty ? nil : FissureStarChartGroup(chart: chart, tiers: matchingTiers)
+        }
+    }
+
     // MARK: - Init
     init(
         worldStateRepository: WorldStateRepository,
@@ -147,7 +181,8 @@ final class WorldStateViewModel {
     }
 
     // MARK: - Functions
-    func fetchWorldState() async {
+    func fetchWorldState(forceRefresh: Bool = false) async {
+        if forceRefresh { await worldStateRepository.clearCache() }
         defer {
             isLoading = false
         }

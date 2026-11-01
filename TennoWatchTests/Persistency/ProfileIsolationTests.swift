@@ -1,24 +1,48 @@
+//
+//  ProfileIsolationTests.swift
+//  TennoWatchTests
+//
+//  Created by Andrii Bryzhnychenko on 10/4/26.
+//
+
 import Foundation
 import SwiftData
+import Synchronization
 import Testing
 @testable import TennoWatch
 
+@MainActor
 private final class ProfileIsolationAPI: ServiceProtocol {
     var response = ProfileModel.stub()
     private(set) var fetchCount = 0
 
-    func fetch<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
+    @MainActor
+    func fetch<T: Decodable & Sendable>(_ endpoint: Endpoint) async throws -> T {
         fetchCount += 1
         return try #require(response as? T)
     }
 }
 
 private final class ProfileIsolationAccountStore: AccountIDStoring {
-    var currentAccountID: String?
+    private let accountID = Mutex<String?>(nil)
+
+    var currentAccountID: String? {
+        get { accountID.withLock { $0 } }
+        set { accountID.withLock { $0 = newValue } }
+    }
+
+    func replaceCurrentAccountID(with accountID: String?, ifMatching expectedID: String?) -> Bool {
+        self.accountID.withLock { current in
+            guard current == expectedID else { return false }
+            current = accountID
+            return true
+        }
+    }
 }
 
 private final class CountingCatalogSyncService: CatalogSyncService {
-    private(set) var sourceMergeCount = 0
+    private let mergeCount = Mutex(0)
+    var sourceMergeCount: Int { mergeCount.withLock { $0 } }
     private let service = DefaultCatalogSyncService()
 
     func mergeProfile(_ profile: Profile, into items: [MasteryItem]) -> [MasteryItem] {
@@ -26,16 +50,18 @@ private final class CountingCatalogSyncService: CatalogSyncService {
     }
 
     func mergeProfile(_ profile: Profile, into sources: [MasterySourceModel]) -> [MasterySourceModel] {
-        sourceMergeCount += 1
+        mergeCount.withLock { $0 += 1 }
         return service.mergeProfile(profile, into: sources)
     }
 }
 
+@MainActor
 private final class DelayedProfileAPI: ServiceProtocol {
     private var request: CheckedContinuation<ProfileModel, Error>?
     private var started: CheckedContinuation<Void, Never>?
 
-    func fetch<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
+    @MainActor
+    func fetch<T: Decodable & Sendable>(_ endpoint: Endpoint) async throws -> T {
         let response = try await withCheckedThrowingContinuation { continuation in
             request = continuation
             started?.resume()
@@ -55,6 +81,7 @@ private final class DelayedProfileAPI: ServiceProtocol {
     }
 }
 
+@MainActor
 @Suite("Profile mastery isolation")
 struct ProfileIsolationTests {
     private func makeRepositories() throws -> (

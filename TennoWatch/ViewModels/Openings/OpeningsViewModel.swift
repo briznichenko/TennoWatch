@@ -25,6 +25,7 @@ struct OpeningsSourceCategorySummary: Identifiable, Hashable {
 }
 
 @Observable
+@MainActor
 final class OpeningsViewModel {
     // MARK: - Object Properties
     private let profileRepository: ProfileRepository
@@ -59,7 +60,7 @@ final class OpeningsViewModel {
     /// categories that still have an unmastered source left.
     private var permanentSourceGroups: [(name: String, sources: [MasterySourceModel])] {
         (catalog?.nonItemSources ?? []).compactMap { category in
-            let unmastered = category.sources.filter { $0.isMastered != true }
+            let unmastered = category.sources.filter { $0.mastery > 0 && $0.isMastered != true }
             return unmastered.isEmpty ? nil : (category.name, unmastered)
         }
     }
@@ -82,7 +83,7 @@ final class OpeningsViewModel {
     var permanentSourceCategories: [OpeningsSourceCategorySummary] {
         permanentSourceGroups
             .compactMap { group in
-                let matching = group.sources.filter { $0.name.matchesSearch(searchText) || $0.uniqueName.matchesSearch(searchText) }
+                let matching = group.sources.filter { $0.searchableText.matchesSearch(searchText) }
                 return matching.isEmpty ? nil : OpeningsSourceCategorySummary(name: group.name, count: matching.count)
             }
             .sorted { $0.name < $1.name }
@@ -104,7 +105,8 @@ final class OpeningsViewModel {
     }
 
     // MARK: - Functions
-    func fetchOpenings() async {
+    func fetchOpenings(forceRefresh: Bool = false) async {
+        if forceRefresh { await worldStateRepository.clearCache() }
         isLoading = true
         defer { isLoading = false }
 

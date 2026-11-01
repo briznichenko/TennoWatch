@@ -13,11 +13,8 @@ struct ProfileView: View {
     @State private var profileToDelete: Profile?
     @State private var isShowingDeleteConfirmation = false
     @State private var isShowingSettings = false
-    @State private var isShowingIdHelp = false
-    @AppStorage("profileIdHelpDontShowAgain") private var dontShowIdHelpAgain = false
-    @FocusState private var isIDInputFocused
+    @State private var isShowingAddProfile = false
     @Environment(\.colorScheme) private var colorScheme
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private let dependencies: AppDependencies
     private let onCacheCleared: () -> Void
@@ -31,83 +28,75 @@ struct ProfileView: View {
 
     // MARK: - Body
     var body: some View {
-        ZStack {
-            NavigationStack {
-                List {
-                    identityCard
-                        .listRowInsets(Layout.identityCardInsets)
-                        .listRowSeparator(.hidden)
-                        .listRowBackground(Color.clear)
-                    savedProfilesSection
-                    playerIdSection
-                    statsSection
-                }
-                .listStyle(.sidebar)
-                .compactListSections()
-                .scrollContentBackground(.hidden)
-                .background(Color.bg)
-                .tint(DashboardPalette.accent(in: colorScheme))
-                .navigationTitle(Strings.Profile.title)
-                .overlay {
-                    if viewModel.isLoading {
-                        LotusLoaderView()
-                    }
-                }
-                .toolbar {
-                    ToolbarItem(placement: .primaryAction) {
-                        AppSettingsButton(isPresented: $isShowingSettings)
-                    }
-                }
-                .handleErrorAlert(with: viewModel.errorManager)
-                .sheet(isPresented: $isShowingSettings) {
-                    SettingsView(
-                        viewModel: .init(
-                            persistencyService: dependencies.persistencyService,
-                            catalogRepository: dependencies.catalogRepository,
-                            profileRepository: dependencies.profileRepository,
-                            worldStateRepository: dependencies.worldStateRepository,
-                            notificationService: dependencies.notificationService,
-                            voidTraderNotificationScheduler: dependencies.voidTraderNotificationScheduler,
-                            errorManager: dependencies.errorManager
-                        ),
-                        displayName: viewModel.displayName,
-                        onCacheCleared: onCacheCleared
-                    )
-                }
-                .task {
-                    await viewModel.load()
-                }
-                .platformRefreshable(isDisabled: viewModel.isLoading || viewModel.profile?.isLocal == true) {
-                    if viewModel.profile?.isLocal != true {
-                        await viewModel.fetchProfile(forceRefresh: true)
-                    }
-                }
-                .confirmationDialog(
-                    Strings.Profile.deleteProfileTitle,
-                    isPresented: $isShowingDeleteConfirmation,
-                    titleVisibility: .visible,
-                    presenting: profileToDelete
-                ) { profile in
-                    Button(Strings.Profile.deleteProfileButton, role: .destructive) {
-                        Task { await viewModel.deleteProfile(profile) }
-                    }
-                } message: { profile in
-                    Text(Strings.Profile.deleteProfileMessage(viewModel.name(for: profile)))
+        NavigationStack {
+            List {
+                identityCard
+                    .listRowInsets(Layout.identityCardInsets)
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
+                savedProfilesSection
+                statsSection
+            }
+            .profileListStyle()
+            .compactListSections()
+            .buttonStyle(.plain)
+            .foregroundStyle(Color.labelPrimary)
+            .scrollContentBackground(.hidden)
+            .frame(maxWidth: DashboardLayout.maximumContentWidth)
+            .frame(maxWidth: .infinity)
+            .background(Color.bg)
+            .tint(DashboardPalette.accent(in: colorScheme))
+            .navigationTitle(Strings.Profile.title)
+            .overlay {
+                if viewModel.isLoading {
+                    LotusLoaderView()
                 }
             }
-
-            if isShowingIdHelp {
-                PlayerIdHelpAlertView(
-                    dontShowAgain: dontShowIdHelpAgain,
-                    onCancel: { isShowingIdHelp = false },
-                    onConfirm: { dontShowAgain in
-                        dontShowIdHelpAgain = dontShowAgain
-                        isShowingIdHelp = false
-                    }
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    AppSettingsButton(isPresented: $isShowingSettings)
+                }
+            }
+            .handleErrorAlert(with: viewModel.errorManager)
+            .sheet(isPresented: $isShowingSettings) {
+                SettingsView(
+                    viewModel: .init(
+                        persistencyService: dependencies.persistencyService,
+                        catalogRepository: dependencies.catalogRepository,
+                        profileRepository: dependencies.profileRepository,
+                        worldStateRepository: dependencies.worldStateRepository,
+                        notificationService: dependencies.notificationService,
+                        voidTraderNotificationScheduler: dependencies.voidTraderNotificationScheduler,
+                        errorManager: dependencies.errorManager
+                    ),
+                    displayName: viewModel.displayName,
+                    onCacheCleared: onCacheCleared
                 )
             }
+            .sheet(isPresented: $isShowingAddProfile) {
+                AddProfileSheet(viewModel: viewModel)
+            }
+            .task {
+                await viewModel.load()
+            }
+            .platformRefreshable(isDisabled: viewModel.isLoading || viewModel.profile?.isLocal == true) {
+                if viewModel.profile?.isLocal != true {
+                    await viewModel.syncProfile()
+                }
+            }
+            .confirmationDialog(
+                Strings.Profile.deleteProfileTitle,
+                isPresented: $isShowingDeleteConfirmation,
+                titleVisibility: .visible,
+                presenting: profileToDelete
+            ) { profile in
+                Button(Strings.Profile.deleteProfileButton, role: .destructive) {
+                    Task { await viewModel.deleteProfile(profile) }
+                }
+            } message: { profile in
+                Text(Strings.Profile.deleteProfileMessage(viewModel.name(for: profile)))
+            }
         }
-        .animation(reduceMotion ? nil : .easeInOut(duration: Layout.helpTransitionDuration), value: isShowingIdHelp)
     }
 
     // MARK: - Subviews
@@ -118,7 +107,9 @@ struct ProfileView: View {
             isLocal: viewModel.profile?.isLocal == true,
             rank: viewModel.playerLevel,
             missionsCompleted: viewModel.totalMissionsCompleted,
-            totalKills: viewModel.totalKills
+            totalKills: viewModel.totalKills,
+            isSyncing: viewModel.isLoading,
+            onSync: { Task { await viewModel.syncProfile() } }
         )
     }
     
@@ -128,19 +119,13 @@ struct ProfileView: View {
                 Button {
                     Task { await viewModel.selectProfile(profile) }
                 } label: {
-                    HStack(spacing: Layout.iconSpacing) {
-                        DashboardIcon(name: profile.isLocal ? "pencil.circle" : "person.crop.circle")
-                        Text(viewModel.name(for: profile))
-                            .font(.headline)
-                            .foregroundStyle(Color.labelPrimary)
-                        Spacer()
-                        if profile.accountID.oid == viewModel.accountId {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(DashboardPalette.accent(in: colorScheme))
-                        }
-                    }
-                    .padding(.vertical, Layout.rowVerticalPadding)
+                    ProfileRow(
+                        title: viewModel.name(for: profile),
+                        icon: profile.isLocal ? "pencil.circle" : "person.crop.circle",
+                        isSelected: profile.accountID.oid == viewModel.accountId
+                    )
                 }
+                .accessibilityAddTraits(profile.accountID.oid == viewModel.accountId ? .isSelected : [])
                 .swipeActions {
                     Button(role: .destructive) {
                         profileToDelete = profile
@@ -158,70 +143,26 @@ struct ProfileView: View {
                     }
                 }
             }
+            Button {
+                isShowingAddProfile = true
+            } label: {
+                ProfileRow(title: Strings.Profile.addProfile, icon: "plus.circle")
+            }
             if !viewModel.savedProfiles.contains(where: \.isLocal) {
                 Button {
                     Task { await viewModel.createLocalProfile() }
                 } label: {
-                    Label(Strings.Profile.manualProfile, systemImage: "plus.circle")
+                    ProfileRow(title: Strings.Profile.manualProfile, icon: "pencil.circle")
                 }
             }
         } header: {
             DashboardSectionHeader(title: Strings.Profile.savedProfilesHeader, icon: "person.2")
+                .padding(.vertical, Layout.sectionHeaderPadding)
         }
+        .listRowInsets(Layout.rowInsets)
         .listRowBackground(Color.surface)
         .listRowSeparatorTint(Color.divider)
         .disabled(viewModel.isLoading)
-    }
-
-    private var playerIdSection: some View {
-        Section {
-            VStack(alignment: .leading, spacing: Layout.formSpacing) {
-                Text(Strings.Profile.id)
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(Color.labelSecondary)
-                HStack(spacing: Layout.iconSpacing) {
-                    TextField(Strings.Profile.idPlaceholder, text: $viewModel.playerId)
-                        .focused($isIDInputFocused)
-                        .font(.body.monospaced())
-                        .foregroundStyle(Color.labelPrimary)
-                        .onSubmit {
-                            Task { await viewModel.fetchProfile() }
-                        }
-                    Image(systemName: "pencil")
-                        .foregroundStyle(isIDInputFocused ? Color.accentColor : .secondary)
-                        .accessibilityHidden(true)
-                }
-                .padding(Layout.fieldPadding)
-                .background(Color.bg, in: .rect(cornerRadius: Layout.fieldCornerRadius))
-                .overlay {
-                    RoundedRectangle(cornerRadius: Layout.fieldCornerRadius)
-                        .strokeBorder(isIDInputFocused ? Color.accentColor : Color.divider, lineWidth: Layout.fieldBorderWidth)
-                }
-            }
-            .padding(.vertical, Layout.rowVerticalPadding)
-            Button {
-                Task { await viewModel.fetchProfile(forceRefresh: true) }
-            } label: {
-                HStack {
-                    Label(Strings.Profile.syncButton, systemImage: "arrow.triangle.2.circlepath")
-                        .font(.headline)
-                    Spacer()
-                    if viewModel.isLoading {
-                        LotusLoaderView(size: LoadingIndicatorSize.compact)
-                    }
-                }
-            }
-            .disabled(viewModel.isLoading || viewModel.playerId.isEmpty)
-        } footer: {
-            Button {
-                isShowingIdHelp = true
-            } label: {
-                Label(Strings.Profile.idHelpTrigger, systemImage: "info.circle")
-            }
-            .font(.caption)
-        }
-        .listRowBackground(Color.surface)
-        .listRowSeparatorTint(Color.divider)
     }
 
     private var statsSection: some View {
@@ -230,57 +171,82 @@ struct ProfileView: View {
                 NavigationLink {
                     IntrinsicsView(groups: viewModel.intrinsicGroups)
                 } label: {
-                    Label {
-                        LabeledContent(Strings.Profile.intrinsicsRow, value: viewModel.intrinsicsSummaryText)
-                    } icon: {
-                        Image(systemName: "sparkles")
-                    }
+                    ProfileRow(title: Strings.Profile.intrinsicsRow, icon: "sparkles", value: viewModel.intrinsicsSummaryText)
                 }
             }
             if !viewModel.itemStats.isEmpty {
                 NavigationLink {
                     ProfileItemsListView(viewModel: .init(items: viewModel.itemStats))
                 } label: {
-                    Label {
-                        LabeledContent(Strings.Profile.itemsRow, value: "\(viewModel.itemStats.count)")
-                    } icon: {
-                        Image(systemName: "square.stack.3d.up")
-                    }
+                    ProfileRow(title: Strings.Profile.itemsRow, icon: "square.stack.3d.up", value: viewModel.itemStats.count.formatted())
                 }
             }
             if !viewModel.missionStats.isEmpty {
                 NavigationLink {
                     ProfileMissionsListView(viewModel: .init(missions: viewModel.missionStats))
                 } label: {
-                    Label {
-                        LabeledContent(Strings.Profile.missionsRow, value: "\(viewModel.missionStats.count)")
-                    } icon: {
-                        Image(systemName: "map")
-                    }
+                    ProfileRow(title: Strings.Profile.missionsRow, icon: "map", value: viewModel.missionStats.count.formatted())
                 }
             }
             if !viewModel.accountStatRows.isEmpty {
                 NavigationLink {
                     ProfileAccountStatsView(rows: viewModel.accountStatRows)
                 } label: {
-                    Label(Strings.Profile.statsRow, systemImage: "chart.bar.xaxis")
+                    ProfileRow(title: Strings.Profile.statsRow, icon: "chart.bar.xaxis")
                 }
             }
         } header: {
             DashboardSectionHeader(title: Strings.Profile.statsHeader, icon: "chart.bar")
+                .padding(.vertical, Layout.sectionHeaderPadding)
         }
+        .listRowInsets(Layout.rowInsets)
         .listRowBackground(Color.surface)
         .listRowSeparatorTint(Color.divider)
     }
 }
 
+private struct ProfileRow: View {
+    let title: String
+    let icon: String
+    var value: String?
+    var isSelected = false
+
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    var body: some View {
+        HStack(spacing: ListLayout.iconSpacing) {
+            DashboardIcon(name: icon)
+                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+            let layout = dynamicTypeSize.isAccessibilitySize
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: ListLayout.detailSpacing))
+                : AnyLayout(HStackLayout(spacing: ListLayout.iconSpacing))
+            layout {
+                Text(title)
+                    .foregroundStyle(Color.labelPrimary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                if let value {
+                    Text(value)
+                        .font(.subheadline)
+                        .foregroundStyle(Color.labelSecondary)
+                        .monospacedDigit()
+                }
+            }
+            .fixedSize(horizontal: false, vertical: true)
+            if isSelected {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundStyle(DashboardPalette.accent(in: colorScheme))
+                    .accessibilityHidden(true)
+            }
+        }
+        .frame(maxWidth: .infinity, minHeight: ListLayout.minimumRowHeight, alignment: .leading)
+        .contentShape(.rect)
+        .accessibilityElement(children: .combine)
+    }
+}
+
 private struct Layout {
     static let identityCardInsets = EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0)
-    static let helpTransitionDuration: TimeInterval = 0.2
-    static let iconSpacing: CGFloat = 12
-    static let rowVerticalPadding: CGFloat = 2
-    static let formSpacing: CGFloat = 10
-    static let fieldPadding: CGFloat = 10
-    static let fieldCornerRadius: CGFloat = 14
-    static let fieldBorderWidth: CGFloat = 1
+    static let rowInsets = EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
+    static let sectionHeaderPadding: CGFloat = 8
 }

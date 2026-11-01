@@ -1,3 +1,11 @@
+//
+//  ExternalData.swift
+//  TennoWatch
+//
+//  Created by Andrii Bryzhnychenko on 8/26/26.
+//
+
+
 struct ExternalData {
     static let persistentItemNames: [String: String] = [
         "/Lotus/Weapons/Lasria/AK47/TC2024AK47Weapon": "AX-52",

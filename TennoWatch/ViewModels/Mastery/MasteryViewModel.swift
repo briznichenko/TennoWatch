@@ -31,6 +31,7 @@ struct MasteryRankProgress {
 }
 
 @Observable
+@MainActor
 final class MasteryViewModel {
     // MARK: - Object Properties
     private let profileRepository: ProfileRepository

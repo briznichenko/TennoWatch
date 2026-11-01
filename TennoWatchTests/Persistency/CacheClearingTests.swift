@@ -1,8 +1,16 @@
+//
+//  CacheClearingTests.swift
+//  TennoWatchTests
+//
+//  Created by Andrii Bryzhnychenko on 9/26/26.
+//
+
 import Foundation
 import SwiftData
 import Testing
 @testable import TennoWatch
 
+@MainActor
 @Suite("Cache clearing")
 struct CacheClearingTests {
     @Test("Clear removes profile, related records, and catalog")

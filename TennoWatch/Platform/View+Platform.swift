@@ -1,3 +1,10 @@
+//
+//  View+Platform.swift
+//  TennoWatch
+//
+//  Created by Andrii Bryzhnychenko on 10/7/26.
+//
+
 import SwiftUI
 
 extension View {
@@ -11,11 +18,21 @@ extension View {
     }
 
     @ViewBuilder
+    func profileListStyle() -> some View {
+        #if os(iOS)
+        listStyle(.insetGrouped)
+        #else
+        listStyle(.inset)
+        #endif
+    }
+
+    @ViewBuilder
     func appTabStyle() -> some View {
         #if os(macOS)
         tabViewStyle(.sidebarAdaptable)
         #else
-        toolbarBackground(Color.surface, for: .navigationBar, .tabBar)
+        tabViewStyle(.sidebarAdaptable)
+            .toolbarBackground(Color.surface, for: .navigationBar, .tabBar)
             .toolbarBackground(.visible, for: .navigationBar, .tabBar)
         #endif
     }

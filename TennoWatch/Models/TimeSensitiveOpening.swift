@@ -16,7 +16,16 @@ struct TimeSensitiveOpening: Identifiable, Hashable {
 
     // MARK: - Object Properties
     let item: MasteryItem
-    let source: Source
+    let sources: [Source]
+
+    init(item: MasteryItem, source: Source) {
+        self.init(item: item, sources: [source])
+    }
+
+    init(item: MasteryItem, sources: [Source]) {
+        self.item = item
+        self.sources = sources
+    }
 
     // MARK: - Computed Properties
     var id: String { item.catalogItemModel.uniqueName }

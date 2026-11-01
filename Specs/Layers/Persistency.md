@@ -15,7 +15,7 @@
 
 `PersistentProfileRepository` explicitly updates the existing account row when refreshing. It replaces the profile's item/mission/skill arrays, updates account statistics in place, and normalizes repeated item types by keeping the highest XP.
 
-`PersistentCatalogRepository` resolves the requested or active profile, prepares that profile's catalog, attaches its profile items, and recalculates category counters before returning a snapshot. Summary, category detail, non-item sources, and Openings read the same profile-owned graph. Category enum comparisons happen in memory after resolving the catalog; they are not SwiftData predicates.
+`PersistentCatalogRepository` resolves the requested or active profile and prepares its catalog. Synchronization attaches profile items and recalculates counters when explicitly requested, newly created, or invalidated by a profile timestamp change; unchanged reads reuse the synchronized graph before returning a snapshot. Summary, category detail, non-item sources, and Openings read the same profile-owned graph. Category enum comparisons happen in memory after resolving the catalog; they are not SwiftData predicates.
 
 A remote refresh replaces previous progress, including clearing absent item links and source completion. It does not increment counters or preserve another profile's mastery. Local profiles are initialized with empty progress and bypass remote synchronization. Manual item-editing controls are future work.
 

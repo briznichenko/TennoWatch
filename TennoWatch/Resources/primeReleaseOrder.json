@@ -1,0 +1,596 @@
+{
+  "updatedAt": "2026-10-19T00:00:00Z",
+  "source": "https://raw.githubusercontent.com/WFCD/warframe-items/master/data/json/Warframes.json",
+  "frames": [
+    {
+      "name": "Ash",
+      "releaseDate": "2012-10-25T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Ember",
+      "releaseDate": "2012-10-25T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Excalibur",
+      "releaseDate": "2012-10-25T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Loki",
+      "releaseDate": "2012-10-25T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Mag",
+      "releaseDate": "2012-10-25T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Rhino",
+      "releaseDate": "2012-10-25T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Trinity",
+      "releaseDate": "2012-10-25T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Volt",
+      "releaseDate": "2012-10-25T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Excalibur Prime",
+      "releaseDate": "2012-12-18T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Frost",
+      "releaseDate": "2013-01-29T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Nyx",
+      "releaseDate": "2013-01-29T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Banshee",
+      "releaseDate": "2013-03-18T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Saryn",
+      "releaseDate": "2013-03-18T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Frost Prime",
+      "releaseDate": "2013-05-03T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Vauban",
+      "releaseDate": "2013-05-17T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Nova",
+      "releaseDate": "2013-07-13T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Mag Prime",
+      "releaseDate": "2013-09-13T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Nekros",
+      "releaseDate": "2013-09-13T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Ember Prime",
+      "releaseDate": "2013-11-20T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Valkyr",
+      "releaseDate": "2013-11-20T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Oberon",
+      "releaseDate": "2013-12-19T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Zephyr",
+      "releaseDate": "2014-02-05T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Rhino Prime",
+      "releaseDate": "2014-03-05T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Hydroid",
+      "releaseDate": "2014-04-09T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Loki Prime",
+      "releaseDate": "2014-06-11T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Mirage",
+      "releaseDate": "2014-07-18T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Nyx Prime",
+      "releaseDate": "2014-09-24T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Limbo",
+      "releaseDate": "2014-10-24T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Mesa",
+      "releaseDate": "2014-11-27T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Nova Prime",
+      "releaseDate": "2014-12-17T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Chroma",
+      "releaseDate": "2015-03-19T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Volt Prime",
+      "releaseDate": "2015-03-25T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Ash Prime",
+      "releaseDate": "2015-07-07T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Equinox",
+      "releaseDate": "2015-07-31T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Atlas",
+      "releaseDate": "2015-10-01T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Trinity Prime",
+      "releaseDate": "2015-10-06T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Wukong",
+      "releaseDate": "2015-11-25T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Ivara",
+      "releaseDate": "2015-12-03T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Nezha",
+      "releaseDate": "2015-12-16T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Saryn Prime",
+      "releaseDate": "2016-02-16T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Inaros",
+      "releaseDate": "2016-03-04T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Vauban Prime",
+      "releaseDate": "2016-05-17T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Titania",
+      "releaseDate": "2016-08-19T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Nekros Prime",
+      "releaseDate": "2016-08-23T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Valkyr Prime",
+      "releaseDate": "2016-11-22T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Nidus",
+      "releaseDate": "2016-12-22T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Banshee Prime",
+      "releaseDate": "2017-02-28T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Octavia",
+      "releaseDate": "2017-03-24T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Oberon Prime",
+      "releaseDate": "2017-05-30T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Harrow",
+      "releaseDate": "2017-06-29T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Hydroid Prime",
+      "releaseDate": "2017-08-29T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Gara",
+      "releaseDate": "2017-10-12T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Mirage Prime",
+      "releaseDate": "2017-12-12T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Zephyr Prime",
+      "releaseDate": "2018-03-20T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Khora",
+      "releaseDate": "2018-04-20T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Limbo Prime",
+      "releaseDate": "2018-06-19T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Revenant",
+      "releaseDate": "2018-08-24T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Chroma Prime",
+      "releaseDate": "2018-09-25T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Garuda",
+      "releaseDate": "2018-11-08T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Baruuk",
+      "releaseDate": "2018-12-18T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Mesa Prime",
+      "releaseDate": "2018-12-18T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Hildryn",
+      "releaseDate": "2019-03-08T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Equinox Prime",
+      "releaseDate": "2019-04-02T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Wisp",
+      "releaseDate": "2019-05-22T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Wukong Prime",
+      "releaseDate": "2019-07-06T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Gauss",
+      "releaseDate": "2019-08-29T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Atlas Prime",
+      "releaseDate": "2019-10-01T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Grendel",
+      "releaseDate": "2019-10-31T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Ivara Prime",
+      "releaseDate": "2019-12-17T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Titania Prime",
+      "releaseDate": "2020-03-31T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Protea",
+      "releaseDate": "2020-06-11T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Inaros Prime",
+      "releaseDate": "2020-07-14T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Xaku",
+      "releaseDate": "2020-08-25T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Nezha Prime",
+      "releaseDate": "2020-10-27T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Lavos",
+      "releaseDate": "2020-12-18T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Octavia Prime",
+      "releaseDate": "2021-02-23T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Sevagoth",
+      "releaseDate": "2021-04-13T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Gara Prime",
+      "releaseDate": "2021-05-25T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Yareli",
+      "releaseDate": "2021-07-06T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Nidus Prime",
+      "releaseDate": "2021-09-08T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Caliban",
+      "releaseDate": "2021-12-15T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Harrow Prime",
+      "releaseDate": "2021-12-15T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Garuda Prime",
+      "releaseDate": "2022-03-28T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Gyre",
+      "releaseDate": "2022-04-27T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Khora Prime",
+      "releaseDate": "2022-07-16T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Styanax",
+      "releaseDate": "2022-09-07T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Revenant Prime",
+      "releaseDate": "2022-10-05T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Voruna",
+      "releaseDate": "2022-11-30T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Baruuk Prime",
+      "releaseDate": "2022-12-14T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Citrine",
+      "releaseDate": "2023-02-15T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Hildryn Prime",
+      "releaseDate": "2023-03-15T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Kullervo",
+      "releaseDate": "2023-06-21T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Wisp Prime",
+      "releaseDate": "2023-07-27T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Dagath",
+      "releaseDate": "2023-10-18T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Grendel Prime",
+      "releaseDate": "2023-10-18T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Qorvex",
+      "releaseDate": "2023-12-13T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Gauss Prime",
+      "releaseDate": "2024-01-17T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Dante",
+      "releaseDate": "2024-03-27T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Protea Prime",
+      "releaseDate": "2024-05-01T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Jade",
+      "releaseDate": "2024-06-18T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Sevagoth Prime",
+      "releaseDate": "2024-08-21T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Koumei",
+      "releaseDate": "2024-10-02T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Xaku Prime",
+      "releaseDate": "2024-11-13T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Cyte-09",
+      "releaseDate": "2024-12-13T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Lavos Prime",
+      "releaseDate": "2025-02-12T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Temple",
+      "releaseDate": "2025-03-19T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Yareli Prime",
+      "releaseDate": "2025-05-21T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Oraxia",
+      "releaseDate": "2025-06-25T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Caliban Prime",
+      "releaseDate": "2025-08-26T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Nokko",
+      "releaseDate": "2025-10-15T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Gyre Prime",
+      "releaseDate": "2025-12-10T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Uriel",
+      "releaseDate": "2025-12-10T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Follie",
+      "releaseDate": "2026-03-25T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Voruna Prime",
+      "releaseDate": "2026-04-08T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Sirius & Orion",
+      "releaseDate": "2026-06-17T00:00:00Z",
+      "isPrime": false
+    },
+    {
+      "name": "Styanax Prime",
+      "releaseDate": "2026-06-17T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Citrine Prime",
+      "releaseDate": "2026-09-23T00:00:00Z",
+      "isPrime": true
+    },
+    {
+      "name": "Narin",
+      "releaseDate": "2026-09-23T00:00:00Z",
+      "isPrime": false
+    }
+  ]
+}

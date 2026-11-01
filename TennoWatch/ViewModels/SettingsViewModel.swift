@@ -9,6 +9,7 @@ import Foundation
 import Observation
 
 @Observable
+@MainActor
 final class SettingsViewModel {
     // MARK: - Object Properties
     private(set) var gameVersion: String?
@@ -68,13 +69,13 @@ final class SettingsViewModel {
 
     func setVoidTraderNotificationsEnabled(_ isEnabled: Bool) async {
         guard isEnabled else {
-            voidTraderNotificationScheduler.cancelArrivalNotification()
+            await voidTraderNotificationScheduler.cancelArrivalNotification()
             return
         }
 
         do {
             let isGranted = try await notificationService.requestAuthorization()
-            guard isGranted else { return }
+            guard isGranted else { throw NotificationError.notAllowed }
             let voidTrader = try await worldStateRepository.getWorldState().voidTrader
             try await voidTraderNotificationScheduler.syncArrivalNotification(for: voidTrader)
         } catch {
@@ -91,7 +92,8 @@ final class SettingsViewModel {
                 throw ClearCacheError.missingBundleIdentifier
             }
             try await persistencyService.clearAllData()
-            voidTraderNotificationScheduler.cancelArrivalNotification()
+            await worldStateRepository.clearCache()
+            await voidTraderNotificationScheduler.cancelArrivalNotification()
             UserDefaults.standard.removePersistentDomain(forName: bundleIdentifier)
             gameVersion = nil
             catalogGeneratedAt = nil
@@ -101,8 +103,4 @@ final class SettingsViewModel {
             return false
         }
     }
-}
-
-private enum ClearCacheError: Error {
-    case missingBundleIdentifier
 }

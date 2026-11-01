@@ -14,18 +14,28 @@ protocol EndpointProtocol {
     var url: URL { get throws }
 }
 
-enum Platform: String {
+enum Platform: String, Sendable {
     case pc, ps4, psn, xb1, swi, ns
 }
 
-enum ItemCategory: String {
+enum ItemCategory: String, Sendable {
     case weapons, warframes, items, mods
 }
 
-enum Endpoint {
+enum Endpoint: Sendable {
     case worldState(platform: Platform)
     case catalog(ItemCategory)
     case profile(playerId: String)
+}
+
+extension Endpoint {
+    var cacheTTL: TimeInterval {
+        switch self {
+        case .worldState: 30
+        case .catalog: 3_600
+        case .profile: 0
+        }
+    }
 }
 
 extension Endpoint: EndpointProtocol {

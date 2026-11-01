@@ -43,8 +43,8 @@ matched `ProfileItemModel`, `0` if never matched) via
 mastered/unobtainable) is a pure function of `rank` and `obtainable` — there
 is no separate "is this mastered" flag anywhere in the item's own storage,
 it's recomputed every access. This means any XP-formula bug shows up as
-wrong mastery state everywhere at once, and there's no test pinning this
-formula against a known catalog item + XP value (see
+wrong mastery state everywhere at once. Persistence tests check AX-52's
+mastered state, but focused XP boundary tests are still absent (see
 [Testing](Testing.md)).
 
 ## `CatalogItemModel.Category`
@@ -58,8 +58,8 @@ raw value.
 ## Extensions layer (`Extensions/`)
 Small, single-purpose, worth knowing about before reinventing:
 - **`Date+Ex.swift`** — `timeLeftDescription`, abbreviated
-  day/hour/minute countdown via `DateComponentsFormatter`. Used everywhere a
-  cycle/fissure/Void-Trader expiry needs a "2h 15m" string.
+  day/hour/minute countdown via `DateComponentsFormatter`, used for static
+  countdown text. Live countdowns use the separate `LiveCountdownText` component.
 - **`String+Ex.swift`** — `sentenceCased` (capitalize first letter only,
   used for category display names throughout Mastery/Openings);
   `nodeNameAndPlanet` (parses `"Name (Planet)"` node strings, used for
@@ -81,7 +81,8 @@ Small, single-purpose, worth knowing about before reinventing:
   `View`/`ErrorManager` bridge, not UI chrome.
 
 ## Test coverage
-No dedicated model tests — models are exercised indirectly through
+No dedicated model-only suite. Models are exercised through persistence tests,
+including AX-52 mastery and cross-context reads, and indirectly through
 `CatalogSyncServiceTests`, `OpeningsMatchingServiceTests`, and
 `ProfileRepositoryTests`/`APIManagerTests` (decoding). The `MasteryItem.rank`
 XP formula specifically has no direct test.

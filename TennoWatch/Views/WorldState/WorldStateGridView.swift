@@ -17,6 +17,7 @@ struct WorldStateGridView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: DashboardLayout.sectionSpacing) {
                 voidTraderCard
+                eventsCard
                 LazyVGrid(columns: columns, spacing: DashboardLayout.gridSpacing) {
                     invasionsCard
                     fissuresCard
@@ -30,6 +31,7 @@ struct WorldStateGridView: View {
                     calendarCard
                     flashSalesCard
                     cyclesCard
+                    primeReleasesCard
                 }
             }
             .frame(maxWidth: DashboardLayout.maximumContentWidth)
@@ -45,6 +47,29 @@ struct WorldStateGridView: View {
     }
 
     // MARK: - Cards
+    @ViewBuilder
+    private var primeReleasesCard: some View {
+        if let updatedAt = viewModel.primeReleaseDataUpdatedAt, !viewModel.primeReleaseCandidates.isEmpty {
+            NavigationLink {
+                PrimeReleaseListView(candidates: viewModel.primeReleaseCandidates, updatedAt: updatedAt)
+            } label: {
+                CardView(icon: "sparkles", title: Strings.WorldState.primeReleasesHeader) {
+                    Text(viewModel.primeReleaseCandidates.map { $0.name + " Prime" }.joined(separator: ", "))
+                        .lineLimit(Layout.cycleSummaryLineLimit)
+                }
+            }
+        }
+    }
+
+    private var eventsCard: some View {
+        TimelineView(.periodic(from: .now, by: CountdownRefreshInterval.minute)) { context in
+            let events = viewModel.activeEvents(at: context.date)
+            if !events.isEmpty {
+                WorldStateEventsCard(events: events)
+            }
+        }
+    }
+
     @ViewBuilder
     private var cyclesCard: some View {
         if !viewModel.cycles.isEmpty {
@@ -76,7 +101,7 @@ struct WorldStateGridView: View {
     private var fissuresCard: some View {
         if !viewModel.fissures.isEmpty {
             NavigationLink {
-                FissureListView(groups: viewModel.fissuresByTier)
+                FissureListView(groups: viewModel.fissuresByStarChart)
             } label: {
                 CardView(icon: "tornado", title: Strings.WorldState.fissuresHeader) {
                     Text("\(viewModel.fissures.count)")

@@ -7,7 +7,8 @@
 ```swift
 struct Strings {
     private init() {}
-    struct WorldState { private init() }
+    struct WorldState {
+        private init() {}
         static var title: String { Strings.string("world_state_title_key", "World state") }
         ...
     }
@@ -28,10 +29,9 @@ func string(_ key:_ defaultValue:)`. That helper does a manual
 `Bundle(path:)` lookup for the *current* `AppLanguage`'s `.lproj`, falling
 back to `.main` if the language is `.system` or the bundle can't be found —
 this is what makes runtime language switching work without an app restart
-(see the `Theme.md` note on `.id(languagePreference)`), since standard
-`NSLocalizedString`/`String(localized:)` only responds to `Locale`/`environment`
-changes for text created *after* the switch, and this bundle-swap approach
-sidesteps that.
+(see [Theme & Shared UI](Theme-and-UI-Components.md)). The helper selects the
+bundle explicitly rather than relying on changes to the SwiftUI locale to
+redirect existing Foundation string lookups.
 
 Every string carries its **English text inline as the default value** —
 `Localizable.xcstrings` doesn't need an entry to avoid a crash or a visibly

@@ -12,6 +12,7 @@ struct MainView: View {
     // MARK: - Object Properties
     let dependencies: AppDependencies
     let onCacheCleared: () -> Void
+    @State private var wikiCoordinator = WikiCoordinator()
     @AppStorage(UserDefaultsAccountIDStore.storageKey) private var currentAccountID: String?
     @Environment(\.colorScheme) private var colorScheme
 
@@ -61,6 +62,10 @@ struct MainView: View {
         }
         .appTabStyle()
         .tint(DashboardPalette.accent(in: colorScheme))
+        .environment(\.wikiCoordinator, wikiCoordinator)
+        .sheet(item: $wikiCoordinator.destination) { destination in
+            WikiBrowserView(destination: destination, onClose: wikiCoordinator.dismiss)
+        }
     }
 }
 

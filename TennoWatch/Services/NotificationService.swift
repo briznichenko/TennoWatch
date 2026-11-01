@@ -8,14 +8,14 @@
 import Foundation
 import UserNotifications
 
-struct ScheduledNotification {
+struct ScheduledNotification: Sendable {
     let id: String
     let title: String
     let body: String
     let fireDate: Date
 }
 
-protocol NotificationService {
+protocol NotificationService: Sendable {
     func requestAuthorization() async throws -> Bool
     func schedule(_ notification: ScheduledNotification) async throws
     func cancelNotification(id: String)
@@ -23,7 +23,7 @@ protocol NotificationService {
 
 final class DefaultNotificationService: NSObject, NotificationService {
     // MARK: - Object Properties
-    private let center = UNUserNotificationCenter.current()
+    private var center: UNUserNotificationCenter { .current() }
 
     // MARK: - Init
     override init() {
@@ -33,7 +33,12 @@ final class DefaultNotificationService: NSObject, NotificationService {
 
     // MARK: - Functions
     func requestAuthorization() async throws -> Bool {
-        try await center.requestAuthorization(options: [.alert, .sound, .badge])
+        do {
+            return try await center.requestAuthorization(options: [.alert, .sound, .badge])
+        } catch {
+            if AppErrors.isCancellation(error) { throw error }
+            throw NotificationError.authorizationFailed(underlying: error)
+        }
     }
 
     func schedule(_ notification: ScheduledNotification) async throws {
@@ -52,7 +57,12 @@ final class DefaultNotificationService: NSObject, NotificationService {
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
         let request = UNNotificationRequest(identifier: notification.id, content: content, trigger: trigger)
 
-        try await center.add(request)
+        do {
+            try await center.add(request)
+        } catch {
+            if AppErrors.isCancellation(error) { throw error }
+            throw NotificationError.schedulingFailed(underlying: error)
+        }
     }
 
     func cancelNotification(id: String) {

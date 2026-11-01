@@ -51,6 +51,7 @@ def main():
         data = json.load(f)
 
     mapping = build_swift_dict(data, args.key_field)
+    print('//\n//  ExternalData.swift\n//  TennoWatch\n//\n//  Created by Andrii Bryzhnychenko on 8/26/26.\n//\n\n')
     print(to_swift_literal(mapping, args.var_name))
 
 

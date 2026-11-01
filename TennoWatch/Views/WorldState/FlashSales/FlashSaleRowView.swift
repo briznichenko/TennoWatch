@@ -2,6 +2,8 @@
 //  FlashSaleRowView.swift
 //  TennoWatch
 //
+//  Created by Andrii Bryzhnychenko on 9/17/26.
+//
 
 import SwiftUI
 
@@ -15,6 +17,7 @@ struct FlashSaleRowView: View {
                     .font(.headline)
                 Spacer()
                 LiveCountdownText(date: flashSale.expiry)
+                ItemWikiLink(itemName: flashSale.item)
             }
             if let discount = flashSale.discount {
                 Text(Strings.WorldState.discount(Int(discount)))

@@ -1,5 +1,5 @@
 //
-//  WorldStateGridView.swift
+//  LayoutMetrics.swift
 //  TennoWatch
 //
 //  Created by Andrii Bryzhnychenko on 10/10/26.

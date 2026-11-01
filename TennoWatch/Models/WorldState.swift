@@ -136,6 +136,13 @@ struct WorldEvent: NetworkModel {
     let victimNode: String?
 }
 
+extension WorldEvent {
+    var communityProgress: Double? {
+        guard isCommunity, let health, health.isFinite else { return nil }
+        return min(max(health / 100, 0), 1)
+    }
+}
+
 struct CalendarChallenge: NetworkModel {
     let title: String
     let description: String

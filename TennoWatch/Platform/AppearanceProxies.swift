@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@MainActor
 enum AppearanceProxies {
     static func configure() {
         #if os(iOS)

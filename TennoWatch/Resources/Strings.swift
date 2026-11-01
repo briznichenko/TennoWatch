@@ -25,6 +25,38 @@ struct Strings {
         currentBundle.localizedString(forKey: key, value: defaultValue, table: "Localizable")
     }
 
+    struct Errors {
+        private init() {}
+        static var invalidURL: String { Strings.string("error_invalid_url_key", "This link could not be opened. Please check it and try again.") }
+        static var invalidResponse: String { Strings.string("error_invalid_response_key", "The service returned an unexpected response. Please try again later.") }
+        static var decoding: String { Strings.string("error_decoding_key", "The received data could not be read. Please try again later.") }
+        static var profileNotFound: String { Strings.string("error_profile_not_found_key", "This saved profile could not be found. Please select another profile or add it again.") }
+        static var playerNotFound: String { Strings.string("error_player_not_found_key", "No profile was found for this player ID. Check the ID and try again.") }
+        static var catalogFile: String { Strings.string("error_catalog_file_key", "The bundled catalog could not be found. Please update or reinstall TennoWatch.") }
+        static var catalogUnavailable: String { Strings.string("error_catalog_unavailable_key", "The catalog is not available yet. Please refresh the catalog in Settings and try again.") }
+        static var catalogCategory: String { Strings.string("error_catalog_category_key", "This catalog category is unavailable. Please refresh the catalog in Settings and try again.") }
+        static var notificationPermission: String { Strings.string("error_notification_permission_key", "Notifications are disabled for TennoWatch. Allow notifications in system Settings to enable reminders.") }
+        static var notificationAuthorization: String { Strings.string("error_notification_authorization_key", "Could not request notification permission. Please try again or check notification settings for TennoWatch.") }
+        static var notificationScheduling: String { Strings.string("error_notification_scheduling_key", "Could not schedule the reminder. Please check notification settings for TennoWatch and try again.") }
+        static var cacheConfiguration: String { Strings.string("error_cache_configuration_key", "Could not clear the cache because the app configuration is incomplete. Please restart or update TennoWatch.") }
+        static var databaseStartup: String { Strings.string("error_database_startup_key", "TennoWatch could not open your local data. Please restart the app and try again.") }
+        static var startupTitle: String { Strings.string("error_startup_title_key", "Could not open TennoWatch") }
+        static var badRequest: String { Strings.string("error_bad_request_key", "The service could not process this request. Please try again later.") }
+        static var unauthorized: String { Strings.string("error_unauthorized_key", "The service could not authorize this request. Please try again later.") }
+        static var forbidden: String { Strings.string("error_forbidden_key", "The service is not allowing access to this data. Please try again later.") }
+        static var notFound: String { Strings.string("error_not_found_key", "The requested data could not be found. Please refresh and try again.") }
+        static var conflict: String { Strings.string("error_conflict_key", "The data has changed. Please refresh and try again.") }
+        static var requestTimeout: String { Strings.string("error_request_timeout_key", "The request took too long. Please try again.") }
+        static var rateLimited: String { Strings.string("error_rate_limited_key", "Too many requests. Please wait a moment and try again.") }
+        static var serviceUnavailable: String { Strings.string("error_service_unavailable_key", "The service is temporarily unavailable. Please try again later.") }
+        static var httpFailure: String { Strings.string("error_http_failure_key", "The service could not complete this request. Please try again later.") }
+        static var offline: String { Strings.string("error_offline_key", "You appear to be offline. Check your internet connection and try again.") }
+        static var connectionLost: String { Strings.string("error_connection_lost_key", "The connection was interrupted. Check your internet connection and try again.") }
+        static var unreachable: String { Strings.string("error_unreachable_key", "Could not connect to the service. Check your internet connection and try again later.") }
+        static var secureConnection: String { Strings.string("error_secure_connection_key", "A secure connection could not be established. Please try again later.") }
+        static var database: String { Strings.string("error_database_key", "Could not read or save your local data. Please restart TennoWatch and try again.") }
+    }
+
     struct Main {
         private init() {}
         static var refresh: String { Strings.string("main_refresh_key", "Refresh") }
@@ -43,9 +75,24 @@ struct Strings {
     struct WorldState {
         private init() {}
         static var title: String { Strings.string("world_state_title_key", "World state") }
+        static var primeReleasesHeader: String { Strings.string("world_state_prime_releases_header_key", "Potential Prime releases") }
+        static var primeReleasesExplanation: String {
+            Strings.string("world_state_prime_releases_explanation_key", "Oldest frames without a Prime, ordered by original release. Predictions only; release order can change. No dates confirmed.")
+        }
+
+        static func originalFrameRelease(_ date: String) -> String {
+            String(format: Strings.string("world_state_original_frame_release_format_key", "Original frame released %@"), date)
+        }
+
+        static func primeReleaseDataUpdated(_ date: String) -> String {
+            String(format: Strings.string("world_state_prime_release_data_updated_format_key", "WFCD release data · Updated %@"), date)
+        }
+
         static var cyclesHeader: String { Strings.string("world_state_cycles_header_key", "Cycles") }
         static var invasionsHeader: String { Strings.string("world_state_invasions_header_key", "Invasions") }
         static var fissuresHeader: String { Strings.string("world_state_fissures_header_key", "Fissures") }
+        static var normalStarChart: String { Strings.string("world_state_normal_star_chart_key", "Normal") }
+        static var railjackStarChart: String { Strings.string("world_state_railjack_star_chart_key", "Railjack") }
         static var sortieHeader: String { Strings.string("world_state_sortie_header_key", "Sortie") }
         static var archonHuntHeader: String { Strings.string("world_state_archon_hunt_header_key", "Archon hunt") }
         static var archonHuntRewardCrimson: String { Strings.string("world_state_archon_hunt_reward_crimson_key", "Crimson Archon Shard") }
@@ -58,6 +105,8 @@ struct Strings {
         static var vaultTraderHeader: String { Strings.string("world_state_vault_trader_header_key", "Prime vault") }
         static var steelPathHeader: String { Strings.string("world_state_steel_path_header_key", "Steel path") }
         static var alertsHeader: String { Strings.string("world_state_alerts_header_key", "Alerts") }
+        static var eventsHeader: String { Strings.string("world_state_events_header_key", "Events") }
+        static var communityProgress: String { Strings.string("world_state_community_progress_key", "Community progress") }
         static var archimedeaHeader: String { Strings.string("world_state_archimedea_header_key", "Archimedea") }
         static var flashSalesHeader: String { Strings.string("world_state_flash_sales_header_key", "Flash sales") }
         static var calendarHeader: String { Strings.string("world_state_calendar_header_key", "Calendar") }
@@ -174,6 +223,10 @@ struct Strings {
             )
         }
 
+        static func sourcePointsRemaining(_ pointsRemaining: Int) -> String {
+            String(format: Strings.string("mastery_source_points_remaining_format_key", "+%lld left"), pointsRemaining)
+        }
+
         static var breakdownHeader: String { Strings.string("mastery_breakdown_header_key", "Mastery Breakdown") }
     }
 
@@ -200,6 +253,7 @@ struct Strings {
 
     struct Profile {
         private init() {}
+        static var addProfile: String { Strings.string("profile_add_profile_key", "Add profile") }
         static var savedProfilesHeader: String { Strings.string("profile_saved_profiles_header_key", "Saved profiles") }
         static var manualProfile: String { Strings.string("profile_manual_profile_key", "Manual tracking") }
         static var manualProfileDescription: String { Strings.string("profile_manual_profile_description_key", "Local profile") }
@@ -298,6 +352,15 @@ struct Strings {
 
     struct Common {
         private init() {}
+        static var lookOnWiki: String { Strings.string("common_look_on_wiki_key", "Wiki page") }
+        static var close: String { Strings.string("common_close_key", "Close") }
+        static var back: String { Strings.string("common_back_key", "Back") }
+        static var forward: String { Strings.string("common_forward_key", "Forward") }
+        static var wikiLoadFailed: String { Strings.string("common_wiki_load_failed_key", "Couldn't load wiki") }
+        static func openItemWiki(_ name: String) -> String {
+            String(format: Strings.string("common_open_item_wiki_format_key", "Open %@ on Warframe Wiki"), name)
+        }
+
         static var search: String { Strings.string("common_search_key", "Search") }
         static var searchItems: String { Strings.string("common_search_items_key", "Search items") }
         static var searchNodes: String { Strings.string("common_search_nodes_key", "Search nodes") }

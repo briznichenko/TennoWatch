@@ -1,83 +1,56 @@
 # Tab: Openings
 
-## Purpose
-The cross-cutting tab: takes "what I still need for mastery" (Mastery tab's
-domain) and "what's happening right now" (World State tab's domain) and
-answers "what should I go do today." It's the tab that justifies having both
-of the others — nothing here is fetched independently, it's a matching pass
-over data the other two tabs already own.
+## Purpose and entry point
 
-## Entry point
-`MainView` → `Tab("Openings")` → [`OpeningsView`](../../TennoWatch/Views/Openings/OpeningsView.swift),
-constructed with `profileRepository`, `catalogRepository`, `worldStateRepository`,
-`errorManager` — the only tab that depends on all three repositories.
+Openings combines unmastered catalog items with current world state to suggest
+acquisition opportunities. It fetches through shared repositories rather than
+reading the other tabs' ViewModels.
+
+`MainView` constructs `OpeningsViewModel` with profile/catalog/world-state
+repositories and the shared error manager. The matching service is injectable.
 
 ## Screens
-1. **`OpeningsView`** — thin root, delegates straight to `OpeningsListView`.
-2. **`OpeningsListView`** — two sections:
-   - **Time-sensitive** — `TimeSensitiveOpeningRowView` per match (an
-     invasion carrying the item as reward, or the Void Trader stocking it).
-     Empty state text when nothing matches right now.
-   - **Permanent** — everything else still unmastered, grouped by category
-     (items) or source-category name (non-item sources), same
-     `OpeningsCategoryRowView` count-row pattern for both, pushing to
-     `OpeningsItemCategoryDetailView` / `OpeningsSourceCategoryDetailView`.
-     Both sub-lists are unfiltered — no filter/sort pills like Mastery's
-     detail screens, since this is already a filtered ("still needed") view.
 
-## ViewModel — `OpeningsViewModel`
-- Fetches catalog and world state **concurrently** via `async let` — the one
-  place in the app using structured concurrency for parallel fetches instead
-  of sequential `await`s:
-  ```swift
-  async let fetchedCatalog = fetchCatalog()
-  async let fetchedWorldState = fetchWorldState()
-  catalog = await fetchedCatalog
-  worldState = await fetchedWorldState
-  ```
-  Each sub-fetch catches its own errors and pushes to `errorManager`
-  independently, so a world-state failure doesn't block catalog data from
-  showing (and vice versa) — a real user-facing benefit, not just a
-  concurrency exercise, since this tab's two data sources are genuinely
-  independent and either failing shouldn't blank the other's section.
-- `unmasteredItems` — all obtainable, unmastered `MasteryItem`s, computed
-  fresh from `catalog` every access (not cached).
-- `matchedOpenings` — runs `OpeningsMatchingService.timeSensitiveOpenings(for:in:)`
-  over `unmasteredItems` + `worldState`. The matching logic itself
-  (name-matching against invasion rewards / Void Trader inventory) lives in
-  the service, not here — see [Services](../Layers/Services.md).
-- `permanentMasteryItems` — `unmasteredItems` minus whatever
-  `matchedOpenings` already claimed (by `catalogItemModel.uniqueName`), so an
-  item never appears in both sections.
-- `permanentSourceGroups` — non-item sources, grouped by source-category
-  name, dropping categories with nothing left unmastered.
-- Two lazy lookup functions, `permanentItems(in:)` / `permanentSources(in:)`,
-  used only when a detail screen is pushed — avoids building every category's
-  full item list up front.
+`OpeningsView` owns the navigation stack and fetch lifecycle; `OpeningsListView`
+shows summary counts, time-sensitive matches, and an initially collapsed permanent
+section. Search filters item names/unique names and non-item source text.
 
-## Model — `TimeSensitiveOpening`
-Plain value type, not persisted: `item: MasteryItem` + `Source` (`.invasion`
-or `.voidTrader`, each carrying just enough context to render — node/faction/
-completion, or location/expiry). `id` is the item's `uniqueName`, so a given
-item can only produce one opening even if it matches multiple invasions
-(first match wins, since matching is dictionary-keyed by unique name in the
-service — see Services spec).
+Time-sensitive rows display the item's matching invasion and trader sources.
+Permanent categories contain obtainable, unmastered items not claimed by a current
+match, plus positive-mastery non-item sources that are not complete. Category links
+open searchable `OpeningsItemCategoryDetailView` or
+`OpeningsSourceCategoryDetailView`, seeded with the current search text. These
+screens do not use Mastery's mastery-state filter pills.
 
-## Known gaps / TODOs
-- Matching is name-based fallback (`localizedCaseInsensitiveContains`) when
-  there's no exact `uniqueName` hit — see the Services spec for the
-  false-positive risk this carries with short/generic item names.
-- No sortie/Nightwave/relic-fissure matching — only invasions and the Void
-  Trader feed into "time-sensitive." Fissures dropping a needed relic, or a
-  Nightwave challenge rewarding an item, wouldn't surface here even though
-  they're just as time-boxed.
-- `.refreshable` calls `fetchOpenings()` unconditionally (no force-refresh
-  flag threaded through, unlike Profile/Settings) — every pull-to-refresh
-  re-syncs the profile against the catalog, which is the correct behavior
-  here but worth noting it's not consistent with the `forceRefresh` pattern
-  used elsewhere.
+## Concurrent loading and refresh
 
-## Test coverage
-`OpeningsMatchingServiceTests` covers the matching logic. No
-`OpeningsViewModelTests` — the grouping/dedup logic in the ViewModel itself
-(`permanentMasteryItems`, `permanentSourceGroups`) is untested.
+`fetchOpenings(forceRefresh:)` uses `async let` to load catalog and world state
+concurrently. Catalog loading obtains the profile with normal cache policy and
+then reads its catalog. Each child catches failures independently and returns
+`nil`, allowing the other section's data to load. Results are assigned after both
+children finish, with a cancellation check before publishing them.
+
+The root task uses normal loading. Manual refresh passes `forceRefresh: true`,
+clearing the world-state network cache; it does not force a remote profile refresh.
+Structured child tasks belong to the parent task's lifetime, but cancellation
+still requires cooperative handling at suspension points and before state updates.
+
+## Matching and model
+
+`TimeSensitiveOpening` contains an item and an array of sources: invasion,
+Void Trader, or Vault Trader. Its ID is the item's unique name. The service groups
+matches into one opening per item and combines distinct sources, so multiple
+invasions or traders can be retained on one row.
+
+Matching uses exact unique names, case-insensitive display names, then recognized
+component suffixes. See [Services](../Layers/Services.md) for the matching order
+and limitations. It does not use arbitrary substring matching.
+
+## Limitations and coverage
+
+There is no sortie/Nightwave/relic-fissure matching. The permanent section is the
+remaining catalog, not proof that each item is obtainable immediately. Component
+rewards do not establish that all crafting ingredients are available.
+
+`OpeningsMatchingServiceTests` covers the service. There are no dedicated Openings
+ViewModel suites for concurrent loading, search/grouping, or permanent exclusions.
