@@ -10,6 +10,10 @@ SOURCE_URL = "https://raw.githubusercontent.com/WFCD/warframe-items/master/data/
 def main():
     parser = argparse.ArgumentParser(description="Build the bundled Prime watchlist from WFCD Warframes.json.")
     parser.add_argument("input", type=Path, help=f"Warframes.json downloaded from {SOURCE_URL}")
+    parser.add_argument(
+        "--output", type=Path,
+        default=Path(__file__).resolve().parents[1] / "TennoWatch/Resources/primeReleaseOrder.json"
+    )
     args = parser.parse_args()
     items = json.loads(args.input.read_text())
     frames = []
@@ -31,7 +35,7 @@ def main():
         "source": SOURCE_URL,
         "frames": sorted(frames, key=lambda frame: (frame["releaseDate"], frame["name"])),
     }
-    output = Path(__file__).resolve().parents[1] / "TennoWatch/Resources/primeReleaseOrder.json"
+    output = args.output
     output.write_text(json.dumps(snapshot, indent=2) + "\n")
 
 

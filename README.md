@@ -84,6 +84,10 @@ Cross-cutting:
 
 Swift Testing covers networking, profile persistence and isolation, cache clearing, repositories, sync/matching services, and the World State ViewModel (`TennoWatchTests/`).
 
+## Continuous Integration
+
+GitHub Actions builds and tests macOS and iOS, runs SwiftLint on pull requests, and refreshes bundled mastery and Prime release data weekly or on demand through a reviewable pull request. See [.github/README.md](.github/README.md) for repository permissions, required checks, schedules, and local validation commands.
+
 ## Data Source
 
 - World state comes from [`api.warframestat.us`](https://docs.warframestat.us/), a community-run API maintained by [Warframe Community Developers (WFCD)](https://github.com/WFCD). The mastery catalog is generated from Digital Extremes' public `PublicExport` feed. Node opening details use a bundled snapshot of WFCD's [`solNodes.json`](https://github.com/WFCD/warframe-worldstate-data/blob/master/data/solNodes.json), retrieved on October 11, 2026, stored in `TennoWatch/Resources/solNodes.json`; replace that snapshot from the same source to refresh planet and mission type metadata.
