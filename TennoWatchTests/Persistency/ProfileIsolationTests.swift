@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import Synchronization
 import Testing
 @testable import TennoWatch
 
@@ -25,7 +26,8 @@ private final class ProfileIsolationAccountStore: AccountIDStoring {
 }
 
 private final class CountingCatalogSyncService: CatalogSyncService {
-    private(set) var sourceMergeCount = 0
+    private let mergeCount = Mutex(0)
+    var sourceMergeCount: Int { mergeCount.withLock { $0 } }
     private let service = DefaultCatalogSyncService()
 
     func mergeProfile(_ profile: Profile, into items: [MasteryItem]) -> [MasteryItem] {
@@ -33,7 +35,7 @@ private final class CountingCatalogSyncService: CatalogSyncService {
     }
 
     func mergeProfile(_ profile: Profile, into sources: [MasterySourceModel]) -> [MasterySourceModel] {
-        sourceMergeCount += 1
+        mergeCount.withLock { $0 += 1 }
         return service.mergeProfile(profile, into: sources)
     }
 }
@@ -62,6 +64,7 @@ private final class DelayedProfileAPI: ServiceProtocol {
     }
 }
 
+@MainActor
 @Suite("Profile mastery isolation")
 struct ProfileIsolationTests {
     private func makeRepositories() throws -> (

@@ -9,13 +9,10 @@
 import AppKit
 import SwiftUI
 
+@MainActor
 enum MenuBarIcon {
     static let image: NSImage = {
-        let renderer = ImageRenderer(content:
-            LotusMark()
-                .stroke(.black, style: StrokeStyle(lineWidth: IconLayout.strokeWidth, lineCap: .round, lineJoin: .round))
-                .frame(width: IconLayout.width, height: IconLayout.height)
-        )
+        let renderer = ImageRenderer(content: MenuBarIconDrawing())
         renderer.scale = IconLayout.renderScale
         let image = renderer.nsImage
             ?? NSImage(systemSymbolName: "leaf", accessibilityDescription: "TennoWatch")
@@ -23,6 +20,14 @@ enum MenuBarIcon {
         image.isTemplate = true
         return image
     }()
+}
+
+private struct MenuBarIconDrawing: View {
+    var body: some View {
+        LotusMark()
+            .stroke(.black, style: StrokeStyle(lineWidth: IconLayout.strokeWidth, lineCap: .round, lineJoin: .round))
+            .frame(width: IconLayout.width, height: IconLayout.height)
+    }
 }
 
 struct MenuBarContent: View {

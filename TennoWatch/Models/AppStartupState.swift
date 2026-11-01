@@ -7,6 +7,7 @@
 
 import SwiftData
 
+@MainActor
 enum AppStartupState {
     case ready(ModelContainer, AppDependencies)
     case failed(Error)

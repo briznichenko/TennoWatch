@@ -53,6 +53,7 @@ private struct StubVoidTraderNotificationScheduler: VoidTraderNotificationSchedu
     func cancelArrivalNotification() {}
 }
 
+@MainActor
 @Suite("WorldStateViewModel")
 struct WorldStateViewModelTests {
     // MARK: - Teardown

@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 protocol VoidTraderNotificationScheduler {
     func syncArrivalNotification(for voidTrader: VoidTrader?) async throws
     func cancelArrivalNotification()

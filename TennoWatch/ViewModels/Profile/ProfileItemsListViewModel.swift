@@ -9,6 +9,7 @@ import Foundation
 import Observation
 
 @Observable
+@MainActor
 final class ProfileItemsListViewModel {
     enum SortOption: String, CaseIterable, Identifiable, Hashable {
         case kills, xp, name

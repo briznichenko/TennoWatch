@@ -9,6 +9,7 @@ import Foundation
 import Observation
 
 @Observable
+@MainActor
 final class ProfileViewModel {
     // MARK: - Object Properties
     private(set) var profile: Profile?

@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 
+@MainActor
 protocol ProfileRepository {
     var syncPolicy: SyncPolicy { get }
     var currentAccountID: String? { get }
@@ -158,7 +159,7 @@ final class PersistentProfileRepository: ProfileRepository {
         }
     }
 
-    static func resolveProfile(in context: ModelContext, accountID: String?) throws -> ProfileDataModel {
+    nonisolated static func resolveProfile(in context: ModelContext, accountID: String?) throws -> ProfileDataModel {
         if let accountID {
             let descriptor = FetchDescriptor<ProfileDataModel>(predicate: #Predicate { $0.accountID == accountID })
             guard let profile = try context.fetch(descriptor).first else { throw ProfileError.noData }
@@ -171,7 +172,7 @@ final class PersistentProfileRepository: ProfileRepository {
         return try profiles.first(where: { $0.isLocal }) ?? makeLocalProfile(in: context)
     }
 
-    private static func makeLocalProfile(in context: ModelContext) throws -> ProfileDataModel {
+    private nonisolated static func makeLocalProfile(in context: ModelContext) throws -> ProfileDataModel {
         let profile = Profile(
             accountID: .init(oid: UUID().uuidString), displayName: "", playerLevel: 0,
             items: [], playerSkills: [:], missions: [], accountStats: .empty,
@@ -181,7 +182,7 @@ final class PersistentProfileRepository: ProfileRepository {
         return profile
     }
 
-    private static func upsert(_ value: Profile, in context: ModelContext) throws {
+    private nonisolated static func upsert(_ value: Profile, in context: ModelContext) throws {
         let accountID = value.accountID.oid
         let descriptor = FetchDescriptor<ProfileDataModel>(predicate: #Predicate { $0.accountID == accountID })
         let profile: ProfileDataModel
@@ -209,7 +210,7 @@ final class PersistentProfileRepository: ProfileRepository {
         profile.playerSkills = value.playerSkills.map { IntrinsicsDataModel(name: $0.key, rank: $0.value) }
         profile.missions = value.missions.map { ResultMissionDataModel(from: $0) }
     }
-    private static func apply(_ stats: AccountStats, to model: AccountStatsDataModel) {
+    private nonisolated static func apply(_ stats: AccountStats, to model: AccountStatsDataModel) {
         model.deaths = stats.deaths
         model.reviveCount = stats.reviveCount
         model.meleeKills = stats.meleeKills

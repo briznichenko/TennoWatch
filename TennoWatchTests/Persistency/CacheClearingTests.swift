@@ -10,6 +10,7 @@ import SwiftData
 import Testing
 @testable import TennoWatch
 
+@MainActor
 @Suite("Cache clearing")
 struct CacheClearingTests {
     @Test("Clear removes profile, related records, and catalog")

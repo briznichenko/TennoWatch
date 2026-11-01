@@ -8,6 +8,7 @@
 import Observation
 
 @Observable
+@MainActor
 final class OpeningsItemCategoryDetailViewModel {
     let categoryTitle: String
     let items: [MasteryItemViewModel]

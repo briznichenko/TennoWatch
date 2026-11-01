@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 protocol AccountIDStoring: AnyObject {
     var currentAccountID: String? { get set }
 }

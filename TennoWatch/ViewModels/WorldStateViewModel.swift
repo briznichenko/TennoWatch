@@ -35,6 +35,7 @@ struct FissureStarChartGroup: Identifiable {
 }
 
 @Observable
+@MainActor
 final class WorldStateViewModel {
     // MARK: - Object Properties
     private let worldStateRepository: WorldStateRepository

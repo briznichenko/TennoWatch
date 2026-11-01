@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 protocol WorldStateRepository {
     func getWorldState(platform: Platform) async throws -> WorldState
     func clearCache()

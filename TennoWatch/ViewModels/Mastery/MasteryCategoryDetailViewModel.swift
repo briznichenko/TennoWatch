@@ -9,6 +9,7 @@ import Foundation
 import Observation
 
 @Observable
+@MainActor
 final class MasteryCategoryDetailViewModel {
     enum Filter: String, CaseIterable, Identifiable, Hashable {
         case missing, mastered, locked

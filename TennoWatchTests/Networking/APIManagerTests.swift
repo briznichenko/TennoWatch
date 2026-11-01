@@ -13,7 +13,12 @@ import Synchronization
 // MARK: - Assemble
 
 private final class StubURLProtocol: URLProtocol {
-    nonisolated(unsafe) static var handler: (@Sendable (URLRequest) throws -> (HTTPURLResponse, Data))?
+    private static let storedHandler = Mutex<(@Sendable (URLRequest) throws -> (HTTPURLResponse, Data))?>(nil)
+
+    static var handler: (@Sendable (URLRequest) throws -> (HTTPURLResponse, Data))? {
+        get { storedHandler.withLock { $0 } }
+        set { storedHandler.withLock { $0 = newValue } }
+    }
 
     override static func canInit(with request: URLRequest) -> Bool { true }
     override static func canonicalRequest(for request: URLRequest) -> URLRequest { request }
@@ -45,6 +50,7 @@ private struct StubModel: Decodable {
     let date: Date
 }
 
+@MainActor
 @Suite("APIManager", .serialized)
 struct APIManagerTests {
     // MARK: - Teardown
@@ -344,7 +350,7 @@ struct APIManagerTests {
 
 }
 
-nonisolated private func makeResponse(
+private func makeResponse(
     _ request: URLRequest,
     status: Int = 200,
     body: String = "{\"value\":1}",

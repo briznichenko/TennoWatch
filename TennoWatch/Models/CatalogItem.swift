@@ -9,7 +9,7 @@ import Foundation
 
 typealias NetworkModel = Decodable
 
-struct MasteryCatalogContainer: NetworkModel {
+struct MasteryCatalogContainer: NetworkModel, Sendable {
     let schemaVersion: Double
     let gameVersion: String
     let generatedAt: Date
@@ -19,11 +19,15 @@ struct MasteryCatalogContainer: NetworkModel {
     let nonItemSources: [String: [MasterySourceModel]]
 }
 
-struct MasterySourceModel: NetworkModel, Hashable {
+struct MasterySourceModel: NetworkModel, Hashable, Sendable {
     let uniqueName: String
     let name: String
     let mastery: Int
-    @Omitted var isMastered: Bool?
+    var isMastered: Bool?
+
+    enum CodingKeys: String, CodingKey {
+        case uniqueName, name, mastery
+    }
 }
 
 extension MasterySourceModel: PersistentModelConvertible {
@@ -37,7 +41,7 @@ extension MasterySourceModel: PersistentModelConvertible {
     }
 }
 
-struct CatalogItemModel: Codable, Hashable, Identifiable, Equatable {
+struct CatalogItemModel: Codable, Hashable, Identifiable, Equatable, Sendable {
     enum Category: String, CaseIterable, Codable {
         case suits = "Suits"
         case spaceSuits = "SpaceSuits"

@@ -8,6 +8,7 @@
 import Foundation
 import Observation
 
+@MainActor
 protocol ErrorManager: Observable {
     var errorQueue: [Error] { get }
     var currentError: Error? { get }

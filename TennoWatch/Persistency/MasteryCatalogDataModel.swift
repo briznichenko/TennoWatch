@@ -196,7 +196,7 @@ extension MasterySourceDataModel: ValueTypeConvertible {
     }
 }
 
-struct MasteryCatalog {
+struct MasteryCatalog: Sendable {
     // MARK: - Object Properties
     let schemaVersion: Double
     let gameVersion: String

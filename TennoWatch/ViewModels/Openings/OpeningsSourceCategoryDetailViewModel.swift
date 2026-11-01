@@ -16,6 +16,7 @@ struct OpeningsNodePlanetGroup: Identifiable {
 }
 
 @Observable
+@MainActor
 final class OpeningsSourceCategoryDetailViewModel {
     let categoryName: String
     let sources: [MasterySourceViewModel]

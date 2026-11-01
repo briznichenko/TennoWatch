@@ -8,6 +8,7 @@
 import SwiftUI
 
 @Observable
+@MainActor
 final class WikiCoordinator {
     struct Destination: Identifiable {
         let name: String

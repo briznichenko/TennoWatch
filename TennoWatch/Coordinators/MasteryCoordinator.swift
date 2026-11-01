@@ -8,6 +8,7 @@
 import SwiftUI
 
 @Observable
+@MainActor
 final class MasteryCoordinator {
     enum Destination: Hashable {
         case categoryDetail(CatalogItemModel.Category)

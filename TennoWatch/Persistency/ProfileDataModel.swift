@@ -165,7 +165,7 @@ extension AccountStatsDataModel: ValueTypeConvertible {
     }
 }
 
-struct AccountStats: Codable, Hashable {
+struct AccountStats: Codable, Hashable, Sendable {
     let deaths: Int
     let reviveCount: Int
     let meleeKills: Int
@@ -259,7 +259,7 @@ extension IntrinsicsDataModel: ValueTypeConvertible {
     }
 }
 
-struct Intrinsics: Codable, Hashable, Equatable {
+struct Intrinsics: Codable, Hashable, Equatable, Sendable {
     let name: String
     let rank: Int
 }
@@ -270,7 +270,7 @@ extension Intrinsics: PersistentModelConvertible {
     }
 }
 
-struct ProfileItemModel: Codable, Hashable, Equatable {
+struct ProfileItemModel: Codable, Hashable, Equatable, Sendable {
     let equipTime: Double?
     let headshots: Int?
     let hits: Int?

@@ -7,6 +7,7 @@
 
 import SwiftData
 
+@MainActor
 struct AppDependencies {
     // MARK: - Object Properties
     let persistencyService: PersistencyService

@@ -14,6 +14,7 @@ enum MasterySourceType: String {
     case nodes, intrinsics, junctions
 }
 
+@MainActor
 protocol CatalogRepository {
     var syncPolicy: SyncPolicy { get }
     func prepareCatalog() async throws
@@ -135,7 +136,7 @@ final class PersistentCatalogRepository: CatalogRepository {
         return try decoder.decode(MasteryCatalogContainer.self, from: Data(contentsOf: url))
     }
 
-    private static func prepareCatalog(
+    private nonisolated static func prepareCatalog(
         for profile: ProfileDataModel,
         bundle: MasteryCatalogContainer,
         in context: ModelContext
@@ -196,7 +197,7 @@ final class PersistentCatalogRepository: CatalogRepository {
         return (catalog, true)
     }
 
-    private static func deleteCatalog(_ catalog: MasteryCatalogDataModel, in context: ModelContext) {
+    private nonisolated static func deleteCatalog(_ catalog: MasteryCatalogDataModel, in context: ModelContext) {
         for container in catalog.items {
             for item in container.masteryItems where item.profileItem != nil {
                 item.profileItem = nil
@@ -205,7 +206,7 @@ final class PersistentCatalogRepository: CatalogRepository {
         context.delete(catalog)
     }
 
-    private static func mergeProfile(
+    private nonisolated static func mergeProfile(
         _ profile: ProfileDataModel,
         into catalog: MasteryCatalogDataModel,
         catalogSyncService: CatalogSyncService

@@ -25,6 +25,7 @@ struct OpeningsSourceCategorySummary: Identifiable, Hashable {
 }
 
 @Observable
+@MainActor
 final class OpeningsViewModel {
     // MARK: - Object Properties
     private let profileRepository: ProfileRepository

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MasteryCategoryModel: Hashable, Identifiable {
+struct MasteryCategoryModel: Hashable, Identifiable, Sendable {
     // MARK: - Object Properties
     let name: String
     var sources: [MasterySourceModel]

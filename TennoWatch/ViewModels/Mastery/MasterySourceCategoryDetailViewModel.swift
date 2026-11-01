@@ -9,6 +9,7 @@ import Foundation
 import Observation
 
 @Observable
+@MainActor
 final class MasterySourceCategoryDetailViewModel {
     typealias Filter = MasteryCategoryDetailViewModel.Filter
     typealias SortOption = MasteryCategoryDetailViewModel.SortOption

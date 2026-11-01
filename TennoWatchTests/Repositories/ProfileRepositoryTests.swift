@@ -34,10 +34,12 @@ private final class StubAPIService: ServiceProtocol {
     }
 }
 
+@MainActor
 private final class StubPersistencyService: PersistencyService {
     var storedProfiles: [Profile] = []
     private(set) var savedProfiles: [Profile] = []
 
+    @MainActor
     func fetchModel<T: ValueTypeConvertible>(by type: T.Type, with descriptor: FetchDescriptor<T>) async throws -> [T.Value] {
         guard let result = storedProfiles as? [T.Value] else {
             fatalError("StubPersistencyService only supports fetching Profile")
@@ -45,8 +47,10 @@ private final class StubPersistencyService: PersistencyService {
         return result
     }
 
+    @MainActor
     func saveValues<T: PersistentModelConvertible>(_ values: [T]) async throws {}
 
+    @MainActor
     func saveValue<T: PersistentModelConvertible>(_ value: T) async throws {
         if let profile = value as? Profile {
             savedProfiles.append(profile)
@@ -56,6 +60,7 @@ private final class StubPersistencyService: PersistencyService {
     private var container: ModelContainer?
     private var context: ModelContext?
 
+    @MainActor
     func perform<T: Sendable>(_ operation: @Sendable (ModelContext) throws -> T) async throws -> T {
         if context == nil {
             let container = try ModelContainer(
@@ -80,6 +85,7 @@ private final class StubAccountIDStore: AccountIDStoring {
     var currentAccountID: String?
 }
 
+@MainActor
 @Suite("PersistentProfileRepository")
 struct ProfileRepositoryTests {
     // MARK: - Teardown

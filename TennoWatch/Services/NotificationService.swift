@@ -15,6 +15,7 @@ struct ScheduledNotification {
     let fireDate: Date
 }
 
+@MainActor
 protocol NotificationService {
     func requestAuthorization() async throws -> Bool
     func schedule(_ notification: ScheduledNotification) async throws

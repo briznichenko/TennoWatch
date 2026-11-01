@@ -9,6 +9,7 @@ import Foundation
 import Observation
 
 @Observable
+@MainActor
 final class SettingsViewModel {
     // MARK: - Object Properties
     private(set) var gameVersion: String?
