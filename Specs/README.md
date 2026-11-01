@@ -11,15 +11,14 @@ future work has a stable baseline to diff against.
 
 | Spec | Screen(s) | Depends on |
 |---|---|---|
-| [WorldState](Tabs/WorldState.md) | Cycles, invasions, fissures, sorties, Nightwave, Void Trader | `WorldStateRepository` |
+| [WorldState](Tabs/WorldState.md) | World-state dashboard, drill-downs, potential Prime releases | `WorldStateRepository`, `VoidTraderNotificationScheduler` |
 | [Mastery](Tabs/Mastery.md) | Rank progress, item categories, non-item sources, drill-down lists | `ProfileRepository`, `CatalogRepository` |
 | [Openings](Tabs/Openings.md) | Time-sensitive vs. permanent unmastered items | `ProfileRepository`, `CatalogRepository`, `WorldStateRepository`, `OpeningsMatchingService` |
 | [Profile](Tabs/Profile.md) | Identity card, intrinsics, items, missions, account stats | `ProfileRepository` |
-| [Settings](Tabs/Settings.md) | Theme, language, account, catalog refresh | `PersistencyService`, `CatalogRepository`, `ProfileRepository` |
+| [Settings](Tabs/Settings.md) | Theme, language, notifications, account, catalog refresh, storage reset | Persistence, repositories, notification services |
 
-Settings is not a `Tab` in `MainView` — it's a sheet presented from Profile's
-toolbar. It gets its own spec because it's a distinct feature surface with its
-own ViewModel and screen, same as the four tabs.
+Settings is a separate feature surface: a sheet from Profile on iOS and a native
+Settings window on macOS. The app has four tabs.
 
 ## Layers
 
@@ -28,32 +27,32 @@ own ViewModel and screen, same as the four tabs.
 | [Networking](Layers/Networking.md) | `Networking/` | `APIManager` + `Endpoint` — talks to `api.warframestat.us` and `api.warframe.com` |
 | [Persistency](Layers/Persistency.md) | `Persistency/` | SwiftData `@ModelActor` service + value/model conversion pair |
 | [Repositories](Layers/Repositories.md) | `Repositories/` | One repository per data domain; owns cache policy, fronts networking + persistency |
-| [Services](Layers/Services.md) | `Services/` | Stateless business logic (catalog↔profile merge, openings matching, error queue) |
+| [Services](Layers/Services.md) | `Services/` | Business logic, shared error state, local notifications |
 | [Models](Layers/Models.md) | `Models/` | Network DTOs, SwiftData-adjacent value models, view-facing derived models |
 | [Theme & Shared UI](Layers/Theme-and-UI-Components.md) | `Theme/` | Palette, reusable SwiftUI components, list styling |
 | [Localization](Layers/Localization.md) | `Resources/` | `Strings` namespace + `Localizable.xcstrings` + runtime language switch |
 | [Testing](Layers/Testing.md) | `TennoWatchTests/` | Swift Testing coverage, fixtures, what's covered vs. not |
 
-## Cross-cutting architecture (applies to every tab)
+## Cross-cutting architecture
 
-- **MVVM+C.** View → `@Observable` ViewModel → Repository protocol →
-  (Service +) Networking/Persistency. No coordinator yet (single-level
-  navigation only); 
-- **Dependency injection** is manual, via [`AppDependencies`](../TennoWatch/AppDependencies.swift),
-  constructed once in `TennoWatchApp` and threaded down through
-  `MainView` → tab `View.init` → `ViewModel.init`. There is no DI container.
-- **Loading/error pattern**, repeated in every top-level ViewModel:
-  `isLoading` toggled with `defer`, failures caught and pushed to the shared
-  `ErrorManager` (never thrown to the view), and the view attaches
-  `.handleErrorAlert(with: viewModel.errorManager)` once at the top.
-- **List → detail navigation** is done by the parent ViewModel exposing a
-  `make*DetailViewModel(...)` factory rather than passing repositories further
-  down, e.g. `MasteryViewModel.makeCategoryDetailViewModel(for:)`.
-- **Swift 6 strict concurrency**, target-wide default `MainActor` isolation
-  (Approachable Concurrency) — most types need no explicit `@MainActor`.
-  `DefaultPersistencyService` is the one actor doing real off-main work
-  (`@ModelActor`).
-- **Xcode project uses file-system-synchronized groups**
-  (`PBXFileSystemSynchronizedRootGroup`), not manually-maintained `PBXFileReference`
-  lists. Any `.swift` file dropped into the right folder is picked up by Xcode
-  automatically — no `.pbxproj` editing needed for new files. 
+- **MVVM+C.** Views own `@Observable` ViewModels; ViewModels use repository
+  protocols. `MasteryCoordinator` owns a `NavigationPath` with typed destinations,
+  including the mastery breakdown. `WikiCoordinator` owns wiki-sheet presentation
+  shared through the environment. Other tab drill-downs use inline navigation.
+- **Dependency injection** is manual. [`AppDependencies`](../TennoWatch/AppDependencies.swift)
+  constructs shared dependencies; composition views construct ViewModels and pass
+  them into feature views. Mastery's parent ViewModel supplies detail ViewModel factories.
+- **Loading and errors.** Top-level ViewModels expose loading state and route failures
+  to the shared `ErrorManager`; views attach `.handleErrorAlert(with:)`. Cancellation
+  is silent. User-facing error mapping and startup failure handling are covered by
+  `AppErrorsTests`.
+- **Swift 6 concurrency.** Default actor isolation is nonisolated, with Approachable
+  Concurrency enabled. UI state explicitly uses `@MainActor`; Observation itself
+  does not provide isolation. Profile/Catalog repositories, the network cache, and
+  the notification scheduler use actors. `DefaultPersistencyService` is a
+  `@ModelActor`: synchronous graph mutations and conversions stay inside its context,
+  and `Sendable` values cross the boundary. See [Persistency](Layers/Persistency.md).
+- **Platform adaptation** lives in `Platform/`, including scenes, refresh controls,
+  Settings presentation, appearance proxies, and the embedded wiki web view.
+- **File-system-synchronized Xcode groups** pick up Swift files placed in the
+  corresponding source/test folders without manual project-file entries.

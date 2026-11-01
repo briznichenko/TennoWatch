@@ -17,12 +17,12 @@
   community API's URL path segments verbatim.
 
 ## `APIManager.swift`
-- `ServiceProtocol` exposes `fetch<T: Decodable>(_:) async throws -> T` and
+- `ServiceProtocol: Sendable` exposes `fetch<T: Decodable & Sendable>(_:) async throws -> T` and
   `clearCache()` (a default no-op for services without a cache).
   This is the seam every repository depends on instead of `APIManager`
   directly, so tests can substitute a stub (see
   [Testing](Testing.md)/`APIManagerTests`).
-- `APIManager` uses `async`/`await` over an injectable `URLSession`. Its default
+- `APIManager` is an actor using `async`/`await` over an injectable `URLSession`. Its default
   ephemeral session waits for connectivity, with a 15-second request timeout and
   a 30-second resource timeout per attempt. It disables URLCache so the explicit
   TTL is the only client cache policy. Injected sessions keep their own configuration.

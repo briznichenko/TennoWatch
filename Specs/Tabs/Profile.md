@@ -4,11 +4,11 @@
 Pulls a player's public stats, missions, and inventory from Digital
 Extremes' own profile-viewer endpoint (`api.warframe.com`, not the
 community `warframestat.us` API everything else uses). Also the tab that
-hosts the Settings entry point (gear icon → sheet).
+hosts the Settings entry point (sheet on iOS, native Settings window on macOS).
 
 ## Entry point
 `MainView` → `Tab("Profile")` → [`ProfileView`](../../TennoWatch/Views/Profile/ProfileView.swift),
-constructed with `profileRepository` + `errorManager`, but also takes the
+constructed with a `ProfileViewModel` using `profileRepository` + `errorManager`. It also takes the
 whole `AppDependencies` struct directly (the only tab view that does) purely
 so it can build `SettingsView`'s dependencies when the sheet is presented.
 
@@ -36,7 +36,7 @@ so it can build `SettingsView`'s dependencies when the sheet is presented.
 5. **`ProfileMissionsListView`** — same shape, for `MissionStat`.
 6. **`ProfileAccountStatsView`** — pushed, flat `AccountStatRow` list (no
    dedicated ViewModel — takes `rows: [AccountStatRow]` directly).
-7. **`SettingsView`** — presented as a `.sheet`, not pushed. See
+7. **`SettingsView`** — presented as a sheet on iOS or a native window on macOS. See
    [Settings](Settings.md).
 
 ## ViewModel — `ProfileViewModel`
@@ -47,10 +47,9 @@ so it can build `SettingsView`'s dependencies when the sheet is presented.
 - If the last profile is deleted, the repository creates a fresh manual profile. A local profile is never sent to the remote profile endpoint; manual item editing remains future work.
 - All other computed properties (`intrinsicGroups`, `itemStats`,
   `missionStats`, `accountStatRows`, `totalMissionsCompleted`, `totalKills`,
-  `intrinsicsSummaryText`) are thin derivations off `profile: Profile?`,
-  computed by the model layer (`Profile.intrinsicGroups` etc.) rather than
-  here — the ViewModel mostly just forwards with a `?? []`/`?? 0` fallback
-  for the nil-profile case.
+  `intrinsicsSummaryText`) derive from `profile: Profile?`. Arrays forward model projections with empty
+  fallbacks; mission/kill totals and the intrinsic summary are reduced in the
+  ViewModel.
 
 ## Data dependency
 `ProfileRepository.getProfile(withPlayerId:forceRefresh:)` — the same

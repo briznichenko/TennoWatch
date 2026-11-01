@@ -1,65 +1,54 @@
 # Layer: Testing
 
-`TennoWatchTests/` — Swift Testing (`import Testing`, `@Suite`/`@Test`),
-not XCTest. Mirrors the source tree: `Networking/`, `Repositories/`,
-`Services/`, `ViewModels/`, plus a shared `Support/Fixtures.swift`.
+`TennoWatchTests/` uses Swift Testing (`import Testing`, `@Suite`, `@Test`) with
+fixtures, injected protocol implementations, and in-memory SwiftData stores.
 
-## What's covered
-| Area | File | Notes |
-|---|---|---|
-| Networking | `APIManagerTests.swift` | fetch/decode path, likely the date-sentinel edge case |
-| Repositories | `ProfileRepositoryTests.swift` | cache/force-refresh branch logic |
-| Services | `CatalogSyncServiceTests.swift` | Steel Path / intrinsic / mission mastery rules |
-| Services | `OpeningsMatchingServiceTests.swift` | exact vs. name-fallback matching |
-| ViewModels | `WorldStateViewModelTests.swift` | the only ViewModel under test |
+## Existing coverage
 
-## What's not covered
-`CatalogRepository` (the most complex type in the app — six methods, a
-seeding path, a merge transaction), `WorldStateRepository`,
-`MasteryViewModel`/`MasteryCategoryDetailViewModel`/`MasterySourceCategoryDetailViewModel`,
-`OpeningsViewModel`, `ProfileViewModel`, `SettingsViewModel`,
-`MasteryItem.rank`'s XP formula directly, `ErrorService`. See each tab/layer
-spec's own "Known gaps" section for specifics — this is the rollup.
+- **`APIManagerTests`** — response/date decoding, HTTP/transport retry policy,
+  Retry-After, cancellation, TTL expiry, cache keys, profile bypass, and invalidation.
+- **`ProfileRepositoryTests`** — profile cache and force-refresh behavior.
+- **`ProfileIsolationTests`** — real persistence and repositories: overlapping
+  accounts, replacement progress, local identity, deletion, legacy repair, delayed
+  selection safety, synchronized-graph reuse, and catalog invalidation/rebuilding.
+- **`MasteryItemPersistenceTests`** — AX-52 mastery after syncing the bundled
+  profile, and mastered state surviving reads from another model context.
+- **`CacheClearingTests`** — deletion of persisted profiles and related catalog data.
+- **`CatalogSyncServiceTests`** — item and non-item mastery merge rules.
+- **`OpeningsMatchingServiceTests`** — reward/trader matching and source aggregation.
+- **`AppErrorsTests`** — user-facing error mapping, cancellation suppression,
+  error-queue behavior, startup success/failure, and wiki error handling.
+- **`WorldStateViewModelTests`** — success/failure/cancellation, loading lifecycle,
+  cycle mapping, and invasion/fissure sorting.
 
-## Patterns worth reusing (established in `WorldStateViewModelTests.swift`)
-- **Stub repositories conform to the real protocol**, not a mock framework —
-  `StubWorldStateRepository` holds a `Result<WorldState, Error>` and returns/throws
-  it from the protocol method. This is the pattern any new
-  `ViewModelTests` file should follow: a private `Stub*Repository` per test
-  file, not a shared generic mock.
-- **`ControlledWorldStateRepository`** — a second stub that uses
-  `withCheckedThrowingContinuation` to let a test deterministically control
-  *when* an in-flight request resolves (`waitForRequestToStart()` /
-  `resume(with:)`), specifically to test `isLoading` transitions without a
-  race. This is the one place in the codebase demonstrating the
-  continuation-bridging pattern from the project's Swift 6 learning goals —
-  worth a close read if `withCheckedThrowingContinuation` is still building
-  intuition, since it shows both the "give the test a checkpoint" and
-  "resume it under test control" halves of the pattern in a real,
-  non-contrived use.
-- **Fixtures as static factory extensions**, one per model
-  (`WorldState.stub(...)`, presumably `Invasion.stub()`, `VoidTrader.stub()`,
-  etc. given the cross-references in `WorldState.stub`), all defaulting every
-  parameter so a test only overrides what it cares about. New model types
-  should get a matching `.stub()` in `Fixtures.swift` rather than
-  constructing the full initializer inline in a test.
+## Coverage boundaries
 
-## Conventions for a new test file
-1. Mirror the source path: `TennoWatchTests/<Layer>/<TypeName>Tests.swift`.
-2. `@Suite("<TypeName>")` wrapping `@Test` functions/methods, `@testable import TennoWatch`.
-3. Stub the narrowest protocol the type under test depends on — don't reach
-   for the real `APIManager`/`DefaultPersistencyService` unless the test is
-   specifically about that integration (repository tests do use an
-   in-memory `ModelContainer`, since SwiftData's own behavior is part of
-   what's being tested there).
-4. Add fixtures to the shared `Fixtures.swift` rather than duplicating stub
-   construction per test file.
+Catalog repository behavior has integration coverage through the persistence
+suites, but no dedicated `CatalogRepositoryTests` suite. `WorldStateRepository`
+has no direct repository tests. World State is the only feature ViewModel with
+its own suite; Mastery, Openings, Profile, Settings, and Wiki ViewModels do not
+have dedicated suites. The mastery-rank threshold calculation and the item XP
+formula lack focused boundary tests. Local notification scheduling and SwiftUI
+views have no dedicated suites; there is no UI/snapshot test target.
 
-## Note on scope
-Per [CLAUDE.md](../../CLAUDE.md): *"No tests yet — this is intentional while
-fundamentals are still being built up. Ask before assuming either way when
-that changes."* This is stale — the test suite already exists and covers a
-meaningful (if partial) slice of the app. Worth updating that line, or
-confirming whether it's meant to gate something more specific (e.g. UI/
-snapshot tests, which genuinely don't exist yet) rather than tests in
-general.
+## Patterns to reuse
+
+- Stub the narrowest real dependency protocol, without a mock framework.
+- `ControlledWorldStateRepository` uses `withCheckedThrowingContinuation` to
+  suspend a fetch until the test resumes it, making loading-state assertions
+  deterministic. Every continuation must be resumed exactly once; avoid tests
+  that leave suspended requests unresolved.
+- Reuse static model factories in `Support/Fixtures.swift`, overriding only the
+  fields relevant to a test.
+- Use an in-memory `ModelContainer` when SwiftData behavior is part of the test.
+  Keep model access inside the owning context/actor and compare value snapshots.
+
+## Workflow and new coverage
+
+Use the shared `TennoWatch` scheme on macOS and an iOS simulator after relevant
+changes. [CI documentation](../../.github/README.md#local-validation) contains the
+local build/test commands and destination overrides.
+
+Discuss new test scope before adding coverage, per [AGENTS.md](../../AGENTS.md).
+Mirror the source area under `TennoWatchTests`, use `@testable import TennoWatch`,
+and prefer deterministic fixtures over live API calls.

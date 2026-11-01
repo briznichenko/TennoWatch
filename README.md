@@ -15,7 +15,7 @@ It's built on a shared Apple-platform stack — Swift 6 compiler, SwiftUI, Swift
 | **World State** | Live invasions, fissures, sorties, Archon Hunts, Nightwave, traders, alerts, Steel Path rewards, Archimedea, the calendar, flash sales, and world cycles. |
 | **Mastery** | Tracks mastery rank progress against the full item catalog, broken down by category and source, including intrinsics and Steel Path variants. |
 | **Openings** | Cross-references your remaining mastery items against live world state to surface time-sensitive ways to get them — an invasion carrying the item as a reward, the Void Trader stocking it, etc. |
-| **Profile** | Sync by account ID, switch saved profiles, or use an offline manual profile; view stats, missions, and inventory. |
+| **Profile** | Sync by account ID, switch saved profiles, or use a local profile with empty progress; view remote profile stats, missions, and inventory. |
 | **Settings** | Theme, language, local Void Trader arrival reminders, catalog refresh, and cache clearing. |
 
 Deeper specs for each tab and layer live in [Specs/](Specs/).
@@ -53,9 +53,9 @@ xcodebuild -project TennoWatch.xcodeproj -scheme TennoWatch \
   -destination 'platform=macOS' build CODE_SIGN_IDENTITY=-
 ```
 
-Add your account ID in Profile to sync, or create a manual profile for offline mastery tracking. Saved profiles keep their progress separately.
+Add your account ID in Profile to sync, or use a local manual profile to browse the catalog without a remote account. Manual progress editing is not implemented yet. Saved profiles keep their progress separately.
 
-The Mastery catalog itself is generated offline: [Scripts/generate_catalog](Scripts/generate_catalog) fetches Digital Extremes' live `PublicExport` feed and rebuilds [TennoWatch/Resources/masterycatalog.json](TennoWatch/Resources/masterycatalog.json) from scratch (`cd Scripts/generate_catalog && npm install && npm run generate`), and [Scripts/itemMapper.py](Scripts/itemMapper.py) separately maps game item paths to display names into [Generated/ExternalData.swift](Generated/ExternalData.swift). Both are checked into the repo; you only need to re-run them after a game update adds new items.
+The mastery catalog is bundled for runtime use. To update it and the Prime release snapshot, follow the validated refresh workflow in [.github/README.md](.github/README.md#local-validation); it preserves manually maintained non-item sources and checks both snapshots before replacing them. The underlying [catalog generator](Scripts/generate_catalog) downloads Digital Extremes' `PublicExport` feed. [Scripts/itemMapper.py](Scripts/itemMapper.py) separately maps `Scripts/input.json` item paths to display names in [Generated/ExternalData.swift](Generated/ExternalData.swift). Item mappings and `solNodes.json` remain manual updates outside the scheduled refresh.
 
 ## Architecture
 
@@ -64,8 +64,8 @@ The Mastery catalog itself is generated offline: [Scripts/generate_catalog](Scri
 | Networking | `Networking/` | `APIManager` + `Endpoint` — plain `async`/`await` over `URLSession`, talking to `api.warframestat.us` and `api.warframe.com`. |
 | Persistency | `Persistency/` | SwiftData, via a `@ModelActor` service and a `ValueTypeConvertible`/`PersistentModelConvertible` pair that keeps plain value types at the repository/ViewModel boundary instead of leaking `@Model` classes upward. |
 | Repositories | `Repositories/` | One repository per data domain; owns cache policy, fronts networking + persistency. |
-| Coordinators | `Coordinators/` | Mastery's `@Observable` coordinator owns a `NavigationPath` + `Destination` enum; views push by value. Other tabs currently use inline navigation. |
-| Services | `Services/` | Stateless business logic — catalog↔profile merge, openings matching, error queue. |
+| Coordinators | `Coordinators/` | Mastery owns typed drill-down navigation; Wiki owns shared wiki presentation. Other tab drill-downs use inline navigation. |
+| Services | `Services/` | Catalog/profile merging, openings matching, shared error state, and local notification delivery/scheduling. |
 | Models | `Models/` | Network DTOs, SwiftData-adjacent value models, view-facing derived models. |
 | Theme & Shared UI | `Theme/` | Palette, reusable SwiftUI components, list styling, and a narrow UIKit-appearance bridge (`AppearanceProxies`) in `Platform/` for iOS nav-bar/tab-bar tinting. |
 | Localization | `Resources/` | `Strings` namespace + `Localizable.xcstrings`, with runtime language switching. |
@@ -78,7 +78,7 @@ Cross-cutting:
 - **MVVM+C.** View → `@Observable` ViewModel → Repository protocol → (Service +) Networking/Persistency. Mastery uses a coordinator with a `NavigationPath` and typed destinations resolved via `.navigationDestination(for:)`. Other tabs currently use inline `NavigationLink` destinations.
 - **Swift 6 language mode**, with default `nonisolated` isolation and Approachable Concurrency. ViewModels, coordinators, app setup, and presentation errors explicitly use `@MainActor`. Profile/Catalog repositories and the network cache use actors; stateless services and repository contracts are `Sendable`. The shared account-selection store uses locked, conditional updates. Plain data types and pure logic remain nonisolated. `DefaultPersistencyService` owns its SwiftData context (`@ModelActor`); model access and conversion stay inside that actor, while `Sendable` value types cross the boundary.
 - **Manual dependency injection** via [`AppDependencies`](TennoWatch/AppDependencies.swift), constructed once and threaded down through views to ViewModels. No DI container.
-- **SwiftUI** only, with UIKit interop limited to the one appearance-proxy bridge noted above.
+- **SwiftUI first**, with UIKit/AppKit/WebKit bridges in `Platform/` for appearance and the embedded wiki browser.
 
 ## Testing
 

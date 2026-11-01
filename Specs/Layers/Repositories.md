@@ -6,7 +6,9 @@ cache policy and "network vs. local" decisions live, kept out of both
 ViewModels and the networking/persistency layers.
 
 ## `WorldStateRepository`
-The simplest one — no caching, no persistence, a pass-through to
+No repository-owned cache or persistence; delegates to the network service,
+which caches world state for 30 seconds in memory. `clearCache()` forwards
+invalidation to that service. Fetches use
 `ServiceProtocol.fetch(.worldState(platform:))`. `getWorldState(platform:)`
 defaults to `.pc` via a protocol extension (the same default-argument-via-
 extension trick every repository protocol in this app uses, since protocol
@@ -22,7 +24,7 @@ Profile import builds or refreshes that account's mastery catalog before promoti
 
 ## `CatalogRepository`
 
-Consumers request a full catalog, category summary, single item category, or non-item category. Every read resolves a profile-owned graph, rebuilds it when the bundled catalog changes, and recalculates remote mastery from that profile's persisted records inside one `perform(_:)` operation.
+Consumers request a full catalog, category summary, single item category, or non-item category. Every read resolves a profile-owned graph and rebuilds it when the bundled catalog changes. It synchronizes mastery when explicitly requested, when the graph is created, or when `syncedProfileLastUpdated` differs from the profile's timestamp. Unchanged reads reuse the synchronized graph. These checks and any merge run inside one `perform(_:)` operation.
 
 Plain `get*` methods use the active account. `sync*` methods use the supplied profile's account ID and read its latest persisted records; they do not change the active account or merge one account's snapshot into another account's graph.
 
@@ -35,11 +37,11 @@ Static item definitions are shared by unique name. Mastery rows, source completi
    whether it touches `PersistencyService` (`Persistent` prefix) or is a
    pure network pass-through (`Default` prefix) — see `DefaultWorldStateRepository`
    vs. `PersistentCatalogRepository`/`PersistentProfileRepository`.
-2. Inject `ServiceProtocol`/`PersistencyService`/nested services via
+3. Inject `ServiceProtocol`/`PersistencyService`/nested services via
    initializer with a real default (`APIManager()`, `DefaultCatalogSyncService()`)
    so call sites don't need to know about them — only `AppDependencies`
    overrides defaults, and only tests inject stubs.
-3. Wire the concrete type into `AppDependencies`, never construct a
+4. Wire the concrete type into `AppDependencies`, never construct a
    repository inline in a View or ViewModel.
 
 ## Test coverage
