@@ -10,24 +10,21 @@ import SwiftUI
 struct VoidTraderRowView: View {
     let voidTrader: VoidTrader
 
-    // MARK: - Computed Properties
-    private var hasArrived: Bool {
-        guard let activation = voidTrader.activation else { return true }
-        return activation <= .now
-    }
-
     var body: some View {
-        VStack(alignment: .leading, spacing: ListLayout.detailSpacing) {
-            Text(voidTrader.character)
-                .font(.headline)
-            Text(voidTrader.location)
-                .font(.caption)
-                .foregroundStyle(Color.labelSecondary)
-            HStack(spacing: ListLayout.detailSpacing) {
-                Text(hasArrived ? Strings.WorldState.baroDepartsIn : Strings.WorldState.baroArrivesIn)
+        TimelineView(.periodic(from: .now, by: CountdownRefreshInterval.second)) { context in
+            let countdown = voidTrader.countdown(at: context.date)
+            VStack(alignment: .leading, spacing: ListLayout.detailSpacing) {
+                Text(voidTrader.character)
+                    .font(.headline)
+                Text(voidTrader.location)
                     .font(.caption)
                     .foregroundStyle(Color.labelSecondary)
-                LiveCountdownText(date: hasArrived ? voidTrader.expiry : voidTrader.activation)
+                HStack(spacing: ListLayout.detailSpacing) {
+                    Text(countdown.hasArrived ? Strings.WorldState.baroDepartsIn : Strings.WorldState.baroArrivesIn)
+                        .font(.caption)
+                        .foregroundStyle(Color.labelSecondary)
+                    LiveCountdownText(date: countdown.targetDate)
+                }
             }
         }
     }

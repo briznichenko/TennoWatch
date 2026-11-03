@@ -609,6 +609,11 @@ struct VoidTrader: NetworkModel {
     let location: String
     let psId: String
     let schedule: [VoidTraderSchedule]
+
+    func countdown(at date: Date) -> (hasArrived: Bool, targetDate: Date?) {
+        let hasArrived = activation.map { $0 <= date } ?? true
+        return (hasArrived, hasArrived ? expiry : activation)
+    }
 }
 
 struct WorldState: NetworkModel {
