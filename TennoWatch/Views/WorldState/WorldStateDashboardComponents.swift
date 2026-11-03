@@ -11,8 +11,8 @@ struct WorldStateTraderCard: View {
     let trader: VoidTrader
 
     var body: some View {
-        TimelineView(.periodic(from: .now, by: CountdownRefreshInterval.minute)) { context in
-            let hasArrived = trader.activation.map { $0 <= context.date } ?? true
+        TimelineView(.periodic(from: .now, by: CountdownRefreshInterval.second)) { context in
+            let countdown = trader.countdown(at: context.date)
             DashboardHero(title: Strings.WorldState.voidTraderHeader, icon: "person.fill.questionmark", showsDisclosure: true) {
                 VStack(alignment: .leading, spacing: Layout.contentSpacing) {
                     Text(trader.character)
@@ -23,11 +23,11 @@ struct WorldStateTraderCard: View {
                         .foregroundStyle(Color.labelSecondary)
                 }
                 VStack(alignment: .leading, spacing: Layout.detailSpacing) {
-                    Text(hasArrived ? Strings.WorldState.baroDepartsIn : Strings.WorldState.baroArrivesIn)
+                    Text(countdown.hasArrived ? Strings.WorldState.baroDepartsIn : Strings.WorldState.baroArrivesIn)
                         .font(.caption)
                         .foregroundStyle(DashboardPalette.heroAccent)
                     LiveCountdownText(
-                        date: hasArrived ? trader.expiry : trader.activation,
+                        date: countdown.targetDate,
                         font: .title2.weight(.semibold),
                         tint: .labelPrimary
                     )

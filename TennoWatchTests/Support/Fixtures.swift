@@ -141,12 +141,13 @@ extension ZarimanCycle {
 
 extension VoidTrader {
     static func stub(
+        activation: Date? = nil,
         location: String = "",
         expiry: Date? = nil,
         inventory: [VoidTraderItem] = []
     ) -> VoidTrader {
         .init(
-            activation: nil,
+            activation: activation,
             expiry: expiry,
             id: nil,
             character: "",
