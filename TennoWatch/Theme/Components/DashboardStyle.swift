@@ -63,10 +63,12 @@ struct DashboardHero<Content: View>: View {
     let title: String
     let icon: String
     var showsDisclosure = false
+    var includesBackground = true
+    var compact = false
     @ViewBuilder var content: Content
 
     var body: some View {
-        VStack(alignment: .leading, spacing: HeroStyle.contentSpacing) {
+        VStack(alignment: .leading, spacing: compact ? 6 : HeroStyle.contentSpacing) {
             HStack {
                 Label(title, systemImage: icon)
                     .labelStyle(.titleAndIcon)
@@ -83,8 +85,10 @@ struct DashboardHero<Content: View>: View {
             content
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(DashboardLayout.contentPadding)
-        .background(DashboardHeroBackground())
+        .padding(includesBackground ? DashboardLayout.contentPadding : 0)
+        .background {
+            if includesBackground { DashboardHeroBackground() }
+        }
     }
 }
 

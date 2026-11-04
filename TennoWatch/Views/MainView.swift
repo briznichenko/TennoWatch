@@ -12,14 +12,15 @@ struct MainView: View {
     // MARK: - Object Properties
     let dependencies: AppDependencies
     let onCacheCleared: () -> Void
+    @Binding var selectedTab: Int
     @State private var wikiCoordinator = WikiCoordinator()
     @AppStorage(UserDefaultsAccountIDStore.storageKey) private var currentAccountID: String?
     @Environment(\.colorScheme) private var colorScheme
 
     // MARK: - Body
     var body: some View {
-        TabView {
-            Tab(Strings.Main.tabWorldState, systemImage: "globe.europe.africa") {
+        TabView(selection: $selectedTab) {
+            Tab(Strings.Main.tabWorldState, systemImage: "globe.europe.africa", value: 0) {
                 WorldStateView(
                     viewModel: .init(
                         worldStateRepository: dependencies.worldStateRepository,
@@ -28,7 +29,7 @@ struct MainView: View {
                     )
                 )
             }
-            Tab(Strings.Main.tabMastery, systemImage: "trophy") {
+            Tab(Strings.Main.tabMastery, systemImage: "trophy", value: 1) {
                 MasteryView(
                     viewModel: .init(
                         profileRepository: dependencies.profileRepository,
@@ -38,7 +39,7 @@ struct MainView: View {
                 )
                 .id(currentAccountID)
             }
-            Tab(Strings.Main.tabOpenings, systemImage: "target") {
+            Tab(Strings.Main.tabOpenings, systemImage: "target", value: 2) {
                 OpeningsView(
                     viewModel: .init(
                         profileRepository: dependencies.profileRepository,
@@ -49,7 +50,7 @@ struct MainView: View {
                 )
                 .id(currentAccountID)
             }
-            Tab(Strings.Main.tabProfile, systemImage: "person", role: AppPresentation.profileTabRole) {
+            Tab(Strings.Main.tabProfile, systemImage: "person", value: 3, role: AppPresentation.profileTabRole) {
                 ProfileView(
                     viewModel: .init(
                         profileRepository: dependencies.profileRepository,
@@ -72,6 +73,6 @@ struct MainView: View {
 #Preview {
     let container = try? ModelContainer(for: ProfileDataModel.self, MasteryCatalogDataModel.self, configurations: .init(isStoredInMemoryOnly: true))
     if let container {
-        MainView(dependencies: AppDependencies(modelContainer: container), onCacheCleared: {})
+        MainView(dependencies: AppDependencies(modelContainer: container), onCacheCleared: {}, selectedTab: .constant(0))
     }
 }

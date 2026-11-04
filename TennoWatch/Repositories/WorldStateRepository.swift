@@ -23,10 +23,12 @@ extension WorldStateRepository {
 struct DefaultWorldStateRepository: WorldStateRepository {
     // MARK: - Object Properties
     private let worldStateService: ServiceProtocol
+    private let widgetUpdatesEnabled: Bool
 
     // MARK: - Init
-    init(worldStateService: ServiceProtocol = APIManager()) {
+    init(worldStateService: ServiceProtocol = APIManager(), widgetUpdatesEnabled: Bool = false) {
         self.worldStateService = worldStateService
+        self.widgetUpdatesEnabled = widgetUpdatesEnabled
     }
 
     func clearCache() async {
@@ -35,6 +37,13 @@ struct DefaultWorldStateRepository: WorldStateRepository {
 
     // MARK: - Functions
     func getWorldState(platform: Platform) async throws -> WorldState {
-        try await worldStateService.fetch(.worldState(platform: platform))
+        let state: WorldState = try await worldStateService.fetch(.worldState(platform: platform))
+        if widgetUpdatesEnabled && platform == .pc {
+            WidgetSnapshotStore().saveBaro(.init(
+                activation: state.voidTrader.activation, expiry: state.voidTrader.expiry,
+                location: state.voidTrader.location, updatedAt: state.timestamp
+            ))
+        }
+        return state
     }
 }

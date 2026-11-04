@@ -7,89 +7,6 @@
 
 import SwiftUI
 
-struct MasteryRankCard: View {
-    let progress: MasteryRankProgress
-    let itemsRemaining: Int
-
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @ScaledMetric(relativeTo: .largeTitle) private var ringSize = RankLayout.ringSize
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: RankLayout.contentSpacing) {
-            HStack {
-                Label(Strings.Profile.masteryRankLabel, systemImage: "trophy.fill")
-                    .font(.caption.weight(.semibold))
-                    .tracking(DashboardLayout.headingTracking)
-                Spacer()
-                Image(systemName: "arrow.up.right")
-                    .font(.subheadline.weight(.semibold))
-            }
-            .foregroundStyle(DashboardPalette.heroAccent)
-
-            let layout = dynamicTypeSize.isAccessibilitySize
-                ? AnyLayout(VStackLayout(alignment: .leading, spacing: RankLayout.ringSpacing))
-                : AnyLayout(HStackLayout(alignment: .center, spacing: RankLayout.ringSpacing))
-
-            layout {
-                rankRing
-                VStack(alignment: .leading, spacing: RankLayout.detailSpacing) {
-                    Text(Strings.Mastery.xpToNextRank(
-                        progress.xpToNextRank.formatted(),
-                        nextRank: progress.rank + 1
-                    ))
-                    .font(.title2.weight(.semibold))
-                    .foregroundStyle(Color.labelPrimary)
-                    .fixedSize(horizontal: false, vertical: true)
-                    Text("\(progress.currentXP.formatted()) / \(progress.xpForNextRank.formatted())")
-                        .font(.caption.monospacedDigit())
-                        .foregroundStyle(Color.labelSecondary)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-
-            Rectangle()
-                .fill(Color.divider)
-                .frame(height: DashboardLayout.dividerThickness)
-
-            Label(Strings.Mastery.itemsLeft(itemsRemaining), systemImage: "square.stack.3d.up")
-                .font(.subheadline)
-                .foregroundStyle(Color.labelSecondary)
-        }
-        .padding(DashboardLayout.contentPadding)
-        .background(DashboardHeroBackground())
-        .accessibilityElement(children: .combine)
-    }
-
-    private var rankRing: some View {
-        VStack {
-            Image(systemName: "trophy")
-                .font(.title3)
-                .foregroundStyle(DashboardPalette.heroAccent)
-            Text(Strings.Mastery.rankBadge(progress.rank))
-                .font(.system(.title2, design: .rounded, weight: .bold))
-                .foregroundStyle(Color.labelPrimary)
-                .monospacedDigit()
-        }
-        .background {
-            ZStack {
-                Circle()
-                    .stroke(DashboardPalette.heroAccent.opacity(RankLayout.trackOpacity), lineWidth: RankLayout.trackWidth)
-                Circle()
-                    .trim(from: 0, to: progress.fraction)
-                    .stroke(
-                        DashboardPalette.heroAccent.gradient,
-                        style: StrokeStyle(lineWidth: RankLayout.progressWidth, lineCap: .round)
-                    )
-                    .rotationEffect(.degrees(RankLayout.startAngle))
-                    .animation(reduceMotion ? nil : .smooth(duration: RankLayout.animationDuration), value: progress.fraction)
-            }
-            .padding(RankLayout.ringInset)
-        }
-        .frame(width: ringSize, height: ringSize)
-    }
-}
-
 struct MasteryCategoryCard: View {
     let summary: CatalogContainerSummary
 
@@ -237,19 +154,6 @@ private struct MasteryCompletionBar: View {
         .animation(reduceMotion ? nil : .smooth(duration: CompletionStyle.animationDuration), value: fraction)
         .accessibilityHidden(true)
     }
-}
-
-private struct RankLayout {
-    static let ringSize = 88.0
-    static let contentSpacing: CGFloat = 10
-    static let ringSpacing: CGFloat = 16
-    static let detailSpacing: CGFloat = 8
-    static let trackOpacity = 0.18
-    static let trackWidth: CGFloat = 5
-    static let progressWidth: CGFloat = 6
-    static let startAngle: Double = -90
-    static let animationDuration: TimeInterval = 0.5
-    static let ringInset: CGFloat = -20
 }
 
 private struct CategoryLayout {

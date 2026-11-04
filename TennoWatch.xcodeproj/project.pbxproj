@@ -16,6 +16,24 @@
 		A355E4D4AFFDB970D7307A52 /* CatalogSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8B2E2702DEA0BAB9EDCABA /* CatalogSyncServiceTests.swift */; };
 		CF7672013DA9CDD3100EAA15 /* APIManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72B3A29E3C671BD71B667B76 /* APIManagerTests.swift */; };
 		E90F8ECD65AF273EC6241195 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D706BD5EF860A92F6CDEB58 /* Fixtures.swift */; };
+		F00320260000000000000010 /* MasteryRankProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00320260000000000000001 /* MasteryRankProgress.swift */; };
+		F00320260000000000000011 /* WidgetSnapshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00320260000000000000002 /* WidgetSnapshots.swift */; };
+		F00320260000000000000012 /* TennoWatchWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00320260000000000000004 /* TennoWatchWidgets.swift */; };
+		F00320260000000000000013 /* WidgetProviders.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00320260000000000000005 /* WidgetProviders.swift */; };
+		F0032026000000000000001A /* TennoWatchWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F0032026000000000000000C /* TennoWatchWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F0032026000000000000001C /* MasteryRankProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00320260000000000000001 /* MasteryRankProgress.swift */; };
+		F0032026000000000000001D /* WidgetSnapshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00320260000000000000002 /* WidgetSnapshots.swift */; };
+		F0032027000000000000000B /* WidgetShared/MasteryRankCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00320270000000000000001 /* WidgetShared/MasteryRankCard.swift */; };
+		F0032027000000000000000C /* WidgetShared/VoidTraderCardContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00320270000000000000002 /* WidgetShared/VoidTraderCardContent.swift */; };
+		F0032027000000000000000D /* TennoWatch/Theme/Components/DashboardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00320270000000000000003 /* TennoWatch/Theme/Components/DashboardStyle.swift */; };
+		F0032027000000000000000E /* TennoWatch/Theme/Components/LotusMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00320270000000000000004 /* TennoWatch/Theme/Components/LotusMark.swift */; };
+		F0032027000000000000000F /* TennoWatch/Theme/LayoutMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00320270000000000000005 /* TennoWatch/Theme/LayoutMetrics.swift */; };
+		F00320270000000000000010 /* TennoWatch/Resources/Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00320270000000000000006 /* TennoWatch/Resources/Strings.swift */; };
+		F00320270000000000000011 /* TennoWatch/Resources/AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00320270000000000000007 /* TennoWatch/Resources/AppLanguage.swift */; };
+		F00320270000000000000012 /* WidgetShared/MasteryRankCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00320270000000000000001 /* WidgetShared/MasteryRankCard.swift */; };
+		F00320270000000000000013 /* WidgetShared/VoidTraderCardContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00320270000000000000002 /* WidgetShared/VoidTraderCardContent.swift */; };
+		F00320270000000000000014 /* TennoWatch/Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F00320270000000000000008 /* TennoWatch/Assets.xcassets */; };
+		F00320270000000000000015 /* TennoWatch/Resources/Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F00320270000000000000009 /* TennoWatch/Resources/Localizable.xcstrings */; };
 		F3177F55C73CA558FFA1B8BA /* WorldStateViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195D439705557131008EF821 /* WorldStateViewModelTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -27,7 +45,28 @@
 			remoteGlobalIDString = 7DAA00C0303C70C50040DF25;
 			remoteInfo = TennoWatch;
 		};
+		F00320260000000000000018 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7DAA00B9303C70C50040DF25 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F00320260000000000000017;
+			remoteInfo = TennoWatchWidgets;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F0032026000000000000001B /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				F0032026000000000000001A /* TennoWatchWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		195D439705557131008EF821 /* WorldStateViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorldStateViewModelTests.swift; sourceTree = "<group>"; };
@@ -44,6 +83,24 @@
 		B9D574040649ACABC712C602 /* TennoWatchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TennoWatchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB16E810A8E0361B8D9EBC7B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		CF8B2E2702DEA0BAB9EDCABA /* CatalogSyncServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CatalogSyncServiceTests.swift; sourceTree = "<group>"; };
+		F00320260000000000000001 /* MasteryRankProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasteryRankProgress.swift; sourceTree = "<group>"; };
+		F00320260000000000000002 /* WidgetSnapshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSnapshots.swift; sourceTree = "<group>"; };
+		F00320260000000000000004 /* TennoWatchWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TennoWatchWidgets.swift; sourceTree = "<group>"; };
+		F00320260000000000000005 /* WidgetProviders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetProviders.swift; sourceTree = "<group>"; };
+		F00320260000000000000007 /* TennoWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TennoWatch.entitlements; sourceTree = "<group>"; };
+		F00320260000000000000008 /* TennoWatchWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TennoWatchWidgets.entitlements; sourceTree = "<group>"; };
+		F00320260000000000000009 /* App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "App-Info.plist"; sourceTree = "<group>"; };
+		F0032026000000000000000A /* Widgets-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Widgets-Info.plist"; sourceTree = "<group>"; };
+		F0032026000000000000000C /* TennoWatchWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TennoWatchWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		F00320270000000000000001 /* WidgetShared/MasteryRankCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetShared/MasteryRankCard.swift; sourceTree = SOURCE_ROOT; };
+		F00320270000000000000002 /* WidgetShared/VoidTraderCardContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetShared/VoidTraderCardContent.swift; sourceTree = SOURCE_ROOT; };
+		F00320270000000000000003 /* TennoWatch/Theme/Components/DashboardStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TennoWatch/Theme/Components/DashboardStyle.swift; sourceTree = SOURCE_ROOT; };
+		F00320270000000000000004 /* TennoWatch/Theme/Components/LotusMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TennoWatch/Theme/Components/LotusMark.swift; sourceTree = SOURCE_ROOT; };
+		F00320270000000000000005 /* TennoWatch/Theme/LayoutMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TennoWatch/Theme/LayoutMetrics.swift; sourceTree = SOURCE_ROOT; };
+		F00320270000000000000006 /* TennoWatch/Resources/Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TennoWatch/Resources/Strings.swift; sourceTree = SOURCE_ROOT; };
+		F00320270000000000000007 /* TennoWatch/Resources/AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TennoWatch/Resources/AppLanguage.swift; sourceTree = SOURCE_ROOT; };
+		F00320270000000000000008 /* TennoWatch/Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = TennoWatch/Assets.xcassets; sourceTree = SOURCE_ROOT; };
+		F00320270000000000000009 /* TennoWatch/Resources/Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = TennoWatch/Resources/Localizable.xcstrings; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -63,6 +120,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		7DAA00BE303C70C50040DF25 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F00320260000000000000015 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -133,6 +197,10 @@
 		7DAA00B8303C70C50040DF25 = {
 			isa = PBXGroup;
 			children = (
+				F0032027000000000000000A /* Shared Card UI */,
+				F00320260000000000000003 /* WidgetShared */,
+				F00320260000000000000006 /* TennoWatchWidgets */,
+				F0032026000000000000000B /* Configuration */,
 				7DAA00C3303C70C50040DF25 /* TennoWatch */,
 				7DAA00C2303C70C50040DF25 /* Products */,
 				491098740E4361191587F5B0 /* Frameworks */,
@@ -143,6 +211,7 @@
 		7DAA00C2303C70C50040DF25 /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				F0032026000000000000000C /* TennoWatchWidgets.appex */,
 				7DAA00C1303C70C50040DF25 /* TennoWatch.app */,
 				94037D41B2F4715C41EE7FCD /* TennoWatchTests.xctest */,
 				B9D574040649ACABC712C602 /* TennoWatchTests.xctest */,
@@ -158,6 +227,51 @@
 				A1640026CAFE000000000001 /* MasteryItemPersistenceTests.swift */,
 			);
 			path = Persistency;
+			sourceTree = "<group>";
+		};
+		F00320260000000000000003 /* WidgetShared */ = {
+			isa = PBXGroup;
+			children = (
+				F00320260000000000000001 /* MasteryRankProgress.swift */,
+				F00320260000000000000002 /* WidgetSnapshots.swift */,
+			);
+			path = WidgetShared;
+			sourceTree = "<group>";
+		};
+		F00320260000000000000006 /* TennoWatchWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				F00320260000000000000004 /* TennoWatchWidgets.swift */,
+				F00320260000000000000005 /* WidgetProviders.swift */,
+			);
+			path = TennoWatchWidgets;
+			sourceTree = "<group>";
+		};
+		F0032026000000000000000B /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				F00320260000000000000007 /* TennoWatch.entitlements */,
+				F00320260000000000000008 /* TennoWatchWidgets.entitlements */,
+				F00320260000000000000009 /* App-Info.plist */,
+				F0032026000000000000000A /* Widgets-Info.plist */,
+			);
+			path = Configuration;
+			sourceTree = "<group>";
+		};
+		F0032027000000000000000A /* Shared Card UI */ = {
+			isa = PBXGroup;
+			children = (
+				F00320270000000000000001 /* WidgetShared/MasteryRankCard.swift */,
+				F00320270000000000000002 /* WidgetShared/VoidTraderCardContent.swift */,
+				F00320270000000000000003 /* TennoWatch/Theme/Components/DashboardStyle.swift */,
+				F00320270000000000000004 /* TennoWatch/Theme/Components/LotusMark.swift */,
+				F00320270000000000000005 /* TennoWatch/Theme/LayoutMetrics.swift */,
+				F00320270000000000000006 /* TennoWatch/Resources/Strings.swift */,
+				F00320270000000000000007 /* TennoWatch/Resources/AppLanguage.swift */,
+				F00320270000000000000008 /* TennoWatch/Assets.xcassets */,
+				F00320270000000000000009 /* TennoWatch/Resources/Localizable.xcstrings */,
+			);
+			name = "Shared Card UI";
 			sourceTree = "<group>";
 		};
 		F21F758D753B1BBD7D3B5124 /* TennoWatchTests */ = {
@@ -185,10 +299,12 @@
 				7DAA00BD303C70C50040DF25 /* Sources */,
 				7DAA00BE303C70C50040DF25 /* Frameworks */,
 				7DAA00BF303C70C50040DF25 /* Resources */,
+				F0032026000000000000001B /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				F00320260000000000000019 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				7DAA00C3303C70C50040DF25 /* TennoWatch */,
@@ -216,6 +332,23 @@
 			productReference = B9D574040649ACABC712C602 /* TennoWatchTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		F00320260000000000000017 /* TennoWatchWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F0032026000000000000000F /* Build configuration list for PBXNativeTarget "TennoWatchWidgets" */;
+			buildPhases = (
+				F00320260000000000000014 /* Sources */,
+				F00320260000000000000015 /* Frameworks */,
+				F00320260000000000000016 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TennoWatchWidgets;
+			productName = TennoWatchWidgets;
+			productReference = F0032026000000000000000C /* TennoWatchWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -224,7 +357,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2660;
-				LastUpgradeCheck = 2710;
+				LastUpgradeCheck = 2720;
 				TargetAttributes = {
 					7DAA00C0303C70C50040DF25 = {
 						CreatedOnToolsVersion = 26.6;
@@ -246,6 +379,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				F00320260000000000000017 /* TennoWatchWidgets */,
 				7DAA00C0303C70C50040DF25 /* TennoWatch */,
 				C075BEE9EC112E800C4C8FE2 /* TennoWatchTests */,
 			);
@@ -264,6 +398,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F00320260000000000000016 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F00320270000000000000014 /* TennoWatch/Assets.xcassets in Resources */,
+				F00320270000000000000015 /* TennoWatch/Resources/Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -333,6 +476,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F00320270000000000000012 /* WidgetShared/MasteryRankCard.swift in Sources */,
+				F00320270000000000000013 /* WidgetShared/VoidTraderCardContent.swift in Sources */,
+				F0032026000000000000001C /* MasteryRankProgress.swift in Sources */,
+				F0032026000000000000001D /* WidgetSnapshots.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F00320260000000000000014 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0032027000000000000000B /* WidgetShared/MasteryRankCard.swift in Sources */,
+				F0032027000000000000000C /* WidgetShared/VoidTraderCardContent.swift in Sources */,
+				F0032027000000000000000D /* TennoWatch/Theme/Components/DashboardStyle.swift in Sources */,
+				F0032027000000000000000E /* TennoWatch/Theme/Components/LotusMark.swift in Sources */,
+				F0032027000000000000000F /* TennoWatch/Theme/LayoutMetrics.swift in Sources */,
+				F00320270000000000000010 /* TennoWatch/Resources/Strings.swift in Sources */,
+				F00320270000000000000011 /* TennoWatch/Resources/AppLanguage.swift in Sources */,
+				F00320260000000000000010 /* MasteryRankProgress.swift in Sources */,
+				F00320260000000000000011 /* WidgetSnapshots.swift in Sources */,
+				F00320260000000000000012 /* TennoWatchWidgets.swift in Sources */,
+				F00320260000000000000013 /* WidgetProviders.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -344,6 +509,11 @@
 			name = TennoWatch;
 			target = 7DAA00C0303C70C50040DF25 /* TennoWatch */;
 			targetProxy = 53148B310B4259EFA4F6197A /* PBXContainerItemProxy */;
+		};
+		F00320260000000000000019 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F00320260000000000000017 /* TennoWatchWidgets */;
+			targetProxy = F00320260000000000000018 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -506,6 +676,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = accentColor;
+				CODE_SIGN_ENTITLEMENTS = Configuration/TennoWatch.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
@@ -514,6 +685,7 @@
 				"ENABLE_OUTGOING_NETWORK_CONNECTIONS[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Configuration/App-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -529,6 +701,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.briznichenko.TennoWatch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
@@ -546,6 +719,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = accentColor;
+				CODE_SIGN_ENTITLEMENTS = Configuration/TennoWatch.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
@@ -554,6 +728,7 @@
 				"ENABLE_OUTGOING_NETWORK_CONNECTIONS[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Configuration/App-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -569,6 +744,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.briznichenko.TennoWatch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
@@ -606,6 +782,82 @@
 			};
 			name = Debug;
 		};
+		F0032026000000000000000D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = Configuration/TennoWatchWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TBBZBB993Z;
+				"ENABLE_APP_SANDBOX[sdk=macosx*]" = YES;
+				"ENABLE_OUTGOING_NETWORK_CONNECTIONS[sdk=macosx*]" = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Configuration/Widgets-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "TennoWatch Widgets";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.briznichenko.TennoWatch.Widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F0032026000000000000000E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = Configuration/TennoWatchWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TBBZBB993Z;
+				"ENABLE_APP_SANDBOX[sdk=macosx*]" = YES;
+				"ENABLE_OUTGOING_NETWORK_CONNECTIONS[sdk=macosx*]" = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Configuration/Widgets-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "TennoWatch Widgets";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.briznichenko.TennoWatch.Widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -632,6 +884,15 @@
 			buildConfigurations = (
 				7DAA00CD303C70C60040DF25 /* Debug */,
 				7DAA00CE303C70C60040DF25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F0032026000000000000000F /* Build configuration list for PBXNativeTarget "TennoWatchWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F0032026000000000000000D /* Debug */,
+				F0032026000000000000000E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

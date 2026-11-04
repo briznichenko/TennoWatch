@@ -62,6 +62,15 @@ extension PersistencyService {
 
 @ModelActor
 actor DefaultPersistencyService: PersistencyService {
+    private var widgetUpdatesEnabled = false
+
+    init(modelContainer: ModelContainer, widgetUpdatesEnabled: Bool) {
+        let context = ModelContext(modelContainer)
+        self.modelContainer = modelContainer
+        self.modelExecutor = DefaultSerialModelExecutor(modelContext: context)
+        self.widgetUpdatesEnabled = widgetUpdatesEnabled
+    }
+
     // MARK: - Functions
     func fetchModel<T: ValueTypeConvertible>(by type: T.Type, with descriptor: FetchDescriptor<T>) async throws -> [T.Value] {
         let models = try modelContext.fetch(descriptor)
@@ -79,14 +88,34 @@ actor DefaultPersistencyService: PersistencyService {
             modelContext.insert(model)
         }
         try modelContext.save()
+        publishWidgetSnapshots()
     }
 
     func saveValue<T>(_ value: T) async throws where T: PersistentModelConvertible {
         modelContext.insert(value.model)
         try modelContext.save()
+        publishWidgetSnapshots()
     }
 
     func perform<T: Sendable>(_ operation: @Sendable (ModelContext) throws -> T) async throws -> T {
-        try operation(modelContext)
+        let result = try operation(modelContext)
+        publishWidgetSnapshots()
+        return result
+    }
+
+    private func publishWidgetSnapshots() {
+        guard widgetUpdatesEnabled,
+              let profiles = try? modelContext.fetch(FetchDescriptor<ProfileDataModel>()) else { return }
+        let snapshots = profiles.compactMap { profile -> MasterySnapshot? in
+            guard let summary = profile.masteryCatalog?.summary else { return nil }
+            let earnedXP = summary.categories.reduce(0) { $0 + $1.earnedMasteryPoints }
+                + summary.nonItemCategories.reduce(0) { $0 + $1.earnedMasteryPoints }
+            return MasterySnapshot(
+                accountID: profile.accountID, name: profile.isLocal ? "" : profile.displayName,
+                playerRank: profile.isLocal ? nil : profile.playerLevel,
+                earnedXP: earnedXP, updatedAt: profile.lastUpdated
+            )
+        }
+        WidgetSnapshotStore().saveMastery(snapshots.sorted { $0.accountID < $1.accountID })
     }
 }

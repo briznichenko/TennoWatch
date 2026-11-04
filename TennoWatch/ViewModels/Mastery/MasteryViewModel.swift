@@ -15,21 +15,6 @@ struct MasteryBreakdownRow: Identifiable, Hashable {
     var id: String { name }
 }
 
-struct MasteryRankProgress {
-    let rank: Int
-    let currentXP: Int
-    let xpForCurrentRank: Int
-    let xpForNextRank: Int
-
-    var fraction: Double {
-        let span = Double(xpForNextRank - xpForCurrentRank)
-        guard span > 0 else { return 1 }
-        return min(1, max(0, Double(currentXP - xpForCurrentRank) / span))
-    }
-
-    var xpToNextRank: Int { max(0, xpForNextRank - currentXP) }
-}
-
 @Observable
 @MainActor
 final class MasteryViewModel {
@@ -58,7 +43,7 @@ final class MasteryViewModel {
     }
 
     var rankProgress: MasteryRankProgress {
-        Self.rankProgress(forXP: earnedMasteryXP, playerRank: playerRank)
+        MasteryRankProgress.calculate(forXP: earnedMasteryXP, playerRank: playerRank)
     }
 
     var obtainableItemsRemaining: Int {
@@ -131,26 +116,6 @@ final class MasteryViewModel {
     }
     
     // MARK: - Helper Functions
-    private static func rankProgress(forXP xp: Int, playerRank: Int?) -> MasteryRankProgress {
-        let legendaryCapXP = RankRequirements.rankXPMultiplier * RankRequirements.legendaryCapRank * RankRequirements.legendaryCapRank
-        func cumulativeXP(for rank: Int) -> Int {
-            guard rank > RankRequirements.legendaryCapRank else { return RankRequirements.rankXPMultiplier * rank * rank }
-            return legendaryCapXP + (rank - RankRequirements.legendaryCapRank) * RankRequirements.legendaryRankXP
-        }
-        var completedRanks = 0
-        while cumulativeXP(for: completedRanks + 1) <= xp {
-            completedRanks += 1
-        }
-        let rank = playerRank.map { max(0, $0) } ?? completedRanks
-        let currentXP = cumulativeXP(for: rank)
-        return MasteryRankProgress(
-            rank: rank,
-            currentXP: xp,
-            xpForCurrentRank: currentXP,
-            xpForNextRank: cumulativeXP(for: rank + 1)
-        )
-    }
-
     private static func makeBreakdownSections(
         categories: [CatalogContainerSummary],
         nodes: MasteryCategoryModel,
@@ -207,10 +172,4 @@ final class MasteryViewModel {
 
         return [weapons, missionsAndIntrinsics, companions, archAndModular, other]
     }
-}
-
-private struct RankRequirements {
-    static let legendaryCapRank = 30
-    static let rankXPMultiplier = 2500
-    static let legendaryRankXP = 147_500
 }
