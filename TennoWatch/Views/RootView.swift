@@ -12,6 +12,7 @@ struct RootView: View {
     // MARK: - Object Properties
     let dependencies: AppDependencies
 
+    @State private var selectedTab = 0
     @State private var isShowingSplash = true
     @State private var cacheResetID = UUID()
 
@@ -22,11 +23,19 @@ struct RootView: View {
                 SplashView()
                     .transition(.opacity)
             } else {
-                MainView(dependencies: dependencies) {
+                MainView(dependencies: dependencies, onCacheCleared: {
                     cacheResetID = UUID()
-                }
+                }, selectedTab: $selectedTab)
                 .id(cacheResetID)
                 .transition(.opacity)
+            }
+        }
+        .onOpenURL { url in
+            guard url.scheme == "tennowatch" else { return }
+            switch url.host {
+            case "world-state": selectedTab = 0
+            case "mastery": selectedTab = 1
+            default: break
             }
         }
         .task {

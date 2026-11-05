@@ -57,6 +57,16 @@ Add your account ID in Profile to sync, or use a local manual profile to browse 
 
 The mastery catalog is bundled for runtime use. To update it and the Prime release snapshot, follow the validated refresh workflow in [.github/README.md](.github/README.md#local-validation); it preserves manually maintained non-item sources and checks both snapshots before replacing them. The underlying [catalog generator](Scripts/generate_catalog) downloads Digital Extremes' `PublicExport` feed. [Scripts/itemMapper.py](Scripts/itemMapper.py) separately maps `Scripts/input.json` item paths to display names in [Generated/ExternalData.swift](Generated/ExternalData.swift). Item mappings and `solNodes.json` remain manual updates outside the scheduled refresh.
 
+## Widgets
+
+Baro Ki’Teer and Mastery Rank widgets support small and medium sizes on iOS and macOS. Launch TennoWatch once, then add them from the system widget gallery. Tapping a widget opens its corresponding tab.
+
+Baro shows the relay and a countdown to arrival or departure. Its timeline includes both transitions, and it requests fresh public schedule data at most once an hour. If a refresh fails, it labels the saved schedule and stops the countdown after departure. WidgetKit controls when refresh requests actually run.
+
+Mastery Rank follows the currently selected profile and shows XP remaining to the next rank, including Legendary Ranks. The app publishes saved progress; the widget does not fetch private profile data. Open or refresh the app to update progress. Clearing the app cache also clears the shared widget snapshots.
+
+Both targets use the App Group `group.com.briznichenko.TennoWatch`. For signed device builds, enable that group for the app and `TennoWatchWidgets` using the same development team. Unsigned builds validate compilation but do not verify the system widget gallery or App Group provisioning.
+
 ## Architecture
 
 | Layer | Folder | Purpose |

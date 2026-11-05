@@ -95,6 +95,7 @@ final class SettingsViewModel {
             await worldStateRepository.clearCache()
             await voidTraderNotificationScheduler.cancelArrivalNotification()
             UserDefaults.standard.removePersistentDomain(forName: bundleIdentifier)
+            WidgetSnapshotStore().clear()
             gameVersion = nil
             catalogGeneratedAt = nil
             return true

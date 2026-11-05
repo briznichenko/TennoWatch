@@ -199,3 +199,33 @@ struct WorldStateViewModelTests {
         #expect(sut.isLoading == false)
     }
 }
+
+@Suite("VoidTrader countdown")
+struct VoidTraderCountdownTests {
+    @Test("Before arrival, the countdown targets arrival")
+    func upcomingVisitCountsDownToArrival() {
+        let arrival = Date(timeIntervalSince1970: 1_800_000_000)
+        let trader = VoidTrader.stub(activation: arrival, expiry: arrival.addingTimeInterval(172_800))
+
+        for now in [arrival.addingTimeInterval(-3600), arrival.addingTimeInterval(-1)] {
+            let countdown = trader.countdown(at: now)
+
+            #expect(countdown.hasArrived == false)
+            #expect(countdown.targetDate == arrival)
+        }
+    }
+
+    @Test("From arrival onward, the countdown targets departure")
+    func presentVisitCountsDownToDeparture() {
+        let arrival = Date(timeIntervalSince1970: 1_800_000_000)
+        let departure = arrival.addingTimeInterval(172_800)
+        let trader = VoidTrader.stub(activation: arrival, expiry: departure)
+
+        for now in [arrival, arrival.addingTimeInterval(3600)] {
+            let countdown = trader.countdown(at: now)
+
+            #expect(countdown.hasArrived)
+            #expect(countdown.targetDate == departure)
+        }
+    }
+}
