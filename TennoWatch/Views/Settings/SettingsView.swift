@@ -11,6 +11,7 @@ struct SettingsView: View {
     // MARK: - Object Properties
     @AppStorage("themePreference") private var themePreference: ThemePreference = .system
     @AppStorage(AppLanguage.storageKey) private var languagePreference: AppLanguage = .system
+    @AppStorage(MasteryRules.excludeLockedItemsKey) private var excludeLockedItems = false
     @AppStorage(DefaultVoidTraderNotificationScheduler.preferenceKey) private var isVoidTraderNotificationsEnabled = false
     @State private var viewModel: SettingsViewModel
     @State private var isShowingClearCacheConfirmation = false
@@ -54,6 +55,14 @@ struct SettingsView: View {
                     Toggle(Strings.Settings.voidTraderNotificationsLabel, isOn: $isVoidTraderNotificationsEnabled)
                 } header: {
                     DashboardSectionHeader(title: Strings.Settings.notificationsHeader, icon: "bell")
+                }
+
+                Section {
+                    Toggle(Strings.Settings.excludeLockedItemsLabel, isOn: $excludeLockedItems)
+                } header: {
+                    DashboardSectionHeader(title: Strings.Mastery.title, icon: "chart.bar")
+                } footer: {
+                    Text(Strings.Settings.excludeLockedItemsDescription)
                 }
 
                 Section {

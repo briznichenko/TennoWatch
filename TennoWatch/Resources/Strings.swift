@@ -176,6 +176,8 @@ struct Strings {
         static var title: String { Strings.string("settings_title_key", "Settings") }
         static var notificationsHeader: String { Strings.string("settings_notifications_header_key", "Notifications") }
         static var voidTraderNotificationsLabel: String { Strings.string("settings_void_trader_notifications_label_key", "Void Trader arrival") }
+        static var excludeLockedItemsLabel: String { Strings.string("settings_exclude_locked_items_label_key", "Exclude locked items") }
+        static var excludeLockedItemsDescription: String { Strings.string("settings_exclude_locked_items_description_key", "Exclude locked items from completion counts and remaining Mastery XP. Already-earned XP still counts toward your rank.") }
         static var storageHeader: String { Strings.string("settings_storage_header_key", "Storage") }
         static var clearCache: String { Strings.string("settings_clear_cache_key", "Clear cache") }
         static var clearCacheConfirmation: String { Strings.string("settings_clear_cache_confirmation_key", "Delete all saved profiles, catalog data, and preferences from this device?") }
@@ -229,6 +231,27 @@ struct Strings {
         }
 
         static var breakdownHeader: String { Strings.string("mastery_breakdown_header_key", "Mastery Breakdown") }
+
+        struct Breakdown {
+            private init() {}
+            static var warframes: String { Strings.string("mastery_breakdown_warframes_key", "Warframes") }
+            static var primaryWeapons: String { Strings.string("mastery_breakdown_primary_weapons_key", "Primary Weapons") }
+            static var secondaryWeapons: String { Strings.string("mastery_breakdown_secondary_weapons_key", "Secondary Weapons") }
+            static var meleeWeapons: String { Strings.string("mastery_breakdown_melee_weapons_key", "Melee Weapons") }
+            static var kitguns: String { Strings.string("mastery_breakdown_kitguns_key", "Kitguns") }
+            static var missions: String { Strings.string("mastery_breakdown_missions_key", "Missions") }
+            static var steelPathMissions: String { Strings.string("mastery_breakdown_steel_path_missions_key", "Steel Path Missions") }
+            static var sentinels: String { Strings.string("mastery_breakdown_sentinels_key", "Sentinels") }
+            static var sentinelWeapons: String { Strings.string("mastery_breakdown_sentinel_weapons_key", "Sentinel Weapons") }
+            static var companions: String { Strings.string("mastery_breakdown_companions_key", "Companions") }
+            static var archwing: String { Strings.string("mastery_breakdown_archwing_key", "Archwing") }
+            static var archgun: String { Strings.string("mastery_breakdown_archgun_key", "Archgun") }
+            static var archmelee: String { Strings.string("mastery_breakdown_archmelee_key", "Archmelee") }
+            static var amps: String { Strings.string("mastery_breakdown_amps_key", "Amps") }
+            static var kDrives: String { Strings.string("mastery_breakdown_k_drives_key", "K-Drives") }
+            static var necramechs: String { Strings.string("mastery_breakdown_necramechs_key", "Necramechs") }
+            static var railjackComponents: String { Strings.string("mastery_breakdown_railjack_components_key", "Railjack Components") }
+        }
     }
 
     struct Openings {

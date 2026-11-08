@@ -24,8 +24,10 @@ Changing the selected account recreates the tab and its navigation state.
 ## ViewModel and rank progress
 
 `MasteryViewModel` loads `MasteryCatalogSummary` for the root rather than every item.
-The breakdown loads source-category data on demand. Earned XP includes both item
-and non-item categories.
+The breakdown loads the full catalog on demand. Earned XP includes both item
+and non-item categories. Settings can exclude locked (unobtainable) items from
+category completion counts and breakdown remaining XP. This preference updates
+live, preserves earned XP and rank progress, and leaves the Locked filter available.
 
 The current rank helper uses cumulative `2500 * rank * rank` through rank 30
 (2,250,000 XP), then adds 147,500 XP per Legendary rank. Remote profiles use their

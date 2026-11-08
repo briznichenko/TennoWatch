@@ -261,6 +261,17 @@ struct CatalogContainerSummary: Identifiable, Hashable, Sendable {
     // MARK: - Computed Properties
     var id: CatalogItemModel.Category { category }
     var countText: String { "\(masteredItemsCount) / \(itemsCount)" }
+
+    func excludingLockedItems() -> Self {
+        .init(
+            category: category,
+            itemsCount: obtainableItemsCount,
+            masteredItemsCount: obtainableItemsCount - obtainableRemainingCount,
+            obtainableItemsCount: obtainableItemsCount,
+            obtainableRemainingCount: obtainableRemainingCount,
+            earnedMasteryPoints: earnedMasteryPoints
+        )
+    }
 }
 
 struct MasteryCategorySummary: Identifiable, Hashable, Sendable {

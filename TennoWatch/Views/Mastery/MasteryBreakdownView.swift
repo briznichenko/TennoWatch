@@ -21,9 +21,21 @@ struct MasteryBreakdownView: View {
                             Text(row.name)
                                 .foregroundStyle(Color.labelPrimary)
                             Spacer()
-                            Text(row.earnedPoints.formatted())
-                                .font(.subheadline)
-                                .foregroundStyle(Color.labelSecondary)
+                            VStack(alignment: .trailing, spacing: Layout.detailSpacing) {
+                                Text(row.earnedPoints, format: .number)
+                                    .font(.subheadline)
+                                    .foregroundStyle(Color.labelSecondary)
+                                if row.remainingPoints > 0 {
+                                    Text(Strings.Mastery.sourcePointsRemaining(row.remainingPoints))
+                                        .font(.caption)
+                                        .foregroundStyle(Color.labelSecondary)
+                                } else {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundStyle(Color.masteredIcon)
+                                        .accessibilityLabel(Strings.Mastery.itemStateMastered)
+                                }
+                            }
+                            .monospacedDigit()
                         }
                         .frame(minHeight: Layout.minimumRowHeight)
                     }
@@ -44,5 +56,6 @@ struct MasteryBreakdownView: View {
 }
 
 private struct Layout {
+    static let detailSpacing: CGFloat = 4
     static let minimumRowHeight: CGFloat = 32
 }

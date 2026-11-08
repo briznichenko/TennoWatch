@@ -9,4 +9,5 @@ import Foundation
 
 struct MasteryRules {
     static let maximumIntrinsicRank = 10
+    static let excludeLockedItemsKey = "excludeLockedMasteryItems"
 }

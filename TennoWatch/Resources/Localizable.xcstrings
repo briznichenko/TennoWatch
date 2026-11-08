@@ -726,6 +726,61 @@
         }
       }
     },
+    "mastery_breakdown_amps_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amps"
+          }
+        }
+      }
+    },
+    "mastery_breakdown_archgun_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archgun"
+          }
+        }
+      }
+    },
+    "mastery_breakdown_archmelee_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archmelee"
+          }
+        }
+      }
+    },
+    "mastery_breakdown_archwing_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archwing"
+          }
+        }
+      }
+    },
+    "mastery_breakdown_companions_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Companions"
+          }
+        }
+      }
+    },
     "mastery_breakdown_header_key" : {
       "comment" : "Section header above the mastery point breakdown by category, mirroring the in-game profile panel.",
       "extractionState" : "manual",
@@ -734,6 +789,138 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mastery Breakdown"
+          }
+        }
+      }
+    },
+    "mastery_breakdown_k_drives_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "K-Drives"
+          }
+        }
+      }
+    },
+    "mastery_breakdown_kitguns_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kitguns"
+          }
+        }
+      }
+    },
+    "mastery_breakdown_melee_weapons_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Melee Weapons"
+          }
+        }
+      }
+    },
+    "mastery_breakdown_missions_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missions"
+          }
+        }
+      }
+    },
+    "mastery_breakdown_necramechs_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Necramechs"
+          }
+        }
+      }
+    },
+    "mastery_breakdown_primary_weapons_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primary Weapons"
+          }
+        }
+      }
+    },
+    "mastery_breakdown_railjack_components_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Railjack Components"
+          }
+        }
+      }
+    },
+    "mastery_breakdown_secondary_weapons_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Secondary Weapons"
+          }
+        }
+      }
+    },
+    "mastery_breakdown_sentinel_weapons_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sentinel Weapons"
+          }
+        }
+      }
+    },
+    "mastery_breakdown_sentinels_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sentinels"
+          }
+        }
+      }
+    },
+    "mastery_breakdown_steel_path_missions_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Steel Path Missions"
+          }
+        }
+      }
+    },
+    "mastery_breakdown_warframes_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warframes"
           }
         }
       }
@@ -1168,6 +1355,17 @@
         }
       }
     },
+    "profile_drifter_intrinsics_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drifter Intrinsics"
+          }
+        }
+      }
+    },
     "profile_id_help_cancel_button_key" : {
       "comment" : "Cancel button on the player ID help alert.",
       "extractionState" : "manual",
@@ -1318,6 +1516,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Manual tracking"
+          }
+        }
+      }
+    },
+    "profile_railjack_intrinsics_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Railjack Intrinsics"
           }
         }
       }
@@ -1511,6 +1720,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Очистити кеш"
+          }
+        }
+      }
+    },
+    "settings_exclude_locked_items_description_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exclude locked items from completion counts and remaining Mastery XP. Already-earned XP still counts toward your rank."
+          }
+        }
+      }
+    },
+    "settings_exclude_locked_items_label_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exclude locked items"
           }
         }
       }

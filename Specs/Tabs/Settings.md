@@ -13,12 +13,14 @@ the selected profile for the macOS window.
 
 ## Screen
 
-The list has six sections:
+The list has seven sections:
 
 - **Appearance** — system/light/dark via `@AppStorage("themePreference")`.
 - **Language** — system/English/Ukrainian via `@AppStorage(AppLanguage.storageKey)`;
   changes apply live. See [Localization](../Layers/Localization.md).
 - **Notifications** — an `@AppStorage` toggle for local Void Trader arrival reminders.
+- **Mastery** — an `@AppStorage` toggle to exclude locked items from completion
+  counts and remaining XP, disabled by default. Earned XP is preserved.
 - **Account** — the display name supplied by the parent.
 - **Catalog** — version, optional generation date, and refresh with loading state.
 - **Storage** — destructive cache clearing behind a confirmation dialog.

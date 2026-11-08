@@ -13,6 +13,7 @@ struct MasteryView: View {
     @State private var coordinator = MasteryCoordinator()
     @State private var isCategoriesExpanded: Bool = true
     @AppStorage(UserDefaultsAccountIDStore.storageKey) private var currentAccountID: String?
+    @AppStorage(MasteryRules.excludeLockedItemsKey) private var excludeLockedItems = false
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -60,6 +61,9 @@ struct MasteryView: View {
             }
             .task(id: currentAccountID) {
                 await viewModel.fetchCatalog()
+            }
+            .onChange(of: excludeLockedItems, initial: true) { _, value in
+                viewModel.excludeLockedItems = value
             }
             .platformRefreshable(isDisabled: viewModel.isLoading) {
                 await viewModel.fetchCatalog()
