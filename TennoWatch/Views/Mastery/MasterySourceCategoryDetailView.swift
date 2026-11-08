@@ -46,10 +46,12 @@ struct MasterySourceCategoryDetailView: View {
             }
         }
         .safeAreaInset(edge: .top) {
-            FilterPills(options: Filter.allCases, title: \.title, selection: $viewModel.filter)
-                .padding(.horizontal)
-                .padding(.vertical, Layout.filterVerticalPadding)
-                .background(Color.bg)
+            if viewModel.availableFilters.count > 1 {
+                FilterPills(options: viewModel.availableFilters, title: \.title, selection: $viewModel.filter)
+                    .padding(.horizontal)
+                    .padding(.vertical, Layout.filterVerticalPadding)
+                    .background(Color.bg)
+            }
         }
         .navigationTitle(viewModel.categoryName.sentenceCased)
         .inlineNavigationTitle()

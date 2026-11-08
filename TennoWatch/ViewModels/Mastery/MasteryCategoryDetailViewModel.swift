@@ -12,13 +12,14 @@ import Observation
 @MainActor
 final class MasteryCategoryDetailViewModel {
     enum Filter: String, CaseIterable, Identifiable, Hashable {
-        case missing, mastered, locked
+        case missing, partlyMastered, mastered, locked
 
         var id: String { rawValue }
         var title: String {
             switch self {
             case .missing: Strings.Mastery.filterMissing
             case .mastered: Strings.Mastery.filterMastered
+            case .partlyMastered: Strings.Mastery.filterPartlyMastered
             case .locked: Strings.Mastery.filterLocked
             }
         }
@@ -26,6 +27,7 @@ final class MasteryCategoryDetailViewModel {
         func matches(_ state: MasteryItem.MasteryState) -> Bool {
             switch self {
             case .missing: state == .unmastered || state == .partiallyMastered
+            case .partlyMastered: state == .partiallyMastered
             case .mastered: state == .mastered
             case .locked: state == .unobtainable
             }
@@ -57,6 +59,13 @@ final class MasteryCategoryDetailViewModel {
     var sortOption: SortOption = .name
 
     // MARK: - Computed Properties
+    var availableFilters: [Filter] {
+        let items = container?.masteryItems ?? []
+        return Filter.allCases.filter { filter in
+            items.contains { filter.matches($0.masteryState) }
+        }
+    }
+
     var sortedItems: [MasteryItem] {
         let filtered = (container?.masteryItems ?? []).filter {
             filter.matches($0.masteryState)
@@ -82,6 +91,9 @@ final class MasteryCategoryDetailViewModel {
         defer { isLoading = false }
         do {
             container = try await catalogRepository.getCatalogContainer(for: category)
+            if !availableFilters.contains(filter), let firstFilter = availableFilters.first {
+                filter = firstFilter
+            }
         } catch {
             errorManager.append(error)
         }

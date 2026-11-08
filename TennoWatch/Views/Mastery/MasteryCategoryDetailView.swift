@@ -34,11 +34,17 @@ struct MasteryCategoryDetailView: View {
             }
         }
         .safeAreaInset(edge: .top) {
-            FilterPills(options: Filter.allCases, title: \.title, selection: $viewModel.filter)
-                .padding(.horizontal)
+            if viewModel.availableFilters.count > 1 {
+                ScrollView(.horizontal) {
+                    FilterPills(options: viewModel.availableFilters, title: \.title, selection: $viewModel.filter)
+                        .padding(.horizontal)
+                }
+                .fixedSize(horizontal: false, vertical: true)
+                .scrollIndicators(.hidden)
                 .background(Color.bg)
                 .clipShape(RoundedRectangle(cornerRadius: Layout.filterCornerRadius))
                 .padding(.vertical, Layout.filterVerticalPadding)
+            }
         }
         .navigationTitle(viewModel.category.displayName.sentenceCased)
         .inlineNavigationTitle()

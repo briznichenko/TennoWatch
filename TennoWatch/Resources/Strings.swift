@@ -199,6 +199,7 @@ struct Strings {
         static var sortOptionName: String { Strings.string("mastery_sort_option_name_key", "Name") }
         static var sortOptionPointsRemaining: String { Strings.string("mastery_sort_option_points_remaining_key", "Points remaining") }
         static var filterMissing: String { Strings.string("mastery_filter_missing_key", "Missing") }
+        static var filterPartlyMastered: String { Strings.string("mastery_filter_partly_mastered_key", "Partly mastered") }
         static var filterMastered: String { Strings.string("mastery_filter_mastered_key", "Mastered") }
         static var filterLocked: String { Strings.string("mastery_filter_locked_key", "Locked") }
         static var itemStateMastered: String { Strings.string("mastery_item_state_mastered_key", "Mastered") }

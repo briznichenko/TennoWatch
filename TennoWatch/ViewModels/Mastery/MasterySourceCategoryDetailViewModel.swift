@@ -27,9 +27,20 @@ final class MasterySourceCategoryDetailViewModel {
     var sortOption: SortOption = .name
 
     // MARK: - Computed Properties
+    private var masterySources: [MasterySourceModel] {
+        (category?.sources ?? []).filter { $0.mastery > 0 }
+    }
+
+    var availableFilters: [Filter] {
+        let sources = masterySources
+        return Filter.allCases.filter { filter in
+            sources.contains { filter.matches($0.masteryState) }
+        }
+    }
+
     var sortedItems: [MasterySourceModel] {
-        let filtered = (category?.sources ?? []).filter {
-            $0.mastery > 0 && filter.matches($0.masteryState) && ($0.name.matchesSearch(searchText) || $0.uniqueName.matchesSearch(searchText))
+        let filtered = masterySources.filter {
+            filter.matches($0.masteryState) && ($0.name.matchesSearch(searchText) || $0.uniqueName.matchesSearch(searchText))
         }
         switch sortOption {
         case .name: return filtered.sorted { $0.name < $1.name }
@@ -64,6 +75,9 @@ final class MasterySourceCategoryDetailViewModel {
         defer { isLoading = false }
         do {
             category = try await catalogRepository.getMasterySources(named: .init(rawValue: categoryName))
+            if !availableFilters.contains(filter), let firstFilter = availableFilters.first {
+                filter = firstFilter
+            }
         } catch {
             errorManager.append(error)
         }
