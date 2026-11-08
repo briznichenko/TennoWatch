@@ -810,6 +810,23 @@
         }
       }
     },
+    "mastery_filter_partly_mastered_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partly mastered"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Частково опановано"
+          }
+        }
+      }
+    },
     "mastery_item_state_mastered_key" : {
       "comment" : "Detail text for a fully mastered item row.",
       "extractionState" : "manual",
