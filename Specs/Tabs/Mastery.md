@@ -13,8 +13,9 @@ navigation stack. Typed destinations resolve category details, non-item source
 details, and the mastery breakdown. The parent ViewModel creates detail ViewModels.
 Changing the selected account recreates the tab and its navigation state.
 
-- The root shows a rank summary card, an expandable adaptive item-category grid,
-  and non-item source cards. Tapping the rank card opens `MasteryBreakdownView`.
+- The root shows a rank summary card, a catalog completion card, an expandable
+  adaptive item-category grid, and non-item source cards. Tapping the rank card
+  opens `MasteryBreakdownView`.
 - `MasteryCategoryDetailView` and `MasterySourceCategoryDetailView` load once and
   provide search, missing/mastered/locked filter pills, and name/points-remaining
   sorting. They share filter and sort types through aliases.
@@ -33,6 +34,14 @@ The current rank helper uses cumulative `2500 * rank * rank` through rank 30
 (2,250,000 XP), then adds 147,500 XP per Legendary rank. Remote profiles use their
 reported player level as the displayed rank; local profiles derive completed ranks
 from XP. Rank progress and the item XP-to-rank formula are separate calculations.
+The rank card headlines the total obtainable mastery XP, with earned XP beneath it,
+and displays ranks above MR30 as Legendary ranks (LR1, LR2, etc.). The ring still
+shows progress toward the next rank. Widgets receive the obtainable maximum in
+their saved snapshot; older snapshots show a placeholder until the app refreshes
+them. Catalog completion separately
+compares earned non-founder XP with the bundled obtainable maximum. This includes
+non-item sources, excludes founder XP from both sides, and stays independent of
+the locked-item display setting. Founder XP still contributes to rank progress.
 These values describe the implementation; changes to the game rules require a
 separate source check.
 
@@ -56,3 +65,6 @@ There are no dedicated Mastery ViewModel suites or focused threshold tests for
 rank progress. `CatalogSyncServiceTests` covers merge rules; persistence/isolation
 suites cover item progress and profile-owned catalogs. Manual profile item editing
 is not implemented.
+`MasteryItemPersistenceTests` also checks that unranked, partially ranked, and
+fully ranked founder equipment is separated from non-founder catalog completion
+without removing earned XP from rank progress.

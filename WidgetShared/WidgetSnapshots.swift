@@ -30,6 +30,7 @@ struct MasterySnapshot: Codable, Sendable {
     let name: String
     let playerRank: Int?
     let earnedXP: Int
+    let obtainableMasteryMax: Int?
     let updatedAt: Date
 
     var progress: MasteryRankProgress {

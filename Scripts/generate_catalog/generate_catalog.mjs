@@ -8,9 +8,6 @@ const OUTPUT_PATH = process.env.CATALOG_OUTPUT_PATH
     ?? path.join(__dirname, "..", "..", "TennoWatch", "Resources", "masterycatalog.json");
 
 const FOUNDERS_NAMES = new Set(["Excalibur Prime", "Skana Prime", "Lato Prime"]);
-const EXCLUDED_UNIQUE_NAMES = new Set([
-    "/Lotus/Weapons/Tenno/ThrowingWeapons/U18ThrowingKnives/U18throwingknives"
-]);
 const KITGUN_PRIMARY_NAMES = new Set([
     "/Lotus/Weapons/SolarisUnited/Secondary/SUModularSecondarySet1/Barrel/SUModularSecondaryBarrelBPart",
     "/Lotus/Weapons/SolarisUnited/Secondary/SUModularSecondarySet1/Barrel/SUModularSecondaryBarrelCPart",
@@ -143,7 +140,7 @@ async function main() {
         if (catalogItemsByUniqueName.has(uniqueName)) continue;
 
         const { maxRank, pointsPerRank, xpPerRankSq, requiresGilding } = computeFields(category, raw);
-        const obtainable = !FOUNDERS_NAMES.has(raw.name) && !EXCLUDED_UNIQUE_NAMES.has(raw.uniqueName);
+        const obtainable = !FOUNDERS_NAMES.has(raw.name);
 
         catalogItemsByUniqueName.set(uniqueName, {
             uniqueName,

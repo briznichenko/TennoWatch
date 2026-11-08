@@ -13,6 +13,38 @@ import Testing
 @MainActor
 @Suite("Mastery item persistence")
 struct MasteryItemPersistenceTests {
+    @Test("Non-founder completion excludes founder XP without changing rank XP", arguments: [0, 9_000, 900_000])
+    func founderXPIsSeparateFromCatalogCompletion(founderXP: Int) throws {
+        let container = try ModelContainer(
+            for: ProfileDataModel.self,
+            MasteryCatalogDataModel.self,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+        )
+        func item(obtainable: Bool, xp: Int) -> MasteryItemDataModel {
+            let definition = CatalogItemModel.stub(maxRank: 30, pointsPerRank: 200, obtainable: obtainable)
+            let profileItem = ProfileItemModel(
+                equipTime: nil, headshots: nil, hits: nil, assists: nil, kills: nil,
+                xp: xp, type: definition.uniqueName, fired: nil
+            )
+            return MasteryItemDataModel(profileItemModel: profileItem, catalogItemModel: definition)
+        }
+        let founder = item(obtainable: false, xp: founderXP)
+        let regular = item(obtainable: true, xp: 900_000)
+        let category = CatalogContainerModel(category: .suits, masteryItems: [founder, regular])
+        category.partialPoints = founder.isMastered ? 0 : founder.value.earnedMasteryPoints
+        let context = ModelContext(container)
+        context.insert(category)
+        try context.save()
+
+        let summary = category.summary
+        let expectedFounderPoints = founderXP == 0 ? 0 : (founderXP == 9_000 ? 600 : 6_000)
+        #expect(summary.lockedEarnedMasteryPoints == expectedFounderPoints)
+        #expect(summary.earnedMasteryPoints == 6_000 + expectedFounderPoints)
+        #expect(summary.earnedMasteryPoints - summary.lockedEarnedMasteryPoints == 6_000)
+        #expect(summary.excludingLockedItems().earnedMasteryPoints == summary.earnedMasteryPoints)
+        #expect(summary.excludingLockedItems().lockedEarnedMasteryPoints == expectedFounderPoints)
+    }
+
     @Test("AX-52 appears mastered in the category after syncing the bundled profile")
     func ax52IsMasteredAfterSync() async throws {
         let container = try ModelContainer(

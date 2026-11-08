@@ -64,6 +64,14 @@ final class MasteryViewModel {
         MasteryRankProgress.calculate(forXP: earnedMasteryXP, playerRank: playerRank)
     }
 
+    var obtainableMasteryXP: Int {
+        guard let summary else { return 0 }
+        return summary.categories.reduce(0) { $0 + $1.earnedMasteryPoints - $1.lockedEarnedMasteryPoints }
+            + summary.nonItemCategories.reduce(0) { $0 + $1.earnedMasteryPoints }
+    }
+
+    var obtainableMasteryMax: Int { summary?.obtainableMasteryMax ?? 0 }
+
     var obtainableItemsRemaining: Int {
         categories.reduce(0) { $0 + $1.obtainableRemainingCount }
     }

@@ -117,7 +117,10 @@ extension CatalogContainerModel: ValueTypeConvertible {
             masteredItemsCount: masteredItemsCount,
             obtainableItemsCount: obtainableItemsCount,
             obtainableRemainingCount: obtainableItemsCount - masteredObtainableCount,
-            earnedMasteryPoints: fullyMasteredPoints + partialPoints
+            earnedMasteryPoints: fullyMasteredPoints + partialPoints,
+            lockedEarnedMasteryPoints: itemsCount == obtainableItemsCount ? 0 : masteryItems
+                .filter { !$0.catalogItem.obtainable }
+                .reduce(0) { $0 + $1.value.earnedMasteryPoints }
         )
     }
 }
@@ -257,6 +260,7 @@ struct CatalogContainerSummary: Identifiable, Hashable, Sendable {
     let obtainableItemsCount: Int
     let obtainableRemainingCount: Int
     let earnedMasteryPoints: Int
+    let lockedEarnedMasteryPoints: Int
 
     // MARK: - Computed Properties
     var id: CatalogItemModel.Category { category }
@@ -269,7 +273,8 @@ struct CatalogContainerSummary: Identifiable, Hashable, Sendable {
             masteredItemsCount: obtainableItemsCount - obtainableRemainingCount,
             obtainableItemsCount: obtainableItemsCount,
             obtainableRemainingCount: obtainableRemainingCount,
-            earnedMasteryPoints: earnedMasteryPoints
+            earnedMasteryPoints: earnedMasteryPoints,
+            lockedEarnedMasteryPoints: lockedEarnedMasteryPoints
         )
     }
 }

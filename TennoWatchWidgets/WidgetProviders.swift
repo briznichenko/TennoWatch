@@ -100,7 +100,8 @@ struct MasteryEntry: TimelineEntry {
 
     static var preview: Self {
         .init(date: .now, snapshot: .init(
-            accountID: "preview", name: "Tenno", playerRank: 12, earnedXP: 385_000, updatedAt: .now
+            accountID: "preview", name: "Tenno", playerRank: 12, earnedXP: 385_000,
+            obtainableMasteryMax: 3_213_138, updatedAt: .now
         ))
     }
 }

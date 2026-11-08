@@ -187,16 +187,19 @@ private struct CompletionStyle {
         VStack(spacing: 16) {
             MasteryRankCard(
                 progress: .init(rank: 18, currentXP: 842_500, xpForCurrentRank: 810_000, xpForNextRank: 902_500),
+                obtainableMasteryMax: 3_213_138,
                 itemsRemaining: 286
             )
             HStack(spacing: 12) {
                 MasteryCategoryCard(summary: .init(
                     category: .suits, itemsCount: 112, masteredItemsCount: 76,
-                    obtainableItemsCount: 110, obtainableRemainingCount: 34, earnedMasteryPoints: 456_000
+                    obtainableItemsCount: 110, obtainableRemainingCount: 34, earnedMasteryPoints: 456_000,
+                    lockedEarnedMasteryPoints: 0
                 ))
                 MasteryCategoryCard(summary: .init(
                     category: .longGuns, itemsCount: 184, masteredItemsCount: 92,
-                    obtainableItemsCount: 180, obtainableRemainingCount: 88, earnedMasteryPoints: 276_000
+                    obtainableItemsCount: 180, obtainableRemainingCount: 88, earnedMasteryPoints: 276_000,
+                    lockedEarnedMasteryPoints: 0
                 ))
             }
         }

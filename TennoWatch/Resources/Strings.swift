@@ -208,11 +208,36 @@ struct Strings {
         static var itemStateUnobtainable: String { Strings.string("mastery_item_state_unobtainable_key", "Unobtainable") }
 
         static func rankBadge(_ rank: Int) -> String {
-            String(format: Strings.string("mastery_rank_format_key", "MR %lld"), rank)
+            if rank > 30 {
+                return String(format: Strings.string("mastery_legendary_rank_format_key", "LR%lld"), rank - 30)
+            }
+            return String(format: Strings.string("mastery_rank_format_key", "MR %lld"), rank)
         }
 
         static func xpToNextRank(_ xpToNextRank: String, nextRank: Int) -> String {
-            String(format: Strings.string("mastery_xp_to_next_rank_format_key", "%@ XP to MR %lld"), xpToNextRank, nextRank)
+            if nextRank > 30 {
+                return String(format: Strings.string("mastery_xp_to_legendary_rank_format_key", "%@ XP to LR%lld"), xpToNextRank, nextRank - 30)
+            }
+            return String(format: Strings.string("mastery_xp_to_next_rank_format_key", "%@ XP to MR %lld"), xpToNextRank, nextRank)
+        }
+
+        static func xpRequiredForRank(_ xp: String, rank: Int) -> String {
+            String(format: Strings.string("mastery_xp_required_for_rank_format_key", "%@ XP required for %@"), xp, rankBadge(rank))
+        }
+
+        static func earnedXP(_ xp: String) -> String {
+            String(format: Strings.string("mastery_earned_xp_format_key", "%@ XP earned"), xp)
+        }
+
+        static func totalObtainableXP(_ xp: String) -> String {
+            String(format: Strings.string("mastery_total_obtainable_xp_format_key", "%@ XP obtainable"), xp)
+        }
+
+        static var catalogCompletion: String { Strings.string("mastery_catalog_completion_key", "Catalog completion") }
+        static var nonFounderMastery: String { Strings.string("mastery_non_founder_mastery_key", "Excludes founder equipment") }
+
+        static func catalogXP(earned: String, maximum: String) -> String {
+            String(format: Strings.string("mastery_catalog_xp_format_key", "%@ / %@ XP"), earned, maximum)
         }
 
         static func itemsLeft(_ count: Int) -> String {

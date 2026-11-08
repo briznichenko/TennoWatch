@@ -113,7 +113,8 @@ actor DefaultPersistencyService: PersistencyService {
             return MasterySnapshot(
                 accountID: profile.accountID, name: profile.isLocal ? "" : profile.displayName,
                 playerRank: profile.isLocal ? nil : profile.playerLevel,
-                earnedXP: earnedXP, updatedAt: profile.lastUpdated
+                earnedXP: earnedXP, obtainableMasteryMax: summary.obtainableMasteryMax,
+                updatedAt: profile.lastUpdated
             )
         }
         WidgetSnapshotStore().saveMastery(snapshots.sorted { $0.accountID < $1.accountID })

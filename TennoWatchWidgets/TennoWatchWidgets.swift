@@ -113,6 +113,7 @@ struct MasteryWidgetView: View {
             if let snapshot = entry.snapshot {
                 MasteryRankCard(
                     progress: snapshot.progress,
+                    obtainableMasteryMax: snapshot.obtainableMasteryMax,
                     isWidget: true,
                     compact: family == .systemSmall,
                     profileName: snapshot.name.isEmpty ? String(localized: "Local profile") : snapshot.name

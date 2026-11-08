@@ -28,6 +28,9 @@ struct MasteryView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: DashboardLayout.sectionSpacing) {
                     summaryCard
+                    if viewModel.summary != nil {
+                        catalogCompletionCard
+                    }
                     categoryList
                     otherSourcesList
                 }
@@ -78,6 +81,7 @@ struct MasteryView: View {
         } label: {
             MasteryRankCard(
                 progress: viewModel.rankProgress,
+                obtainableMasteryMax: viewModel.summary?.obtainableMasteryMax,
                 itemsRemaining: viewModel.obtainableItemsRemaining
             )
         }
@@ -118,6 +122,30 @@ struct MasteryView: View {
                 }
             }
         }
+    }
+
+    private var catalogCompletionCard: some View {
+        VStack(alignment: .leading, spacing: DashboardLayout.gridSpacing) {
+            Text(Strings.Mastery.catalogCompletion)
+                .font(.headline)
+                .foregroundStyle(Color.labelPrimary)
+            Text(Strings.Mastery.catalogXP(
+                earned: viewModel.obtainableMasteryXP.formatted(),
+                maximum: viewModel.obtainableMasteryMax.formatted()
+            ))
+            .font(.subheadline.monospacedDigit())
+            .foregroundStyle(Color.labelPrimary)
+            ProgressView(
+                value: Double(viewModel.obtainableMasteryXP),
+                total: Double(max(1, viewModel.obtainableMasteryMax))
+            )
+            Text(Strings.Mastery.nonFounderMastery)
+                .font(.caption)
+                .foregroundStyle(Color.labelSecondary)
+        }
+        .padding(DashboardLayout.contentPadding)
+        .background(DashboardCardBackground())
+        .accessibilityElement(children: .combine)
     }
 
     private var categoryColumns: [GridItem] {
