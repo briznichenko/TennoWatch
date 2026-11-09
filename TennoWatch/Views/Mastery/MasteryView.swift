@@ -82,6 +82,7 @@ struct MasteryView: View {
             MasteryRankCard(
                 progress: viewModel.rankProgress,
                 obtainableMasteryMax: viewModel.summary?.obtainableMasteryMax,
+                earnedXP: viewModel.obtainableMasteryXP,
                 itemsRemaining: viewModel.obtainableItemsRemaining
             )
         }

@@ -10,6 +10,7 @@ import SwiftUI
 struct MasteryRankCard: View {
     let progress: MasteryRankProgress
     let obtainableMasteryMax: Int?
+    var earnedXP: Int?
     var itemsRemaining: Int?
     var isWidget = false
     var compact = false
@@ -38,12 +39,16 @@ struct MasteryRankCard: View {
             layout {
                 rankRing
                 VStack(alignment: .leading, spacing: compact ? 2 : RankLayout.detailSpacing) {
-                    Text(Strings.Mastery.totalObtainableXP(obtainableMasteryMax?.formatted() ?? "—"))
+                    Text(Strings.Mastery.xpToNextRank(
+                        progress.xpToNextRank.formatted(),
+                        nextRank: progress.rank + 1
+                    ))
+
                     .font(isWidget ? (compact ? .caption.weight(.semibold) : .headline) : .title2.weight(.semibold))
                     .foregroundStyle(Color.labelPrimary)
                     .fixedSize(horizontal: false, vertical: true)
                     if !compact {
-                        Text(Strings.Mastery.earnedXP(progress.currentXP.formatted()))
+                        Text(Strings.Mastery.earnedXP((earnedXP ?? progress.currentXP).formatted()))
                             .font(.caption.monospacedDigit())
                             .foregroundStyle(Color.labelSecondary)
                     }

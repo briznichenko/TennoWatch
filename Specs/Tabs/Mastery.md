@@ -34,9 +34,11 @@ The current rank helper uses cumulative `2500 * rank * rank` through rank 30
 (2,250,000 XP), then adds 147,500 XP per Legendary rank. Remote profiles use their
 reported player level as the displayed rank; local profiles derive completed ranks
 from XP. Rank progress and the item XP-to-rank formula are separate calculations.
-The rank card headlines the total obtainable mastery XP, with earned XP beneath it,
-and displays ranks above MR30 as Legendary ranks (LR1, LR2, etc.). The ring still
-shows progress toward the next rank. Widgets receive the obtainable maximum in
+The root rank card headlines the total obtainable mastery XP, with earned XP from
+obtainable items and non-item sources beneath it, regardless of the locked-item
+display setting. Locked/founder XP remains included in the displayed rank and ring
+progress toward the next rank. Ranks above MR30 display as Legendary ranks (LR1,
+LR2, etc.). Widgets receive the obtainable maximum in
 their saved snapshot; older snapshots show a placeholder until the app refreshes
 them. Catalog completion separately
 compares earned non-founder XP with the bundled obtainable maximum. This includes
