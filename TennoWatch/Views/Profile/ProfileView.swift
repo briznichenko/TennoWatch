@@ -115,7 +115,7 @@ struct ProfileView: View {
     
     private var savedProfilesSection: some View {
         Section {
-            ForEach(viewModel.savedProfiles, id: \.accountID.oid) { profile in
+            ForEach(viewModel.savedProfiles.filter { !$0.isLocal || !$0.displayName.isEmpty }, id: \.accountID.oid) { profile in
                 Button {
                     Task { await viewModel.selectProfile(profile) }
                 } label: {
