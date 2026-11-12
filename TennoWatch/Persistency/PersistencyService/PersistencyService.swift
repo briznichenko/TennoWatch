@@ -111,7 +111,7 @@ actor DefaultPersistencyService: PersistencyService {
             let earnedXP = summary.categories.reduce(0) { $0 + $1.earnedMasteryPoints }
                 + summary.nonItemCategories.reduce(0) { $0 + $1.earnedMasteryPoints }
             return MasterySnapshot(
-                accountID: profile.accountID, name: profile.isLocal ? "" : profile.displayName,
+                accountID: profile.accountID, name: profile.displayName,
                 playerRank: profile.isLocal ? nil : profile.playerLevel,
                 earnedXP: earnedXP, obtainableMasteryMax: summary.obtainableMasteryMax,
                 updatedAt: profile.lastUpdated

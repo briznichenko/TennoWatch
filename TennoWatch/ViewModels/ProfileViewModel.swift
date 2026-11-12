@@ -21,7 +21,7 @@ final class ProfileViewModel {
 
     // MARK: - Computed Properties
     var displayName: String {
-        profile.map { $0.isLocal ? Strings.Profile.manualProfile : $0.displayName } ?? Strings.Profile.displayNameUnknown
+        profile.map { name(for: $0) } ?? Strings.Profile.displayNameUnknown
     }
     var accountId: String {
         profile?.accountID.oid ?? ""
@@ -89,9 +89,11 @@ final class ProfileViewModel {
         }
     }
 
-    func createLocalProfile() async {
-        await perform {
-            self.profile = try await self.profileRepository.createLocalProfile()
+    func createLocalProfile(name: String) async -> Bool {
+        let requestedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !requestedName.isEmpty else { return false }
+        return await perform {
+            self.profile = try await self.profileRepository.createLocalProfile(name: requestedName)
         }
     }
 
@@ -103,7 +105,7 @@ final class ProfileViewModel {
     }
 
     func name(for profile: Profile) -> String {
-        profile.isLocal ? Strings.Profile.manualProfile : profile.displayName
+        profile.isLocal && profile.displayName.isEmpty ? Strings.Profile.manualProfile : profile.displayName
     }
 
     private func restoreSelection() async throws {

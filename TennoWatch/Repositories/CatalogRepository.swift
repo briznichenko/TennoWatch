@@ -25,6 +25,12 @@ protocol CatalogRepository: Sendable {
     func getCatalogContainer(for category: CatalogItemModel.Category) async throws -> CatalogContainer
     func getMasterySources(named source: MasterySourceType?) async throws -> MasteryCategoryModel
     func getMasterySourceCategories() async throws -> [MasteryCategoryModel]
+    func getManualProfileID() async throws -> String?
+    func setMastered(_ mastered: Bool, itemIDs: Set<String>, profileID: String) async throws
+}
+
+enum ManualMasteryError: Error {
+    case remoteProfile, unknownItems
 }
 
 actor PersistentCatalogRepository: CatalogRepository {
@@ -92,6 +98,58 @@ actor PersistentCatalogRepository: CatalogRepository {
 
     func getMasterySourceCategories() async throws -> [MasteryCategoryModel] {
         try await readCatalog { $0.nonItemSources.map(\.value) }
+    }
+
+    func getManualProfileID() async throws -> String? {
+        let activeID = accountIDStore.currentAccountID
+        return try await persistencyService.perform { context in
+            guard let activeID else { return nil }
+            let profile = try PersistentProfileRepository.resolveProfile(in: context, accountID: activeID)
+            return profile.isLocal ? profile.accountID : nil
+        }
+    }
+
+    func setMastered(_ mastered: Bool, itemIDs: Set<String>, profileID: String) async throws {
+        guard !itemIDs.isEmpty else { return }
+        let bundle = try Self.bundledContainer.get()
+        let syncService = catalogSyncService
+        try await persistencyService.perform { context in
+            do {
+                try Task.checkCancellation()
+                let profile = try PersistentProfileRepository.resolveProfile(in: context, accountID: profileID)
+                guard profile.isLocal else { throw ManualMasteryError.remoteProfile }
+                let (catalog, _) = try Self.prepareCatalog(for: profile, bundle: bundle, in: context)
+                let selected = catalog.items.flatMap(\.masteryItems).filter { itemIDs.contains($0.catalogItem.uniqueName) }
+                guard selected.count == itemIDs.count else { throw ManualMasteryError.unknownItems }
+                let existing = profile.items.filter { itemIDs.contains($0.type) }
+                for item in selected {
+                    item.profileItem = nil
+                }
+                profile.items.removeAll { itemIDs.contains($0.type) }
+                for item in existing {
+                    context.delete(item)
+                }
+                if mastered {
+                    for item in selected {
+                        let definition = item.catalogItem
+                        let progress = ProfileItemModel(
+                            equipTime: nil, headshots: nil, hits: nil, assists: nil, kills: nil,
+                            xp: definition.maxRank * definition.maxRank * definition.xpPerRankSq,
+                            type: definition.uniqueName, fired: nil
+                        ).model
+                        profile.items.append(progress)
+                    }
+                }
+                profile.lastUpdated = .now
+                Self.mergeProfile(profile, into: catalog, catalogSyncService: syncService)
+                catalog.syncedProfileLastUpdated = profile.lastUpdated
+                try Task.checkCancellation()
+                try context.save()
+            } catch {
+                context.rollback()
+                throw error
+            }
+        }
     }
 
     private func readCatalog<T: Sendable>(
@@ -210,7 +268,6 @@ actor PersistentCatalogRepository: CatalogRepository {
         into catalog: MasteryCatalogDataModel,
         catalogSyncService: CatalogSyncService
     ) {
-        if profile.isLocal { return }
         let profileItems = Dictionary(profile.items.map { ($0.type, $0) }, uniquingKeysWith: { first, second in
             (first.xp ?? 0) >= (second.xp ?? 0) ? first : second
         })

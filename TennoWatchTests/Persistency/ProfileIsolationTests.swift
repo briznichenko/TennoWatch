@@ -193,6 +193,89 @@ struct ProfileIsolationTests {
         #expect(api.fetchCount == 1)
     }
 
+    @Test("Named local profiles get separate UUID snapshots and explicit edits cannot follow selection")
+    func namedLocalProfilesKeepIndependentProgress() async throws {
+        let (persistence, profiles, catalog, api, store) = try makeRepositories()
+        let first = try await profiles.createLocalProfile(name: "First")
+        let itemID = try await ax52(in: catalog).catalogItemModel.uniqueName
+        let second = try await profiles.createLocalProfile(name: "Second")
+        #expect(first.accountID != second.accountID)
+        #expect(UUID(uuidString: first.accountID.oid) != nil)
+        #expect(UUID(uuidString: second.accountID.oid) != nil)
+        #expect(first.displayName == "First")
+        #expect(second.displayName == "Second")
+        #expect(try await catalog.getManualProfileID() == second.accountID.oid)
+
+        try await catalog.setMastered(true, itemIDs: [itemID], profileID: first.accountID.oid)
+        #expect(store.currentAccountID == second.accountID.oid)
+        #expect(try await ax52(in: catalog).rank == 0)
+        _ = try await profiles.selectProfile(accountID: first.accountID.oid)
+        #expect(try await ax52(in: catalog).isMastered)
+        let saved = try await profiles.getSavedProfiles()
+        #expect(saved.first { $0.accountID == first.accountID }?.items.count == 1)
+        #expect(saved.first { $0.accountID == second.accountID }?.items.isEmpty == true)
+        #expect(api.fetchCount == 0)
+        let snapshotCount = try await persistence.perform { context in
+            try context.fetchCount(FetchDescriptor<MasteryCatalogDataModel>())
+        }
+        #expect(snapshotCount == 2)
+    }
+
+    @Test("Bulk local edits recalculate XP and survive a new context and catalog rebuild")
+    func manualBulkProgressSurvivesRebuild() async throws {
+        let (persistence, profiles, catalog, _, store) = try makeRepositories()
+        let local = try await profiles.createLocalProfile(name: "Manual")
+        let allItems = try await catalog.getMasteryCatalog().items.flatMap(\.masteryItems)
+        let regular = try #require(allItems.first { $0.catalogItemModel.name == "AX-52" })
+        let extended = try #require(allItems.first { $0.catalogItemModel.maxRank == 40 })
+        let selected = [regular, extended]
+        let itemIDs = Set(selected.map { $0.catalogItemModel.uniqueName })
+        let expectedXP = selected.reduce(0) { $0 + $1.catalogItemModel.maxRank * $1.catalogItemModel.pointsPerRank }
+        try await catalog.setMastered(true, itemIDs: itemIDs, profileID: local.accountID.oid)
+        try await catalog.setMastered(true, itemIDs: itemIDs, profileID: local.accountID.oid)
+        let summary = try await catalog.getMasterySummary()
+        #expect(summary.categories.reduce(0) { $0 + $1.earnedMasteryPoints } == expectedXP)
+        #expect(summary.categories.reduce(0) { $0 + $1.masteredItemsCount } == 2)
+
+        let context = ModelContext(persistence.modelContainer)
+        let stored = try PersistentProfileRepository.resolveProfile(in: context, accountID: local.accountID.oid)
+        #expect(stored.items.count == 2)
+        stored.masteryCatalog?.schemaVersion = -1
+        try context.save()
+        let reloaded = PersistentCatalogRepository(
+            persistencyService: DefaultPersistencyService(modelContainer: persistence.modelContainer), accountIDStore: store
+        )
+        let rebuilt = try await reloaded.getMasteryCatalog().items.flatMap(\.masteryItems)
+        #expect(rebuilt.filter { itemIDs.contains($0.catalogItemModel.uniqueName) }.allSatisfy { $0.isMastered })
+        let rebuiltSummary = try await reloaded.getMasterySummary()
+        #expect(rebuiltSummary.categories.reduce(0) { $0 + $1.earnedMasteryPoints } == expectedXP)
+        try await reloaded.setMastered(false, itemIDs: itemIDs, profileID: local.accountID.oid)
+        #expect(try await reloaded.getMasterySummary().categories.reduce(0) { $0 + $1.earnedMasteryPoints } == 0)
+        let remainingItems = try await persistence.perform { context in
+            try context.fetchCount(FetchDescriptor<ProfileItemDataModel>())
+        }
+        #expect(remainingItems == 0)
+    }
+
+    @Test("Manual editing rejects remote profiles and invalid bulk edits leave local progress intact")
+    func manualEditsValidateEntireTransaction() async throws {
+        let (_, profiles, catalog, api, _) = try makeRepositories()
+        let local = try await profiles.createLocalProfile(name: "Manual")
+        let itemID = try await ax52(in: catalog).catalogItemModel.uniqueName
+        try await catalog.setMastered(true, itemIDs: [itemID], profileID: local.accountID.oid)
+        await #expect(throws: ManualMasteryError.self) {
+            try await catalog.setMastered(false, itemIDs: [itemID, "missing-item"], profileID: local.accountID.oid)
+        }
+        #expect(try await ax52(in: catalog).isMastered)
+        api.response = response(accountID: "A", xp: 900_000)
+        _ = try await profiles.getProfile(withPlayerId: "A", forceRefresh: true)
+        #expect(try await catalog.getManualProfileID() == nil)
+        await #expect(throws: ManualMasteryError.self) {
+            try await catalog.setMastered(false, itemIDs: [itemID], profileID: "A")
+        }
+        #expect(try await ax52(in: catalog).isMastered)
+    }
+
     @Test("Deleting an active profile cascades its graph and preserves another profile's progress")
     func deleteProfilePreservesOtherGraph() async throws {
         let (persistence, profiles, catalog, api, store) = try makeRepositories()

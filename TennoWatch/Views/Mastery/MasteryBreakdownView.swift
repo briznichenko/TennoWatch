@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MasteryBreakdownView: View {
     // MARK: - Object Properties
+    @Environment(ManualMasteryStore.self) private var manualMasteryStore
     let viewModel: MasteryViewModel
 
     // MARK: - Body
@@ -49,7 +50,7 @@ struct MasteryBreakdownView: View {
                 LotusLoaderView()
             }
         }
-        .task {
+        .task(id: manualMasteryStore.revision) {
             await viewModel.loadBreakdown()
         }
     }

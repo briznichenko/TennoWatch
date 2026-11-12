@@ -118,6 +118,19 @@ final class OpeningsViewModel {
         worldState = result.1
     }
 
+    func makeItemCategoryDetailViewModel(for category: CatalogItemModel.Category) -> OpeningsItemCategoryDetailViewModel {
+        .init(
+            categoryTitle: category.displayName.sentenceCased,
+            items: permanentItems(in: category),
+            searchText: searchText,
+            reloadItems: { [weak self] in
+                guard let self else { return [] }
+                self.catalog = await self.fetchCatalog()
+                return self.permanentItems(in: category)
+            }
+        )
+    }
+
     func permanentItems(in category: CatalogItemModel.Category) -> [MasteryItemViewModel] {
         permanentMasteryItems
             .filter { $0.catalogItemModel.category == category }

@@ -15,10 +15,14 @@ protocol ProfileRepository: Sendable {
     func getSavedProfiles() async throws -> [Profile]
     func selectProfile(accountID: String) async throws -> Profile
     func deleteProfile(accountID: String) async throws
-    func createLocalProfile() async throws -> Profile
+    func createLocalProfile(name: String) async throws -> Profile
 }
 
 extension ProfileRepository {
+    func createLocalProfile() async throws -> Profile {
+        try await createLocalProfile(name: Strings.Profile.manualProfile)
+    }
+
     func getProfile(withPlayerId playerId: String? = nil, forceRefresh: Bool = false) async throws -> Profile {
         try await getProfile(withPlayerId: playerId, forceRefresh: forceRefresh)
     }
@@ -123,14 +127,34 @@ actor PersistentProfileRepository: ProfileRepository {
         return profile
     }
 
-    func createLocalProfile() async throws -> Profile {
-        let accountID = try await persistencyService.perform { context in
-            let profiles = try context.fetch(FetchDescriptor<ProfileDataModel>())
-            let profile = try profiles.first(where: { $0.isLocal }) ?? Self.makeLocalProfile(in: context)
-            try context.save()
-            return profile.accountID
+    func createLocalProfile(name: String) async throws -> Profile {
+        let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else { throw LocalProfileError.emptyName }
+        try Task.checkCancellation()
+        selectionRevision += 1
+        let revision = selectionRevision
+        let profile = try await persistencyService.perform { context in
+            do {
+                try Task.checkCancellation()
+                let profile = try Self.makeLocalProfile(name: name, in: context)
+                try context.save()
+                return profile.value
+            } catch {
+                context.rollback()
+                throw error
+            }
         }
-        return try await selectProfile(accountID: accountID)
+        try await catalogRepository.prepareCatalog(for: profile)
+        try Task.checkCancellation()
+        guard revision == selectionRevision else { throw CancellationError() }
+        accountIDStore.currentAccountID = profile.accountID.oid
+        return profile
+    }
+
+    enum LocalProfileError: LocalizedError {
+        case emptyName
+
+        var errorDescription: String? { Strings.Profile.localNameRequired }
     }
 
     func deleteProfile(accountID: String) async throws {
@@ -171,9 +195,9 @@ actor PersistentProfileRepository: ProfileRepository {
         return try profiles.first(where: { $0.isLocal }) ?? makeLocalProfile(in: context)
     }
 
-    private nonisolated static func makeLocalProfile(in context: ModelContext) throws -> ProfileDataModel {
+    private nonisolated static func makeLocalProfile(name: String = "", in context: ModelContext) throws -> ProfileDataModel {
         let profile = Profile(
-            accountID: .init(oid: UUID().uuidString), displayName: "", playerLevel: 0,
+            accountID: .init(oid: UUID().uuidString), displayName: name, playerLevel: 0,
             items: [], playerSkills: [:], missions: [], accountStats: .empty,
             lastUpdated: .now, isLocal: true
         ).model

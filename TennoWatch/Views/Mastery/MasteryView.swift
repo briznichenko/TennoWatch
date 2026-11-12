@@ -9,10 +9,10 @@ import SwiftUI
 
 struct MasteryView: View {
     // MARK: - Object Properties
+    @Environment(ManualMasteryStore.self) private var manualMasteryStore
     @State private var viewModel: MasteryViewModel
     @State private var coordinator = MasteryCoordinator()
     @State private var isCategoriesExpanded: Bool = true
-    @AppStorage(UserDefaultsAccountIDStore.storageKey) private var currentAccountID: String?
     @AppStorage(MasteryRules.excludeLockedItemsKey) private var excludeLockedItems = false
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -62,7 +62,7 @@ struct MasteryView: View {
                     MasteryBreakdownView(viewModel: viewModel)
                 }
             }
-            .task(id: currentAccountID) {
+            .task(id: manualMasteryStore.revision) {
                 await viewModel.fetchCatalog()
             }
             .onChange(of: excludeLockedItems, initial: true) { _, value in

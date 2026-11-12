@@ -105,7 +105,6 @@ final class MasteryViewModel {
             guard !Task.isCancelled else { return }
             summary = updatedSummary
             playerRank = profile?.isLocal == true ? nil : profile?.playerLevel
-            allBreakdownSections = []
         } catch {
             if !Task.isCancelled && !(error is CancellationError) {
                 errorManager.append(error)
@@ -114,7 +113,6 @@ final class MasteryViewModel {
     }
 
     func loadBreakdown() async {
-        guard allBreakdownSections.isEmpty else { return }
         do {
             let catalog = try await catalogRepository.getMasteryCatalog()
             guard !Task.isCancelled else { return }

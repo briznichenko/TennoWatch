@@ -9,6 +9,7 @@ import SwiftUI
 
 struct OpeningsView: View {
     // MARK: - Object Properties
+    @Environment(ManualMasteryStore.self) private var manualMasteryStore
     @State private var viewModel: OpeningsViewModel
 
     // MARK: - Init
@@ -27,7 +28,7 @@ struct OpeningsView: View {
                     }
                 }
                 .handleErrorAlert(with: viewModel.errorManager)
-                .task {
+                .task(id: manualMasteryStore.revision) {
                     await viewModel.fetchOpenings()
                 }
                 .platformRefreshable(isDisabled: viewModel.isLoading) {

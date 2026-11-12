@@ -148,13 +148,6 @@ struct ProfileView: View {
             } label: {
                 ProfileRow(title: Strings.Profile.addProfile, icon: "plus.circle")
             }
-            if !viewModel.savedProfiles.contains(where: \.isLocal) {
-                Button {
-                    Task { await viewModel.createLocalProfile() }
-                } label: {
-                    ProfileRow(title: Strings.Profile.manualProfile, icon: "pencil.circle")
-                }
-            }
         } header: {
             DashboardSectionHeader(title: Strings.Profile.savedProfilesHeader, icon: "person.2")
                 .padding(.vertical, Layout.sectionHeaderPadding)

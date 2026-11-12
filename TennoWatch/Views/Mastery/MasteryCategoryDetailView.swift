@@ -12,6 +12,10 @@ struct MasteryCategoryDetailView: View {
     typealias SortOption = MasteryCategoryDetailViewModel.SortOption
 
     // MARK: - Object Properties
+    @Environment(ManualMasteryStore.self) private var manualMasteryStore
+    @State private var profileID: String?
+    @State private var isSelecting = false
+    @State private var selectedIDs: Set<String> = []
     @State private var viewModel: MasteryCategoryDetailViewModel
 
     // MARK: - Init
@@ -22,10 +26,20 @@ struct MasteryCategoryDetailView: View {
     // MARK: - Body
     var body: some View {
         ThemedList {
-            ForEach(viewModel.sortedItems, id: \.self) { item in
-                MasteryItemView(viewModel: .init(item: item))
+            ForEach(viewModel.sortedItems, id: \.catalogItemModel.uniqueName) { item in
+                ManualMasterySelectionRow(
+                    id: item.catalogItemModel.uniqueName,
+                    name: item.catalogItemModel.name,
+                    isSelecting: isSelecting,
+                    selectedIDs: $selectedIDs
+                ) {
+                    MasteryItemView(viewModel: .init(item: item))
+                }
             }
         }
+        .disabled(manualMasteryStore.isSaving)
+        .onChange(of: viewModel.searchText) { selectedIDs = [] }
+        .onChange(of: viewModel.filter) { selectedIDs = [] }
         .listStyle(.plain)
         .searchable(text: $viewModel.searchText, prompt: Strings.Common.searchItems)
         .overlay {
@@ -49,6 +63,11 @@ struct MasteryCategoryDetailView: View {
         .navigationTitle(viewModel.category.displayName.sentenceCased)
         .inlineNavigationTitle()
         .toolbar {
+            ManualMasteryToolbar(
+                store: manualMasteryStore, profileID: profileID,
+                isSelecting: $isSelecting, selectedIDs: $selectedIDs,
+                visibleIDs: Set(viewModel.sortedItems.map(\.catalogItemModel.uniqueName))
+            )
             ToolbarItem(placement: .primaryAction) {
                 Menu {
                     Picker(Strings.Mastery.sortBy, selection: $viewModel.sortOption) {
@@ -62,8 +81,10 @@ struct MasteryCategoryDetailView: View {
                 }
             }
         }
-        .task {
+        .task(id: manualMasteryStore.revision) {
             await viewModel.load()
+            profileID = await manualMasteryStore.profileID()
+            selectedIDs.formIntersection(Set(viewModel.sortedItems.map(\.catalogItemModel.uniqueName)))
         }
     }
 }

@@ -9,6 +9,10 @@ import SwiftUI
 
 struct OpeningsListView: View {
     // MARK: - Object Properties
+    @Environment(ManualMasteryStore.self) private var manualMasteryStore
+    @State private var profileID: String?
+    @State private var isSelecting = false
+    @State private var selectedIDs: Set<String> = []
     @Bindable var viewModel: OpeningsViewModel
     @State private var isPermanentSectionExpanded: Bool = false
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -32,6 +36,18 @@ struct OpeningsListView: View {
             timeSensitiveSection(openings: openings)
             permanentSection(itemCategories: itemCategories, sourceCategories: sourceCategories)
         }
+        .disabled(manualMasteryStore.isSaving)
+        .onChange(of: viewModel.searchText) { selectedIDs = [] }
+        .toolbar {
+            ManualMasteryToolbar(
+                store: manualMasteryStore, profileID: profileID,
+                isSelecting: $isSelecting, selectedIDs: $selectedIDs,
+                visibleIDs: Set(openings.map(\.id))
+            )
+        }
+        .task(id: manualMasteryStore.revision) {
+            profileID = await manualMasteryStore.profileID()
+        }
         .listStyle(.sidebar)
         .compactListSections()
         .scrollContentBackground(.hidden)
@@ -49,7 +65,9 @@ struct OpeningsListView: View {
                     .padding(.vertical, Layout.emptyStatePadding)
             } else {
                 ForEach(openings) { opening in
-                    TimeSensitiveOpeningRowView(viewModel: opening)
+                    ManualMasterySelectionRow(id: opening.id, name: opening.name, isSelecting: isSelecting, selectedIDs: $selectedIDs) {
+                        TimeSensitiveOpeningRowView(viewModel: opening)
+                    }
                 }
             }
         } header: {
@@ -73,11 +91,7 @@ struct OpeningsListView: View {
                 ForEach(itemCategories) { summary in
                     NavigationLink {
                         OpeningsItemCategoryDetailView(
-                            viewModel: .init(
-                                categoryTitle: summary.category.displayName.sentenceCased,
-                                items: viewModel.permanentItems(in: summary.category),
-                                searchText: viewModel.searchText
-                            )
+                            viewModel: viewModel.makeItemCategoryDetailViewModel(for: summary.category)
                         )
                     } label: {
                         OpeningsCategoryRowView(

@@ -86,7 +86,6 @@ final class MasteryCategoryDetailViewModel {
 
     // MARK: - Functions
     func load() async {
-        guard container == nil else { return }
         isLoading = true
         defer { isLoading = false }
         do {

@@ -13,9 +13,20 @@ struct MainView: View {
     let dependencies: AppDependencies
     let onCacheCleared: () -> Void
     @Binding var selectedTab: Int
+    @State private var manualMasteryStore: ManualMasteryStore
     @State private var wikiCoordinator = WikiCoordinator()
     @AppStorage(UserDefaultsAccountIDStore.storageKey) private var currentAccountID: String?
     @Environment(\.colorScheme) private var colorScheme
+
+    init(dependencies: AppDependencies, onCacheCleared: @escaping () -> Void, selectedTab: Binding<Int>) {
+        self.dependencies = dependencies
+        self.onCacheCleared = onCacheCleared
+        self._selectedTab = selectedTab
+        self._manualMasteryStore = State(initialValue: ManualMasteryStore(
+            catalogRepository: dependencies.catalogRepository,
+            errorManager: dependencies.errorManager
+        ))
+    }
 
     // MARK: - Body
     var body: some View {
@@ -61,6 +72,7 @@ struct MainView: View {
                 )
             }
         }
+        .environment(manualMasteryStore)
         .appTabStyle()
         .tint(DashboardPalette.accent(in: colorScheme))
         .environment(\.wikiCoordinator, wikiCoordinator)

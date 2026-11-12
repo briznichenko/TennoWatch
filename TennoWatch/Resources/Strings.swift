@@ -193,6 +193,11 @@ struct Strings {
 
     struct Mastery {
         private init() {}
+        static var markUnmastered: String { Strings.string("mastery_mark_unmastered_key", "Mark unmastered") }
+        static var markMastered: String { Strings.string("mastery_mark_mastered_key", "Mark mastered") }
+        static var selectAll: String { Strings.string("mastery_select_all_key", "Select all") }
+        static var done: String { Strings.string("mastery_done_key", "Done") }
+        static var selectItems: String { Strings.string("mastery_select_items_key", "Select items") }
         static var baseStarChart: String { Strings.string("mastery_base_star_chart_key", "Base Star Chart") }
         static var steelPath: String { Strings.string("mastery_steel_path_key", "Steel Path") }
         static var title: String { Strings.string("mastery_title_key", "Mastery") }
@@ -302,6 +307,12 @@ struct Strings {
 
     struct Profile {
         private init() {}
+        static var localNameRequired: String { Strings.string("profile_local_name_required_key", "Enter a name for this local profile.") }
+        static var createProfile: String { Strings.string("profile_create_profile_key", "Create profile") }
+        static var localName: String { Strings.string("profile_local_name_key", "Profile name") }
+        static var remoteProfile: String { Strings.string("profile_remote_profile_key", "Remote") }
+        static var localProfile: String { Strings.string("profile_local_profile_key", "Local") }
+        static var profileType: String { Strings.string("profile_profile_type_key", "Profile type") }
         static var addProfile: String { Strings.string("profile_add_profile_key", "Add profile") }
         static var savedProfilesHeader: String { Strings.string("profile_saved_profiles_header_key", "Saved profiles") }
         static var manualProfile: String { Strings.string("profile_manual_profile_key", "Manual tracking") }
